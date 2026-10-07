@@ -1,0 +1,19 @@
+# 后端依赖清单
+#
+# Day 1 待办：
+#   1. 先在 Python 3.13.2 上验证 langgraph / langchain-core 能装能 import
+#      （需求文档风险 R-1，这是整个项目的第一个卡点）
+#   2. 安装完成后把实际版本号回填到本文件，固定下来
+#
+# 安装命令（清华源）：
+#   pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+fastapi
+uvicorn[standard]
+pydantic
+pydantic-settings
+python-dotenv
+httpx
+langgraph
+langchain-core
+langchain-openai
