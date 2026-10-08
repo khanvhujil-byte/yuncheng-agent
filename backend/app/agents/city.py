@@ -22,21 +22,25 @@
 
     拦住 = 不写 adcode，图的条件边直接走到 END，路由把 error_code 透给前端。
 
-下一步（模块 2b）在这里补：must_visit / fixed_hotel 的锚点解析与城市一致性校验
-（ATTRACTION_NOT_FOUND / ATTRACTION_AMBIGUOUS / HOTEL_NOT_FOUND / HOTEL_AMBIGUOUS / CITY_MISMATCH）。
+已实现（模块 2b）：must_visit 解析成 POI 锚点（required=True），并写入 must_visit_resolved。
+未实现：fixed_hotel 的解析与 CITY_MISMATCH —— 按设计放在 Day 4 的 resolve_hotel 里，
+        失败时降级（hotel=None + warning）而不是拦掉整份行程：用户订错酒店，
+        不该导致他连行程都拿不到。
 """
 
 import logging
 from datetime import date, timedelta
 from typing import Optional
 
+from ..models.schemas import Attraction
 from ..models.state import TripState
-from ..services.amap import AmapError, AmapUnreachable, geocode
+from ..services.amap import AmapError, AmapUnreachable, geocode, search_poi
 
 logger = logging.getLogger(__name__)
 
 MAX_SPOTS_PER_DAY = 3  # 每天景点上限。容量 = 天数 × 它（与 planner 的 prompt 约束同源）
 FORECAST_WINDOW_DAYS = 4  # 高德 extensions=all 的预报窗口（实测：正好 4 天）
+MAX_MUST_VISIT = 10  # 每个必去景点 = 1 次高德搜索调用。上限防「30 天行程塞 90 个景点」
 
 
 def _parse_date(text: Optional[str]) -> Optional[date]:
@@ -47,6 +51,35 @@ def _parse_date(text: Optional[str]) -> Optional[date]:
         return date.fromisoformat(text)
     except ValueError:
         return None
+
+
+def _is_relevant(keyword: str, candidate: str, threshold: float = 0.6) -> bool:
+    """判断高德返回的这条结果，是否真的就是用户说的那个地方。
+
+    为什么必须自己判（实测教训）：
+        高德对中文会**分词**，几乎不会返回 0 条 —— 搜「这个景点绝对不存在xyz9」
+        它返回「丰盛九玺」「绝对呼吸」「绝对现卤」（只匹配到「绝对」两个字），
+        而 count=11 看着还挺"有结果"。
+        对普通搜索这无所谓（用户自己会看列表），但对**硬约束**是灾难：
+        用户说"必须去 X"，系统静默换成了一个跟他毫无关系的地点。
+
+    也没有现成的信号可用：实测 pois[].match 恒为 "0"（连精确名也是 0），
+    pois[].importance 恒为 []。
+
+    判定用两条，任一命中即算相关：
+        ① 子串包含：'西湖' in '杭州西湖风景名胜区'
+        ② 逐字重叠率 ≥ threshold：'西湖景区' vs '杭州西湖风景名胜区' → 4/4 = 1.0
+           （分母用**关键词**的字数，因为返回的名字通常更长）
+    分母用关键词而不是两者最大值的理由：我们要问的是「用户说的字，有几个出现在结果里」。
+    """
+    word = keyword.strip()
+    name = candidate.strip()
+    if not word or not name:
+        return False
+    if word in name or name in word:
+        return True
+    overlap = len(set(word) & set(name))
+    return overlap / len(set(word)) >= threshold
 
 
 def validate_city(state: TripState) -> dict:
@@ -116,6 +149,53 @@ def validate_city(state: TripState) -> dict:
 
     if center is None or not adcode:
         return fail("CITY_NOT_FOUND", f"地理编码查不到 {req.city!r}")
+    # ---- 解析 must_visit（硬约束的锚点）----
+    # must_visit 在预检 3 里已经算过（已 strip、已去空），直接复用。
+    # 配额保护：每个名字要调一次高德搜索，先截断再解析（只提醒，不拦）。
+    if len(must_visit) > MAX_MUST_VISIT:
+        warnings.append(
+            f"必去景点共 {len(must_visit)} 个，超过单次上限 {MAX_MUST_VISIT} 个；"
+            f"已解析前 {MAX_MUST_VISIT} 个，其余请分次规划。"
+        )
+        must_visit = must_visit[:MAX_MUST_VISIT]
+
+    resolved: list[Attraction] = []
+    for name in must_visit:
+        try:
+            hits = search_poi(name, req.city, offset=5)
+        except AmapError as exc:
+            # TODO(1) 的答案：配置类错误（Key 无效 / 配额满）**透传原码，绝不伪装成「景点搜不到」**。
+            # 说"景点不存在"会把用户引到错误方向 —— 他会去改景点名，而问题其实在 Key 或配额。
+            return fail(exc.code, f"解析必去景点 {name!r} 时高德报错：{exc.detail}")
+        except AmapUnreachable as exc:
+            # TODO(2) 的答案：网络问题同理，报 ATTRACTION_NOT_FOUND 是撒谎。
+            # 而且预检没做完，不能带着「没验证过的硬约束」继续往下跑。
+            return fail("UPSTREAM_TIMEOUT", f"解析必去景点 {name!r} 时不可达：{exc}")
+
+        if not hits:
+            # 真正的 0 条（实测：只有纯拉丁乱码这类才会 0 条）
+            return fail("ATTRACTION_NOT_FOUND", f"在城市 {req.city!r} 内搜不到必去景点 {name!r}")
+
+        # 取第一条**相关的**结果，而不是第一条 —— 高德会把「绝对呼吸」这种
+        # 只沾一点边的结果排在前面（见 _is_relevant 的说明）。
+        chosen = next((h for h in hits if _is_relevant(name, h.name)), None)
+        if chosen is None:
+            # 有返回、但没一条真的像用户说的那个地方 → 按"搜不到"处理。
+            # 绝不用第一条硬凑：它是硬约束，静默换成别的地方比报错危险得多。
+            sample = "、".join(h.name for h in hits[:3])
+            return fail(
+                "ATTRACTION_NOT_FOUND",
+                f"必去景点 {name!r} 没有匹配结果（高德返回的前几条是：{sample}）",
+            )
+
+        # 打标 required=True —— schemas.py 里已预留，下游和前端据此显示「必去」
+        chosen.required = True  # Pydantic v2 允许直接改字段
+        resolved.append(chosen)
+
+        # 透明度：解析改名必须写 warning，否则用户以为系统去的是他说的那个地方
+        if chosen.name != name:
+            detail = chosen.address or "无地址"
+            warnings.append(f"必去景点「{name}」已解析为「{chosen.name}」（{detail}）")
 
     logger.info(
         "城市解析成功 | city=%s adcode=%s center=%s,%s | 天数=%d 晚数=%d",
@@ -133,7 +213,6 @@ def validate_city(state: TripState) -> dict:
         "error_code": None,
         "errors": [],
         "warnings": warnings,
-        # ---- 模块 2b 在这里补：把 must_visit / fixed_hotel 解析成锚点 ----
-        "must_visit_resolved": [],
-        "hotel_anchor": None,
+        "must_visit_resolved": resolved,  # 下游 attraction_agent 会把它注入候选池
+        "hotel_anchor": None,  # fixed_hotel 的解析放在 Day 4 的 resolve_hotel（见上方说明）
     }
