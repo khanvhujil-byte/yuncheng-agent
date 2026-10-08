@@ -48,6 +48,21 @@ from .schemas import (
 )
 
 
+def _merge_sources(left: Dict[str, DataSource], right: Dict[str, DataSource]) -> Dict[str, DataSource]:
+    """sources 的 reducer：把各节点写的 key 合并成一个字典。
+
+    为什么要它（实测教训）：景点与天气是**并行**节点，各自都想写 sources 里自己那一格。
+    没有 reducer 时，LangGraph 判定「同一个 step 往同一个 key 写了两次」并直接抛
+    InvalidUpdateError —— 不是"后面的覆盖前面的"，是崩。
+
+    为什么不用 operator.add：那是给列表追加用的，对 dict 会 TypeError。
+
+    上一版这里写的是「不带 reducer，靠纪律让各节点只写自己的 key」——**那是错的**，
+    已用实验推翻（两个并行节点各写一个 key → InvalidUpdateError）。
+    """
+    return {**(left or {}), **(right or {})}
+
+
 class TraceEntry(TypedDict):
     """一个节点的执行记录。V0 先留空列表，V1 起填充（对应 NFR-2 可观测性）。"""
 
@@ -115,11 +130,10 @@ class TripState(TypedDict):
     #   注意它**不带 reducer**：它是单值，多路并发写会冲突 —— 只有预检节点写它。
     errors: Annotated[List[str], operator.add]  # 技术性失败记录，给日志排查用
     warnings: Annotated[List[str], operator.add]  # 给用户看的降级说明，会透传到 TripPlan.warnings
-    sources: Dict[str, DataSource]
+    sources: Annotated[Dict[str, DataSource], _merge_sources]
     # ↑ 字段级来源标记，key 约定与 TripPlan.sources 一致。
-    #   注意这个字段「不带」reducer：它是 dict，多路并发写同一个 key 会冲突。
-    #   所以纪律是：各节点只写自己那几个 key（景点写 attractions、天气写 weather、
-    #   resolve_hotel 写 hotel），key 互不重叠。改并行时必须守住这条纪律，否则会从「写冲突」这里炸。
+    #   **必须带合并 reducer**（见 _merge_sources 的说明）：不带就在并行写时直接崩。
+    #   有了它，各节点可以只返回自己那几个 key，框架负责合起来。
 
     # ---- 可观测性与上下文计量 ----
     trace: Annotated[List[TraceEntry], operator.add]  # 每完成一个节点追加一条

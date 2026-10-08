@@ -210,6 +210,8 @@ def search_poi(keywords: str, city: str, offset: int = 20, page: int = 1) -> lis
                 location=location,
                 # "风景名胜;风景名胜;国家级景点" → 取最后一级 "国家级景点"
                 category=type_path.split(";")[-1] or "景点",
+                # 原始分类码，供调用方按类目过滤（餐饮 05 / 住宿 10 要排除）
+                typecode=_s(poi.get("typecode")),
                 rating=float(rating) if rating else None,
                 photos=photos,
                 image_url=photos[0] if photos else None,

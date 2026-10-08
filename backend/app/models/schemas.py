@@ -111,6 +111,12 @@ class Attraction(BaseModel):
     visit_duration: int = 120  # 建议游览时间（分钟）。高德不提供，由模型给；v0.2 起它还是选址的权重
     description: str = ""  # 由模型写
     category: Optional[str] = "景点"  # 来自高德 pois[].type，取最后一级
+    typecode: Optional[str] = None
+    # ↑ v0.2 新增：高德 pois[].typecode，如 "110202"。
+    #   为什么必须留它：需求文档 3.2 要求「按 typecode 过滤掉餐饮与住宿」，
+    #   而 category 只保住了 type 的最后一级，做过滤需要的分类码就丢了。
+    #   实测前缀：05=餐饮服务、10=住宿服务、11=风景名胜、14=科教文化、06=购物服务；
+    #   typecode **可能是多个码用 "|" 拼接**（如 "060101|061101|061000"），判断前要先 split。
     rating: Optional[float] = None  # 来自高德 biz_ext.rating；覆盖不稳定，经常是 None
     photos: List[str] = Field(default_factory=list)  # 高德 pois[].photos[].url 自带图片，所以本项目不需要 Unsplash
     poi_id: Optional[str] = None  # 高德 POI ID。去重要按它做，不能按 name（「西湖」和「西湖风景区」是两条）
