@@ -108,6 +108,11 @@ class TripState(TypedDict):
     constraint_report: Optional[ConstraintReport]  # v0.2：硬约束对账结果，会透传到 TripPlan
 
     # ---- 降级与诚实性（并行节点共用的「意见箱」）----
+    error_code: Optional[str]
+    # ↑ v0.2：预检失败的**机器可读原因**（CITY_NOT_FOUND / CONSTRAINT_INFEASIBLE /
+    #   ATTRACTION_NOT_FOUND / HOTEL_NOT_FOUND / CITY_MISMATCH / DATE_RANGE_MISMATCH）。
+    #   由 validate_city 写入，路由据此填 TripPlanResponse.error_code。
+    #   注意它**不带 reducer**：它是单值，多路并发写会冲突 —— 只有预检节点写它。
     errors: Annotated[List[str], operator.add]  # 技术性失败记录，给日志排查用
     warnings: Annotated[List[str], operator.add]  # 给用户看的降级说明，会透传到 TripPlan.warnings
     sources: Dict[str, DataSource]

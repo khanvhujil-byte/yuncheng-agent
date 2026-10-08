@@ -24,3 +24,6 @@ Day 4 你要写的函数：
 边界处理：
     任一项缺失按 0 计入，同时在 warnings 里写「含缺失项，实际费用可能更高」。
 """
+def patch_budget(state) -> dict:
+    """占位版（Day 4 换成真实加总）。"""
+    return {"plan": {**state["plan"], "budget": {"total": 0}}}

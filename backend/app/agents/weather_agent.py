@@ -28,3 +28,9 @@ Day 3 你要写的函数：
 可选实验（V1 之后再做）：把它改成不用 LLM 的纯工具节点，对比耗时与 token。
 它本质是「adcode + 日期 → 天气数组」的确定性搬运。
 """
+def collect_weather(state) -> dict:
+    """占位版（Day 3 换成真实天气接口）。"""
+    return {"weather": [
+        {"date": "2026-10-01", "day_weather": "晴", "night_weather": "多云",
+         "day_temp": 25, "night_temp": 18, "wind_direction": "南风", "wind_power": "1-3级"},
+    ]}

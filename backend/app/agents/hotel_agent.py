@@ -1,5 +1,4 @@
-"""Agent 3 / 4 · 酒店推荐专家（collect_hotels 节点）。
-
+"""
 Day 3 你要写的函数：
 
     def collect_hotels(state: TripState) -> dict:
@@ -34,3 +33,9 @@ distance 字段：
     因为本节点与 collect_attractions 是并行的，拿不到当天景点坐标，
     所以先用 city_center 近似（需求文档 5.5 已接受的取舍）。
 """
+def resolve_hotel(state) -> dict:
+    """占位版（Day 4 换成纯代码加权选址）。"""
+    return {"hotel": {"name": "假酒店", "address": "占位",
+                      "location": {"longitude": 120.15, "latitude": 30.25},
+                      "estimated_cost": 300, "nights": 2, "distance": "占位"},
+            "hotels": [], "hotel_source": "agent"}

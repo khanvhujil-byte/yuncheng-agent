@@ -6,7 +6,7 @@ import dayjs from 'dayjs'
 import { Clock, Hotel, MapPin, Route, Ticket, Utensils } from 'lucide-vue-next'
 import { computed } from 'vue'
 
-import type { DayPlan, Meal, SourceMap } from '@/types/trip'
+import type { DayPlan, SourceMap } from '@/types/trip'
 import { isEstimated } from '@/utils/source'
 
 const props = defineProps<{
@@ -25,18 +25,10 @@ const MEAL_LABELS: Record<string, string> = {
 const ticketEstimated = computed(() =>
   isEstimated(props.sources, 'attraction.ticket_price'),
 )
-/** 酒店费用是否属于「估算」 */
-const hotelEstimated = computed(() =>
-  isEstimated(props.sources, 'hotel.estimated_cost'),
-)
 /** 餐饮费用是否属于「估算」 */
 const mealEstimated = computed(() =>
   isEstimated(props.sources, 'meal.estimated_cost'),
 )
-
-function monthDay(date: string): string {
-  return dayjs(date).format('M月D日')
-}
 
 function weekday(date: string): string {
   return '周' + '日一二三四五六'[dayjs(date).day()]
@@ -80,27 +72,7 @@ function mealLabel(type: string): string {
           </span>
         </div>
 
-        <!-- 酒店 -->
-        <div v-if="day.hotel" class="block">
-          <div class="block-title">
-            <Hotel :size="15" />
-            住宿
-          </div>
-          <div class="hotel">
-            <div class="hotel-name">{{ day.hotel.name }}</div>
-            <div class="hotel-meta">
-              <span v-if="day.hotel.address" class="muted">{{ day.hotel.address }}</span>
-              <span v-if="day.hotel.type" class="muted">{{ day.hotel.type }}</span>
-              <span v-if="day.hotel.rating" class="muted">评分 {{ day.hotel.rating }}</span>
-              <span v-if="day.hotel.distance" class="muted">{{ day.hotel.distance }}</span>
-            </div>
-            <div v-if="day.hotel.estimated_cost || day.hotel.price_range" class="hotel-price">
-              {{ day.hotel.price_range || '' }}
-              <span v-if="day.hotel.estimated_cost">约 ¥{{ day.hotel.estimated_cost }}/晚</span>
-              <span v-if="hotelEstimated" class="tag-estimated">预估</span>
-            </div>
-          </div>
-        </div>
+        <!-- 住宿（v0.2：不再是每天一个，统一在顶部 TripSummary 里显示）-->
 
         <!-- 景点 -->
         <div class="block">

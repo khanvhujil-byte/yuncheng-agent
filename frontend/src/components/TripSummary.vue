@@ -3,7 +3,7 @@
  * 行程总览：目的地 / 天气条 / 预算卡 / 降级提示。
  */
 import dayjs from 'dayjs'
-import { Calendar, CloudSun, Info, MapPin, TriangleAlert, Wallet } from 'lucide-vue-next'
+import { Calendar, CloudSun, Hotel, Info, MapPin, ShieldCheck, TriangleAlert, Wallet } from 'lucide-vue-next'
 import { computed } from 'vue'
 
 import type { TripPlan } from '@/types/trip'
@@ -14,6 +14,22 @@ const props = defineProps<{ plan: TripPlan }>()
 const warnings = computed(() => props.plan.warnings ?? [])
 const weatherList = computed(() => props.plan.weather_info ?? [])
 const budget = computed(() => props.plan.budget ?? null)
+
+/** v0.2：住宿是行程级一家，不再是每天一个 */
+const hotel = computed(() => props.plan.hotel ?? null)
+const hotelNights = computed(() => props.plan.hotel_nights ?? 0)
+const hotelIsUser = computed(() => props.plan.sources?.hotel === 'user')
+const hotelEstimated = computed(() => isEstimated(props.plan.sources, 'hotel.estimated_cost'))
+
+/** v0.2：硬约束对账（必去景点满足情况） */
+const report = computed(() => props.plan.constraint_report ?? null)
+const unsatisfied = computed(() => report.value?.unsatisfied ?? [])
+const satisfied = computed(() => report.value?.satisfied ?? [])
+const required = computed(() => report.value?.required_attractions ?? [])
+
+function reasonOf(name: string): string {
+  return report.value?.reasons?.[name] ?? '未能安排'
+}
 
 const budgetItems = computed(() => [
   { key: 'attractions', label: '门票', value: budget.value?.total_attractions ?? 0 },
@@ -73,6 +89,64 @@ function tempText(value: number | string | undefined): string {
       <ul class="alert-list">
         <li v-for="(text, index) in warnings" :key="index">{{ text }}</li>
       </ul>
+    </div>
+
+    <!-- 住宿（v0.2：行程级一家，不是每天一个） -->
+    <div class="card">
+      <div class="card-title">
+        <Hotel :size="16" />
+        住宿
+        <span v-if="hotelIsUser" class="tag-estimated" style="background: #e8f1ff; color: #2b5fb8">
+          你指定的
+        </span>
+        <span v-else-if="hotelEstimated" class="tag-estimated">预估</span>
+      </div>
+      <template v-if="hotel">
+        <div style="font-weight: 600; font-size: 15px">{{ hotel.name }}</div>
+        <div class="muted" style="margin-top: 4px; font-size: 13px">
+          <span v-if="hotel.address">{{ hotel.address }}</span>
+          <span v-if="hotel.type"> · {{ hotel.type }}</span>
+          <span v-if="hotel.rating"> · 评分 {{ hotel.rating }}</span>
+        </div>
+        <div class="muted" style="margin-top: 4px; font-size: 13px">
+          共 {{ hotelNights }} 晚
+          <span v-if="hotel.estimated_cost">
+            · 约 ¥{{ hotel.estimated_cost }}/晚 · 合计 ¥{{ hotel.estimated_cost * hotelNights }}
+          </span>
+        </div>
+        <p v-if="hotel.distance" class="muted" style="margin: 6px 0 0; font-size: 12px">
+          {{ hotel.distance }}
+        </p>
+        <p v-if="hotelIsUser" class="footnote">
+          这家酒店是你自己指定的，系统没有另做选址；价格仍是估算值。
+        </p>
+      </template>
+      <div v-else class="empty-hint">
+        没有住宿信息。可能是候选酒店为空，或该路数据获取失败。
+      </div>
+    </div>
+
+    <!-- 硬约束对账（v0.2）：你要求的必去景点，到底排进去了几个 -->
+    <div v-if="required.length" class="card">
+      <div class="card-title">
+        <ShieldCheck :size="16" />
+        你的必去要求
+        <span class="muted" style="font-weight: 400">
+          {{ satisfied.length }} / {{ required.length }} 已安排
+        </span>
+      </div>
+      <ul class="alert-list" style="list-style: none; padding: 0; margin: 0">
+        <li v-for="name in satisfied" :key="'ok-' + name" style="font-size: 13px">
+          已安排 · {{ name }}
+        </li>
+        <li v-for="name in unsatisfied" :key="'no-' + name" style="font-size: 13px; color: #b85450">
+          未安排 · {{ name }} —— {{ reasonOf(name) }}
+        </li>
+      </ul>
+      <p v-if="unsatisfied.length" class="footnote">
+        未安排的项会同时出现在上方的「需要你留意」里。系统不会静默丢掉你的要求，
+        但你也可以减少必去景点或增加天数来让它排得下。
+      </p>
     </div>
 
     <!-- 天气条 -->

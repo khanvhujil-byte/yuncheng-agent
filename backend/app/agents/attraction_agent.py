@@ -30,3 +30,13 @@ Day 3 你要写的函数：
     工具调用失败不要抛异常向上冒。写 errors + warnings，返回空列表，
     让 compose_plan 照常执行（需求文档 FR-03 异常分支）。
 """
+def collect_attractions(state) -> dict:
+    """占位版（Day 3 换成真实 POI 搜索）。"""
+    return {"attractions": [
+        {"name": "假景点-西湖", "address": "占位", "poi_id": "FAKE-1",
+         "location": {"longitude": 120.15, "latitude": 30.25},
+         "visit_duration": 180, "ticket_price": 0, "required": False},
+        {"name": "假景点-灵隐寺", "address": "占位", "poi_id": "FAKE-2",
+         "location": {"longitude": 120.10, "latitude": 30.24},
+         "visit_duration": 120, "ticket_price": 45, "required": False},
+    ]}

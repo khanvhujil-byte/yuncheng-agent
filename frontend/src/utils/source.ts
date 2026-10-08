@@ -12,6 +12,9 @@ const SOURCE_LABELS: Record<DataSource, string> = {
   amap: '高德实查',
   llm_estimated: '模型估算',
   degraded: '获取失败',
+  // v0.2 新增：用户自己指定的锚点（规格化酒店）。它既不是查到的、也不是估算的，
+  // 所以必须单独一档，否则会被误标成「模型估算」。
+  user: '你指定的',
 }
 
 export function sourceLabel(source: DataSource | undefined): string {

@@ -19,6 +19,16 @@ const ERROR_MESSAGES: Record<string, string> = {
   UPSTREAM_TIMEOUT: '外部服务响应超时，请重试。',
   LLM_ERROR: '模型服务异常，请重试。',
   NETWORK_ERROR: '连不上后端。确认后端已启动在 http://127.0.0.1:8000。',
+  // ---- v0.2 新增：锚点与预检相关的错误码 ----
+  DATE_RANGE_MISMATCH:
+    '日期区间和天数对不上。例如选了 10 月 1 日到 5 日（5 天），天数却填 3 —— 请改到一致。',
+  CONSTRAINT_INFEASIBLE:
+    '这次的要求排不下。必去景点的数量超过了行程容量（每天最多 3 个景点），请减少必去景点或增加天数。',
+  ATTRACTION_NOT_FOUND: '必去景点里有一个在城市内搜不到，请检查名字（或补上更完整的名称）。',
+  ATTRACTION_AMBIGUOUS: '必去景点有多个同名结果（例如「西湖」和「西湖风景区」），请写得更具体。',
+  HOTEL_NOT_FOUND: '你指定的酒店没搜到，建议补上地址或换一个名字。',
+  HOTEL_AMBIGUOUS: '你指定的酒店重名了（例如「如家酒店」全国有很多家），请补上地址。',
+  CITY_MISMATCH: '你指定的酒店和目的地城市相距太远，请确认酒店订在了这个城市。',
 }
 
 const FALLBACK_MESSAGE = '请求失败，请重试。'

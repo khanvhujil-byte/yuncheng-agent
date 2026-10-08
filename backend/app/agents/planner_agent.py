@@ -36,3 +36,8 @@ Day 4 你要写的函数：
 
 注意：budget 不在这里算，交给 budget.py（代码算，不让模型做加法）。
 """
+def compose_plan(state) -> dict:
+    """占位版（Day 4 换成真实 LLM 编排 + 两层校验）。"""
+    return {"plan": {"city": "杭州", "start_date": "2026-10-01", "end_date": "2026-10-02",
+                     "days": [], "warnings": [], "sources": {}},
+            "retries": state.get("retries", 0) + 1}

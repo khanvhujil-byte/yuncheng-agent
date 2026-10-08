@@ -14,6 +14,8 @@ Day 1 待实现：
     而且只在 stdout 被重定向成非 tty 时触发，非常难查。
     所有日志走 logging，不用 print。
 """
+import app
+
 """FastAPI 应用装配。
 
 本文件禁止 print emoji。Windows 中文控制台 GBK 编码不了 U+1F680 之类的字符，
@@ -22,7 +24,7 @@ Day 1 待实现：
 """
 
 import logging
-
+from .routes import trip
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -33,7 +35,7 @@ app = FastAPI(
     version="0.1.0",
     description="四个助手分工协作：景点搜集 / 天气查询 / 酒店推荐 / 行程编排",
 )
-
+app.include_router(trip.router, prefix="/api")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[

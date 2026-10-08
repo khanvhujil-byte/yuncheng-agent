@@ -35,9 +35,14 @@ const form = reactive<TripRequest>({
   start_date: dayjs().add(1, 'day').format('YYYY-MM-DD'),
   end_date: dayjs().add(3, 'day').format('YYYY-MM-DD'),
   travel_days: 3,
+  // v0.2：留空 = 按「天数 - 1」算（3 天 2 晚，最后一晚返程）
+  nights: undefined,
   transportation: '公共交通',
   accommodation: '经济型酒店',
   preferences: ['自然风光'],
+  // v0.2 锚点（硬约束）
+  must_visit: [],
+  fixed_hotel: '',
   free_text_input: '',
 })
 
@@ -130,6 +135,10 @@ async function submit(): Promise<void> {
         ...form,
         city: form.city.trim(),
         preferences: [...form.preferences],
+        // v0.2 锚点：空值一律清成 undefined，别把空字符串送给后端
+        must_visit: (form.must_visit ?? []).map((item) => item.trim()).filter(Boolean),
+        fixed_hotel: form.fixed_hotel?.trim() ? form.fixed_hotel.trim() : undefined,
+        nights: form.nights ?? undefined,
       },
       {
         onProgress: (event) => {
@@ -188,7 +197,7 @@ function reset(): void {
         <span>多智能体旅行规划助手</span>
       </div>
       <p class="subtitle">
-        四个专职助手分工协作：景点搜集 · 天气查询 · 酒店推荐 · 行程编排
+        景点搜集 · 天气查询 · 行程编排 · 住宿求解（两路并行 + 住宿后置）
       </p>
       <div v-if="backendOnline === false" class="offline">
         <TriangleAlert :size="14" />
@@ -233,6 +242,22 @@ function reset(): void {
             />
           </a-form-item>
 
+          <!-- v0.2：住几晚决定住宿费（3 天通常住 2 晚），留空按「天数 - 1」算 -->
+          <a-form-item>
+            <template #label>
+              住几晚
+              <span style="color: #8c94a3; font-weight: 400">（留空 = {{ Math.max(form.travel_days - 1, 0) }} 晚）</span>
+            </template>
+            <a-input-number
+              v-model:value="form.nights"
+              :min="0"
+              :max="form.travel_days"
+              style="width: 100%"
+              size="large"
+              placeholder="留空按天数自动算"
+            />
+          </a-form-item>
+
           <a-form-item label="交通方式">
             <a-select v-model:value="form.transportation" size="large">
               <a-select-option v-for="item in TRANSPORT_OPTIONS" :key="item" :value="item">
@@ -247,6 +272,36 @@ function reset(): void {
                 {{ item }}
               </a-select-option>
             </a-select>
+          </a-form-item>
+
+          <!-- ==== v0.2 锚点（硬约束）：填了就一定会被对账 ==== -->
+
+          <a-form-item>
+            <template #label>
+              已订酒店
+              <span style="color: #8c94a3; font-weight: 400">（选填，填了就按它排）</span>
+            </template>
+            <a-input
+              v-model:value="form.fixed_hotel"
+              placeholder="例如：杭州西湖某酒店（重名时建议补地址）"
+              size="large"
+              allow-clear
+            />
+          </a-form-item>
+
+          <a-form-item>
+            <template #label>
+              必去景点
+              <span style="color: #8c94a3; font-weight: 400">（选填，输入后回车）</span>
+            </template>
+            <a-select
+              v-model:value="form.must_visit"
+              mode="tags"
+              size="large"
+              style="width: 100%"
+              placeholder="例如：西湖、灵隐寺"
+              :token-separators="[',', '，']"
+            />
           </a-form-item>
 
           <a-form-item label="旅行偏好（可多选）">
@@ -285,8 +340,9 @@ function reset(): void {
           <Compass :size="36" class="placeholder-icon" />
           <p class="placeholder-title">填好左边，点「生成行程」</p>
           <p class="placeholder-text">
-            系统会依次让四个助手干活：先确认城市位置，再分别搜集景点、查询天气、推荐酒店，
-            最后由编排助手汇总成逐日行程。
+            系统会先确认城市位置（顺手做可行性预检），再让景点与天气两路并行采集，
+            然后由编排助手汇总成逐日行程，最后统一求解住宿与预算。
+            你填的「必去景点」和「已订酒店」是硬约束，排不进去会如实告诉你。
           </p>
         </div>
 
