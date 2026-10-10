@@ -1,51 +1,53 @@
 """FastAPI 应用装配。
 
-Day 1 待实现：
-    - app = FastAPI(title=..., version=...)
-    - CORS 中间件：允许 http://localhost:5173（前端端口）
-      不放行的话浏览器直接拦掉请求，后端日志里连一条记录都看不到
-    - 注册路由：app.include_router(trip.router, prefix="/api")
-    - GET /health  →  {"status": "ok", "service": ..., "version": ...}
-      前端页面加载时会调它，用来提示「后端未连接」
+职责只有四件：建 app、放行 CORS、挂路由、开数据库。
+业务逻辑一行都不在这里。
 
-注意（需求文档「坑 3」）：
-    本文件及全项目禁止 print emoji。Windows 中文控制台 GBK 编码不了
-    U+1F680 之类的字符，会让 startup 事件抛 UnicodeEncodeError 直接退出，
-    而且只在 stdout 被重定向成非 tty 时触发，非常难查。
-    所有日志走 logging，不用 print。
-"""
-import app
+CORS 必须放行前端端口，否则浏览器直接拦掉请求 —— 而且**后端日志里连一条记录都没有**，
+排查时容易误判成"后端没起"。
 
-"""FastAPI 应用装配。
-
-本文件禁止 print emoji。Windows 中文控制台 GBK 编码不了 U+1F680 之类的字符，
-会让 startup 事件抛 UnicodeEncodeError 导致应用直接退出。
+本文件及全项目禁止 print emoji。Windows 中文控制台 GBK 编码不了 U+1F680 之类的字符，
+会让 startup 事件抛 UnicodeEncodeError 直接退出，而且只在 stdout 被重定向成非 tty 时触发。
 日志一律走 logging。
 """
 
 import logging
-from .routes import trip
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+from ..services.store import init_db
+from .routes import trip
 
 logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="多智能体旅行规划助手",
-    version="0.1.0",
+    version="0.4.0",
     description="四个助手分工协作：景点搜集 / 天气查询 / 酒店推荐 / 行程编排",
 )
+
+# 先挂路由再建 app 的顺序坑（真踩过）：include_router 必须在 app = FastAPI() 之后，
+# 否则启动就 NameError: name 'app' is not defined。
 app.include_router(trip.router, prefix="/api")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
+        # 5174 是「不看后端端口时起第二份前端」用的备用端口，本地开发一并放行
+        "http://localhost:5174",
+        "http://127.0.0.1:5174",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 建表（幂等）。放在模块级而不是 startup 事件里：SQLite 建表是同步且极快的，
+# 这样第一个请求进来时库一定已经就绪，少一个"启动钩子没跑到"的失败模式。
+init_db()
 
 
 @app.get("/health", tags=["系统"], summary="健康检查")

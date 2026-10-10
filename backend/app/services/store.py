@@ -1,0 +1,243 @@
+"""行程库与运行日志（SQLite，标准库 sqlite3，**零新依赖**）。
+
+对应 learn-claude-code 课程里的两章：
+    s09 Memory        —— selection（找得到）/ extraction（存什么）/ consolidation（复用与统计）
+    s10 Task System   —— 结果**落盘持久化**，而不是只活在内存里
+
+它解决什么问题：
+    v0.3 一次规划要 40 秒、11 次 LLM 调用、1.8 万 token。
+    但**同一批需求的第二次请求，完全没必要重算** —— 用户在页面上改个出发日期再点一次，
+    拿到的应该是"把日期平移一下"的行程，而不是又等 40 秒。
+
+三个设计决定（都是踩过坑之后的取舍）：
+
+    1. **指纹不含出发日期**。同一城市、同天数、同偏好、同必去景点的行程骨架是可复用的；
+       日期差异用「**平移复用**」处理（把 days[].date 整体平移 + 按新日期重取天气）。
+       所以指纹刻意排除 start_date / end_date，只保留"需求形状"。
+
+    2. **命中后仍然重取天气**。天气是跟着日期走的，直接复用旧响应会把"10 月 10 日晴"
+       搬到 11 月，那是**编造**。所以命中路径也要调一次高德天气（0 token，2 次 HTTP）。
+       这条是诚实性约束的直接推论：**能复用骨架，不能复用跟时间绑定的外部数据**。
+
+    3. **每次运行都记一行 run_log**。它让"缓存命中率 / 平均耗时 / token 成本"这些数字
+       可以直接 SQL 查出来，不用回头翻日志。
+"""
+
+import hashlib
+import json
+import logging
+import sqlite3
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Optional
+
+from ..models.schemas import TripRequest
+
+logger = logging.getLogger(__name__)
+
+# 数据库放在 backend/data/ 下。用 SQLite 而不是 Postgres 的理由：
+# 这是单机单用户的简历项目，SQLite 零运维、零依赖、可直接拷走当证据。
+DB_PATH = Path(__file__).resolve().parents[2] / "data" / "trip_planner.db"
+
+SCHEMA = """
+CREATE TABLE IF NOT EXISTS itinerary (
+    fingerprint   TEXT PRIMARY KEY,   -- 需求形状的指纹（不含日期）
+    city          TEXT NOT NULL,
+    travel_days   INTEGER NOT NULL,
+    request_json  TEXT NOT NULL,      -- 原始请求，便于人工核对"为什么算相似"
+    plan_json     TEXT NOT NULL,      -- 完整 TripPlan（不含日期相关字段的天气）
+    created_at    TEXT NOT NULL,
+    hit_count     INTEGER NOT NULL DEFAULT 0,
+    last_hit_at   TEXT
+);
+
+CREATE TABLE IF NOT EXISTS run_log (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    thread_id     TEXT,
+    fingerprint   TEXT,
+    cached        INTEGER NOT NULL DEFAULT 0,   -- 1 = 走缓存命中路径（没花 LLM 钱）
+    success       INTEGER NOT NULL DEFAULT 0,
+    error_code    TEXT,
+    elapsed_ms    INTEGER NOT NULL DEFAULT 0,
+    llm_calls     INTEGER NOT NULL DEFAULT 0,
+    prompt_tokens INTEGER NOT NULL DEFAULT 0,
+    completion_tokens INTEGER NOT NULL DEFAULT 0,
+    tool_calls    INTEGER NOT NULL DEFAULT 0,
+    plan_days     INTEGER NOT NULL DEFAULT 0,
+    budget_total  INTEGER NOT NULL DEFAULT 0,
+    created_at    TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_run_log_created ON run_log(created_at);
+"""
+
+
+def _now() -> str:
+    return datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
+
+
+def _json_default(obj: Any) -> Any:
+    """把 Pydantic 模型转成 dict，供 json.dumps 使用。
+
+    为什么需要它（真实踩过）：`TripPlan` 是**混合体** ——
+        days / budget / 来源标记  是普通 dict（来自 compose_plan 与 patch_budget）
+        weather_info / hotel / constraint_report  直接来自 state，是 **Pydantic 对象**
+    直接 json.dumps 会在 WeatherInfo 上抛
+    "TypeError: Object of type WeatherInfo is not JSON serializable" —— 而且是在
+    行程**已经生成完**（花了 40 秒与 LLM 费用）之后的入库那一刻才炸，最亏的一种失败方式。
+    """
+    if hasattr(obj, "model_dump"):
+        return obj.model_dump(mode="json")
+    return str(obj)
+
+
+def _connect() -> sqlite3.Connection:
+    """每次调用开一个新连接。
+
+    为什么不用全局连接：FastAPI 的同步端点跑在线程池里，SQLite 连接默认不能跨线程。
+    开连接的开销在这个量级（每次请求个位数次）完全可以忽略，省掉一整类线程安全问题。
+    """
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def init_db() -> None:
+    """建表。幂等，进程启动时调一次即可。"""
+    with _connect() as conn:
+        conn.executescript(SCHEMA)
+    logger.info("行程库就绪 | %s", DB_PATH)
+
+
+def fingerprint_of(req: TripRequest) -> str:
+    """需求形状的指纹 —— **刻意不含日期**（理由见模块 docstring 第 1 条）。
+
+    规范化后再哈希：
+        - 偏好标签、必去景点都**排序**：勾选顺序不同不影响是不是同一批需求
+        - 字符串 strip：多打一个空格不该算另一批需求
+    用 sha256 而不是 Python 的 hash()：后者每次进程重启都会变，没法落盘复用。
+    """
+    nights = req.nights if req.nights is not None else max(req.travel_days - 1, 0)
+    payload = {
+        "city": req.city.strip(),
+        "travel_days": req.travel_days,
+        "nights": nights,
+        "transportation": req.transportation.strip(),
+        "accommodation": req.accommodation.strip(),
+        "preferences": sorted(p.strip() for p in (req.preferences or []) if p.strip()),
+        "must_visit": sorted(m.strip() for m in (req.must_visit or []) if m.strip()),
+        "fixed_hotel": (req.fixed_hotel or "").strip(),
+        "free_text_input": (req.free_text_input or "").strip(),
+    }
+    raw = json.dumps(payload, ensure_ascii=False, sort_keys=True)
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
+def save_itinerary(fingerprint: str, req: TripRequest, plan: dict[str, Any]) -> None:
+    """写入/覆盖一条行程。已存在就刷新内容，但**保留 hit_count**（它是历史复用次数）。"""
+    with _connect() as conn:
+        conn.execute(
+            """
+            INSERT INTO itinerary (fingerprint, city, travel_days, request_json, plan_json, created_at, hit_count)
+            VALUES (?, ?, ?, ?, ?, ?, 0)
+            ON CONFLICT(fingerprint) DO UPDATE SET
+                plan_json  = excluded.plan_json,
+                request_json = excluded.request_json,
+                created_at = excluded.created_at
+            """,
+            (
+                fingerprint,
+                req.city,
+                req.travel_days,
+                json.dumps(req.model_dump(), ensure_ascii=False),
+                json.dumps(plan, ensure_ascii=False, default=_json_default),
+                _now(),
+            ),
+        )
+    logger.info("行程已入库 | fingerprint=%s | %s %d 天", fingerprint[:12], req.city, req.travel_days)
+
+
+def find_itinerary(fingerprint: str) -> Optional[dict[str, Any]]:
+    """按指纹找行程。命中就顺手 +1（复用次数是缓存价值最直接的证据）。"""
+    with _connect() as conn:
+        row = conn.execute(
+            "SELECT plan_json, created_at, hit_count FROM itinerary WHERE fingerprint = ?",
+            (fingerprint,),
+        ).fetchone()
+        if row is None:
+            return None
+        conn.execute(
+            "UPDATE itinerary SET hit_count = hit_count + 1, last_hit_at = ? WHERE fingerprint = ?",
+            (_now(), fingerprint),
+        )
+    plan = json.loads(row["plan_json"])
+    logger.info("行程命中缓存 | fingerprint=%s | 建于 %s | 第 %d 次复用",
+                fingerprint[:12], row["created_at"], row["hit_count"] + 1)
+    return {"plan": plan, "created_at": row["created_at"], "hit_count": row["hit_count"] + 1}
+
+
+def log_run(
+    *,
+    thread_id: str,
+    fingerprint: str,
+    cached: bool,
+    success: bool,
+    error_code: Optional[str] = None,
+    elapsed_ms: int = 0,
+    llm_calls: int = 0,
+    prompt_tokens: int = 0,
+    completion_tokens: int = 0,
+    tool_calls: int = 0,
+    plan_days: int = 0,
+    budget_total: int = 0,
+) -> None:
+    """每次请求记一行。让"缓存命中率 / 平均耗时 / token 成本"可以直接 SQL 查出来。"""
+    with _connect() as conn:
+        conn.execute(
+            """
+            INSERT INTO run_log (thread_id, fingerprint, cached, success, error_code, elapsed_ms,
+                                 llm_calls, prompt_tokens, completion_tokens, tool_calls,
+                                 plan_days, budget_total, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (thread_id, fingerprint, int(cached), int(success), error_code, elapsed_ms,
+             llm_calls, prompt_tokens, completion_tokens, tool_calls,
+             plan_days, budget_total, _now()),
+        )
+
+
+def stats() -> dict[str, Any]:
+    """给 /api/trip/stats 用：一眼看出缓存有没有真的在省事。"""
+    with _connect() as conn:
+        runs = conn.execute(
+            """
+            SELECT
+                COUNT(*)                                             AS total_runs,
+                SUM(cached)                                          AS cached_runs,
+                AVG(CASE WHEN cached = 0 THEN elapsed_ms END)        AS avg_ms_generated,
+                AVG(CASE WHEN cached = 1 THEN elapsed_ms END)        AS avg_ms_cached,
+                SUM(CASE WHEN cached = 0 THEN llm_calls END)         AS llm_calls_generated,
+                SUM(CASE WHEN cached = 0 THEN prompt_tokens + completion_tokens END) AS tokens_generated,
+                SUM(success)                                         AS successes
+            FROM run_log
+            """
+        ).fetchone()
+        stored = conn.execute("SELECT COUNT(*) AS n, SUM(hit_count) AS hits FROM itinerary").fetchone()
+
+    def _r(value: Optional[float], digits: int = 1) -> Optional[float]:
+        return round(value, digits) if value is not None else None
+
+    total = runs["total_runs"] or 0
+    cached = runs["cached_runs"] or 0
+    return {
+        "total_runs": total,
+        "cached_runs": cached,
+        "cache_hit_rate": round(cached / total, 3) if total else 0.0,
+        "itineraries_stored": stored["n"] or 0,
+        "itineraries_reused": stored["hits"] or 0,
+        "avg_ms_generated": _r(runs["avg_ms_generated"], 0),
+        "avg_ms_cached": _r(runs["avg_ms_cached"], 0),
+        "llm_calls_generated": runs["llm_calls_generated"] or 0,
+        "tokens_generated": runs["tokens_generated"] or 0,
+    }

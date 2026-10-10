@@ -324,3 +324,10 @@ class TripPlanResponse(BaseModel):
     # ↑ 会话 ID。V0 阶段只返回不消费（前端显示前 8 位当装饰）；
     #   V2 接上 LangGraph Checkpointer 之后，它就是「这一段会话的钥匙」，
     #   用户想改行程里的一天时要带回来。现在就返回它，是为了将来前端不用改。
+
+    # ---- v0.4：行程复用（对应 learn-claude-code s09 Memory / s10 持久化）----
+    cached: bool = False
+    # ↑ 本次响应是否来自**行程库**。命中时不会消耗任何 LLM 调用（40 秒 → 1 秒内）。
+    #   注意命中路径仍会重取天气：日期与天气绑定，复用旧天气就是编造。
+    cache_hit_count: int = 0  # 这条行程被复用了几次 —— 缓存价值的直接证据
+    cache_saved_at: Optional[str] = None  # 这条行程最初生成的时间

@@ -38,8 +38,12 @@ def _user_prompt(state: TripState) -> str:
     )
 
 
-def _warnings_of(state: TripState, weather: list) -> list[str]:
-    """只有"实测缺口"才写警告（预检阶段不写，避免两条重复的话）。"""
+def weather_warnings(weather: list) -> list[str]:
+    """只有"实测缺口"才写警告（预检阶段不写，避免两条重复的话）。
+
+    公开出来是因为**缓存命中路径也要用它**（trip.py 复用行程时会按新日期重取天气，
+    需要重新生成这条警告）——同一个口径只留一处实现。
+    """
     missing = [item.date for item in weather if getattr(item, "beyond_window", False)]
     if not missing:
         return []
@@ -75,7 +79,7 @@ def collect_weather(state: TripState) -> dict:
         ok = not ctx.errors
 
     weather = ctx.weather
-    warnings = _warnings_of(state, weather)
+    warnings = weather_warnings(weather)
     if use_agent and not ok:
         warnings.append("天气助手调用模型失败，本次行程不含天气信息。")
     if not weather and not warnings:

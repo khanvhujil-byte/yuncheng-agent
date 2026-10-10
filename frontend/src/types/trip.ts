@@ -238,6 +238,16 @@ export interface TripPlanResponse {
    * 「在原有行程上改一天」而不是从零重算。
    */
   thread_id?: string
+  /**
+   * v0.4：本次响应是否来自**行程库**（缓存命中）。
+   * 命中时不会消耗任何 LLM 调用（40 秒 → 1 秒内）；但天气仍会按新日期重取，
+   * 因为日期与天气绑定，复用旧天气就是编造。
+   */
+  cached?: boolean
+  /** 这条行程被复用了几次 —— 缓存价值的直接证据 */
+  cache_hit_count?: number
+  /** 这条行程最初生成的时间 */
+  cache_saved_at?: string | null
 }
 
 /** 后端返回的错误体 */

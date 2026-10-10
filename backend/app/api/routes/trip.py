@@ -18,13 +18,21 @@
 V1 待做：GET /api/trip/{thread_id}（需要 LangGraph Checkpointer）
 """
 
+import copy
+import logging
+import time
 from datetime import date, timedelta
 from uuid import uuid4
 
 from fastapi import APIRouter
 
 from ...agents.graph import app as trip_graph
+from ...agents.weather_agent import weather_warnings
 from ...models.schemas import TripPlanResponse, TripRequest
+from ...services import amap, store
+from ...services.tools import ToolContext, execute
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/trip", tags=["旅行规划"])
 
@@ -137,6 +145,58 @@ def _to_trip_plan(final: dict, req: TripRequest) -> dict:
     }
 
 
+def _reuse_with_new_dates(plan: dict, req: TripRequest) -> dict:
+    """把行程库里的行程**平移到本次请求的日期**，并按新日期重取天气。
+
+    为什么不能直接把缓存的响应原样返回（这是本模块最重要的一个决定）：
+        天气是**跟日期绑定的外部数据**。把 10 月 10 日的「晴 26 度」搬到 11 月，
+        就是编造 —— 正是实验 B 里测的那种错误。
+        所以命中路径也必须重取天气（0 token、2 次 HTTP），只是不再跑 LLM。
+
+    可以复用的东西：景点、游览顺序、三餐、酒店、预算、约束对账 —— 它们与出发日期无关。
+    """
+    data = copy.deepcopy(plan)
+    try:
+        start = date.fromisoformat(req.start_date)
+    except ValueError:
+        return data  # 日期本身不合法，交给正常路径去报错
+
+    days = data.get("days") or []
+    for index, day in enumerate(days):
+        day["date"] = (start + timedelta(days=index)).isoformat()
+        day["day_index"] = index
+    data["start_date"] = req.start_date
+    data["end_date"] = _resolve_end_date(req)
+
+    ctx = ToolContext(
+        city=req.city,
+        adcode=None,
+        start_date=req.start_date,
+        travel_days=len(days) or req.travel_days,
+        nights=int(data.get("hotel_nights") or 0),
+    )
+    try:
+        _, adcode = amap.geocode(req.city)
+        ctx.adcode = adcode
+    except Exception as exc:  # noqa: BLE001 —— 天气取不到不该让复用整体失败，按降级处理
+        logger.warning("复用行程时地理编码失败 | %s", exc)
+        adcode = None
+    if adcode:
+        execute("weather", "get_weather", {}, ctx)
+
+    sources = dict(data.get("sources") or {})
+    sources["weather"] = "amap" if ctx.weather else "degraded"
+    data["sources"] = sources
+    if ctx.weather:
+        data["weather_info"] = [item.model_dump() for item in ctx.weather]
+
+    # 警告：把旧的「预报窗口」那条换成本次实测的；其余（解析改名 / 门票未获取）保留
+    kept = [w for w in (data.get("warnings") or []) if "预报窗口" not in w]
+    kept += weather_warnings(ctx.weather)
+    data["warnings"] = kept
+    return data
+
+
 @router.post("/plan", response_model=TripPlanResponse, summary="生成行程")
 def plan_trip(req: TripRequest) -> TripPlanResponse:
     """同步阻塞接口。
@@ -144,10 +204,47 @@ def plan_trip(req: TripRequest) -> TripPlanResponse:
     函数签名用 def 而不是 async def：graph.invoke() 是同步调用（真实版本要跑几十秒），
     写成 async def 会堵住 FastAPI 的事件循环，其他请求全部排队。
     用 def 时 FastAPI 会自动把它丢进线程池。
-    """
-    thread_id = uuid4().hex
-    final = trip_graph.invoke(_initial_state(req))
 
+    v0.4 起该接口有**两条路径**（对应 learn-claude-code 的 s09 Memory / s10 持久化）：
+        ① 行程库里已有同形状的需求 → 平移日期 + 重取天气，秒级返回（**0 次 LLM 调用**）
+        ② 没有 → 跑完整图（约 40 秒 / 11 次 LLM 调用），成功后写入行程库
+    两条路径都会往 run_log 记一行，让缓存效果可以被 SQL 查出来。
+    """
+    started = time.perf_counter()
+    thread_id = uuid4().hex
+    fingerprint = store.fingerprint_of(req)
+
+    def elapsed_ms() -> int:
+        return int((time.perf_counter() - started) * 1000)
+
+    def _degraded_of(payload: dict) -> list[str]:
+        return [key for key, value in (payload.get("sources") or {}).items() if value == "degraded"]
+
+    # ---------------- 路径一：命中行程库 ----------------
+    hit = store.find_itinerary(fingerprint)
+    if hit is not None:
+        data = _reuse_with_new_dates(hit["plan"], req)
+        days = data.get("days") or []
+        ok = bool(days) and not _degraded_of(data)
+        store.log_run(
+            thread_id=thread_id, fingerprint=fingerprint, cached=True, success=ok,
+            elapsed_ms=elapsed_ms(), plan_days=len(days),
+            budget_total=int((data.get("budget") or {}).get("total") or 0),
+        )
+        logger.info("行程命中复用 | %s | %d ms（未花 LLM）", fingerprint[:12], elapsed_ms())
+        return TripPlanResponse(
+            success=ok,
+            message=f"复用了一条已生成的行程（第 {hit['hit_count']} 次复用，日期已按本次请求平移）",
+            data=data,
+            warnings=list(data.get("warnings") or []),
+            thread_id=thread_id,
+            cached=True,
+            cache_hit_count=hit["hit_count"],
+            cache_saved_at=hit["created_at"],
+        )
+
+    # ---------------- 路径二：完整生成 ----------------
+    final = trip_graph.invoke(_initial_state(req))
     warnings = list(final.get("warnings") or [])
 
     # 结局一：预检失败（validate_city 没拿到 adcode，图已经走到 END）
@@ -155,6 +252,8 @@ def plan_trip(req: TripRequest) -> TripPlanResponse:
     # CONSTRAINT_INFEASIBLE / HOTEL_NOT_FOUND / CITY_MISMATCH 都会被报成 CITY_NOT_FOUND。
     if not final.get("adcode"):
         code = final.get("error_code") or "CITY_NOT_FOUND"
+        store.log_run(thread_id=thread_id, fingerprint=fingerprint, cached=False,
+                      success=False, error_code=code, elapsed_ms=elapsed_ms())
         return TripPlanResponse(
             success=False,
             message=_PREFLIGHT_MESSAGES.get(code, "请求未通过可行性预检，请检查表单后重试。"),
@@ -171,21 +270,43 @@ def plan_trip(req: TripRequest) -> TripPlanResponse:
     # 结局四：连行程都没有（plan 为空）→ 仍是 200 + success=False + data（days 为空），不抛 500
     #
     # success 的口径（需求文档 8.2）：success = 是否拿到**完整**行程。
-    #
-    # v0.3 修正判据：从「warnings 非空」改成「sources 里有没有 degraded」。
-    #   原因：warnings 里混着两类东西 ——
-    #     降级类（某一路数据没取到）   → 行程确实不完整
-    #     说明类（「必去景点『西湖』已解析为『杭州西湖风景名胜区』」）→ 行程是完整的
-    #   以前只要有任何一句话就判 success=False，导致一次正常成功的规划也报「部分结果」。
-    #   而 sources 天生就是「哪一路降级了」的标记，用它判断才对。
-    sources = data.get("sources") or {}
-    degraded = [key for key, value in sources.items() if value == "degraded"]
+    # v0.3 修正判据：从「warnings 非空」改成「sources 里有没有 degraded」——
+    #   warnings 里混着降级类与说明类（如「必去景点已解析为…」），后者不代表行程不完整。
+    degraded = _degraded_of(data)
     ok = bool(days) and not degraded
     message = "" if ok else f"已返回部分结果：{'、'.join(degraded) or '行程未生成'} 未取到完整数据，请见上方提示。"
+
+    # 只有「完整且无降级」的行程才入库：
+    # 把降级结果缓存下来 = 把一次故障永久固化，之后每次命中都拿到缺数据的那份。
+    if ok:
+        store.save_itinerary(fingerprint, req, data)
+
+    usage = final.get("usage") or {}
+    store.log_run(
+        thread_id=thread_id, fingerprint=fingerprint, cached=False, success=ok,
+        elapsed_ms=elapsed_ms(),
+        llm_calls=usage.get("llm_calls", 0),
+        prompt_tokens=usage.get("prompt_tokens", 0),
+        completion_tokens=usage.get("completion_tokens", 0),
+        tool_calls=len(final.get("tool_calls") or []),
+        plan_days=len(days),
+        budget_total=int((data.get("budget") or {}).get("total") or 0),
+    )
     return TripPlanResponse(
         success=ok,
         message=message,
         data=data,
         warnings=warnings,
         thread_id=thread_id,
+        cached=False,
     )
+
+
+@router.get("/stats", summary="行程库与运行的统计（缓存效果）")
+def trip_stats() -> dict:
+    """一眼看出缓存有没有真的在省事：命中率、命中/未命中各自的平均耗时、累计 token。
+
+    这是"可观测性"的最小落地 —— 没有它，"我加了缓存"只是一句话；
+    有了它，"命中一次省下多少秒、多少 token"是查得出来的。
+    """
+    return store.stats()
