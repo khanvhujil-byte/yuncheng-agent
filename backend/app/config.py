@@ -66,6 +66,14 @@ class Settings(BaseSettings):
     #   这个开关本身就是个实验变量：量化「把确定性节点 Agent 化的代价」。
     #   改 .env 加一行 WEATHER_USE_AGENT=false 即可切换。
 
+    # ---- 上下文压缩（对应 learn-claude-code 的 s08 Context Compact）----
+    prompt_compact: bool = True
+    # ↑ 是否对送进编排 prompt 的候选景点做**预算裁剪**。
+    #   关闭它就回到 v0.3 的行为（全部候选都塞进 prompt），用于 A/B 实验量化省了多少 token。
+    prompt_max_candidates: int = 24
+    # ↑ 提示词里候选景点的上限。必去锚点永远在内，其余按高德评分排序取到上限。
+    #   为什么是 24：编排每天用 2~3 个，天数上限 30 时 24 仍然够用（候选池本来就是超集）。
+
     # ---- 高德开放平台（Web 服务 Key，后端 REST 用）----
     amap_api_key: str = ""
     amap_timeout: float = 10.0

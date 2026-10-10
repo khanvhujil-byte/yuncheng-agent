@@ -33,6 +33,7 @@ from typing import Any, Optional
 
 from pydantic import ValidationError
 
+from ..config import get_settings
 from ..models.schemas import Attraction, ConstraintReport, DayPlan, WeatherInfo
 from ..models.state import TripState
 from ..services.llm import LlmError, LlmUnreachable, chat_json
@@ -78,10 +79,48 @@ def _format_weather(items: list[WeatherInfo]) -> str:
     return "\n".join(lines)
 
 
+def _select_candidates(candidates: list[Attraction], travel_days: int) -> tuple[list[Attraction], int]:
+    """上下文压缩：只把最有用的候选送进 prompt（对应 learn-claude-code 的 s08）。
+
+    为什么需要：实测一次 3 天请求的候选池有 41 条，**全塞进 prompt 会白烧掉一大截输入 token**，
+    而编排每天只用 2~3 个 —— 清单再长也用不完。
+    怎么选（顺序即优先级）：
+        ① **必去锚点永远在内**（硬约束绝不能被"省钱"裁掉，否则必去景点会静默消失）
+        ② 其余按高德评分降序（无评分按 0），同分时游览时长更长的优先
+    上限 = max(prompt_max_candidates, 天数 × 4, 锚点数)：
+        「够用」优先于「省 token」—— 天数多时必须给够，否则编排无米下锅。
+
+    返回 (选中的候选, 候选池总数)；总数用于在 prompt 里**如实说明筛过**，
+    让模型知道清单是子集（否则它可能以为"就这么多景点"）。
+    """
+    total = len(candidates)
+    settings = get_settings()
+    if not settings.prompt_compact or total == 0:
+        return candidates, total
+
+    anchors = [item for item in candidates if item.required]
+    limit = max(settings.prompt_max_candidates, travel_days * 4, len(anchors))
+    rest = sorted(
+        (item for item in candidates if not item.required),
+        key=lambda item: (item.rating or 0.0, item.visit_duration),
+        reverse=True,
+    )
+    selected = anchors + rest[: max(limit - len(anchors), 0)]
+    logger.info("编排 prompt 压缩 | 候选池 %d → 送模型 %d（锚点 %d 必留）", total, len(selected), len(anchors))
+    return selected, total
+
+
 def _build_user_prompt(state: TripState) -> str:
     req = state["request"]
     anchors = list(state.get("must_visit_resolved") or [])
     must_visit = [a.name for a in anchors]
+    selected, total = _select_candidates(list(state.get("attractions") or []), state["travel_days"])
+
+    pool_note = (
+        f"候选池共 {total} 个，已按评分筛出 {len(selected)} 个供你编排"
+        if len(selected) < total
+        else f"候选池共 {total} 个"
+    )
 
     return (
         f"【行程要求】\n"
@@ -95,8 +134,8 @@ def _build_user_prompt(state: TripState) -> str:
         f"偏好标签：{'、'.join(req.preferences) or '（未指定）'}\n"
         f"额外要求：{req.free_text_input or '（无）'}\n"
         f"用户必去景点 must_visit：{'、'.join(must_visit) if must_visit else '（无）'}\n"
-        f"\n【候选景点清单】（每天只能从这里面挑）\n"
-        f"{_format_attractions(list(state.get('attractions') or []))}\n"
+        f"\n【候选景点清单】（{pool_note}；每天只能从这里面挑）\n"
+        f"{_format_attractions(selected)}\n"
         f"\n【天气预报】\n"
         f"{_format_weather(list(state.get('weather') or []))}\n"
     )

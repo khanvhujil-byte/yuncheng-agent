@@ -19,17 +19,20 @@ V1 待做：GET /api/trip/{thread_id}（需要 LangGraph Checkpointer）
 """
 
 import copy
+import json
 import logging
 import time
 from datetime import date, timedelta
 from uuid import uuid4
 
 from fastapi import APIRouter
+from fastapi.responses import StreamingResponse
 
 from ...agents.graph import app as trip_graph
+from ...agents.graph import build_graph
 from ...agents.weather_agent import weather_warnings
 from ...models.schemas import TripPlanResponse, TripRequest
-from ...services import amap, store
+from ...services import amap, runner, store
 from ...services.tools import ToolContext, execute
 
 logger = logging.getLogger(__name__)
@@ -145,6 +148,111 @@ def _to_trip_plan(final: dict, req: TripRequest) -> dict:
     }
 
 
+def _degraded_sources(payload: dict) -> list[str]:
+    """哪些数据源降级了。`success` 的判据就是它，而不是「warnings 是否为空」。"""
+    return [key for key, value in (payload.get("sources") or {}).items() if value == "degraded"]
+
+
+def _finalize(
+    final: dict,
+    req: TripRequest,
+    thread_id: str,
+    fingerprint: str,
+    elapsed_ms: int,
+    *,
+    cached: bool = False,
+    cache_hit_count: int = 0,
+    cache_saved_at: str | None = None,
+) -> TripPlanResponse:
+    """把图跑完之后的 state 组装成响应 —— **同步路径与后台路径共用这一个出口**。
+
+    为什么必须共用：组装逻辑是最容易漏字段的地方（已经踩过 hotel、weather_info 两次）。
+    两条路径各写一份，等于把这个坑复制成两份。
+
+    success 的口径（需求文档 8.2）：success = 是否拿到**完整**行程。
+    判据是「sources 里有没有 degraded」，而不是「warnings 是否为空」——
+    warnings 里混着降级类与说明类（如「必去景点已解析为…」），后者不代表行程不完整。
+    """
+    warnings = list(final.get("warnings") or [])
+
+    # 预检失败（validate_city 没拿到 adcode，图已经走到 END）
+    # 错误码由 validate_city 写进 state，这里不硬编码 —— 否则
+    # CONSTRAINT_INFEASIBLE / HOTEL_NOT_FOUND / CITY_MISMATCH 都会被报成 CITY_NOT_FOUND。
+    if not final.get("adcode"):
+        code = final.get("error_code") or "CITY_NOT_FOUND"
+        store.log_run(thread_id=thread_id, fingerprint=fingerprint, cached=cached,
+                      success=False, error_code=code, elapsed_ms=elapsed_ms)
+        return TripPlanResponse(
+            success=False,
+            message=_PREFLIGHT_MESSAGES.get(code, "请求未通过可行性预检，请检查表单后重试。"),
+            error_code=code,
+            warnings=warnings,
+            thread_id=thread_id,
+            cached=cached,
+        )
+
+    data = _to_trip_plan(final, req)
+    days = data.get("days") or []
+    degraded = _degraded_sources(data)
+    ok = bool(days) and not degraded
+    message = (
+        "" if ok
+        else f"已返回部分结果：{'、'.join(degraded) or '行程未生成'} 未取到完整数据，请见上方提示。"
+    )
+
+    # 只有「完整且无降级」的行程才入库：
+    # 把降级结果缓存下来 = 把一次故障永久固化，之后每次命中都拿到缺数据的那份。
+    if ok and not cached:
+        store.save_itinerary(fingerprint, req, data)
+
+    usage = final.get("usage") or {}
+    store.log_run(
+        thread_id=thread_id, fingerprint=fingerprint, cached=cached, success=ok,
+        elapsed_ms=elapsed_ms,
+        llm_calls=usage.get("llm_calls", 0),
+        prompt_tokens=usage.get("prompt_tokens", 0),
+        completion_tokens=usage.get("completion_tokens", 0),
+        tool_calls=len(final.get("tool_calls") or []),
+        plan_days=len(days),
+        budget_total=int((data.get("budget") or {}).get("total") or 0),
+    )
+    return TripPlanResponse(
+        success=ok,
+        message=message,
+        data=data,
+        warnings=warnings,
+        thread_id=thread_id,
+        cached=cached,
+        cache_hit_count=cache_hit_count,
+        cache_saved_at=cache_saved_at,
+    )
+
+
+def _cached_response(
+    hit: dict, req: TripRequest, thread_id: str, fingerprint: str, elapsed_ms: int
+) -> TripPlanResponse:
+    """命中行程库时的响应（同步路径与后台路径共用）。"""
+    data = _reuse_with_new_dates(hit["plan"], req)
+    days = data.get("days") or []
+    ok = bool(days) and not _degraded_sources(data)
+    store.log_run(
+        thread_id=thread_id, fingerprint=fingerprint, cached=True, success=ok,
+        elapsed_ms=elapsed_ms, plan_days=len(days),
+        budget_total=int((data.get("budget") or {}).get("total") or 0),
+    )
+    logger.info("行程命中复用 | %s | %d ms（未花 LLM）", fingerprint[:12], elapsed_ms)
+    return TripPlanResponse(
+        success=ok,
+        message=f"复用了一条已生成的行程（第 {hit['hit_count']} 次复用，日期已按本次请求平移）",
+        data=data,
+        warnings=list(data.get("warnings") or []),
+        thread_id=thread_id,
+        cached=True,
+        cache_hit_count=hit["hit_count"],
+        cache_saved_at=hit["created_at"],
+    )
+
+
 def _reuse_with_new_dates(plan: dict, req: TripRequest) -> dict:
     """把行程库里的行程**平移到本次请求的日期**，并按新日期重取天气。
 
@@ -217,88 +325,142 @@ def plan_trip(req: TripRequest) -> TripPlanResponse:
     def elapsed_ms() -> int:
         return int((time.perf_counter() - started) * 1000)
 
-    def _degraded_of(payload: dict) -> list[str]:
-        return [key for key, value in (payload.get("sources") or {}).items() if value == "degraded"]
-
     # ---------------- 路径一：命中行程库 ----------------
     hit = store.find_itinerary(fingerprint)
     if hit is not None:
-        data = _reuse_with_new_dates(hit["plan"], req)
-        days = data.get("days") or []
-        ok = bool(days) and not _degraded_of(data)
-        store.log_run(
-            thread_id=thread_id, fingerprint=fingerprint, cached=True, success=ok,
-            elapsed_ms=elapsed_ms(), plan_days=len(days),
-            budget_total=int((data.get("budget") or {}).get("total") or 0),
-        )
-        logger.info("行程命中复用 | %s | %d ms（未花 LLM）", fingerprint[:12], elapsed_ms())
-        return TripPlanResponse(
-            success=ok,
-            message=f"复用了一条已生成的行程（第 {hit['hit_count']} 次复用，日期已按本次请求平移）",
-            data=data,
-            warnings=list(data.get("warnings") or []),
-            thread_id=thread_id,
-            cached=True,
-            cache_hit_count=hit["hit_count"],
-            cache_saved_at=hit["created_at"],
-        )
+        return _cached_response(hit, req, thread_id, fingerprint, elapsed_ms())
 
     # ---------------- 路径二：完整生成 ----------------
+    # 组装集中在 _finalize()，与后台任务路径共用同一个出口（见该函数的说明）
     final = trip_graph.invoke(_initial_state(req))
-    warnings = list(final.get("warnings") or [])
+    return _finalize(final, req, thread_id, fingerprint, elapsed_ms())
 
-    # 结局一：预检失败（validate_city 没拿到 adcode，图已经走到 END）
-    # 错误码由 validate_city 写进 state，这里不再硬编码 —— 否则
-    # CONSTRAINT_INFEASIBLE / HOTEL_NOT_FOUND / CITY_MISMATCH 都会被报成 CITY_NOT_FOUND。
-    if not final.get("adcode"):
-        code = final.get("error_code") or "CITY_NOT_FOUND"
-        store.log_run(thread_id=thread_id, fingerprint=fingerprint, cached=False,
-                      success=False, error_code=code, elapsed_ms=elapsed_ms())
+
+def _sse(payload: dict) -> str:
+    """SSE 的一帧：`data: <json>\\n\\n`。
+
+    json 里绝不能出现裸换行，否则会把一帧劈成两帧 —— 所以统一走 json.dumps。
+    `default=str` 是兜底：万一某个字段是 Pydantic 对象，序列化成字符串也比整帧丢掉强。
+    """
+    return "data: " + json.dumps(payload, ensure_ascii=False, default=str) + "\n\n"
+
+
+@router.post("/plan/async", summary="提交后台生成任务（立即返回 thread_id）")
+def plan_async(req: TripRequest) -> dict:
+    """提交即返回，进度走 SSE 推送。
+
+    为什么要异步：一次规划约 40 秒，同步接口把浏览器连接占满，
+    用户在整个过程里看不到任何进展 —— 这是当前体验最差的一处。
+    """
+    thread_id = uuid4().hex
+    fingerprint = store.fingerprint_of(req)
+
+    # 命中行程库就不必起任务：登记一个「已完成」的任务，让 SSE 同一套流程立刻把结果推出去
+    hit = store.find_itinerary(fingerprint)
+    if hit is not None:
+        response = _cached_response(hit, req, thread_id, fingerprint, 0)
+        runner.register_done_job(thread_id, req, response.model_dump())
+        return {"success": True, "thread_id": thread_id, "message": "命中历史行程，可直接取结果"}
+
+    started = time.perf_counter()
+
+    def _finish(final: dict) -> TripPlanResponse:
+        return _finalize(
+            final, req, thread_id, fingerprint, int((time.perf_counter() - started) * 1000)
+        )
+
+    runner.start_job(thread_id, req, _initial_state(req), _finish)
+    return {"success": True, "thread_id": thread_id, "message": "已开始生成"}
+
+
+@router.get("/plan/stream/{thread_id}", summary="SSE：推送节点进度与最终结果")
+def plan_stream(thread_id: str) -> StreamingResponse:
+    """服务端推送。每个节点完成推一条，最后推 done（带完整结果）或 error。
+
+    用同步生成器：FastAPI 会把它放到线程池里跑，不会堵住事件循环。
+    单机单用户项目没必要上 async 队列 —— 这一点如实写在注释里，不假装是分布式。
+    """
+
+    def generate():
+        sent = 0
+        while True:
+            job = runner.get_job(thread_id)
+            if job is None:
+                yield _sse({"type": "error", "message": "找不到这个任务（后端可能重启过）"})
+                return
+            while sent < len(job.events):
+                yield _sse(job.events[sent])
+                sent += 1
+            if job.status == "done":
+                yield _sse({"type": "done", "result": job.result})
+                return
+            if job.status == "error":
+                yield _sse({"type": "error", "message": job.error})
+                return
+            time.sleep(0.3)  # 轮询内存事件列表；前端断开时生成器会被回收
+
+    return StreamingResponse(
+        generate(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no", "Connection": "keep-alive"},
+    )
+
+
+@router.get("/plan/result/{thread_id}", summary="取任务结果（轮询兜底）")
+def plan_result(thread_id: str) -> dict:
+    """SSE 断线时的兜底：前端可以按 thread_id 直接取结果。"""
+    job = runner.get_job(thread_id)
+    if job is None:
+        return {"success": False, "message": "找不到这个任务（后端可能重启过）"}
+    if job.status != "done":
+        return {"success": False, "message": "仍在生成中", "status": job.status, "elapsed_ms": job.elapsed_ms}
+    return job.result or {"success": False, "message": "任务没有产出结果"}
+
+
+@router.get("/journal/{thread_id}", summary="查看某次任务的节点 journal")
+def get_journal(thread_id: str) -> dict:
+    """看这次任务完成了哪些节点、能不能续跑 —— 断点续跑的入口。"""
+    records = store.load_journal(thread_id)
+    completed = [record["node"] for record in records]
+    return {
+        "thread_id": thread_id,
+        "completed_nodes": completed,
+        "can_resume_from": runner.can_resume_from(completed),
+        "nodes": [
+            {"node": r["node"], "seq": r["seq"], "elapsed_ms": r["elapsed_ms"]} for r in records
+        ],
+    }
+
+
+@router.post("/plan/resume/{thread_id}", response_model=TripPlanResponse, summary="从断点续跑")
+def resume_plan(thread_id: str) -> TripPlanResponse:
+    """从 journal 里已完成的位置之后继续，**不重跑已完成的昂贵节点**。
+
+    为什么能省：图的结构没变，只是把入口从 validate_city 换成「第一个没做的节点」
+    （`build_graph(start_at=...)`）。已完成的节点产出从 journal 里拼回 state。
+    """
+    record = store.load_run(thread_id)
+    if record is None:
+        return TripPlanResponse(
+            success=False, message="找不到这次任务的原始请求，无法续跑。", thread_id=thread_id
+        )
+    req = TripRequest.model_validate(record["request"])
+    fingerprint = store.fingerprint_of(req)
+    started = time.perf_counter()
+
+    state, completed = runner.rebuild_state(_initial_state(req), thread_id)
+    start_at = runner.can_resume_from(completed)
+    if start_at is None:
         return TripPlanResponse(
             success=False,
-            message=_PREFLIGHT_MESSAGES.get(code, "请求未通过可行性预检，请检查表单后重试。"),
-            error_code=code,
-            warnings=warnings,
+            message="已完成的步骤不足以续跑（或这次任务已经跑完），请重新提交。",
             thread_id=thread_id,
         )
 
-    data = _to_trip_plan(final, req)
-    days = data.get("days") or []
-
-    # 结局二：有行程 + 无降级 → 完整成功
-    # 结局三：有行程 + 有降级 → **部分结果**（success=False 但 data 有内容，前端照常渲染）
-    # 结局四：连行程都没有（plan 为空）→ 仍是 200 + success=False + data（days 为空），不抛 500
-    #
-    # success 的口径（需求文档 8.2）：success = 是否拿到**完整**行程。
-    # v0.3 修正判据：从「warnings 非空」改成「sources 里有没有 degraded」——
-    #   warnings 里混着降级类与说明类（如「必去景点已解析为…」），后者不代表行程不完整。
-    degraded = _degraded_of(data)
-    ok = bool(days) and not degraded
-    message = "" if ok else f"已返回部分结果：{'、'.join(degraded) or '行程未生成'} 未取到完整数据，请见上方提示。"
-
-    # 只有「完整且无降级」的行程才入库：
-    # 把降级结果缓存下来 = 把一次故障永久固化，之后每次命中都拿到缺数据的那份。
-    if ok:
-        store.save_itinerary(fingerprint, req, data)
-
-    usage = final.get("usage") or {}
-    store.log_run(
-        thread_id=thread_id, fingerprint=fingerprint, cached=False, success=ok,
-        elapsed_ms=elapsed_ms(),
-        llm_calls=usage.get("llm_calls", 0),
-        prompt_tokens=usage.get("prompt_tokens", 0),
-        completion_tokens=usage.get("completion_tokens", 0),
-        tool_calls=len(final.get("tool_calls") or []),
-        plan_days=len(days),
-        budget_total=int((data.get("budget") or {}).get("total") or 0),
-    )
-    return TripPlanResponse(
-        success=ok,
-        message=message,
-        data=data,
-        warnings=warnings,
-        thread_id=thread_id,
-        cached=False,
+    logger.info("断点续跑 | %s | 已完成 %s | 从 %s 继续", thread_id[:8], completed, start_at)
+    resumed = build_graph(start_at=start_at).invoke(state)
+    return _finalize(
+        resumed, req, thread_id, fingerprint, int((time.perf_counter() - started) * 1000)
     )
 
 

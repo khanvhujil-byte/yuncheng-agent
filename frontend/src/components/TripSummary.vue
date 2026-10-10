@@ -3,7 +3,17 @@
  * 行程总览：目的地 / 天气条 / 预算卡 / 降级提示。
  */
 import dayjs from 'dayjs'
-import { Calendar, CloudSun, Hotel, Info, MapPin, ShieldCheck, TriangleAlert, Wallet } from 'lucide-vue-next'
+import {
+  Calendar,
+  CloudSun,
+  History,
+  Hotel,
+  Info,
+  MapPin,
+  ShieldCheck,
+  TriangleAlert,
+  Wallet,
+} from 'lucide-vue-next'
 import { computed } from 'vue'
 
 import ExportPanel from '@/components/ExportPanel.vue'
@@ -11,7 +21,38 @@ import TripMap from '@/components/TripMap.vue'
 import type { TripPlan } from '@/types/trip'
 import { isEstimated } from '@/utils/source'
 
-const props = defineProps<{ plan: TripPlan }>()
+/**
+ * 缓存元信息通过 props 传进来，原因有两个：
+ *   1. 这是纯展示组件，自己去发请求会让「谁在什么时候请求什么」变得不可追踪；
+ *   2. 三个值可能挂在响应外层，也可能挂在 data 里，由父组件统一归一化一次就够了。
+ */
+const props = defineProps<{
+  plan: TripPlan
+  /** true = 本次结果直接来自行程库，没有消耗任何模型调用 */
+  cached?: boolean
+  /** 这条行程被复用了几次 */
+  cacheHitCount?: number
+  /** 最初生成时间（ISO 字符串） */
+  cacheSavedAt?: string | null
+}>()
+
+/** 只有显式 cached === true 才显示徽标：undefined / false 都当没命中 */
+const showCacheBadge = computed(() => props.cached === true)
+
+/** 复用次数文案。为 0 或缺失时不硬编「第 0 次复用」 */
+const hitText = computed(() => {
+  const count = props.cacheHitCount ?? 0
+  return count > 0 ? `第 ${count} 次复用` : '已复用'
+})
+
+/** 最初生成时间。后端给的是 ISO 字符串，这里只截到分钟，够用且不刺眼 */
+const savedAtText = computed(() => {
+  const raw = props.cacheSavedAt
+  if (!raw) return ''
+  const parsed = dayjs(raw)
+  if (!parsed.isValid()) return ''
+  return parsed.format('YYYY-MM-DD HH:mm')
+})
 
 const warnings = computed(() => props.plan.warnings ?? [])
 const weatherList = computed(() => props.plan.weather_info ?? [])
@@ -79,6 +120,15 @@ function tempText(value: number | string | undefined): string {
           <span class="sep">·</span>
           共 {{ plan.days.length }} 天
         </p>
+        <!-- 缓存复用徽标：放在概览卡里，因为「这份行程是现成的还是刚算的」
+             直接影响用户怎么读后面的内容（现成的就不会有本次的模型判断） -->
+        <div v-if="showCacheBadge" class="cache-badge">
+          <History :size="15" />
+          <span>
+            复用历史行程（{{ hitText }}<template v-if="savedAtText">，最初生成于 {{ savedAtText }}</template>）
+          </span>
+          <span class="cache-note">本次未消耗模型调用</span>
+        </div>
       </div>
     </div>
 
@@ -283,6 +333,30 @@ function tempText(value: number | string | undefined): string {
 .sep {
   margin: 0 2px;
   color: #c2c7d0;
+}
+
+/* 缓存徽标：用绿色系和「预估/降级」的黄色系明确区分 ——
+   复用是好事（省钱省时间），不是需要警惕的降级 */
+.cache-badge {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: #eaf7ec;
+  border: 1px solid #c6e6c9;
+  border-radius: 8px;
+  color: #2f6b39;
+  font-size: 13px;
+}
+
+.cache-note {
+  font-size: 12px;
+  color: #4a8a55;
+  background: #ffffff;
+  border-radius: 4px;
+  padding: 1px 6px;
 }
 
 .card-title {

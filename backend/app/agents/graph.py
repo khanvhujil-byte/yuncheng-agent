@@ -38,7 +38,7 @@ def route_after_validate(state: TripState) -> str:
     return "next"
 
 
-def build_graph():
+def build_graph(start_at: str | None = None):
     g = StateGraph(TripState)
 
     # ---- 登记节点（名字 = 日志和图上显示的名字）----
@@ -50,7 +50,10 @@ def build_graph():
     g.add_node("patch_budget", patch_budget)
 
     # ---- 入口 ----
-    g.add_edge(START, "validate_city")
+    # start_at：**断点续跑**用。默认从 validate_city 开始；
+    # 续跑时把它设成「第一个没做的节点」，前面已完成的昂贵节点就不会重跑
+    # （省掉的是 search 调用与整段 LLM 编排）。图的结构本身一行都不用改。
+    g.add_edge(START, start_at or "validate_city")
 
     # ---- 预检分叉：ok 走采集，fail 直接 END（不花 LLM 钱）----
     g.add_conditional_edges(

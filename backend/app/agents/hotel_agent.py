@@ -25,7 +25,10 @@ from .react_loop import run_agent
 
 logger = logging.getLogger(__name__)
 
-MAX_STEPS = 6  # 搜候选 1 + 排序 1 + 实测 1 + 决定 1，再留 2 步余量
+MAX_STEPS = 5  # 搜候选 1 + 排序 1 + 实测 1 + 决定 1，留 1 步余量。
+# ↑ 从 6 收到 5 的原因（实测）：住宿 Agent 一旦开始"多试几家/反复实测"，
+#   这一步会从十几秒涨到近百秒，成为整条链路的瓶颈（SSE 逐节点进度让它第一次可见）。
+#   步数上限是兜底：真跑歪了也不会把端到端拖到两分钟。
 
 
 def _user_prompt(state: TripState, nights: int) -> str:

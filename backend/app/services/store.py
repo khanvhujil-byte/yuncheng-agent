@@ -69,6 +69,23 @@ CREATE TABLE IF NOT EXISTS run_log (
 );
 
 CREATE INDEX IF NOT EXISTS idx_run_log_created ON run_log(created_at);
+
+-- v0.4：后台生成任务与节点级 journal（对应 learn-claude-code 的 s11 后台任务 / s16 workflow journal）
+CREATE TABLE IF NOT EXISTS graph_run (
+    thread_id     TEXT PRIMARY KEY,
+    request_json  TEXT NOT NULL,   -- 原样存下来，续跑时才能重建初始 state
+    created_at    TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS graph_journal (
+    thread_id     TEXT NOT NULL,
+    node          TEXT NOT NULL,
+    seq           INTEGER NOT NULL,          -- 节点执行顺序，用于判断"第一个没做的节点"
+    update_json   TEXT NOT NULL,             -- 该节点写回 state 的那部分（原样存）
+    elapsed_ms    INTEGER NOT NULL DEFAULT 0,
+    created_at    TEXT NOT NULL,
+    PRIMARY KEY (thread_id, node)            -- 同一节点重试时覆盖旧记录，不堆垃圾
+);
 """
 
 
@@ -205,6 +222,69 @@ def log_run(
              llm_calls, prompt_tokens, completion_tokens, tool_calls,
              plan_days, budget_total, _now()),
         )
+
+
+def save_run(thread_id: str, req: TripRequest) -> None:
+    """记下这次后台任务用的原始请求 —— 续跑时要靠它重建初始 state。"""
+    with _connect() as conn:
+        conn.execute(
+            """
+            INSERT INTO graph_run (thread_id, request_json, created_at) VALUES (?, ?, ?)
+            ON CONFLICT(thread_id) DO UPDATE SET request_json = excluded.request_json
+            """,
+            (thread_id, json.dumps(req.model_dump(), ensure_ascii=False), _now()),
+        )
+
+
+def load_run(thread_id: str) -> Optional[dict[str, Any]]:
+    with _connect() as conn:
+        row = conn.execute(
+            "SELECT request_json, created_at FROM graph_run WHERE thread_id = ?", (thread_id,)
+        ).fetchone()
+    if row is None:
+        return None
+    return {"request": json.loads(row["request_json"]), "created_at": row["created_at"]}
+
+
+def journal_node(thread_id: str, node: str, seq: int, update: dict[str, Any], elapsed_ms: int = 0) -> None:
+    """把某个节点写回 state 的那部分落盘（**原样存**，不解析、不裁剪）。
+
+    为什么要原样存：续跑时要把这些碎片重新拼成一个可用的 state，
+    任何"为了好看"的转换都会在拼回去时变成 bug。
+    """
+    with _connect() as conn:
+        conn.execute(
+            """
+            INSERT INTO graph_journal (thread_id, node, seq, update_json, elapsed_ms, created_at)
+            VALUES (?, ?, ?, ?, ?, ?)
+            ON CONFLICT(thread_id, node) DO UPDATE SET
+                update_json = excluded.update_json,
+                elapsed_ms  = excluded.elapsed_ms,
+                seq         = excluded.seq
+            """,
+            (thread_id, node, seq,
+             json.dumps(update, ensure_ascii=False, default=_json_default), elapsed_ms, _now()),
+        )
+
+
+def load_journal(thread_id: str) -> list[dict[str, Any]]:
+    """按执行顺序返回该任务的节点记录。"""
+    with _connect() as conn:
+        rows = conn.execute(
+            "SELECT node, seq, update_json, elapsed_ms, created_at FROM graph_journal "
+            "WHERE thread_id = ? ORDER BY seq",
+            (thread_id,),
+        ).fetchall()
+    return [
+        {
+            "node": row["node"],
+            "seq": row["seq"],
+            "update": json.loads(row["update_json"]),
+            "elapsed_ms": row["elapsed_ms"],
+            "created_at": row["created_at"],
+        }
+        for row in rows
+    ]
 
 
 def stats() -> dict[str, Any]:
