@@ -63,12 +63,14 @@ def collect_weather(state: TripState) -> dict:
 
     use_agent = get_settings().weather_use_agent
     steps = 0
+    usage: dict[str, int] = {"prompt_tokens": 0, "completion_tokens": 0, "llm_calls": 0}
     if use_agent:
         result = run_agent("weather", WEATHER_AGENT_PROMPT, _user_prompt(state), ctx, max_steps=MAX_STEPS)
         steps = result.steps
         ok = result.ok
+        usage = result.usage
     else:
-        # 确定性路径：同一个工具，直接调一次
+        # 确定性路径：同一个工具，直接调一次（0 token）—— 这就是对照实验的另一臂
         execute("weather", "get_weather", {}, ctx)
         ok = not ctx.errors
 
@@ -92,4 +94,5 @@ def collect_weather(state: TripState) -> dict:
         "errors": list(ctx.errors),
         "sources": {"weather": "amap" if weather else "degraded"},
         "tool_calls": ctx.calls,
+        "usage": usage,
     }

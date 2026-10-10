@@ -6,6 +6,8 @@ import dayjs from 'dayjs'
 import { Calendar, CloudSun, Hotel, Info, MapPin, ShieldCheck, TriangleAlert, Wallet } from 'lucide-vue-next'
 import { computed } from 'vue'
 
+import ExportPanel from '@/components/ExportPanel.vue'
+import TripMap from '@/components/TripMap.vue'
 import type { TripPlan } from '@/types/trip'
 import { isEstimated } from '@/utils/source'
 

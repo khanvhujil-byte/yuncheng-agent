@@ -63,6 +63,21 @@ def _merge_sources(left: Dict[str, DataSource], right: Dict[str, DataSource]) ->
     return {**(left or {}), **(right or {})}
 
 
+def _merge_usage(left: Dict[str, int], right: Dict[str, int]) -> Dict[str, int]:
+    """usage 的 reducer：**把各 Agent 的 token 累加**，而不是覆盖。
+
+    为什么必须是"累加"而不是默认覆盖：
+        ① 一次请求有 4 个 Agent 各自调模型，覆盖的结果只剩最后一个节点的用量；
+        ② 景点与天气是**并行**节点，不带 reducer 会直接抛 InvalidUpdateError。
+    为什么和 sources 的 reducer 不一样：sources 是合并字典（各写各的 key），
+    usage 是累加数字（同一个 key 反复累加）—— 两个 reducer 各自的语义不同，别混用。
+    """
+    total = dict(left or {})
+    for key, value in (right or {}).items():
+        total[key] = total.get(key, 0) + int(value)
+    return total
+
+
 class TraceEntry(TypedDict):
     """一个节点的执行记录。V0 先留空列表，V1 起填充（对应 NFR-2 可观测性）。"""
 
@@ -150,4 +165,6 @@ class TripState(TypedDict):
 
     # ---- 可观测性与上下文计量 ----
     trace: Annotated[List[TraceEntry], operator.add]  # 每完成一个节点追加一条
-    usage: Dict[str, int]  # {"prompt_tokens": .., "completion_tokens": .., "llm_calls": ..}
+    usage: Annotated[Dict[str, int], _merge_usage]
+    # ↑ 整条请求的 token 与调用次数（**累加**，见 _merge_usage）。
+    #   它是「Agent 化的代价」这个对照实验的核心指标：不累加就量不出总成本。

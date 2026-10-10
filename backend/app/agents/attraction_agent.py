@@ -81,4 +81,5 @@ def collect_attractions(state: TripState) -> dict:
         "errors": list(ctx.errors),
         "sources": {"attractions": "amap" if result.ok else "degraded"},
         "tool_calls": ctx.calls,
+        "usage": result.usage,
     }

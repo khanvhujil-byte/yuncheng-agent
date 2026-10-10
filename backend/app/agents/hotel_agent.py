@@ -123,4 +123,5 @@ def resolve_hotel(state: TripState) -> dict:
         "errors": list(ctx.errors),
         "sources": {"hotel": source},
         "tool_calls": ctx.calls,
+        "usage": result.usage,
     }
