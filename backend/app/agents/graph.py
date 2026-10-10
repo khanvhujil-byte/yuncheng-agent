@@ -13,6 +13,7 @@ from .budget import patch_budget
 from .city import validate_city
 from .hotel_agent import resolve_hotel
 from .planner_agent import compose_plan
+from .verify_plan import verify_plan
 from .weather_agent import collect_weather
 
 
@@ -26,11 +27,13 @@ def route_after_city(state: TripState) -> str:
     return "fail"
 
 
-def route_after_validate(state: TripState) -> str:
-    """两层校验之后：还能重试就回 compose_plan，否则继续往下走。
+def route_after_audit(state: TripState) -> str:
+    """独立复核之后：还能重试就回 compose_plan，否则继续往下走。
 
-    开关就是 `validate_error`：本轮编排写了**具体错误** → 需要回喂重试；
-    写 None（表示通过，或彻底失败已产出部分结果）→ 继续。
+    开关仍是 `validate_error`，它现在有**两个来源**：
+        ① compose_plan 自己的两层校验（结构 / 必去景点约束）
+        ② verify_plan 的独立复核（时间可行性 / 重复排期）
+    两者写同一个字段，所以条件边只需要一条逻辑，而不用两个分支。
     封顶 2 次尝试（配合 compose_plan 里的 MAX_ATTEMPTS）。
     """
     if state.get("validate_error") and state.get("retries", 0) < 2:
@@ -46,6 +49,7 @@ def build_graph(start_at: str | None = None):
     g.add_node("collect_attractions", collect_attractions)
     g.add_node("collect_weather", collect_weather)
     g.add_node("compose_plan", compose_plan)
+    g.add_node("verify_plan", verify_plan)
     g.add_node("resolve_hotel", resolve_hotel)
     g.add_node("patch_budget", patch_budget)
 
@@ -69,10 +73,14 @@ def build_graph(start_at: str | None = None):
     g.add_edge("collect_attractions", "compose_plan")
     g.add_edge("collect_weather", "compose_plan")
 
-    # ---- 两层校验的重试环 ----
+    # ---- 两层校验 + 独立复核的重试环 ----
+    # compose_plan 自己校验通过之后，还要过一遍**独立评估者**（verify_plan，纯代码）：
+    # 它审的是"这份行程自己站不站得住"（时间排不下 / 同一景点排两天），
+    # 与 compose_plan 审的"用户要求满足了没"是两个视角 —— 生成者不能给自己打分。
+    g.add_edge("compose_plan", "verify_plan")
     g.add_conditional_edges(
-        "compose_plan",
-        route_after_validate,
+        "verify_plan",
+        route_after_audit,
         {"retry": "compose_plan", "next": "resolve_hotel"},
     )
 

@@ -11,10 +11,21 @@
     MAX_STEPS    步数上限，防死循环、控成本；到顶就用收集箱里已有的数据（不崩）
     摘要化       工具只把摘要回填给模型，原始数据进 ctx，不进对话历史
     不冒泡       工具的异常、模型的异常都转成结果并如实记录，绝不崩掉整条请求
+
+并发（s02 的另一半）：**同一轮的多个 tool_call 并发执行**。
+    实测模型一轮会发 3 个 tool_call（搜 3 个偏好标签），它们互不依赖，串行就是白等。
+    线程安全性分析（不要想当然）：同一轮并发的工具共享同一个 ctx（收集箱），
+        - calls / errors 是 list.append → 原子
+        - 其余是整值赋值（ranked / chosen_hotel）→ 原子
+        - attractions / hotels / distance_cache 是"判重后写入"：极端情况下两个线程
+          可能都判定"不存在"，导致**同一个关键词被搜两次**（多花一次接口配额）。
+    结论：宁可偶发多花一次接口调用，也不给每个工具套一把大锁把并发收益抹掉。
+    （如果将来工具变多、写冲突变危险，再改成"每个工具返回结果、由循环统一写入收集箱"。）
 """
 
 import json
 import logging
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -84,6 +95,11 @@ def run_agent(
             {"role": "assistant", "content": message.get("content") or "", "tool_calls": tool_calls}
         )
 
+        # ---- 这一轮的多个 tool_call：先有序解析，再并发执行 ----
+        # 对应 learn-claude-code 的 s02「Adding a tool means adding one handler」的另一半：
+        # 模型一轮里可能同时要 3 个工具（实测搜 3 个偏好标签就是一轮发 3 个），
+        # 它们互不依赖，串行等就是白等。
+        pending: list[tuple[dict[str, Any], str, dict[str, Any]]] = []
         for call in tool_calls:
             function = call.get("function") or {}
             name = str(function.get("name") or "")
@@ -93,7 +109,16 @@ def run_agent(
                     args = {}
             except json.JSONDecodeError:
                 args = {}
-            result_text = execute(role, name, args, ctx)
+            pending.append((call, name, args))
+
+        if len(pending) == 1:
+            results = [execute(role, pending[0][1], pending[0][2], ctx)]
+        else:
+            with ThreadPoolExecutor(max_workers=min(4, len(pending))) as pool:
+                futures = [pool.submit(execute, role, name, args, ctx) for _, name, args in pending]
+                results = [future.result() for future in futures]  # 按原顺序取回，消息顺序稳定
+
+        for (call, name, args), result_text in zip(pending, results):
             ctx.calls.append({"role": role, "tool": name, "args": args, "result": result_text[:200]})
             messages.append(
                 {"role": "tool", "tool_call_id": call.get("id"), "content": result_text}

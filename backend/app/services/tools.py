@@ -137,11 +137,11 @@ def _trip_dates(start_date: str, travel_days: int) -> list[str]:
     return [(start + timedelta(days=offset)).isoformat() for offset in range(travel_days)]
 
 
-def _haversine_km(a: Location, b: Location) -> float:
+def haversine_km(a: Location, b: Location) -> float:
     """球面直线距离（公里）。本地算，**不消耗配额**。
 
-    用途：给候选酒店排序。真实驾车距离走 measure_distance 工具（要配额），
-    所以策略是「排序用近似，结论用真实」。
+    用途：给候选酒店排序；也给独立评估者（agents/verify_plan.py）算"一天的景点跨度"。
+    真实驾车距离走 measure_distance 工具（要配额），所以策略是「排序用近似，结论用真实」。
     """
     radius = 6371.0
     lat1, lon1, lat2, lon2 = map(math.radians, [a.latitude, a.longitude, b.latitude, b.longitude])
@@ -322,7 +322,7 @@ def _rank_hotels(args: dict, ctx: ToolContext) -> str:
         if hotel.location is None:
             continue
         cost = sum(
-            _haversine_km(hotel.location, a.location) * max(a.visit_duration, 1) for a in weighted
+            haversine_km(hotel.location, a.location) * max(a.visit_duration, 1) for a in weighted
         ) / total_weight
         ranking.append((cost, hotel.name, hotel))
 

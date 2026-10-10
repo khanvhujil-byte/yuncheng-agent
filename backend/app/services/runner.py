@@ -32,6 +32,7 @@ NODE_LABELS: dict[str, str] = {
     "collect_attractions": "搜集景点",
     "collect_weather": "查询天气",
     "compose_plan": "编排行程",
+    "verify_plan": "独立复核",
     "resolve_hotel": "选择住宿",
     "patch_budget": "计算预算",
 }
