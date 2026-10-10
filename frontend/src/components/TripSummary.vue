@@ -162,16 +162,25 @@ function tempText(value: number | string | undefined): string {
             {{ dayLabel(item.date) }}
             <span class="muted">{{ weekday(item.date) }}</span>
           </div>
-          <div class="weather-text">
-            {{ item.day_weather || '--' }} / {{ item.night_weather || '--' }}
-          </div>
-          <div class="weather-temp">
-            {{ tempText(item.day_temp) }} / {{ tempText(item.night_temp) }}
-          </div>
-          <div class="weather-wind muted">
-            {{ item.wind_direction || '' }} {{ item.wind_power || '' }}
-          </div>
-          <div v-if="item.is_forecast === false" class="weather-flag">实况</div>
+          <!-- v0.2：超出预报窗口的天是「已知的空」，必须和「实况」区分开。
+               混在一起显示，用户会以为"这天有实况数据" -->
+          <template v-if="item.beyond_window">
+            <div class="weather-text muted">无预报</div>
+            <div class="weather-temp muted">-- / --</div>
+            <div class="weather-wind muted">超出预报窗口</div>
+          </template>
+          <template v-else>
+            <div class="weather-text">
+              {{ item.day_weather || '--' }} / {{ item.night_weather || '--' }}
+            </div>
+            <div class="weather-temp">
+              {{ tempText(item.day_temp) }} / {{ tempText(item.night_temp) }}
+            </div>
+            <div class="weather-wind muted">
+              {{ item.wind_direction || '' }} {{ item.wind_power || '' }}
+            </div>
+            <div v-if="item.is_forecast === false" class="weather-flag">实况</div>
+          </template>
         </div>
       </div>
       <div v-else class="empty-hint">

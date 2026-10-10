@@ -124,11 +124,15 @@ def validate_city(state: TripState) -> dict:
             f"必去 {len(must_visit)} 个，但 {travel_days} 天最多安排 {capacity} 个",
         )
 
-    # ---- 预检 4：预报窗口（不拦，但提前承诺降级 —— 不能等跑到一半才说）----
+    # ---- 预检 4：预报窗口（不拦；**用户可见的警告由 collect_weather 统一给出**）----
+    # 为什么不在这里写 warning：travel_days > 4 必然导致天气缺天，而 weather_agent
+    # 会给出**精确到日期**的警告。两处都写，用户会看到两条几乎重复的话。
+    # 原则：每条 warning 只留一个来源，而且信息要具体。
     if travel_days > FORECAST_WINDOW_DAYS:
-        warnings.append(
-            f"行程 {travel_days} 天，超出高德天气预报窗口（{FORECAST_WINDOW_DAYS} 天）；"
-            f"第 {FORECAST_WINDOW_DAYS + 1} 天起没有天气预报，系统会留空而不是编造。"
+        logger.info(
+            "预检提示 | 行程 %d 天超出预报窗口 %d 天，天气会缺天（详细警告由 collect_weather 给出）",
+            travel_days,
+            FORECAST_WINDOW_DAYS,
         )
 
     # ---- 真实地理编码（这一步要网络 + 花配额）----

@@ -122,6 +122,11 @@ def _to_trip_plan(final: dict, req: TripRequest) -> dict:
         "start_date": req.start_date,
         "end_date": final.get("end_date") or req.start_date,
         # ③ 行程之外的碎片，统一在这里合进来
+        #
+        # weather_info 也在这里合，而不是让 compose_plan 复述：天气是外部数据，
+        # 让模型把 4 天的天气抄一遍 = 白烧 token + 给幻觉留门（它可能"顺手"改个温度）。
+        # 原则：外部数据在边界拼进响应，模型只负责它真正要生成的部分。
+        "weather_info": final.get("weather") or [],
         "hotel": final.get("hotel"),
         "hotel_nights": final.get("nights", 0),
         "constraint_report": final.get("constraint_report"),
