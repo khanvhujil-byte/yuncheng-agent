@@ -132,6 +132,9 @@ class Hotel(BaseModel):
     """
 
     name: str  # 必填。来自高德 pois[].name
+    poi_id: Optional[str] = None
+    # ↑ v0.3：高德 POI ID。去重、以及「用户指定的酒店」与候选项对齐，都需要一个稳定身份
+    #   （和 Attraction.poi_id 同理：不能按名字判同一家酒店）。
     address: str = ""  # 来自高德 pois[].address
     location: Optional[Location] = None  # 允许为空：个别酒店 POI 缺坐标，不该因此整条丢弃
     price_range: str = ""  # 价格区间。模型估算

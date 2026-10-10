@@ -27,16 +27,14 @@ def route_after_city(state: TripState) -> str:
 
 
 def route_after_validate(state: TripState) -> str:
-    """两层校验之后：还能重试就回 compose_plan，否则往下走。
+    """两层校验之后：还能重试就回 compose_plan，否则继续往下走。
 
-    Day 2 占位版：永远往下走（还没有两层校验）。
-    Day 4 接上校验后，这里要改成：
-        cr = state.get("constraint_report")
-        need_retry = bool(cr and cr.unsatisfied)
-        if need_retry and state.get("retries", 0) < 2:
-            return "retry"
-        return "next"
+    开关就是 `validate_error`：本轮编排写了**具体错误** → 需要回喂重试；
+    写 None（表示通过，或彻底失败已产出部分结果）→ 继续。
+    封顶 2 次尝试（配合 compose_plan 里的 MAX_ATTEMPTS）。
     """
+    if state.get("validate_error") and state.get("retries", 0) < 2:
+        return "retry"
     return "next"
 
 

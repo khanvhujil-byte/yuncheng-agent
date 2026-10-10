@@ -1,119 +1,95 @@
-"""Agent 2 / 4 · 天气查询专家（collect_weather 节点，**不进 LLM**）。
+"""Agent 2 / 4 · 天气查询专家（collect_weather 节点）—— v0.3 薄壳，**带开关**。
 
-输入（从 State 读）：adcode（validate_city 产出，**必须用它，不能用城市名**）、
-                    request.start_date、travel_days
-输出（写回 State）：{"weather": [WeatherInfo, ...], "warnings": [...], "sources": {...}}
+两条路径，同一个工具（`get_weather`）：
 
-为什么这个节点不用 LLM：
-    它本质是「adcode + 日期 → 天气数组」的**确定性搬运**。
-    参考项目为它配了一个 SimpleAgent 加一大段「必须使用工具」的 prompt，
-    属于不必要的智能体化 —— 白花 token、白等 1~3 秒，还多一个出错的地方。
+    weather_use_agent = True  （默认）
+        ReAct 循环：LLM 决定调工具、看结果、汇报 —— 多花 1~2 次 LLM 调用
 
-必须做对的三件事：
+    weather_use_agent = False （.env 里加一行 WEATHER_USE_AGENT=false）
+        直接调一次工具 —— 0 token、1 次 HTTP
 
-    1. **city 参数传 adcode**。高德天气接口不接受城市名；传「杭州」会返回空或报错。
-    2. **把 4 天窗口和行程天数对齐**（本节点的真正难点）。
-       高德 extensions=all 只返回「今天起 4 天」。行程 6 天时后 2 天没有预报 ——
-       必须留空 + 标记，**绝不编造**。这是诚实性实验的数据源头。
-    3. **两个「没有天气」的原因要分开**，不能混成一个：
-         超出预报窗口 → 等长列表 + beyond_window=True（日期在、数据空）
-         接口调用失败 → 空列表 + sources="degraded" + warning
-       混在一起，前端就没法区分「预报不到」和「接口挂了」。
+**这个开关本身就是实验变量**：同一批请求跑两遍，就能量化出
+「把一个确定性节点 Agent 化，代价是多少 token / 多少秒」，
+而且两条路径的产物完全一样（都来自同一个工具），对比是干净的。
 
-温度清洗：高德返回的 daytemp 可能带单位，WeatherInfo 的 validator 已经负责清洗，这里不管。
+本节点不做什么：
+    不做窗口对齐、不做占位标记 —— 那些都在工具内部（规则写在工具里，不写在 prompt 里）。
 """
 
 import logging
-from datetime import date, timedelta
 
-from ..models.schemas import WeatherInfo
+from ..config import get_settings
 from ..models.state import TripState
-from ..services.amap import AmapError, AmapUnreachable, get_weather
+from ..services.tools import ToolContext, execute
+from .prompts import WEATHER_AGENT_PROMPT
+from .react_loop import run_agent
 
 logger = logging.getLogger(__name__)
 
+MAX_STEPS = 3  # 天气任务很短：调一次 + 汇报
 
-def _trip_dates(start_date: str, travel_days: int) -> list[str]:
-    """行程的每一天（YYYY-MM-DD 列表）。解析不了返回空列表，由调用方降级。"""
-    try:
-        start = date.fromisoformat(start_date)
-    except ValueError:
+
+def _user_prompt(state: TripState) -> str:
+    req = state["request"]
+    return (
+        f"城市：{req.city}\n"
+        f"行程日期：{req.start_date} 起共 {state['travel_days']} 天\n"
+        f"请查询天气并汇报覆盖情况。"
+    )
+
+
+def _warnings_of(state: TripState, weather: list) -> list[str]:
+    """只有"实测缺口"才写警告（预检阶段不写，避免两条重复的话）。"""
+    missing = [item.date for item in weather if getattr(item, "beyond_window", False)]
+    if not missing:
         return []
-    return [(start + timedelta(days=offset)).isoformat() for offset in range(travel_days)]
-
-
-def _blank(day: str) -> WeatherInfo:
-    """超出预报窗口的**占位项**：日期留着，天气字段全空。
-
-    为什么占位而不是「干脆不输出这一天」：
-        前端是按天气列表渲染格子的。6 天行程只给 4 个格子，用户会以为天气功能坏了；
-        给 6 个格子、其中 2 个明确标 beyond_window=True，才是「如实说明缺在哪」。
-    """
-    return WeatherInfo(date=day, is_forecast=False, beyond_window=True)
+    if len(missing) == len(weather):
+        return [
+            f"高德天气预报只覆盖今天起 4 天，本次行程的 {len(weather)} 天全部在窗口外，"
+            f"因此不提供天气数据（已留空，不编造）。"
+        ]
+    return [f"以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：{'、'.join(missing)}。"]
 
 
 def collect_weather(state: TripState) -> dict:
-    adcode = state.get("adcode")
-    travel_days = state["travel_days"]
-    days = _trip_dates(state["request"].start_date, travel_days)
-
-    # ---- 前置缺失：连问题都问不出去 ----
-    if not adcode or not days:
-        logger.warning("天气采集跳过 | adcode=%r | 行程日期=%r", adcode, days)
-        return {
-            "weather": [],
-            "warnings": ["天气数据未获取：缺少城市编码，或出行日期无法解析。"],
-            "sources": {"weather": "degraded"},
-        }
-
-    # ---- 真实调用（要网络 + 配额）----
-    try:
-        forecast = get_weather(adcode)
-    except AmapError as exc:
-        logger.warning("天气采集失败 | %s", exc)
-        return {
-            "weather": [],
-            "errors": [f"{exc.code}: 天气查询失败（{exc.detail}）"],
-            "warnings": [f"天气数据获取失败（{exc.code}），本次行程不含天气信息。"],
-            "sources": {"weather": "degraded"},
-        }
-    except AmapUnreachable as exc:
-        logger.warning("天气采集不可达 | %s", exc)
-        return {
-            "weather": [],
-            "errors": [f"UPSTREAM_TIMEOUT: 天气查询失败（{exc}）"],
-            "warnings": ["天气数据获取失败（网络不可达），本次行程不含天气信息。"],
-            "sources": {"weather": "degraded"},
-        }
-
-    # ---- 按日期对齐：行程的每一天都要有一个位置 ----
-    by_date = {item.date: item for item in forecast}
-    result = [by_date.get(day) or _blank(day) for day in days]
-    missing = [item.date for item in result if item.beyond_window]
-
-    # ---- 如实报告缺在哪（这里只写「实测缺口」，不写「预计会缺」）----
-    warnings: list[str] = []
-    if missing:
-        if len(missing) == len(days):
-            warnings.append(
-                f"高德天气预报只覆盖今天起 4 天，本次行程的 {len(days)} 天全部在窗口外，"
-                f"因此不提供天气数据（已留空，不编造）。"
-            )
-        else:
-            warnings.append(
-                f"以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造："
-                f"{'、'.join(missing)}。"
-            )
-
-    logger.info(
-        "天气采集完成 | 行程 %d 天 | 预报命中 %d 天 | 超窗口 %d 天",
-        len(days),
-        len(days) - len(missing),
-        len(missing),
+    req = state["request"]
+    ctx = ToolContext(
+        city=req.city,
+        adcode=state.get("adcode"),
+        start_date=req.start_date,
+        travel_days=state["travel_days"],
+        nights=state["nights"],
     )
 
+    use_agent = get_settings().weather_use_agent
+    steps = 0
+    if use_agent:
+        result = run_agent("weather", WEATHER_AGENT_PROMPT, _user_prompt(state), ctx, max_steps=MAX_STEPS)
+        steps = result.steps
+        ok = result.ok
+    else:
+        # 确定性路径：同一个工具，直接调一次
+        execute("weather", "get_weather", {}, ctx)
+        ok = not ctx.errors
+
+    weather = ctx.weather
+    warnings = _warnings_of(state, weather)
+    if use_agent and not ok:
+        warnings.append("天气助手调用模型失败，本次行程不含天气信息。")
+    if not weather and not warnings:
+        warnings.append("天气数据未获取：缺少城市编码，或出行日期无法解析。")
+
+    logger.info(
+        "天气采集完成 | 模式=%s | 步数 %d | 工具调用 %d 次 | 天气 %d 天",
+        "agent" if use_agent else "tool",
+        steps,
+        len(ctx.calls),
+        len(weather),
+    )
     return {
-        "weather": result,
+        "weather": weather,
         "warnings": warnings,
-        "sources": {"weather": "amap"},
+        "errors": list(ctx.errors),
+        "sources": {"weather": "amap" if weather else "degraded"},
+        "tool_calls": ctx.calls,
     }

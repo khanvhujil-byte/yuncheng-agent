@@ -35,6 +35,7 @@ from typing import Optional
 from ..models.schemas import Attraction
 from ..models.state import TripState
 from ..services.amap import AmapError, AmapUnreachable, geocode, search_poi
+from ..services.tools import is_relevant
 
 logger = logging.getLogger(__name__)
 
@@ -53,33 +54,13 @@ def _parse_date(text: Optional[str]) -> Optional[date]:
         return None
 
 
-def _is_relevant(keyword: str, candidate: str, threshold: float = 0.6) -> bool:
-    """判断高德返回的这条结果，是否真的就是用户说的那个地方。
+def _is_relevant(keyword: str, candidate: str) -> bool:
+    """已搬到 services/tools.py（v0.3：工具/服务层统一持有这类判定）。
 
-    为什么必须自己判（实测教训）：
-        高德对中文会**分词**，几乎不会返回 0 条 —— 搜「这个景点绝对不存在xyz9」
-        它返回「丰盛九玺」「绝对呼吸」「绝对现卤」（只匹配到「绝对」两个字），
-        而 count=11 看着还挺"有结果"。
-        对普通搜索这无所谓（用户自己会看列表），但对**硬约束**是灾难：
-        用户说"必须去 X"，系统静默换成了一个跟他毫无关系的地点。
-
-    也没有现成的信号可用：实测 pois[].match 恒为 "0"（连精确名也是 0），
-    pois[].importance 恒为 []。
-
-    判定用两条，任一命中即算相关：
-        ① 子串包含：'西湖' in '杭州西湖风景名胜区'
-        ② 逐字重叠率 ≥ threshold：'西湖景区' vs '杭州西湖风景名胜区' → 4/4 = 1.0
-           （分母用**关键词**的字数，因为返回的名字通常更长）
-    分母用关键词而不是两者最大值的理由：我们要问的是「用户说的字，有几个出现在结果里」。
+    留这个薄封装是为了不散落调用点；实现在 tools.is_relevant，
+    注意它**只能用在按名字解析具体地点的场景**，不要用在类目关键词搜索上。
     """
-    word = keyword.strip()
-    name = candidate.strip()
-    if not word or not name:
-        return False
-    if word in name or name in word:
-        return True
-    overlap = len(set(word) & set(name))
-    return overlap / len(set(word)) >= threshold
+    return is_relevant(keyword, candidate)
 
 
 def validate_city(state: TripState) -> dict:

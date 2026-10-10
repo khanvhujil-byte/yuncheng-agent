@@ -101,13 +101,19 @@ class TripState(TypedDict):
 
     # ---- 行程骨架（v0.2：在 validate_city 里一次算好，后续节点只读）----
     travel_days: int  # = request.travel_days；它是所有约束的「分母」（容量 = 天数 × 每天上限）
-    nights: int  # = request.nights 或 travel_days - 1。**住几晚才决定住宿费**
+    nights: int  # = request.nights 或 travel_days - 1。**住几晚才决定住宿费**，这是晚数的唯一真相源
+    # ★ 教训（真实事故）：曾经有个 `hotel_nights` 字段没在这里声明，而 resolve_hotel 往它写值。
+    #   LangGraph 对**未声明的键直接丢弃** —— 于是 patch_budget 读到 0 晚，
+    #   住宿费算成 260 × 0 = 0。请求不报错、日志不告警，只有金额是错的。
+    #   所以：① 写进 state 的每个键都必须声明；② 能不加字段就不加（晚数只留这一个）。
     end_date: str  # = start_date + travel_days - 1，由代码派生，不让用户直接给
 
     # ---- 锚点解析产物（v0.2，硬约束）----
     must_visit_resolved: List[Attraction]  # 用户必去景点解析后的 POI，**要注入候选池**（偏好搜不到也要有）
     hotel_anchor: Optional[Hotel]  # 用户已定酒店的解析结果；None 表示由系统选址
-    hotel_source: Literal["user", "agent"]  # 住宿来源，前端据此显示「你指定的」还是「推荐」
+    hotel_source: Optional[str]
+    # ↑ 住宿来源。取值：user（用户指定）/ llm_estimated（系统选址，价格是模型估的）/ degraded（没选出来）。
+    #   不要写窄成 Literal["user","agent"] —— resolve_hotel 会写 llm_estimated，写窄了就对不上。
 
     # ---- 两路并行采集的产出（彼此看不见对方）----
     attractions: List[Attraction]  # Agent 1：候选景点池（目标 >= travel_days*3，含 must_visit_resolved），不是排期结果
@@ -121,6 +127,13 @@ class TripState(TypedDict):
     plan: Optional[TripPlan]  # Agent 4：最终计划。也是 TripState 里唯一对外暴露的计划字段
     retries: int  # 校验失败次数（结构校验 + 约束校验共用）：达到 2 次就走「部分结果」分支，防无限重试
     constraint_report: Optional[ConstraintReport]  # v0.2：硬约束对账结果，会透传到 TripPlan
+    validate_error: Optional[str]
+    # ↑ 上一轮编排校验失败的具体原因。一个字段两用：
+    #   ① 回喂给模型（下一轮 prompt 末尾附上「你哪里错了」）
+    #   ② 驱动条件边（非空 = 需要重试）—— 因为它俩本来就是同一件事
+    tool_calls: Annotated[List[Dict[str, object]], operator.add]
+    # ↑ v0.3：每个 Agent 的每次工具调用记一条（角色 / 工具名 / 参数 / 结果摘要）。
+    #   两个用途：① trace 与失败排查；② 对照实验里量化「Agent 化到底多花了多少次调用」
 
     # ---- 降级与诚实性（并行节点共用的「意见箱」）----
     error_code: Optional[str]

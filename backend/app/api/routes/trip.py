@@ -83,6 +83,8 @@ def _initial_state(req: TripRequest) -> dict:
         "plan": None,
         "retries": 0,
         "constraint_report": None,
+        "validate_error": None,
+        "tool_calls": [],
         # 降级与可观测性（三个 reducer 字段必须初始化成 list）
         "error_code": None,
         "errors": [],
@@ -164,17 +166,25 @@ def plan_trip(req: TripRequest) -> TripPlanResponse:
     data = _to_trip_plan(final, req)
     days = data.get("days") or []
 
-    # 结局二：有行程 + 无降级说明 → 完整成功
-    # 结局三：有行程 + 有降级说明 → **部分结果**（success=False 但 data 有内容，前端照常渲染）
+    # 结局二：有行程 + 无降级 → 完整成功
+    # 结局三：有行程 + 有降级 → **部分结果**（success=False 但 data 有内容，前端照常渲染）
     # 结局四：连行程都没有（plan 为空）→ 仍是 200 + success=False + data（days 为空），不抛 500
     #
-    # 注意 success 的口径来自需求文档 8.2：success = 是否拿到「完整」行程。
-    # warnings 非空就意味着有降级 → 不完整 → False。前端是先看 data 再看 success 的，
-    # 所以 success=False 不会让已经算出来的行程被丢掉。
-    ok = bool(days) and not warnings
+    # success 的口径（需求文档 8.2）：success = 是否拿到**完整**行程。
+    #
+    # v0.3 修正判据：从「warnings 非空」改成「sources 里有没有 degraded」。
+    #   原因：warnings 里混着两类东西 ——
+    #     降级类（某一路数据没取到）   → 行程确实不完整
+    #     说明类（「必去景点『西湖』已解析为『杭州西湖风景名胜区』」）→ 行程是完整的
+    #   以前只要有任何一句话就判 success=False，导致一次正常成功的规划也报「部分结果」。
+    #   而 sources 天生就是「哪一路降级了」的标记，用它判断才对。
+    sources = data.get("sources") or {}
+    degraded = [key for key, value in sources.items() if value == "degraded"]
+    ok = bool(days) and not degraded
+    message = "" if ok else f"已返回部分结果：{'、'.join(degraded) or '行程未生成'} 未取到完整数据，请见上方提示。"
     return TripPlanResponse(
         success=ok,
-        message="" if ok else "已返回部分结果：请看上方提示，未满足的要求会逐条列出",
+        message=message,
         data=data,
         warnings=warnings,
         thread_id=thread_id,

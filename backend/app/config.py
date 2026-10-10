@@ -58,6 +58,14 @@ class Settings(BaseSettings):
     llm_model_id: str = "deepseek-chat"
     llm_timeout: float = 60.0
 
+    # ---- 功能开关（对照实验用）----
+    weather_use_agent: bool = True
+    # ↑ 天气节点是否走 Agent（LLM 调工具）。
+    #   True  = 天气也是 Agent（多智能体完整形态，多花 1~2 次 LLM 调用）
+    #   False = 天气退化成「直接调一次工具」（0 token、1 次 HTTP）
+    #   这个开关本身就是个实验变量：量化「把确定性节点 Agent 化的代价」。
+    #   改 .env 加一行 WEATHER_USE_AGENT=false 即可切换。
+
     # ---- 高德开放平台（Web 服务 Key，后端 REST 用）----
     amap_api_key: str = ""
     amap_timeout: float = 10.0
