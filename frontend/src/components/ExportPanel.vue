@@ -433,9 +433,11 @@ function print(): void {
     display: none;
   }
 
-  /* 卡片别被分页从中间切开：一天一张卡，切开了很难读 */
-  .day-card,
-  .card {
+  /* 卡片别被分页从中间切开：一天一张卡，切开了很难读。
+     这里只对「一天」这个粒度下手，不给所有 .card 加 —— 因为 TripSummary 的
+     预算卡、对账卡也都带 .card 类，一旦给它们加 avoid，打印时会被整块推到下一页，
+     中间留出大片空白，反而更难读。 */
+  .day-card {
     break-inside: avoid;
     page-break-inside: avoid;
   }

@@ -27,8 +27,8 @@
  * SVG 只用经纬度线性投影，不依赖任何外部服务，保证「地图这一块永远有东西可看」。
  */
 import dayjs from 'dayjs'
-import { Hotel as HotelIcon, ImageOff, Map as MapIcon, MapPin, TriangleAlert } from 'lucide-vue-next'
-import { computed, ref, watch } from 'vue'
+import { Hotel as HotelIcon, ImageOff, Map as MapIcon, TriangleAlert } from 'lucide-vue-next'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import type { Attraction, DayPlan, Hotel } from '@/types/trip'
 
@@ -36,6 +36,12 @@ const props = defineProps<{
   days: DayPlan[]
   /** 可选：行程级住宿（v0.2 起住宿是整趟一家，不是每天一个） */
   hotel?: Hotel | null
+  /**
+   * 可选：直接指定 Key，覆盖环境变量。
+   * 存在的意义是「让组件可被测试」：静态地图是外部依赖，
+   * 没有这个入口就没法在自动化测试里稳定地复现「Key 失效 → 降级 SVG」这条路。
+   */
+  keyOverride?: string
 }>()
 
 /** 高德静态地图接口。size 上限 1024*1024，这里取题目给的 700*420 */
@@ -58,15 +64,24 @@ const MAP_HEIGHT = 420
  * 填 VITE_AMAP_STATIC_KEY（开发机上的便利选择），而不是组件替他决定。
  */
 const CANDIDATE_KEYS: string[] = [
+  props.keyOverride,
   import.meta.env.VITE_AMAP_STATIC_KEY,
   import.meta.env.VITE_AMAP_JS_KEY,
 ].filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
 
-/** 当前正在用第几个候选 Key；全部试完就转 SVG */
-const keyIndex = ref(0)
-const keyExhausted = ref(CANDIDATE_KEYS.length === 0)
+/**
+ * 一旦某天出图失败，就把所有天一起切到 SVG。
+ *
+ * 为什么要「全切」而不是「只切失败的那天」：
+ * 高德对同一个 Key 的失败通常是全局性的（Key 类型不对 / 配额跑完 / 权限没开），
+ * 局部的偶发失败很少见。全切能保证页面观感一致 —— 一半真地图一半示意图
+ * 会让用户以为「有些天没有地图数据」，那是误导。
+ */
+const staticMapDisabled = ref(CANDIDATE_KEYS.length === 0)
+/** 已经因为加载失败而换掉几个 Key（换一个重试一次，全用完就降级） */
+const failedAttempts = ref(0)
 
-const activeKey = computed(() => CANDIDATE_KEYS[keyIndex.value] ?? '')
+const activeKey = computed(() => CANDIDATE_KEYS[failedAttempts.value] ?? '')
 
 type LocatedPoint = {
   label: string
@@ -179,36 +194,55 @@ function staticMapUrl(points: LocatedPoint[]): string {
 }
 
 /**
- * 每张图的加载状态。key = 天序号。
+ * 图片加载失败的处理。
  *
- * 为什么要按天记录而不是一个全局布尔：
- * 高德有 QPS 限制，某一天偶发失败不应该让整块地图都变成 SVG。
+ * 先换下一个候选 Key 重试（模板里 :key 绑定了失败次数，换 Key 会强制 <img> 重新请求）；
+ * 候选都试完了才整块降级成自绘 SVG。
+ *
+ * 注意：换 Key 重试不会造成请求风暴 —— 候选 Key 最多 3 个，每个 Key 只试一次。
  */
-const failedDays = ref<Record<number, boolean>>({})
-
-function onImageError(index: number): void {
-  // 先换下一个候选 Key 重试（模板里 :key 绑定 keyIndex，换 key 会强制 <img> 重新发起请求）；
-  // 候选都试完了才把这一天标注为失败，转自绘 SVG。
-  if (keyIndex.value < CANDIDATE_KEYS.length - 1) {
-    keyIndex.value += 1
+function onImageError(): void {
+  if (failedAttempts.value < CANDIDATE_KEYS.length - 1) {
+    failedAttempts.value += 1
     return
   }
-  keyExhausted.value = CANDIDATE_KEYS.length > 0
-  failedDays.value = { ...failedDays.value, [index]: true }
+  staticMapDisabled.value = true
 }
+
+/**
+ * 兜底超时：网络被墙 / 请求挂起时，<img> 既不会 onload 也不会 onerror，
+ * 页面就会一直是空白占位。10 秒还没加载出来就当作失败，直接给 SVG。
+ */
+let watchdog: number | undefined
+function onImageLoad(): void {
+  if (watchdog !== undefined) {
+    window.clearTimeout(watchdog)
+    watchdog = undefined
+  }
+}
+
+onMounted(() => {
+  if (staticMapDisabled.value) return
+  watchdog = window.setTimeout(() => {
+    if (!staticMapDisabled.value) staticMapDisabled.value = true
+  }, 10000)
+})
+
+onBeforeUnmount(() => {
+  if (watchdog !== undefined) window.clearTimeout(watchdog)
+})
 
 /** 行程换了（重新生成）就重置失败状态，否则新行程会继承旧行程的降级结果 */
 watch(
   () => props.days,
   () => {
-    failedDays.value = {}
-    keyIndex.value = 0
-    keyExhausted.value = CANDIDATE_KEYS.length === 0
+    staticMapDisabled.value = CANDIDATE_KEYS.length === 0
+    failedAttempts.value = 0
   },
 )
 
-function useSvgMode(index: number): boolean {
-  return keyExhausted.value || failedDays.value[index] === true
+function useSvgMode(): boolean {
+  return staticMapDisabled.value
 }
 
 // ---------------- 以下是自绘 SVG 需要的投影计算 ----------------
@@ -263,16 +297,27 @@ function polyline(points: PlacedPoint[]): string {
 const svgDays = computed(() =>
   dayPoints.value.map((points) => {
     const placed = projectDay(points)
-    const usedRows: number[] = []
-    return placed.map((item, index) => {
-      // 标签避让：同一天的点在垂直方向挨得太近时，把标签往上抬，
-      // 否则两个景点名会叠在一起变成一团黑。
-      let labelY = item.y - 14
-      while (usedRows.some((row) => Math.abs(row - labelY) < 13)) {
-        labelY -= 13
+    // 已经放好的标签矩形，用来做碰撞检测
+    const placedLabels: Array<{ x: number; y: number; width: number }> = []
+    return placed.map((item) => {
+      // 中文字在大约 12px 字号下宽度约等于字号本身，用它估算标签占位宽度
+      const width = item.name.length * 12 + 6
+      // 初始位置：点正上方 15px
+      let labelY = item.y - 15
+      const collides = (y: number): boolean =>
+        placedLabels.some(
+          (label) =>
+            Math.abs(label.x - item.x) < (label.width + width) / 2 && Math.abs(label.y - y) < 15,
+        )
+      // 撞了就往上让 15px，最多让 6 次。真实的碰撞基本都在第 1~2 次就让开了，
+      // 加次数上限是为了防止「所有点重合」这种极端输入把标签推到画布外面去。
+      for (let guard = 0; guard < 6 && collides(labelY); guard += 1) {
+        labelY -= 15
       }
-      usedRows.push(labelY)
-      return { ...item, labelY, order: index }
+      // 标签不许跑出画布上沿
+      labelY = Math.max(14, labelY)
+      placedLabels.push({ x: item.x, y: labelY, width })
+      return { ...item, labelY }
     })
   }),
 )
@@ -306,15 +351,16 @@ function hasAnyPoint(index: number): boolean {
       <template v-else>
         <!-- 首选：高德静态地图（一天一个请求） -->
         <img
-          v-if="!useSvgMode(index)"
-          :key="`${index}-${keyIndex}`"
+          v-if="!useSvgMode()"
+          :key="`${index}-${failedAttempts}`"
           class="map-image"
           :src="staticMapUrl(dayPoints[index] ?? [])"
           :alt="`第 ${day.day_index + 1} 天行程地图`"
           :width="MAP_WIDTH"
           :height="MAP_HEIGHT"
           loading="lazy"
-          @error="onImageError(index)"
+          @load="onImageLoad"
+          @error="onImageError"
         />
 
         <!-- 降级：自绘 SVG。不依赖任何外部服务，保证地图区块永远有内容 -->
@@ -327,13 +373,38 @@ function hasAnyPoint(index: number): boolean {
         >
           <rect x="0" y="0" :width="SVG_WIDTH" :height="SVG_HEIGHT" fill="#f7f9fc" />
 
-          <!-- 游览动线 -->
+          <!-- 指北针：自绘图没有底图上的「北」，不标的话用户无法判断这张图的方向 -->
+          <text :x="SVG_WIDTH - 26" :y="28" text-anchor="middle" font-size="13" fill="#8c94a3">
+            N
+          </text>
+          <path
+            :d="`M ${SVG_WIDTH - 26} 34 L ${SVG_WIDTH - 31} 46 L ${SVG_WIDTH - 26} 43 L ${SVG_WIDTH - 21} 46 Z`"
+            fill="#8c94a3"
+          />
+
+          <!-- 游览动线：实线 + 箭头。用虚线会让人以为「路线还没定」，
+               而这里的顺序就是后端给出的确定游览顺序，必须画成实线 -->
+          <defs>
+            <!-- marker 的 id 必须每天都不一样：同页多张 SVG 用同一个 id 时，
+                 浏览器只认第一个定义，后面几张图的箭头会指向错误的定义 -->
+            <marker
+              :id="`trip-map-arrow-${index}`"
+              markerWidth="9"
+              markerHeight="9"
+              refX="7"
+              refY="3"
+              orient="auto"
+              markerUnits="strokeWidth"
+            >
+              <path d="M0,0 L0,6 L8,3 z" fill="#8fa8d6" />
+            </marker>
+          </defs>
           <polyline
             :points="polyline(svgDays[index] ?? [])"
             fill="none"
-            stroke="#b9c8e4"
+            stroke="#8fa8d6"
             stroke-width="2"
-            stroke-dasharray="6 5"
+            :marker-mid="`url(#trip-map-arrow-${index})`"
           />
 
           <g v-for="point in svgDays[index] ?? []" :key="`${point.label}-${point.name}`">
@@ -371,7 +442,7 @@ function hasAnyPoint(index: number): boolean {
     </div>
 
     <!-- Key 缺失或失效时的说明。必须说清「为什么没有地图」和「怎么修」，不能静默空白 -->
-    <div v-if="keyExhausted" class="card alert-card">
+    <div v-if="staticMapDisabled" class="card alert-card">
       <div class="alert-title">
         <TriangleAlert :size="16" />
         静态地图不可用，已切换为自绘示意图
@@ -392,7 +463,7 @@ function hasAnyPoint(index: number): boolean {
     <div v-if="!days.length" class="empty-hint">没有行程数据，无法出图。</div>
 
     <!-- 把 Key 暴露在 URL 里的固有代价，写在界面上让使用者知道，而不是只写在代码注释里 -->
-    <p v-if="!keyExhausted" class="footnote">
+    <p v-if="!staticMapDisabled" class="footnote">
       <ImageOff :size="12" />
       地图图片由高德静态地图接口直接提供，因此你的高德 Key 会出现在图片地址里。
       这是静态地图 API 的固有做法；生产环境应由后端代理图片请求，把 Key 留在服务端。
