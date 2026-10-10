@@ -26,3 +26,7 @@ dist/
 # 绯荤粺
 Thumbs.db
 .DS_Store
+
+# 临时调试/探针产物（不要提交）
+backend/_*.json
+backend/_*.txt
