@@ -197,6 +197,50 @@ def _retry(attempts: int, error: str, warnings: list[str]) -> dict:
     return {"retries": attempts, "validate_error": error, "warnings": warnings}
 
 
+def _enrich(days: list[DayPlan], candidates: list[Attraction]) -> int:
+    """用候选池回填「不该让模型复述」的字段：图片、poi_id、评分、类目、地址。
+
+    为什么必须回填（前端验证时发现的真问题）：
+        候选池里的景点本来带着高德图片（photos[].url），但 prompt 只让模型给
+        名字/坐标/时长/描述 —— 图片 URL 这种长字符串让它复述，
+        等于白烧 token，而且它可能抄错或干脆省略（实测：行程里的景点首图全丢）。
+        所以分工是：**模型负责"点出哪些景点"，具体字段从候选池按 poi_id/名字补回来**。
+        这和"天气不让 compose_plan 复述"是同一条原则：外部数据不进模型的手。
+
+    返回回填成功的景点数（用于日志/实验）。
+    """
+    index: dict[str, Attraction] = {}
+    for spot in candidates:
+        index[spot.name] = spot
+        if spot.poi_id:
+            index[spot.poi_id] = spot
+
+    filled = 0
+    for day in days:
+        for item in day.attractions:
+            source = (index.get(item.poi_id) if item.poi_id else None) or index.get(item.name)
+            if source is None:
+                continue
+            filled += 1
+            item.poi_id = item.poi_id or source.poi_id
+            item.typecode = item.typecode or source.typecode
+            item.image_url = item.image_url or source.image_url
+            item.photos = item.photos or list(source.photos)
+            item.required = item.required or source.required
+            # ↑ 「必去」标记也在这里回填。它是我们自己的锚点解析结果（city.py 设的
+            #   required=True），不该由模型决定 —— 实测模型输出里没有这个字段，
+            #   不补的话前端不会给用户打「必去」标。
+            if item.rating is None:
+                item.rating = source.rating
+            if not item.address:
+                item.address = source.address
+            if not item.category or item.category == "景点":
+                item.category = source.category or item.category
+            if not item.description:
+                item.description = source.description
+    return filled
+
+
 def _empty_plan(state: TripState) -> dict:
     """彻底排不出来时的「部分结果」骨架：字段齐全但 days 为空。
 
@@ -304,17 +348,21 @@ def compose_plan(state: TripState) -> dict:
         for name in report.unsatisfied
     )
 
+    # 回填图片/poi_id/评分等「模型不该复述」的字段
+    enriched = _enrich(days, candidates)
+
     plan = {
         **_empty_plan(state),
         "days": [day.model_dump() for day in days],
         "overall_suggestions": str(payload.get("overall_suggestions") or ""),
     }
     logger.info(
-        "编排完成 | %d 天 | 必去满足 %d/%d | 重试次数 %d",
+        "编排完成 | %d 天 | 必去满足 %d/%d | 重试次数 %d | 回填字段 %d 个景点",
         len(days),
         len(report.satisfied),
         len(report.required_attractions),
         attempts - 1,
+        enriched,
     )
     return {
         "plan": plan,

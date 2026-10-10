@@ -18,7 +18,11 @@ const ERROR_MESSAGES: Record<string, string> = {
   AMAP_QUOTA_EXCEEDED: '高德接口今日调用量已用完，请明天再试。',
   UPSTREAM_TIMEOUT: '外部服务响应超时，请重试。',
   LLM_ERROR: '模型服务异常，请重试。',
-  NETWORK_ERROR: '连不上后端。确认后端已启动在 http://127.0.0.1:8000。',
+  // ---- v0.3 新增：模型服务自己的错误分类（services/llm.py）----
+  LLM_AUTH_ERROR: '模型 Key 无效。请检查后端 backend/.env 里的 LLM_API_KEY。',
+  LLM_QUOTA_EXCEEDED: '模型账户余额不足，请充值后重试。',
+  LLM_RATE_LIMITED: '模型接口触发限流，请等几秒重试。',
+  NETWORK_ERROR: '连不上后端。确认后端已启动（默认 http://127.0.0.1:8000）。',
   // ---- v0.2 新增：锚点与预检相关的错误码 ----
   DATE_RANGE_MISMATCH:
     '日期区间和天数对不上。例如选了 10 月 1 日到 5 日（5 天），天数却填 3 —— 请改到一致。',

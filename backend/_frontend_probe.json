@@ -1,0 +1,387 @@
+{
+ "success": true,
+ "message": "",
+ "data": {
+  "city": "杭州",
+  "start_date": "2026-10-10",
+  "end_date": "2026-10-12",
+  "days": [
+   {
+    "date": "2026-10-10",
+    "day_index": 0,
+    "description": "西湖核心景区深度游，从湖滨公园进入，沿苏堤漫步，登宝石山俯瞰西湖全景，感受自然风光。",
+    "transportation": "公共交通（地铁+步行）",
+    "accommodation": "经济型酒店",
+    "attractions": [
+     {
+      "name": "杭州西湖风景名胜区",
+      "address": "西湖街道龙井路1号",
+      "location": {
+       "longitude": 120.121358,
+       "latitude": 30.222692
+      },
+      "visit_duration": 120,
+      "description": "用户必去景点，西湖核心区域，自然风光代表。",
+      "category": "国家级景点",
+      "typecode": null,
+      "rating": null,
+      "photos": [],
+      "poi_id": null,
+      "image_url": null,
+      "ticket_price": 0,
+      "required": false
+     },
+     {
+      "name": "杭州西湖风景名胜区-湖滨公园",
+      "address": "龙井路1号杭州西湖风景名胜区内(东北角)",
+      "location": {
+       "longitude": 120.158818,
+       "latitude": 30.256583
+      },
+      "visit_duration": 120,
+      "description": "西湖东北角入口，交通便利，适合作为游览起点。",
+      "category": "公园",
+      "typecode": null,
+      "rating": null,
+      "photos": [],
+      "poi_id": null,
+      "image_url": null,
+      "ticket_price": 0,
+      "required": false
+     },
+     {
+      "name": "西湖风景区-苏堤",
+      "address": "龙井路1号杭州西湖风景名胜区内(东侧)",
+      "location": {
+       "longitude": 120.139291,
+       "latitude": 30.240338
+      },
+      "visit_duration": 120,
+      "description": "西湖十景之首，春季桃柳夹岸，秋季漫步极佳。",
+      "category": "风景名胜",
+      "typecode": null,
+      "rating": null,
+      "photos": [],
+      "poi_id": null,
+      "image_url": null,
+      "ticket_price": 0,
+      "required": false
+     },
+     {
+      "name": "杭州西湖风景名胜区宝石山",
+      "address": "昭庆寺里街22号",
+      "location": {
+       "longitude": 120.140608,
+       "latitude": 30.259804
+      },
+      "visit_duration": 120,
+      "description": "登高俯瞰西湖全景，视野开阔，适合傍晚观景。",
+      "category": "风景名胜",
+      "typecode": null,
+      "rating": null,
+      "photos": [],
+      "poi_id": null,
+      "image_url": null,
+      "ticket_price": 0,
+      "required": false
+     }
+    ],
+    "meals": [
+     {
+      "type": "breakfast",
+      "name": "酒店自助早餐",
+      "address": null,
+      "location": null,
+      "description": null,
+      "estimated_cost": 20
+     },
+     {
+      "type": "lunch",
+      "name": "楼外楼（孤山店）",
+      "address": null,
+      "location": null,
+      "description": null,
+      "estimated_cost": 80
+     },
+     {
+      "type": "dinner",
+      "name": "绿茶餐厅（湖滨店）",
+      "address": null,
+      "location": null,
+      "description": null,
+      "estimated_cost": 60
+     }
+    ],
+    "day_total_cost": 373
+   },
+   {
+    "date": "2026-10-11",
+    "day_index": 1,
+    "description": "吴山文化区与博物馆之旅，游览吴山景区，参观杭州博物馆和南宋德寿宫遗址博物馆，感受历史与艺术。",
+    "transportation": "公共交通（地铁+步行）",
+    "accommodation": "经济型酒店",
+    "attractions": [
+     {
+      "name": "吴山天风",
+      "address": "吴山景区(吴山广场地铁站D口步行170米)",
+      "location": {
+       "longitude": 120.164886,
+       "latitude": 30.239544
+      },
+      "visit_duration": 120,
+      "description": "吴山景区核心观景点，可俯瞰西湖和杭州城区。",
+      "category": "风景名胜",
+      "typecode": null,
+      "rating": null,
+      "photos": [],
+      "poi_id": null,
+      "image_url": null,
+      "ticket_price": 0,
+      "required": false
+     },
+     {
+      "name": "杭州博物馆",
+      "address": "粮道山18号",
+      "location": {
+       "longitude": 120.166525,
+       "latitude": 30.239091
+      },
+      "visit_duration": 120,
+      "description": "了解杭州历史文化的综合性博物馆，室内游览。",
+      "category": "博物馆",
+      "typecode": null,
+      "rating": null,
+      "photos": [],
+      "poi_id": null,
+      "image_url": null,
+      "ticket_price": 0,
+      "required": false
+     },
+     {
+      "name": "南宋德寿宫遗址博物馆",
+      "address": "望江路228-264号(江城路地铁站E口步行460米)",
+      "location": {
+       "longitude": 120.173273,
+       "latitude": 30.238678
+      },
+      "visit_duration": 120,
+      "description": "南宋皇家宫殿遗址，数字化展示，室内游览。",
+      "category": "博物馆",
+      "typecode": null,
+      "rating": null,
+      "photos": [],
+      "poi_id": null,
+      "image_url": null,
+      "ticket_price": 0,
+      "required": false
+     }
+    ],
+    "meals": [
+     {
+      "type": "breakfast",
+      "name": "酒店自助早餐",
+      "address": null,
+      "location": null,
+      "description": null,
+      "estimated_cost": 20
+     },
+     {
+      "type": "lunch",
+      "name": "知味观（吴山广场店）",
+      "address": null,
+      "location": null,
+      "description": null,
+      "estimated_cost": 50
+     },
+     {
+      "type": "dinner",
+      "name": "河坊街小吃",
+      "address": null,
+      "location": null,
+      "description": null,
+      "estimated_cost": 40
+     }
+    ],
+    "day_total_cost": 323
+   },
+   {
+    "date": "2026-10-12",
+    "day_index": 2,
+    "description": "西湖西南线自然风光与博物馆，游览乌龟潭、中国丝绸博物馆和太子湾公园-九曜山，享受宁静的湖光山色。",
+    "transportation": "公共交通（公交+步行）",
+    "accommodation": "经济型酒店",
+    "attractions": [
+     {
+      "name": "杭州西湖风景名胜区-乌龟潭",
+      "address": "龙井路1号杭州西湖风景名胜区",
+      "location": {
+       "longitude": 120.1334,
+       "latitude": 30.231408
+      },
+      "visit_duration": 120,
+      "description": "西湖西侧静谧水域，自然风光优美，适合漫步。",
+      "category": "风景名胜",
+      "typecode": null,
+      "rating": null,
+      "photos": [],
+      "poi_id": null,
+      "image_url": null,
+      "ticket_price": 0,
+      "required": false
+     },
+     {
+      "name": "中国丝绸博物馆",
+      "address": "玉皇山路73-1号(近南山路)",
+      "location": {
+       "longitude": 120.151292,
+       "latitude": 30.22287
+      },
+      "visit_duration": 120,
+      "description": "展示中国丝绸历史与工艺，室内游览，符合博物馆偏好。",
+      "category": "博物馆",
+      "typecode": null,
+      "rating": null,
+      "photos": [],
+      "poi_id": null,
+      "image_url": null,
+      "ticket_price": 0,
+      "required": false
+     },
+     {
+      "name": "太子湾公园-九曜山",
+      "address": "虎跑路(近太子湾公园)",
+      "location": {
+       "longitude": 120.14184,
+       "latitude": 30.2203
+      },
+      "visit_duration": 120,
+      "description": "太子湾公园内的九曜山，秋季登高赏景，自然风光。",
+      "category": "风景名胜",
+      "typecode": null,
+      "rating": null,
+      "photos": [],
+      "poi_id": null,
+      "image_url": null,
+      "ticket_price": 0,
+      "required": false
+     }
+    ],
+    "meals": [
+     {
+      "type": "breakfast",
+      "name": "酒店自助早餐",
+      "address": null,
+      "location": null,
+      "description": null,
+      "estimated_cost": 20
+     },
+     {
+      "type": "lunch",
+      "name": "南山路餐厅",
+      "address": null,
+      "location": null,
+      "description": null,
+      "estimated_cost": 60
+     },
+     {
+      "type": "dinner",
+      "name": "绿茶餐厅（南山路店）",
+      "address": null,
+      "location": null,
+      "description": null,
+      "estimated_cost": 60
+     }
+    ],
+    "day_total_cost": 354
+   }
+  ],
+  "weather_info": [
+   {
+    "date": "2026-10-10",
+    "day_weather": "晴",
+    "night_weather": "晴",
+    "day_temp": 26,
+    "night_temp": 18,
+    "wind_direction": "北",
+    "wind_power": "1-3",
+    "is_forecast": true,
+    "beyond_window": false
+   },
+   {
+    "date": "2026-10-11",
+    "day_weather": "晴",
+    "night_weather": "晴",
+    "day_temp": 26,
+    "night_temp": 18,
+    "wind_direction": "东北",
+    "wind_power": "1-3",
+    "is_forecast": true,
+    "beyond_window": false
+   },
+   {
+    "date": "2026-10-12",
+    "day_weather": "晴",
+    "night_weather": "晴",
+    "day_temp": 26,
+    "night_temp": 17,
+    "wind_direction": "东北",
+    "wind_power": "1-3",
+    "is_forecast": true,
+    "beyond_window": false
+   }
+  ],
+  "overall_suggestions": "杭州秋季气候宜人，建议穿着舒适步行鞋，西湖周边适合骑行或漫步。公共交通发达，可使用地铁和公交前往各景点。博物馆周一可能闭馆，请提前查询开放时间。品尝杭帮菜如西湖醋鱼、龙井虾仁等。",
+  "budget": {
+   "total_attractions": 0,
+   "total_hotels": 520,
+   "total_meals": 410,
+   "total_transportation": 120,
+   "total": 1050
+  },
+  "hotel": {
+   "name": "可见时光·望达斯旅舍(杭州西湖湖滨河坊街店)",
+   "poi_id": "B0FFHDP24G",
+   "address": "小井巷21号(吴山广场地铁站D口步行360米)",
+   "location": {
+    "longitude": 120.168087,
+    "latitude": 30.239811
+   },
+   "price_range": "",
+   "rating": "4.2",
+   "distance": "距行程景点加权平均 2.2 km",
+   "type": "青年旅舍",
+   "estimated_cost": 260,
+   "nights": 2
+  },
+  "hotel_nights": 2,
+  "hotel_segments": [],
+  "constraint_report": {
+   "required_attractions": [
+    "杭州西湖风景名胜区"
+   ],
+   "satisfied": [
+    "杭州西湖风景名胜区"
+   ],
+   "unsatisfied": [],
+   "reasons": {},
+   "hotel_anchor": null,
+   "hotel_source": "agent",
+   "feasible": true
+  },
+  "warnings": [
+   "必去景点「西湖」已解析为「杭州西湖风景名胜区」（西湖街道龙井路1号）",
+   "景点门票价未获取（高德不提供该字段），按 0 计入 —— 实际开销可能更高。"
+  ],
+  "sources": {
+   "attractions": "amap",
+   "weather": "amap",
+   "hotel": "llm_estimated"
+  }
+ },
+ "error_code": null,
+ "warnings": [
+  "必去景点「西湖」已解析为「杭州西湖风景名胜区」（西湖街道龙井路1号）",
+  "景点门票价未获取（高德不提供该字段），按 0 计入 —— 实际开销可能更高。"
+ ],
+ "thread_id": "fe80e70cf4df41ab9c43305d8e752bfb"
+}
