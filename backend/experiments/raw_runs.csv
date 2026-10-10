@@ -1,0 +1,2 @@
+﻿experiment,arm,days,rep,elapsed_s,success,error_code,llm_calls,prompt_tokens,completion_tokens,tool_calls,attractions,plan_days,required,satisfied,unsatisfied,weather_days,beyond_window,fabricated_weather,retries,hotel,hotel_weighted_km,budget_total,degraded_sources,warning_count
+A_Agent化代价,A1_全Agent,3,1,43.6,True,,11,15102,2932,14,41,3,1,1,0,3,0,0,1,可见时光·望达斯旅舍(杭州西湖湖滨河坊街店),2.59,1040,,2

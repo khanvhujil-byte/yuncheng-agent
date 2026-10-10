@@ -93,6 +93,11 @@ function tempText(value: number | string | undefined): string {
       </ul>
     </div>
 
+    <!-- 行程地图：放在概览靠上的位置，因为「景点在哪、怎么串起来」是用户看完
+         城市和警示后最先要确认的事。放在这里也保证它出现在逐日时间轴（DayTimeline）之前，
+         图文不会隔得太远 -->
+    <TripMap :days="plan.days" :hotel="hotel" />
+
     <!-- 住宿（v0.2：行程级一家，不是每天一个） -->
     <div class="card">
       <div class="card-title">
@@ -224,6 +229,10 @@ function tempText(value: number | string | undefined): string {
       </div>
       <p class="suggestions">{{ plan.overall_suggestions }}</p>
     </div>
+
+    <!-- 导出面板放最底部：它是「整份行程看完了，要带走」的收尾动作，
+         放顶部会打断阅读，放底部符合流程顺序（先看，再导出） -->
+    <ExportPanel :plan="plan" />
   </section>
 </template>
 

@@ -30,3 +30,7 @@ Thumbs.db
 # 临时调试/探针产物（不要提交）
 backend/_*.json
 backend/_*.txt
+
+backend/_probe_out/
+backend/_map_*.png
+backend/experiments/raw_runs.csv
