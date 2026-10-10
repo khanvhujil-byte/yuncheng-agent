@@ -23,8 +23,9 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="多智能体旅行规划助手",
-    version="0.4.0",
-    description="四个助手分工协作：景点搜集 / 天气查询 / 酒店推荐 / 行程编排",
+    version="0.5.0",
+    description="四个助手分工协作：景点搜集 / 天气查询 / 预订住宿 / 行程编排；"
+    "含独立复核、行程库复用、后台任务与断点续跑",
 )
 
 # 先挂路由再建 app 的顺序坑（真踩过）：include_router 必须在 app = FastAPI() 之后，
