@@ -1,0 +1,9 @@
+# 本 spike 的唯一第三方依赖。
+#
+# 只给离线排程验证用，不进入主图运行路径。
+# 安装（在 backend 目录下）：
+#     .\.venv\Scripts\python.exe -m pip install -r requirements-spike.txt
+#
+# 说明：ortools 会连带装 numpy / pandas / protobuf 等依赖，这些只服务于
+# 本 spike，主服务并不 import 它们。requirements.txt（主服务依赖）未改动。
+ortools==9.15.6755

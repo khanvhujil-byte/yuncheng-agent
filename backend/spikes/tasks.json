@@ -1,0 +1,386 @@
+{
+  "schema_version": "cpsat-spike-v1",
+  "description": "离线 CP-SAT 排程 spike 的固定输入。10 个任务共用一份 POI 注册表；每个任务只声明自己实例化到哪几条 POI（候选池）。两臂（固定排期基线 / CP-SAT）读同一个文件、同一套约束。",
+  "constraint_model": {
+    "travel_speed_kmh": 18.0,
+    "travel_time_status": "estimated",
+    "travel_time_note": "haversine 直线距离 / 18 km/h 地面速度，按整分钟四舍五入，单程下限 1 分钟。不是高德路径规划结果，属于'估算通勤'。",
+    "open_window_semantics": "open_window 为 null 表示数据集不提供开放时间约束，按整天可用处理（不代表真的全天开放）。",
+    "visit_minutes_status": "estimated",
+    "visit_minutes_note": "游览时长是人工设定值，不是实测值。",
+    "unknown_price_upper_bound_rule": "对每个 ticket_price=null 的 POI，取'同一个任务实例有效候选集中最小的正价格（known 或 estimated）'作为保守上界，并按'所有未知项同时取到该上界'估计总上限。依据：若实际价格达到该值，下面两项中的至少一项必然被超过，所以这个上界在集合层面是保守的（不会低估）。",
+    "scoring_note": "打分器独立于求解器实现：自己算通勤、自己算时间线、自己重算预算状态。"
+  },
+  "pois": [
+    {
+      "poi_id": "west_lake",
+      "name": "西湖（断桥-白堤一带）",
+      "visit_minutes": 120,
+      "ticket_price": 0,
+      "price_status": "known",
+      "open_window": null,
+      "location": { "lng": 120.150000, "lat": 30.253000 }
+    },
+    {
+      "poi_id": "lingyin",
+      "name": "灵隐寺（飞来峰景区）",
+      "visit_minutes": 120,
+      "ticket_price": 75,
+      "price_status": "known",
+      "open_window": { "start": "07:30", "end": "17:30" },
+      "location": { "lng": 120.101000, "lat": 30.241000 }
+    },
+    {
+      "poi_id": "hefang",
+      "name": "河坊街（清河坊历史街区）",
+      "visit_minutes": 90,
+      "ticket_price": 0,
+      "price_status": "known",
+      "open_window": { "start": "10:00", "end": "22:00" },
+      "location": { "lng": 120.170000, "lat": 30.240000 }
+    },
+    {
+      "poi_id": "longjing",
+      "name": "龙井村茶园",
+      "visit_minutes": 90,
+      "ticket_price": 20,
+      "price_status": "estimated",
+      "open_window": null,
+      "location": { "lng": 120.118000, "lat": 30.217000 }
+    },
+    {
+      "poi_id": "silk_museum",
+      "name": "中国丝绸博物馆",
+      "visit_minutes": 75,
+      "ticket_price": null,
+      "price_status": "unknown",
+      "open_window": { "start": "09:00", "end": "17:00" },
+      "location": { "lng": 120.155000, "lat": 30.228000 }
+    },
+    {
+      "poi_id": "leifeng",
+      "name": "雷峰塔",
+      "visit_minutes": 60,
+      "ticket_price": 40,
+      "price_status": "known",
+      "open_window": { "start": "08:00", "end": "20:00" },
+      "location": { "lng": 120.149000, "lat": 30.231000 }
+    },
+    {
+      "poi_id": "jingci",
+      "name": "净慈寺",
+      "visit_minutes": 55,
+      "ticket_price": 10,
+      "price_status": "estimated",
+      "open_window": { "start": "10:55", "end": "11:55" },
+      "location": { "lng": 120.146000, "lat": 30.229000 }
+    },
+    {
+      "poi_id": "xixi",
+      "name": "西溪湿地",
+      "visit_minutes": 150,
+      "ticket_price": 80,
+      "price_status": "estimated",
+      "open_window": { "start": "08:00", "end": "17:30" },
+      "location": { "lng": 120.070000, "lat": 30.270000 }
+    },
+    {
+      "poi_id": "provincial_museum",
+      "name": "浙江省博物馆之江馆",
+      "visit_minutes": 120,
+      "ticket_price": 0,
+      "price_status": "known",
+      "open_window": { "start": "09:00", "end": "17:00" },
+      "location": { "lng": 120.147000, "lat": 30.245000 }
+    },
+    {
+      "poi_id": "tea_museum",
+      "name": "中国茶叶博物馆",
+      "visit_minutes": 90,
+      "ticket_price": 0,
+      "price_status": "known",
+      "open_window": { "start": "09:00", "end": "17:00" },
+      "location": { "lng": 120.125000, "lat": 30.234000 }
+    },
+    {
+      "poi_id": "huqingyutang",
+      "name": "胡庆余堂中药博物馆",
+      "visit_minutes": 45,
+      "ticket_price": 10,
+      "price_status": "known",
+      "open_window": { "start": "09:00", "end": "17:00" },
+      "location": { "lng": 120.169000, "lat": 30.238000 }
+    },
+    {
+      "poi_id": "su_dongpo",
+      "name": "苏东坡纪念馆",
+      "visit_minutes": 40,
+      "ticket_price": 0,
+      "price_status": "known",
+      "open_window": { "start": "08:30", "end": "17:00" },
+      "location": { "lng": 120.144000, "lat": 30.227000 }
+    },
+    {
+      "poi_id": "wushan",
+      "name": "吴山城隍阁",
+      "visit_minutes": 60,
+      "ticket_price": 30,
+      "price_status": "estimated",
+      "open_window": { "start": "08:00", "end": "20:00" },
+      "location": { "lng": 120.166000, "lat": 30.234000 }
+    },
+    {
+      "poi_id": "qiantang",
+      "name": "钱王祠",
+      "visit_minutes": 45,
+      "ticket_price": 15,
+      "price_status": "known",
+      "open_window": { "start": "08:30", "end": "17:00" },
+      "location": { "lng": 120.152000, "lat": 30.240000 }
+    },
+    {
+      "poi_id": "nine_creeks",
+      "name": "九溪烟树",
+      "visit_minutes": 90,
+      "ticket_price": null,
+      "price_status": "unknown",
+      "open_window": null,
+      "location": { "lng": 120.112000, "lat": 30.198000 }
+    },
+    {
+      "poi_id": "ong_city",
+      "name": "杭州奥体中心（钱江新城）",
+      "visit_minutes": 60,
+      "ticket_price": null,
+      "price_status": "unknown",
+      "open_window": null,
+      "location": { "lng": 120.210000, "lat": 30.246000 }
+    },
+    {
+      "poi_id": "liangzhu",
+      "name": "良渚古城遗址公园",
+      "visit_minutes": 180,
+      "ticket_price": 60,
+      "price_status": "estimated",
+      "open_window": { "start": "09:00", "end": "17:00" },
+      "location": { "lng": 119.990000, "lat": 30.390000 }
+    },
+    {
+      "poi_id": "art_academy",
+      "name": "中国美术学院象山校区",
+      "visit_minutes": 60,
+      "ticket_price": 0,
+      "price_status": "known",
+      "open_window": null,
+      "location": { "lng": 120.085000, "lat": 30.188000 }
+    },
+    {
+      "poi_id": "binjiang_park",
+      "name": "滨江公园（钱塘江南岸）",
+      "visit_minutes": 45,
+      "ticket_price": 0,
+      "price_status": "known",
+      "open_window": null,
+      "location": { "lng": 120.205000, "lat": 30.190000 }
+    },
+    {
+      "poi_id": "grand_canal",
+      "name": "京杭大运河（拱宸桥段）",
+      "visit_minutes": 90,
+      "ticket_price": 0,
+      "price_status": "known",
+      "open_window": null,
+      "location": { "lng": 120.140000, "lat": 30.320000 }
+    },
+    {
+      "poi_id": "china_teahouse",
+      "name": "中国茶叶博物馆龙井馆区",
+      "visit_minutes": 60,
+      "ticket_price": 0,
+      "price_status": "known",
+      "open_window": { "start": "09:00", "end": "16:30" },
+      "location": { "lng": 120.120000, "lat": 30.222000 }
+    },
+    {
+      "poi_id": "zoo",
+      "name": "杭州动物园",
+      "visit_minutes": 120,
+      "ticket_price": 20,
+      "price_status": "known",
+      "open_window": { "start": "08:00", "end": "17:00" },
+      "location": { "lng": 120.133000, "lat": 30.219000 }
+    }
+  ],
+  "tasks": [
+    {
+      "task_id": "T01_relaxed_feasible",
+      "description": "已知可行：时间窗宽松、预算充足、每天上限 3，安排 5 个 POI 中的 3 个必去项。",
+      "days": 2,
+      "day_window": { "start": "08:30", "end": "18:00" },
+      "must_visit": ["west_lake", "lingyin", "hefang"],
+      "max_pois_per_day": 3,
+      "budget_limit": 1000,
+      "candidate_pool": ["west_lake", "lingyin", "hefang", "longjing", "silk_museum"],
+      "expect": {
+        "verdict": "FEASIBLE",
+        "budget_status": "unverified",
+        "reason": "每天上限 3、连续两天 9.5 小时窗口，3 个必去项怎么放都放得下；预算 1000 远高于估算花费。但候选池里的中国丝绸博物馆票价未知，只要它被排进行程，预算状态就只能是 unverified（不按 0 通过）。"
+      }
+    },
+    {
+      "task_id": "T02_capacity_style_infeasible",
+      "description": "已知不可行：3 个必去项，只有 1 天，且每天最多 2 个。",
+      "days": 1,
+      "day_window": { "start": "08:30", "end": "18:00" },
+      "must_visit": ["west_lake", "lingyin", "hefang"],
+      "max_pois_per_day": 2,
+      "budget_limit": 800,
+      "candidate_pool": ["west_lake", "lingyin", "hefang", "longjing", "silk_museum"],
+      "expect": {
+        "verdict": "INFEASIBLE",
+        "budget_status": "not_reached",
+        "reason": "必去 3 个 > 天数 1 × 每天上限 2 = 2，纯计数就无解（时间窗再宽松也救不了）。诊断应指向'每天 POI 数量上限'。"
+      }
+    },
+    {
+      "task_id": "T03_unknown_cost",
+      "description": "未知费用：3 个必去项里 2 个 ticket_price=null，预算 60 定得偏低。",
+      "days": 2,
+      "day_window": { "start": "08:30", "end": "18:00" },
+      "must_visit": ["west_lake", "silk_museum", "provincial_museum"],
+      "max_pois_per_day": 3,
+      "budget_limit": 60,
+      "candidate_pool": ["west_lake", "silk_museum", "provincial_museum", "longjing", "hefang"],
+      "expect": {
+        "verdict": "FEASIBLE",
+        "budget_status": "unknown",
+        "reason": "排期本身有解（每天上限够、时间窗够）。预算只按 known+estimated 判，未知项绝不按 0 通过，所以预算状态必须是 unknown/unverified。上界依据：同任务最小正价格 20 × 2 个未知项 = 40，故 known 55 + estimated 40 = 95 是上界估计。"
+      }
+    },
+    {
+      "task_id": "T04_tight_window_feasible",
+      "description": "边界时间窗（刚好卡住）：净慈寺开放 10:55-11:55，游览恰好 55 分钟，安排必须正好填满窗口。",
+      "days": 1,
+      "day_window": { "start": "09:30", "end": "16:00" },
+      "must_visit": ["west_lake", "leifeng", "jingci"],
+      "max_pois_per_day": 3,
+      "budget_limit": 300,
+      "candidate_pool": ["west_lake", "leifeng", "jingci", "su_dongpo", "qiantang"],
+      "expect": {
+        "verdict": "FEASIBLE",
+        "budget_status": "estimated_exceeded",
+        "reason": "存在唯一的时间安排方式：先雷峰塔再净慈寺，净慈寺 11:00 进入、11:55 离开，正好卡在开放窗内。这类题目先算一遍通勤即可确认，不需要求解器；它在这里的作用是验证'紧约束不会被模型漏掉'。"
+      }
+    },
+    {
+      "task_id": "T05_five_minutes_short",
+      "description": "边界时间窗（差一点）：净慈寺开放 11:05-11:55（比 T04 晚 10 分钟），游览 55 分钟后必然超窗。",
+      "days": 1,
+      "day_window": { "start": "09:30", "end": "16:00" },
+      "must_visit": ["west_lake", "leifeng", "jingci"],
+      "max_pois_per_day": 3,
+      "budget_limit": 300,
+      "candidate_pool": ["west_lake", "leifeng", "jingci", "su_dongpo", "qiantang"],
+      "overrides": {
+        "jingci": {
+          "open_window": { "start": "11:05", "end": "11:55" }
+        }
+      },
+      "expect": {
+        "verdict": "INFEASIBLE",
+        "budget_status": "not_reached",
+        "reason": "净慈寺窗口只有 50 分钟（11:05-11:55），而游览需要 55 分钟：窗口本身就装不下一次游览。而且因为窗口最早，它必须排在最前，11:05 进、12:00 出，超窗 5 分钟。诊断应指向净慈寺的开放时间窗约束。"
+      }
+    },
+    {
+      "task_id": "T06_cross_day_split",
+      "description": "必须跨天分配：西溪湿地（150 分钟）与良渚（180 分钟）都放不进同一天的单日窗口，必须分到两天。",
+      "days": 2,
+      "day_window": { "start": "09:00", "end": "17:00" },
+      "must_visit": ["xixi", "liangzhu"],
+      "max_pois_per_day": 2,
+      "budget_limit": 400,
+      "candidate_pool": ["xixi", "liangzhu", "provincial_museum", "tea_museum", "west_lake"],
+      "expect": {
+        "verdict": "FEASIBLE",
+        "budget_status": "within",
+        "reason": "每个必去项各占一天（150/180 分钟的游览都放不进同一个 8 小时窗口，必须跨天）。known 只有茶叶博物馆 0 与西湖 0，estimated 是西溪 80 + 良渚 60 + 茶叶博物馆 0 = 140，总计 140 < 400，落在预算内。"
+      }
+    },
+    {
+      "task_id": "T07_two_must_one_slot",
+      "description": "每天上限 1 的跨天分配：2 个必去项、2 天时间窗，每天只能放 1 个，正好一人一天。",
+      "days": 2,
+      "day_window": { "start": "09:00", "end": "12:00" },
+      "must_visit": ["art_academy", "binjiang_park"],
+      "max_pois_per_day": 1,
+      "budget_limit": 200,
+      "candidate_pool": ["art_academy", "binjiang_park", "qiantang", "huqingyutang"],
+      "expect": {
+        "verdict": "FEASIBLE",
+        "budget_status": "within",
+        "reason": "每个必去项占一天，3 小时窗口对 60/45 分钟的游览绰绰有余，通勤也在范围内。"
+      }
+    },
+    {
+      "task_id": "T08_budget_tight",
+      "description": "预算紧张：预算 140，known 115 未超，但必去项里的 estimated 一加上去就超限。",
+      "days": 2,
+      "day_window": { "start": "08:30", "end": "18:00" },
+      "must_visit": ["lingyin", "leifeng", "xixi"],
+      "max_pois_per_day": 3,
+      "budget_limit": 140,
+      "candidate_pool": ["lingyin", "leifeng", "xixi", "binjiang_park", "grand_canal", "wushan"],
+      "expect": {
+        "verdict": "FEASIBLE",
+        "budget_status": "estimated_exceeded",
+        "reason": "三个必去项必须全排上：known = 灵隐 75 + 雷峰塔 40 = 115（未超 140），estimated = 西溪 80 + 吴山阁 30 = 110，合计 225 > 140。所以是'估算后才超限'，不能据此断言实际不可行。候选池里放了两个免费点（滨江公园、大运河），保证两臂都能排出可行行程，差异只落在预算口径上。"
+      }
+    },
+    {
+      "task_id": "T09_budget_unverified",
+      "description": "未知费用影响预算判断：预算 100，known 95 未超，但未知项让预算状态无法确认。",
+      "days": 2,
+      "day_window": { "start": "08:30", "end": "18:00" },
+      "must_visit": ["west_lake", "ong_city", "nine_creeks"],
+      "max_pois_per_day": 3,
+      "budget_limit": 100,
+      "candidate_pool": ["west_lake", "ong_city", "nine_creeks", "binjiang_park", "art_academy"],
+      "expect": {
+        "verdict": "FEASIBLE",
+        "budget_status": "unknown",
+        "reason": "排期有解。这个候选池里除未知项外全是 0 元（西湖、滨江公园、美院象山都免费），没有任何正票价可以拿来做上界锚点，所以保守上界只能记 0；但 3 个必去项里有 2 个价格未知，绝不能按 0 通过，预算状态是 unknown/unverified。这也说明上界规则在'池子里没有正价格'时会退化，需要人来补数据。"
+      }
+    },
+    {
+      "task_id": "T10_unknown_bound_trips",
+      "description": "未知费用上界触顶：预算 80，known+estimated 仅 40，但未知项使保守上界 80 恰好打满预算。",
+      "days": 1,
+      "day_window": { "start": "08:00", "end": "17:00" },
+      "must_visit": ["zoo", "china_teahouse"],
+      "max_pois_per_day": 3,
+      "budget_limit": 80,
+      "candidate_pool": ["zoo", "china_teahouse", "grand_canal", "liangzhu", "ong_city"],
+      "expect": {
+        "verdict": "FEASIBLE",
+        "budget_status": "unknown",
+        "reason": "排期有解。known = 动物园 20，estimated = 良渚 60，合计 80 恰好等于预算；再加 2 个未知项（保守上界 20 各一）后 120 > 80，所以预算状态只能是 unknown，不能宣布 within。"
+      }
+    },
+    {
+      "task_id": "T11_known_price_over_budget",
+      "description": "确定超支：预算 100，但两个必去项的 known 票价 75 + 40 = 115 就已经超了。",
+      "days": 2,
+      "day_window": { "start": "08:30", "end": "18:00" },
+      "must_visit": ["lingyin", "leifeng"],
+      "max_pois_per_day": 2,
+      "budget_limit": 100,
+      "candidate_pool": ["lingyin", "leifeng", "qiantang"],
+      "expect": {
+        "verdict": "INFEASIBLE",
+        "budget_status": "not_reached",
+        "reason": "必去项本身的门票（known）就超过预算：75 + 40 = 115 > 100。这是**确定的超支**，和 estimated 超限不同，不能靠'估算不准'开脱，所以 CP-SAT 判 INFEASIBLE，诊断指向'已知费用不超过预算上限'这条约束。固定排期基线**不拿预算当硬条件**（它只做可行性判断），所以它会把行程排出来、并在结果里标 known_exceeded —— 这个差异是刻意的，用来暴露'基线不判不可行'这一事实。"
+      }
+    }
+  ]
+}
