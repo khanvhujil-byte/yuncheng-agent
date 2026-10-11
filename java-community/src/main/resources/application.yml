@@ -1,0 +1,75 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /community   # 与 Python 的 /api 并列，前端一眼能分清"谁在服务"
+
+spring:
+  application:
+    name: java-community
+
+  # ---- 业务库：只在这个服务里持有连接（Python 侧不碰 MySQL）----
+  # 端口 3307 是**本项目专用实例**（数据目录 C:\Users\34397\tools\mysql-community\data）。
+  # 为什么不用本机原有的 3306：那是 MySQL80 服务（Windows 服务，重置口令需要管理员权限），
+  # 而且他其他项目在用它 —— 单独起一个实例，两边互不影响，也不用动任何既有口令。
+  # createDatabaseIfNotExist=true 让首次启动就把库建出来：建库这件事也归 Java 管。
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/trip_community?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
+    username: root
+    password: root
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      # 点赞是高并发写场景：批量落库要靠 rewriteBatchedStatements + 合理的批大小
+      max-wait: 3000
+      validation-query: select 1
+      test-while-idle: true
+
+  # 启动时执行 schema.sql（幂等，全是 CREATE TABLE IF NOT EXISTS）
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      continue-on-error: false
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 32     # 点赞高峰：连接池要够大，否则线程都堵在借连接上
+          max-idle: 16
+          min-idle: 4
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    # 开发期打开 SQL 日志，方便确认"到底有没有真的走批量"
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: null
+
+# ---- 与 Python AI 服务的联动配置 ----
+ai:
+  base-url: http://127.0.0.1:8000
+  # Java 回调 Python 生成摘要时的超时：模型慢，给足；但**必须有上限**，
+  # 否则一个卡住的请求会把 Java 的线程池拖垮（这是"熔断"的第一层）。
+  summary-timeout-ms: 20000
+  enabled: true
+
+# ---- 鉴权 ----
+# 由 Java 签发 JWT，Python 用同一个 secret 校验 → 一次登录打通两个服务
+security:
+  jwt:
+    secret: trip-planner-community-dev-secret-please-change-in-prod-0123456789
+    expire-minutes: 720
+
+logging:
+  level:
+    root: INFO
+    com.trip.community: DEBUG

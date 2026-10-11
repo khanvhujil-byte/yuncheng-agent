@@ -58,6 +58,10 @@ def _final_state(*, days=True, degraded=False, error_code=None):
         "sources": {
             "attractions": "degraded" if degraded else "amap",
             "weather": "amap",
+            # ★ v0.6 跨服务联动：热度来自 Java，来源必须能通过 TripPlanResponse 的 Literal 校验。
+            #   这条曾经真的炸过 —— 我在 city.py 里写了 "java" 却没登记进 DataSource，
+            #   结果整个 /plan 接口 500（Pydantic literal_error）。测试里固定带上它，防止再犯。
+            "community_hot": "java",
         },
         "usage": {"prompt_tokens": 100, "completion_tokens": 50, "llm_calls": 3},
         "tool_calls": [{"tool": "search_attractions"}],
@@ -136,6 +140,12 @@ class TestSuccessAndPartial:
         assert body["success"] is False
         assert body["data"] is not None
         assert "attractions" in body["message"]
+
+    def test_cross_service_source_is_accepted(self, client):
+        """跨服务来源要被契约接受并透传到响应（sources 是 Literal，写错就 500）。"""
+        http = client(_final_state())
+        body = http.post("/api/trip/plan", json=make_request().model_dump()).json()
+        assert body["data"]["sources"]["community_hot"] == "java"
 
     def test_empty_plan_does_not_500(self, client):
         """连 days 都没有时，TripPlan 的三个必填字段来自 request，不能靠 plan。"""

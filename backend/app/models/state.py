@@ -163,6 +163,14 @@ class TripState(TypedDict):
     #   **必须带合并 reducer**（见 _merge_sources 的说明）：不带就在并行写时直接崩。
     #   有了它，各节点可以只返回自己那几个 key，框架负责合起来。
 
+    # ---- 跨服务联动：来自 Java 社区的热度数据（热度反哺）----
+    community_hot: Optional[Dict[str, object]]
+    # ↑ validate_city 从 Java 的 GET /community/hot 读回来的"社区在热什么"，
+    #   编排节点会把它作为**参考**写进 prompt（用户明确偏好永远优先）。
+    #   Java 不可用时是 None —— 生成照常，只在 sources 里标 degraded，绝不因此失败。
+    #   ★ 这个键必须在 TypedDict 里声明：未声明的键会被 LangGraph **静默丢弃**
+    #     （我们已经被这个坑咬过一次：hotel_nights 丢失导致住宿费算成 0）。
+
     # ---- 可观测性与上下文计量 ----
     trace: Annotated[List[TraceEntry], operator.add]  # 每完成一个节点追加一条
     usage: Annotated[Dict[str, int], _merge_usage]

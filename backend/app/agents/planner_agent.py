@@ -36,6 +36,7 @@ from pydantic import ValidationError
 from ..config import get_settings
 from ..models.schemas import Attraction, ConstraintReport, DayPlan, WeatherInfo
 from ..models.state import TripState
+from ..services.java_bridge import format_hot_hint
 from ..services.llm import LlmError, LlmUnreachable, chat_json
 from .prompts import PLANNER_AGENT_PROMPT
 
@@ -122,6 +123,8 @@ def _build_user_prompt(state: TripState) -> str:
         else f"候选池共 {total} 个"
     )
 
+    hot_hint = format_hot_hint(state.get("community_hot"))
+
     return (
         f"【行程要求】\n"
         f"目的地：{req.city}\n"
@@ -138,6 +141,8 @@ def _build_user_prompt(state: TripState) -> str:
         f"{_format_attractions(selected)}\n"
         f"\n【天气预报】\n"
         f"{_format_weather(list(state.get('weather') or []))}\n"
+        # 热度反哺：来自 Java 社区的真实统计。没有就整段不加（不给模型空信息）
+        + (f"\n{hot_hint}\n" if hot_hint else "")
     )
 
 

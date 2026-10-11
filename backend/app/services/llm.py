@@ -109,6 +109,36 @@ def chat_json(system_prompt: str, user_prompt: str, *, extra_user: str = "") -> 
     return text, usage
 
 
+def chat_text(system_prompt: str, user_prompt: str, *, max_tokens: int | None = None) -> tuple[str, dict[str, int]]:
+    """要一段**自由文本**。返回 (文本, usage)。
+
+    和 `chat_json` 的区别只在一个字段：不传 `response_format`。
+    ★ 这个函数是被一个真 bug 逼出来的：我们曾经用 `chat_json` 去要"一句话简介"，
+      结果 DeepSeek 直接返回 HTTP 400 ——
+      `Prompt must contain the word 'json' in some form to use 'response_format' of type 'json_object'`。
+      也就是说：**强制 JSON 模式的接口不能拿来做自由文本生成**，
+      哪怕输出很短也一样。（当时因为上层有兜底，发布流程没挂，但摘要一直是兜底文案。）
+    """
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_prompt},
+    ]
+    body: dict[str, Any] = {
+        "model": get_settings().llm_model_id,
+        "messages": messages,
+        "temperature": 0,
+    }
+    if max_tokens:
+        body["max_tokens"] = max_tokens
+
+    payload = _post(body)
+    choices = payload.get("choices") or [{}]
+    text = (choices[0].get("message") or {}).get("content") or ""
+    usage = _usage_of(payload)
+    logger.info("chat_text 完成 | 输出 %d 字符 | tokens=%s", len(text), usage)
+    return text, usage
+
+
 def chat_with_tools(messages: list[dict[str, Any]], tools: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str, int]]:
     """ReAct 循环用：发 messages（system/user/assistant/tool 混合）+ 工具清单。
 

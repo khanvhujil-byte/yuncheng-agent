@@ -83,6 +83,15 @@ class Settings(BaseSettings):
     app_port: int = 8000
     log_level: str = "INFO"
 
+    # ---- 与 Java 社区服务的联动（双向）----
+    community_enabled: bool = True
+    # ↑ 关掉它，Python 就完全不依赖 Java（生成照常，只是没有热度反哺、也发不了行程）。
+    #   留这个开关的价值：**跨服务联调时能一键隔离**，排查"到底是哪一侧的问题"。
+    community_base_url: str = "http://127.0.0.1:8080/community"
+    community_timeout: float = 2.0
+    # ↑ 读热度的超时（秒）。刻意给得很短：热度只是锦上添花，不值得为它等。
+    #   发布行程那条路会单独放宽到 30 秒（因为 Java 要回调本服务生成摘要）。
+
     # ---- 上线必备：访问控制与限流（默认关，生产必须显式打开）----
     api_key: str = ""
     # ↑ 为空表示**不校验**（本地开发与 CI 友好）。生产设一个随机串：

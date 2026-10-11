@@ -19,7 +19,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from ..config import get_settings
 from ..services import store
 from ..services.store import init_db
-from .routes import trip
+from .routes import ai, community, trip
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +33,11 @@ app = FastAPI(
 # 先挂路由再建 app 的顺序坑（真踩过）：include_router 必须在 app = FastAPI() 之后，
 # 否则启动就 NameError: name 'app' is not defined。
 app.include_router(trip.router, prefix="/api")
+# AI 能力接口：给 Java 社区服务调用（Java → Python 方向的联动）。
+# 它**不加鉴权与限流**：只在内网被 Java 调用，对外不暴露（生产用 nginx 挡 /api/ai）。
+app.include_router(ai.router, prefix="/api")
+# 社区联动接口：前端从这里发布行程 / 看热度，Python 再把请求转给 Java。
+app.include_router(community.router, prefix="/api")
 
 app.add_middleware(
     CORSMiddleware,

@@ -36,3 +36,9 @@ backend/experiments/raw_runs.csv
 
 # 行程库（本地数据，不入库）
 backend/data/
+
+# Java（Maven 产物与编译输出）
+java-community/target/
+*.class
+*.jar
+!.mvn/wrapper/maven-wrapper.jar

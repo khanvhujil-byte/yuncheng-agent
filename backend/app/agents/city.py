@@ -34,6 +34,7 @@ from typing import Optional
 
 from ..models.schemas import Attraction
 from ..models.state import TripState
+from ..services import java_bridge
 from ..services.amap import AmapError, AmapUnreachable, geocode, search_poi
 from ..services.tools import is_relevant
 
@@ -192,6 +193,10 @@ def validate_city(state: TripState) -> dict:
         nights,
     )
 
+    # 热度反哺：读 Java 社区"现在热门什么"。**失败不影响预检**：
+    # 这是加分项，不是必需项 —— 读不到就标 degraded，生成照常进行。
+    hot = java_bridge.fetch_hot()
+
     return {
         "adcode": adcode,
         "city_center": center,
@@ -200,4 +205,8 @@ def validate_city(state: TripState) -> dict:
         "warnings": warnings,
         "must_visit_resolved": resolved,  # 下游 attraction_agent 会把它注入候选池
         "hotel_anchor": None,  # fixed_hotel 的解析放在 Day 4 的 resolve_hotel（见上方说明）
+        "community_hot": hot,
+        # 让"有没有拿到热度"这件事在响应里可见（与 sources 的既有约定一致：
+        # 数据从哪来、有没有降级，一律如实标出）
+        "sources": {"community_hot": "java" if hot else "degraded"},
     }

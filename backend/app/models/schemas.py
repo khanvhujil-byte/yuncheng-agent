@@ -27,7 +27,11 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 # 写错了（比如 llm_estiamted）在构造对象的瞬间就报错，不会一路跑到前端才发现标签没显示。
 # "user" 是 v0.2 新增：用户自己指定的锚点，既不是高德实查、也不是模型估算，
 #          前端要单独显示「你指定的」。
-DataSource = Literal["amap", "llm_estimated", "degraded", "user"]
+# "java" 是 v0.6 新增：来自 Java 社区服务的数据（热度反哺）。
+#          ★ 加它的过程本身就是这条 Literal 的价值证明：我原先在 city.py 里随手写了 "java"，
+#            TripPlanResponse 构造时直接报 literal_error —— 而如果没有这个约束，
+#            一个前端不认识的来源值会一路流到页面上，只是标签不显示而已（最难查的那种 bug）。
+DataSource = Literal["amap", "llm_estimated", "degraded", "user", "java"]
 
 
 # ================================================================ 输入
