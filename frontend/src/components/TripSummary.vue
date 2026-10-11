@@ -5,20 +5,24 @@
 import dayjs from 'dayjs'
 import {
   Calendar,
+  CircleAlert,
+  CircleCheck,
+  CircleQuestionMark,
   CloudSun,
   History,
   Hotel,
   Info,
   MapPin,
+  ShieldAlert,
   ShieldCheck,
   TriangleAlert,
   Wallet,
 } from 'lucide-vue-next'
-import { computed } from 'vue'
+import { computed, type Component } from 'vue'
 
 import ExportPanel from '@/components/ExportPanel.vue'
 import TripMap from '@/components/TripMap.vue'
-import type { TripPlan } from '@/types/trip'
+import type { LimitStatus, TripPlan } from '@/types/trip'
 import { isEstimated } from '@/utils/source'
 
 /**
@@ -80,12 +84,129 @@ function reasonOf(name: string): string {
   return report.value?.reasons?.[name] ?? '未能安排'
 }
 
+/**
+ * v0.7：分类里各有几项金额未知。
+ *
+ * 为什么要在小计旁边标出来：小计只统计「已知 + 估算」，一个景点的门票没查到
+ * 就不会进「门票」这一格。不标的话，用户看到「门票 ¥0」会读成「门票不要钱」，
+ * 而这恰恰是 v0.7 想修掉的那种误读。
+ */
+const unknownByCategory = computed(() => {
+  const counts: Record<string, number> = {}
+  for (const item of budget.value?.items ?? []) {
+    if (item.status === 'unknown') {
+      counts[item.category] = (counts[item.category] ?? 0) + 1
+    }
+  }
+  return counts
+})
+
 const budgetItems = computed(() => [
-  { key: 'attractions', label: '门票', value: budget.value?.total_attractions ?? 0 },
-  { key: 'hotels', label: '住宿', value: budget.value?.total_hotels ?? 0 },
-  { key: 'meals', label: '餐饮', value: budget.value?.total_meals ?? 0 },
-  { key: 'transportation', label: '交通', value: budget.value?.total_transportation ?? 0 },
+  {
+    key: 'attractions',
+    label: '门票',
+    value: budget.value?.total_attractions ?? 0,
+    unknown: unknownByCategory.value.attraction ?? 0,
+  },
+  {
+    key: 'hotels',
+    label: '住宿',
+    value: budget.value?.total_hotels ?? 0,
+    unknown: unknownByCategory.value.hotel ?? 0,
+  },
+  {
+    key: 'meals',
+    label: '餐饮',
+    value: budget.value?.total_meals ?? 0,
+    unknown: unknownByCategory.value.meal ?? 0,
+  },
+  {
+    key: 'transportation',
+    label: '交通',
+    value: budget.value?.total_transportation ?? 0,
+    unknown: unknownByCategory.value.transportation ?? 0,
+  },
 ])
+
+// ---------------- v0.7：费用三态与「够不够」的结论 ----------------
+
+/** 金额未知的费用项名字。★ 它们没有被算进 total —— 这是整张卡最要交代清楚的一件事 */
+const unknownItems = computed(() => budget.value?.unknown_items ?? [])
+const unknownCount = computed(() => unknownItems.value.length)
+
+/** 未知项只列前 3 个，再多用「等 N 项」收口（避免长列表把卡片撑爆，也和后端文案一致） */
+const unknownPreview = computed(() => {
+  const names = unknownItems.value
+  const head = names.slice(0, 3).join('、')
+  return names.length > 3 ? `${head} 等 ${names.length} 项` : head
+})
+
+/**
+ * 「总计」的口径说明，只在**有未知项时**出现。
+ * 没有未知项时 total 就是全部，多写一句话反而像在暗示什么。
+ */
+const totalCaliber = computed(() => {
+  if (!unknownCount.value) return ''
+  return `已知 + 估算之和，不含 ${unknownCount.value} 项未知`
+})
+
+/** 已知 / 估算拆分。老响应没有这两个字段时整块不显示，而不是显示两个 0 */
+const knownTotal = computed(() => budget.value?.known_total)
+const estimatedTotal = computed(() => budget.value?.estimated_total)
+const hasSplitTotals = computed(
+  () => knownTotal.value !== undefined || estimatedTotal.value !== undefined,
+)
+
+/** 用户给的上限；null / undefined = 没设，不做预算约束 */
+const limit = computed(() => budget.value?.limit ?? null)
+
+/**
+ * 五种结论的文案与配色。
+ *
+ * 措辞刻意保守，因为每种结论能证明的东西不一样：
+ *   estimated_exceeded 只能说「按估算可能超」—— 估算项本身有误差，写成「无解」是过度断言；
+ *   unverified 只能说「无法确认」—— 因为有金额未知的项，未知项不能按 0 元算作已满足。
+ */
+const LIMIT_BADGES: Record<LimitStatus, { text: string; tone: string; icon: Component }> = {
+  // limit 有值却拿到 none，说明这次没有复核过（正常链路不会同时出现）——
+  // 此时说实话「未做复核」，不能显示「未设上限」（那和上面的上限金额自相矛盾）
+  none: { text: '本次未做预算复核', tone: 'neutral', icon: Info },
+  within: { text: '在预算内（按当前口径）', tone: 'ok', icon: CircleCheck },
+  known_exceeded: { text: '已超限（已知费用）', tone: 'bad', icon: ShieldAlert },
+  estimated_exceeded: { text: '可能超限（含估算项）', tone: 'warn', icon: CircleAlert },
+  unverified: { text: '无法确认是否在预算内', tone: 'unknown', icon: CircleQuestionMark },
+}
+
+/** 后端给了没登记过的结论值时的兜底，避免徽标变成空白 */
+const UNKNOWN_BADGE: { text: string; tone: string; icon: Component } = {
+  text: '结论未给出',
+  tone: 'unknown',
+  icon: CircleQuestionMark,
+}
+
+const limitBadge = computed(() => {
+  const status = budget.value?.limit_status
+  // 老响应（v0.7 之前的缓存）没有 limit_status：宁可不显示徽标，也不要显示一个空白徽标
+  if (!status) return null
+  return LIMIT_BADGES[status] ?? UNKNOWN_BADGE
+})
+
+/** 一句话解释当前结论的适用范围，防止用户把「按估算算的」当成「已经确定」 */
+const LIMIT_HINTS: Partial<Record<LimitStatus, string>> = {
+  within: '这个结论只在当前数据快照与估算口径下成立，不等于实际一定不会超。',
+  known_exceeded: '已知费用本身已超过上限，这不是估算偏差能解释的，属于硬性超限。',
+  estimated_exceeded:
+    '把估算项算进去后超限了。估算有误差，所以这不等于实际旅行不可行 —— 可以换更省的选择或放宽上限。',
+  unverified: '有费用项金额未知，无法确认是否满足预算 —— 未知项不能按 0 元算作已经满足。',
+}
+
+const limitHint = computed(() => {
+  const status = budget.value?.limit_status
+  return status ? (LIMIT_HINTS[status] ?? '') : ''
+})
+
+/** 后端给的依据里带 Markdown 的星号强调；这里是纯文本渲染，留着会露出一堆星号 */
+const limitBasis = computed(() => (budget.value?.limit_basis ?? '').replace(/\*\*/g, ''))
 
 /** 预算里只要有一项是估算的，整个卡片就要显示「预估」 */
 const budgetIsEstimated = computed(
@@ -251,29 +372,82 @@ function tempText(value: number | string | undefined): string {
       </div>
     </div>
 
-    <!-- 预算 -->
+    <!-- 预算：v0.7 起不只报总价，还要回答「在不在预算内」，并说清哪些钱是不知道的 -->
     <div class="card">
       <div class="card-title">
         <Wallet :size="16" />
         预算
         <span v-if="budgetIsEstimated" class="tag-estimated">含估算项</span>
+        <span v-if="unknownCount" class="tag-unknown">{{ unknownCount }} 项金额未知</span>
       </div>
-      <div v-if="budget" class="budget-row">
-        <div v-for="item in budgetItems" :key="item.key" class="budget-item">
-          <div class="budget-label">{{ item.label }}</div>
-          <div class="budget-value">¥{{ item.value }}</div>
-        </div>
-        <div class="budget-item total">
-          <div class="budget-label">
-            总计
-            <span v-if="budgetIsEstimated" class="tag-estimated">预估</span>
+
+      <template v-if="budget">
+        <!-- 结论放在明细之前：用户最想知道的是「够不够」，其余数字都是支撑 -->
+        <div v-if="limit !== null" class="limit-box">
+          <div class="limit-head">
+            <span class="limit-label">你的预算上限</span>
+            <span class="limit-value">¥{{ limit }}</span>
+            <span v-if="limitBadge" class="limit-badge" :class="`tone-${limitBadge.tone}`">
+              <component :is="limitBadge.icon" :size="13" />
+              {{ limitBadge.text }}
+            </span>
           </div>
-          <div class="budget-value">¥{{ budget.total ?? 0 }}</div>
+          <p v-if="limitHint" class="limit-hint">{{ limitHint }}</p>
         </div>
-      </div>
+
+        <div class="budget-row">
+          <div v-for="item in budgetItems" :key="item.key" class="budget-item">
+            <div class="budget-label">
+              {{ item.label }}
+              <span v-if="item.unknown" class="tag-unknown">含 {{ item.unknown }} 项未知</span>
+            </div>
+            <div class="budget-value">¥{{ item.value }}</div>
+          </div>
+          <div class="budget-item total">
+            <div class="budget-label">
+              总计
+              <span v-if="budgetIsEstimated" class="tag-estimated">预估</span>
+            </div>
+            <div class="budget-value">¥{{ budget.total ?? 0 }}</div>
+            <!-- 总计旁边必须写明口径，否则「总计 2060」会被当成实际要花的钱 -->
+            <div v-if="totalCaliber" class="budget-caliber">{{ totalCaliber }}</div>
+          </div>
+        </div>
+
+        <!-- 已知 / 估算拆分：让「总计」这个数可核对（哪些是真数据、哪些是估的） -->
+        <div v-if="hasSplitTotals" class="split-row">
+          <div class="split-item">
+            <div class="split-label">已知费用</div>
+            <div class="split-value">¥{{ knownTotal ?? 0 }}</div>
+            <div class="split-note">有确切来源，可核对</div>
+          </div>
+          <div class="split-item">
+            <div class="split-label">估算费用</div>
+            <div class="split-value">¥{{ estimatedTotal ?? 0 }}</div>
+            <div class="split-note">模型或固定表估的，有误差</div>
+          </div>
+        </div>
+
+        <!-- 未知项必须显式列出来：只把金额藏起来，用户会把「没看见」读成「不要钱」 -->
+        <div v-if="unknownCount" class="unknown-box">
+          <div class="unknown-head">
+            <TriangleAlert :size="14" />
+            有 {{ unknownCount }} 项费用金额未知，<strong>未计入</strong>上面的总计
+          </div>
+          <div class="unknown-list">{{ unknownPreview }}</div>
+          <p class="unknown-note">
+            未知不等于免费（0 元才是免费）。实际开销可能高于总计，这些项需要另行确认。
+          </p>
+        </div>
+
+        <!-- 依据：结论必须能被追问（「你凭什么说没超」），所以把后端的口径原文摆出来 -->
+        <p v-if="limitBasis" class="basis-text">结论依据：{{ limitBasis }}</p>
+      </template>
       <div v-else class="empty-hint">没有预算数据。</div>
-      <p v-if="budgetIsEstimated" class="footnote">
-        门票与住宿价格高德接口不提供，这里的数值由模型按常识估算，仅供参考。
+
+      <p v-if="budget && (budgetIsEstimated || unknownCount)" class="footnote">
+        门票与住宿价格高德接口不提供：查到真值的按已知计入，估出来的进「估算费用」，
+        查不到的记为未知且不计入总计 —— 所以总计是「已知 + 估算」，不等于实际开销。
       </p>
     </div>
 
@@ -500,6 +674,160 @@ function tempText(value: number | string | undefined): string {
   background: #fff3d6;
   border-radius: 4px;
   padding: 1px 6px;
+}
+
+/* 「金额未知」用中性灰而不是警告黄：它不是错误，是「我们不知道」，
+   用醒目的黄色会让人以为出了故障，用绿色又会显得可信 —— 灰色最贴近事实 */
+.tag-unknown {
+  font-size: 11px;
+  font-weight: 400;
+  color: #5a6272;
+  background: #eceef2;
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
+/* ---------------- v0.7 预算结论 ---------------- */
+
+.limit-box {
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  background: #f7f9fc;
+  border: 1px solid #eceef2;
+  border-radius: 10px;
+}
+
+.limit-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.limit-label {
+  font-size: 12px;
+  color: #8c94a3;
+}
+
+.limit-value {
+  font-size: 16px;
+  font-weight: 650;
+  color: #1b1f27;
+}
+
+/* 徽标按结论配色：绿=在预算内，红=硬超限，橙=估算超限，灰=无法确认。
+   四种颜色对应四种「可信程度」，不能混用 —— 颜色本身就是结论的一部分 */
+.limit-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+
+.limit-badge.tone-ok {
+  color: #2f6b39;
+  background: #eaf7ec;
+}
+
+.limit-badge.tone-bad {
+  color: #a33a3a;
+  background: #fdecec;
+}
+
+.limit-badge.tone-warn {
+  color: #8a6100;
+  background: #fff3d6;
+}
+
+.limit-badge.tone-unknown,
+.limit-badge.tone-neutral {
+  color: #5a6272;
+  background: #eceef2;
+}
+
+.limit-hint {
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #5a6272;
+}
+
+.budget-caliber {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #8c94a3;
+}
+
+.split-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.split-item {
+  flex: 1 1 140px;
+  padding: 10px 14px;
+  border: 1px dashed #eceef2;
+  border-radius: 10px;
+}
+
+.split-label {
+  font-size: 12px;
+  color: #8c94a3;
+}
+
+.split-value {
+  font-size: 16px;
+  font-weight: 650;
+  color: #1b1f27;
+  margin-top: 2px;
+}
+
+.split-note {
+  margin-top: 2px;
+  font-size: 11px;
+  color: #8c94a3;
+}
+
+.unknown-box {
+  margin-top: 12px;
+  padding: 12px 14px;
+  background: #f7f9fc;
+  border-left: 3px solid #c2c7d0;
+  border-radius: 6px;
+}
+
+.unknown-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #5a6272;
+}
+
+.unknown-list {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #3d4453;
+  line-height: 1.8;
+}
+
+.unknown-note {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: #8c94a3;
+  line-height: 1.7;
+}
+
+.basis-text {
+  margin: 12px 0 0;
+  font-size: 12px;
+  color: #8c94a3;
+  line-height: 1.8;
 }
 
 .empty-hint {

@@ -77,6 +77,8 @@ const form = reactive<TripRequest>({
   travel_days: 3,
   // v0.2：留空 = 按「天数 - 1」算（3 天 2 晚，最后一晚返程）
   nights: undefined,
+  // v0.7：留空 = 不做预算约束（后端据此给出「够不够」的结论，而不是只报个总价）
+  budget_limit: undefined,
   transportation: '公共交通',
   accommodation: '经济型酒店',
   preferences: ['自然风光'],
@@ -276,6 +278,10 @@ function buildRequest(): TripRequest {
     must_visit: (form.must_visit ?? []).map((item) => item.trim()).filter(Boolean),
     fixed_hotel: form.fixed_hotel?.trim() ? form.fixed_hotel.trim() : undefined,
     nights: form.nights ?? undefined,
+    // a-input-number 清空后给的是 null（不是 undefined），所以要一起收口，
+    // 否则请求体里会出现 "budget_limit": null —— 后端的 Optional[int] 会把它当「没填」，
+    // 但契约上「没填」就该是不传这个字段，别让两种含义混在一个值里。
+    budget_limit: form.budget_limit ?? undefined,
   }
 }
 
@@ -581,6 +587,22 @@ function reset(): void {
               style="width: 100%"
               size="large"
               placeholder="留空按天数自动算"
+            />
+          </a-form-item>
+
+          <!-- v0.7：预算上限。它是**约束**不是期望值 —— 填了，结果页就必须回答
+               「到底在不在预算内」（结论 + 依据），而不是只报一个总价 -->
+          <a-form-item>
+            <template #label>
+              预算上限（元）
+              <span style="color: #8c94a3; font-weight: 400">（选填，不填 = 不做预算约束）</span>
+            </template>
+            <a-input-number
+              v-model:value="form.budget_limit"
+              :min="1"
+              style="width: 100%"
+              size="large"
+              placeholder="留空 = 不限预算"
             />
           </a-form-item>
 

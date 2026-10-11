@@ -6,7 +6,7 @@ import dayjs from 'dayjs'
 import { Clock, Hotel, MapPin, Route, Ticket, Utensils } from 'lucide-vue-next'
 import { computed } from 'vue'
 
-import type { DayPlan, SourceMap } from '@/types/trip'
+import type { Attraction, DayPlan, SourceMap } from '@/types/trip'
 import { isEstimated } from '@/utils/source'
 
 const props = defineProps<{
@@ -44,6 +44,43 @@ function dayOfMonth(date: string): string {
 
 function mealLabel(type: string): string {
   return MEAL_LABELS[type] ?? type
+}
+
+/**
+ * 金额展示态。★ 三种「没有正数金额」的情况必须分开渲染：
+ *   unknown  金额是 null/undefined —— 不知道多少钱
+ *   free     金额 === 0 ------------ 真免费
+ *   priced   有金额
+ *
+ * 以前的写法是 `v-if="spot.ticket_price"` / `v-if="meal.estimated_cost"`：
+ * 金额为 null 时整块隐藏，于是「不知道」在界面上看起来和「不要钱」一模一样 ——
+ * v0.7 要修的就是这个。门票和餐费共用同一套判定，免得两处又跑偏。
+ */
+function amountState(value: number | null | undefined): 'unknown' | 'free' | 'priced' {
+  if (value === null || value === undefined) return 'unknown'
+  return value === 0 ? 'free' : 'priced'
+}
+
+/**
+ * 门票那行的「预估」标签优先看**这一项自己的**三态（v0.7 起后端逐项标了）；
+ * 只有字段缺失（老响应）时才回退到全局的 sources 映射。
+ */
+function ticketEstimatedFor(spot: Attraction): boolean {
+  if (spot.ticket_price_status) return spot.ticket_price_status === 'estimated'
+  return ticketEstimated.value
+}
+
+/**
+ * 当天有几项费用金额未知（门票 + 餐饮）。
+ * 当日小计只含已知与估算，所以有小计的地方就得说明它漏了几项，
+ * 否则「当日小计 ¥320」会被读成「这天就花这些钱」。
+ */
+function unknownCostCount(day: DayPlan): number {
+  const tickets = day.attractions.filter(
+    (spot) => amountState(spot.ticket_price) === 'unknown',
+  ).length
+  const meals = day.meals.filter((meal) => (meal.estimated_cost ?? null) === null).length
+  return tickets + meals
 }
 </script>
 
@@ -98,10 +135,20 @@ function mealLabel(type: string): string {
                     <Clock :size="13" />
                     {{ spot.visit_duration }} 分钟
                   </span>
-                  <span v-if="spot.ticket_price" class="meta-item">
+                  <!-- v0.7：三种状态三种文案。null 说「待查」而不是什么都不显示 ——
+                       藏起来会让「未知」看起来像「免费」 -->
+                  <span v-if="amountState(spot.ticket_price) === 'unknown'" class="meta-item">
+                    <Ticket :size="13" />
+                    <span class="muted">门票待查</span>
+                  </span>
+                  <span v-else-if="amountState(spot.ticket_price) === 'free'" class="meta-item">
+                    <Ticket :size="13" />
+                    免费
+                  </span>
+                  <span v-else class="meta-item">
                     <Ticket :size="13" />
                     ¥{{ spot.ticket_price }}
-                    <span v-if="ticketEstimated" class="tag-estimated">预估</span>
+                    <span v-if="ticketEstimatedFor(spot)" class="tag-estimated">预估</span>
                   </span>
                   <span v-if="spot.rating" class="meta-item">评分 {{ spot.rating }}</span>
                 </div>
@@ -123,7 +170,14 @@ function mealLabel(type: string): string {
             <div v-for="meal in day.meals" :key="meal.type" class="meal">
               <span class="meal-type">{{ mealLabel(meal.type) }}</span>
               <span class="meal-name">{{ meal.name }}</span>
-              <span v-if="meal.estimated_cost" class="meal-cost">
+              <!-- 餐费同样分三态：没给金额就是「待查」，不能什么都不显示（那和免费没区别） -->
+              <span v-if="amountState(meal.estimated_cost) === 'unknown'" class="meal-cost muted">
+                费用待查
+              </span>
+              <span v-else-if="amountState(meal.estimated_cost) === 'free'" class="meal-cost">
+                免费
+              </span>
+              <span v-else class="meal-cost">
                 ¥{{ meal.estimated_cost }}
                 <span v-if="mealEstimated" class="tag-estimated">预估</span>
               </span>
@@ -136,8 +190,12 @@ function mealLabel(type: string): string {
         </div>
 
         <!-- 当日小计 -->
-        <div v-if="day.day_total_cost" class="day-total">
+        <!-- 当日小计：后端只把已知 + 估算摊进来，含未知项时必须点明，否则会读成当天全部开销 -->
+        <div v-if="day.day_total_cost !== undefined" class="day-total">
           当日小计 <strong>¥{{ day.day_total_cost }}</strong>
+          <span v-if="unknownCostCount(day)" class="day-total-note">
+            （不含 {{ unknownCostCount(day) }} 项金额未知）
+          </span>
         </div>
       </div>
     </article>
@@ -424,6 +482,12 @@ function mealLabel(type: string): string {
   font-size: 15px;
   color: #1b1f27;
   margin-left: 4px;
+}
+
+.day-total-note {
+  margin-left: 4px;
+  font-size: 12px;
+  color: #a8b0be;
 }
 
 @media (max-width: 720px) {

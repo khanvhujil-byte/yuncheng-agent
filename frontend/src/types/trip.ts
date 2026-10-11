@@ -10,6 +10,13 @@
  *   2. 住宿是「行程级」：删掉 DayPlan.hotel，改成 TripPlan.hotel + hotel_nights
  *   3. 锚点：新增 must_visit（必去景点）、fixed_hotel（已定酒店）
  *   4. 约束对账：新增 ConstraintReport
+ *
+ * ★ v0.7（2026-10-11 同步）的两处变化 —— 都是「别把不知道说成不要钱」：
+ *   1. 费用从「事后一个总价」变成「逐项三态」：新增 CostItem / CostStatus / CostSource，
+ *      Budget 新增 items / known_total / estimated_total / unknown_items。
+ *      不变式：状态为 unknown 的费用项 amount 必须是 null，且**不计入 total**（0 才是「真免费」）。
+ *   2. 预算从「事后估算」变成「规划约束」：TripRequest 新增 budget_limit，
+ *      Budget 新增 limit / limit_status / limit_basis；Attraction.ticket_price 改成可空 + 带三态。
  */
 
 /**
@@ -42,6 +49,31 @@ export type DataSource = 'amap' | 'llm_estimated' | 'degraded' | 'user' | 'java'
  */
 export type SourceMap = Partial<Record<string, DataSource>>
 
+/**
+ * 费用项的置信度（v0.7 新增）。三态是**每一项费用自己的属性**，不是整张卡一个标记：
+ *   known      有确切来源的真实金额（高德门票、真免费、用户已定酒店）
+ *   estimated  模型或固定规则估出来的金额（餐饮、交通、酒店价）
+ *   unknown    金额未知 —— 界面上必须说「待查」，**绝不能显示成 0**
+ *              （0 的含义是「真免费」，把未知写成 0 等于按零元帮用户通过了预算）
+ */
+export type CostStatus = 'known' | 'estimated' | 'unknown'
+
+/**
+ * 费用的来源。和 DataSource 分开是因为语义不同：
+ *   static_estimate 是我们自己的固定表（比如交通费按每人每天 40 元），既不是高德也不是模型。
+ */
+export type CostSource = 'amap' | 'llm_estimated' | 'static_estimate' | 'unknown'
+
+/**
+ * 预算结论（v0.7 新增）。只有五种值，各自的可信范围不同 —— 界面文案必须对应上：
+ *   none                用户没设上限，不做预算约束
+ *   within              在当前数据与估算口径内未超限（依据见 limit_basis）
+ *   known_exceeded      **已知**费用就已超限 —— 硬违反，估算偏差解释不了
+ *   estimated_exceeded  加入估算后超限 —— **不等于实际不可行**，不许写成「无解」
+ *   unverified          有金额未知的项 —— **无法确认**，未知不能按 0 元算作已满足
+ */
+export type LimitStatus = 'none' | 'within' | 'known_exceeded' | 'estimated_exceeded' | 'unverified'
+
 /** 请求：一次规划需要填的全部参数 */
 export interface TripRequest {
   /** 目的地城市，如「杭州」 */
@@ -63,6 +95,14 @@ export interface TripRequest {
    * 但「红眼航班到、红眼航班走」确实住 3 晚，所以允许覆盖。
    */
   nights?: number
+  /**
+   * 总预算上限（元，v0.7 新增）。不填（undefined / 空输入）= 不做预算约束。
+   *
+   * 它是**约束**不是「期望值」：后端算完预算会拿汇总结果与它比对，
+   * 把结论写进 `Budget.limit_status` 并给出依据（`limit_basis`）。
+   * 所以界面上填了它，就必须把「到底在不在预算内」显示出来。
+   */
+  budget_limit?: number
   /** 交通方式：公共交通 / 自驾 / 步行 / 混合 */
   transportation: string
   /** 住宿偏好：经济型酒店 / 舒适型酒店 / 豪华酒店 / 民宿 */
@@ -103,8 +143,15 @@ export interface Attraction {
   photos?: string[]
   poi_id?: string | null
   image_url?: string | null
-  /** 门票价（元）。高德有就填真值，否则是模型估算 */
-  ticket_price?: number
+  /**
+   * 门票价（元）。★ v0.7 起**可空**，两种「没有数字」必须分开：
+   *   null      未知 —— 高德 biz_ext.cost 实测恒为空，所以绝大多数景点门票是这一类
+   *   0         真免费
+   * 后端已保证：未知的价格不进 total，而是列进 `Budget.unknown_items`。
+   */
+  ticket_price?: number | null
+  /** 门票价的置信度（v0.7）。status === 'unknown' 时 ticket_price 必为 null */
+  ticket_price_status?: CostStatus
   /** v0.2：是否来自用户的 must_visit（界面上给「必去」打标） */
   required?: boolean
 }
@@ -172,6 +219,27 @@ export interface DayPlan {
   day_total_cost?: number
 }
 
+/**
+ * 一条费用项（v0.7 新增）—— 三态落在**每一条**费用上，不是只给整张卡打一个标记。
+ *
+ * 为什么必须逐项：只知道「总价里混着未知」回答不了用户真正的问题
+ * （「到底是哪一项不确定」），逐项记下来界面才能指着某个景点说「这张门票没查到」。
+ *
+ * ★ 不变式：`status === 'unknown'` 时 `amount` 必为 `null`。
+ *   后端有断言守着这条；前端渲染时也要靠它决定显示「待查」还是显示金额。
+ */
+export interface CostItem {
+  category: 'attraction' | 'meal' | 'hotel' | 'transportation'
+  name: string
+  /** 第几天。行程级开销（住宿 / 交通）为 null */
+  day_index?: number | null
+  /** 金额（元）。未知项为 **null**，不是 0 */
+  amount: number | null
+  status: CostStatus
+  source: CostSource
+  note?: string
+}
+
 /** 预算汇总 */
 export interface Budget {
   total_attractions?: number
@@ -179,8 +247,28 @@ export interface Budget {
   total_hotels?: number
   total_meals?: number
   total_transportation?: number
-  /** 总计。由后端代码计算，禁止模型生成 */
+  /**
+   * ★ v0.7 起它的含义收窄了：只是「已知 + 估算」之和（保留是为了平滑迁移），
+   * **不含金额未知的项**。够不够看 `limit_status`，不要只看这个数就下结论。
+   */
   total?: number
+
+  // ---- v0.7：逐项三态 + 分类汇总 ----
+  /** 逐条费用项。旧响应（v0.7 之前缓存）没有这个字段 */
+  items?: CostItem[]
+  /** status === known 的金额合计：有确切来源、可以核对的部分 */
+  known_total?: number
+  /** status === estimated 的金额合计：估出来的部分，有误差 */
+  estimated_total?: number
+  /** 金额未知的费用项**名字**列表。★ 它们没有被算进 total */
+  unknown_items?: string[]
+
+  // ---- v0.7：用户上限与预算结论（由后端独立复核节点给出）----
+  /** 用户给的上限；null / undefined = 没给，不做预算约束 */
+  limit?: number | null
+  limit_status?: LimitStatus
+  /** 结论的依据（人话，写清了是按哪些数、哪个口径算的）。界面必须显示出来 */
+  limit_basis?: string
 }
 
 /** 硬约束对账报告（v0.2 新增） */

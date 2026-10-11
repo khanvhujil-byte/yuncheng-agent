@@ -79,7 +79,7 @@ def verify_budget(state: TripState) -> dict:
         status = "unverified"
         basis = (
             "这条行程是用 v0.7 之前的旧口径生成并缓存的（只有总价、没有逐项三态），"
-            f"因此**无法复核**它是否满足上限 {limit} 元。"
+            f"因此无法复核它是否满足上限 {limit} 元。"
         )
     elif known > limit:
         status = "known_exceeded"
@@ -92,7 +92,7 @@ def verify_budget(state: TripState) -> dict:
         basis = (
             f"已知 {known} 元 + 估算 {estimated} 元 = {subtotal} 元，超过上限 {limit} 元"
             f"（超出 {subtotal - limit} 元）。"
-            "注意：估算项本身有误差，所以这**不等于实际旅行不可行**，而是"
+            "注意：估算项本身有误差，所以这不等于实际旅行不可行，而是"
             "「按当前口径很可能超」—— 需要换更省的选择或放宽上限。"
         )
     elif unknown_items:
@@ -101,7 +101,7 @@ def verify_budget(state: TripState) -> dict:
         more = f" 等 {len(unknown_items)} 项" if len(unknown_items) > 3 else ""
         basis = (
             f"已知 {known} 元 + 估算 {estimated} 元 = {subtotal} 元，在上限 {limit} 元以内；"
-            f"但 {shown}{more} 的金额未知 —— **无法确认**是否满足预算。"
+            f"但 {shown}{more} 的金额未知 —— 无法确认是否满足预算。"
             "未知项不能按 0 元计入后宣称满足。"
         )
     else:

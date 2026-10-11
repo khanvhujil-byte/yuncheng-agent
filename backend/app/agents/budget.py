@@ -166,10 +166,10 @@ def patch_budget(state: TripState) -> dict:
         # 混在"共 N 项未知"里用户看不出该怎么补信息。
         warnings.append(
             f"有 {len(unknown_attractions)} 个景点的门票价未获取（高德不提供该字段），"
-            "**未计入总价** —— 实际开销可能更高。"
+            "未计入总价 —— 实际开销可能更高。"
         )
     if hotel is None:
-        warnings.append("未确定酒店，住宿费**未知**（不是 0）—— 实际开销会更高。")
+        warnings.append("未确定酒店，住宿费未知（不是 0）—— 实际开销会更高。")
     if unknown_items:
         shown = "、".join(unknown_items[:3])
         more = f" 等 {len(unknown_items)} 项" if len(unknown_items) > 3 else ""

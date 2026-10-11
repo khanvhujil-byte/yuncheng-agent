@@ -18,7 +18,7 @@ import { Download, Printer, Send, TrendingUp } from 'lucide-vue-next'
 import { computed, ref } from 'vue'
 
 import { ApiError, publishToCommunity } from '@/services/api'
-import type { DataSource, DayPlan, Meal, TripPlan } from '@/types/trip'
+import type { DataSource, DayPlan, LimitStatus, Meal, TripPlan } from '@/types/trip'
 
 const props = defineProps<{
   plan: TripPlan
@@ -59,6 +59,19 @@ const MEAL_LABELS: Record<string, string> = {
   lunch: '午餐',
   dinner: '晚餐',
   snack: '加餐',
+}
+
+/**
+ * 预算结论 → 中文（v0.7）。措辞必须和界面上逐字一致，尤其两条：
+ *   estimated_exceeded 不许写成「无解」—— 估算项本身有误差，结论只能到「可能超」；
+ *   unverified 是「无法确认」，不是「超了」也不是「没超」。
+ */
+const LIMIT_STATUS_LABELS: Record<LimitStatus, string> = {
+  none: '未设上限，不做预算约束',
+  within: '在预算内（仅在当前数据与估算口径下成立）',
+  known_exceeded: '已超限：已知费用就已超过上限，属硬性超限',
+  estimated_exceeded: '可能超限：加入估算后超限（估算有误差，不等于实际不可行）',
+  unverified: '无法确认是否在预算内：存在金额未知的费用项',
 }
 
 /** 把一句话压成单行，避免它把 Markdown 表格 / 列表结构撑坏 */
@@ -140,7 +153,16 @@ const markdown = computed(() => {
     if (day.description) lines.push('')
     if (day.transportation) lines.push(`- 交通：${day.transportation}`)
     if (day.accommodation) lines.push(`- 住宿类型：${day.accommodation}`)
-    if (day.day_total_cost !== undefined) lines.push(`- 当日小计：${money(day.day_total_cost)}`)
+    if (day.day_total_cost !== undefined) {
+      // v0.7：小计只含已知 + 估算。不说明的话，纸上这个数会被当成当天全部开销
+      const unknownSpots = day.attractions.filter(
+        (spot) => spot.ticket_price === null || spot.ticket_price === undefined,
+      ).length
+      lines.push(
+        `- 当日小计：${money(day.day_total_cost)}` +
+          (unknownSpots ? `（不含 ${unknownSpots} 个景点的未知门票）` : ''),
+      )
+    }
 
     lines.push('')
     lines.push(`**景点（${day.attractions.length} 处，按游览顺序）**`)
@@ -152,8 +174,16 @@ const markdown = computed(() => {
         if (spot.required) tags.push('必去')
         if (spot.category) tags.push(spot.category)
         if (spot.rating) tags.push(`评分 ${spot.rating}`)
-        if (spot.ticket_price) tags.push(`门票 ${money(spot.ticket_price)}`)
-        else tags.push('门票 免费或未提供')
+        // v0.7：门票三态在纸面上必须分开写。把「未知」和「免费」合并成一句
+        // （原来的写法就是「门票 免费或未提供」），等于在导出物里宣称这张票不要钱 ——
+        // 而这份文件是带出门用的，读错了当场没人纠正你
+        if (spot.ticket_price === null || spot.ticket_price === undefined) {
+          tags.push('门票 待查')
+        } else if (spot.ticket_price === 0) {
+          tags.push('门票 免费')
+        } else {
+          tags.push(`门票 ${money(spot.ticket_price)}`)
+        }
         lines.push(`${index + 1}. **${spot.name}**（${tags.join(' / ')}）`)
         lines.push(`   - 地址：${oneLine(spot.address) || '未提供'}`)
         lines.push(`   - 建议时长：${spot.visit_duration} 分钟`)
@@ -168,7 +198,11 @@ const markdown = computed(() => {
     lines.push('')
     if (day.meals.length) {
       day.meals.forEach((meal: Meal) => {
-        const cost = meal.estimated_cost ? `，约 ${money(meal.estimated_cost)}` : ''
+        // v0.7：没给估算金额就是「未知」，不能省略成一句都不说
+        const cost =
+          (meal.estimated_cost ?? null) === null
+            ? '，费用待查'
+            : `，约 ${money(meal.estimated_cost)}`
         lines.push(`- ${mealLabel(meal.type)}：${meal.name}${cost}`)
       })
     } else {
@@ -195,6 +229,31 @@ const markdown = computed(() => {
       lines.push(`| ${label} | ${money(value ?? 0)} | ${source} |`)
     })
     lines.push(`| **总计** | **${money(budget.total ?? 0)}** | 由后端代码加总 |`)
+
+    // v0.7：总计只是「已知 + 估算」。导出物里必须把口径和未知项写清楚，
+    // 否则这张表离开网页之后，「总计 2060」就成了一句没有限定条件的断言
+    if (budget.known_total !== undefined || budget.estimated_total !== undefined) {
+      lines.push('')
+      lines.push(
+        `- 已知费用 ${money(budget.known_total ?? 0)} + 估算费用 ${money(budget.estimated_total ?? 0)} = ${money(budget.total ?? 0)}`,
+      )
+    }
+    const unknownItems = budget.unknown_items ?? []
+    if (unknownItems.length) {
+      lines.push(
+        `- 有 ${unknownItems.length} 项费用金额未知，**未计入上面的总计**：${unknownItems.join('、')}`,
+      )
+      lines.push('- 未知不等于免费（0 元才是免费），所以实际开销可能高于总计。')
+    }
+    if (budget.limit !== null && budget.limit !== undefined) {
+      lines.push(`- 你设置的预算上限：${money(budget.limit)}`)
+      if (budget.limit_status) {
+        lines.push(`- 预算结论：${LIMIT_STATUS_LABELS[budget.limit_status]}`)
+      }
+      if (budget.limit_basis) {
+        lines.push(`- 结论依据：${oneLine(budget.limit_basis)}`)
+      }
+    }
   } else {
     lines.push('（没有预算数据）')
   }
