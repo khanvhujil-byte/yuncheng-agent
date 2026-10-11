@@ -1,0 +1,25 @@
+# 构建镜像时要排除的东西：体积大、或者根本不该进镜像。
+# 少了这个文件，node_modules 与 .venv 会被一起打进构建上下文（几百 MB，构建白白变慢），
+# 而且 .env 有被打进去的风险。
+
+.git
+.github
+.idea
+.vscode
+
+# 密钥与本地数据
+**/.env
+**/.env.local
+backend/data/
+backend/experiments/
+
+# 依赖与产物
+**/node_modules/
+**/.venv/
+**/dist/
+**/__pycache__/
+**/*.pyc
+**/.pytest_cache/
+**/.ruff_cache/
+**/htmlcov/
+**/.coverage

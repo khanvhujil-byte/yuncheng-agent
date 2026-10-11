@@ -21,6 +21,7 @@
 边界处理：任一项缺失按 0 计，并把缺失写进 warnings，不静默。
 """
 
+import copy
 import logging
 
 from ..models.state import TripState
@@ -42,7 +43,11 @@ def _transport_cost(transportation: str, travel_days: int) -> int:
 
 
 def patch_budget(state: TripState) -> dict:
-    plan = dict(state.get("plan") or {})
+    # deepcopy 不能省（新写的测试抓出来的真 bug）：`dict(...)` 只是**浅拷贝**，
+    # days 还是同一批 dict 对象，后面改 day["day_total_cost"] 会连带改掉调用方那一份。
+    # 在 LangGraph 里这就是"节点就地改了入参"，后果很隐蔽（journal / 缓存可能共享引用），
+    # 排查起来极难。宁可多花一次深拷贝。
+    plan = copy.deepcopy(state.get("plan") or {})
     days = plan.get("days") or []
 
     if not days:

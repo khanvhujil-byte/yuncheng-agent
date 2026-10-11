@@ -14,7 +14,6 @@
 
 import logging
 
-from ..models.schemas import Attraction
 from ..models.state import TripState
 from ..services.tools import ToolContext
 from .prompts import ATTRACTION_AGENT_PROMPT

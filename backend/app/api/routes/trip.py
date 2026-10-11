@@ -25,7 +25,7 @@ import time
 from datetime import date, timedelta
 from uuid import uuid4
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 
 from ...agents.graph import app as trip_graph
@@ -34,10 +34,17 @@ from ...agents.weather_agent import weather_warnings
 from ...models.schemas import TripPlanResponse, TripRequest
 from ...services import amap, runner, store
 from ...services.tools import ToolContext, execute
+from ..security import rate_limit, require_api_key
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/trip", tags=["旅行规划"])
+router = APIRouter(
+    prefix="/trip",
+    tags=["旅行规划"],
+    # 鉴权与限流挂在**路由级**而不是逐个端点：漏掉一个端点就等于漏掉一个口子，
+    # 挂在 router 上，以后新增端点会自动继承。两者默认关闭（见 security.py 的说明）。
+    dependencies=[Depends(require_api_key), Depends(rate_limit)],
+)
 
 # 预检失败的错误码 → 给人看的一句话（前端还会用自己的 ERROR_MESSAGES 再映射一层）
 _PREFLIGHT_MESSAGES: dict[str, str] = {

@@ -34,7 +34,7 @@ v0.2 的图形状（方案 D：酒店后置 + 锚点分叉）：
 """
 
 import operator
-from typing import Annotated, Dict, List, Literal, Optional, TypedDict
+from typing import Annotated, Dict, List, Optional, TypedDict
 
 from .schemas import (
     Attraction,

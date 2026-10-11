@@ -13,9 +13,11 @@ CORS 必须放行前端端口，否则浏览器直接拦掉请求 —— 而且*
 
 import logging
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 
+from ..config import get_settings
+from ..services import store
 from ..services.store import init_db
 from .routes import trip
 
@@ -50,6 +52,14 @@ app.add_middleware(
 # 这样第一个请求进来时库一定已经就绪，少一个"启动钩子没跑到"的失败模式。
 init_db()
 
+# 启动时把"生产该开而没开"的开关喊出来。默认关是为了本地开发和 CI 方便，
+# 但绝不能默默放行 —— 这类"忘了开鉴权"的问题上线后没人会主动发现。
+_settings = get_settings()
+if not (_settings.api_key or "").strip():
+    logger.warning("API_KEY 未设置：鉴权已关闭，仅适合本地开发；生产请在 .env 里设置。")
+if int(_settings.rate_limit_per_minute or 0) <= 0:
+    logger.warning("RATE_LIMIT_PER_MINUTE 未设置：限流已关闭；生产建议 5~10。")
+
 
 @app.get("/health", tags=["系统"], summary="健康检查")
 def health() -> dict:
@@ -59,3 +69,49 @@ def health() -> dict:
         "service": "trip-planner-agent",
         "version": app.version,
     }
+
+
+@app.get("/metrics", tags=["系统"], summary="监控指标（Prometheus 文本格式）")
+def metrics() -> Response:
+    """手工拼 Prometheus 文本格式，**零新依赖**。
+
+    为什么必须有：没有指标就只能靠用户投诉发现问题；有了它，告警规则可以直接写
+    "cache_hit_rate 连续 10 分钟为 0" 或 "avg_ms_generated > 120000"。
+
+    为什么不做额外埋点：这些数字**全部来自 run_log 表** —— 每次请求都往里记了一行。
+    能算出来的指标就别再加埋点，否则两套数据迟早对不上。
+    """
+    stats = store.stats()
+    lines = [
+        "# HELP trip_runs_total 累计请求数",
+        "# TYPE trip_runs_total counter",
+        f"trip_runs_total {stats['total_runs']}",
+        "# HELP trip_cached_runs_total 走行程库缓存的请求数",
+        "# TYPE trip_cached_runs_total counter",
+        f"trip_cached_runs_total {stats['cached_runs']}",
+        "# HELP trip_cache_hit_ratio 缓存命中率",
+        "# TYPE trip_cache_hit_ratio gauge",
+        f"trip_cache_hit_ratio {stats['cache_hit_rate']}",
+        "# HELP trip_itineraries_stored 行程库里的行程条数",
+        "# TYPE trip_itineraries_stored gauge",
+        f"trip_itineraries_stored {stats['itineraries_stored']}",
+        "# HELP trip_llm_calls_total 累计 LLM 调用次数（只统计真实生成的请求）",
+        "# TYPE trip_llm_calls_total counter",
+        f"trip_llm_calls_total {stats['llm_calls_generated']}",
+        "# HELP trip_tokens_total 累计 token（只统计真实生成的请求）",
+        "# TYPE trip_tokens_total counter",
+        f"trip_tokens_total {stats['tokens_generated']}",
+    ]
+    if stats["avg_ms_generated"] is not None:
+        lines += [
+            "# HELP trip_avg_generate_ms 未命中缓存的平均耗时（毫秒）",
+            "# TYPE trip_avg_generate_ms gauge",
+            f"trip_avg_generate_ms {stats['avg_ms_generated']:.0f}",
+        ]
+    if stats["avg_ms_cached"] is not None:
+        lines += [
+            "# HELP trip_avg_cached_ms 命中缓存的平均耗时（毫秒）",
+            "# TYPE trip_avg_cached_ms gauge",
+            f"trip_avg_cached_ms {stats['avg_ms_cached']:.0f}",
+        ]
+    return Response("\n".join(lines) + "\n", media_type="text/plain; version=0.0.4; charset=utf-8")

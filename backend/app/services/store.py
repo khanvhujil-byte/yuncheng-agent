@@ -70,6 +70,19 @@ CREATE TABLE IF NOT EXISTS run_log (
 
 CREATE INDEX IF NOT EXISTS idx_run_log_created ON run_log(created_at);
 
+-- v0.5：后台任务状态外置（解决 12-Factor 的 F12「agent 应该是无状态 reducer」）
+-- 内存里的 _jobs 只当缓存；**真正的状态在这里** —— 换副本或进程重启后仍能取到结果与进度。
+CREATE TABLE IF NOT EXISTS job_state (
+    thread_id     TEXT PRIMARY KEY,
+    status        TEXT NOT NULL,              -- running / done / error
+    events_json   TEXT NOT NULL DEFAULT '[]', -- 已产生的进度事件（SSE 重放用）
+    result_json   TEXT,                       -- 完成后的 TripPlanResponse
+    error         TEXT NOT NULL DEFAULT '',
+    started_at    REAL NOT NULL DEFAULT 0,
+    finished_at   REAL,
+    updated_at    TEXT NOT NULL
+);
+
 -- v0.4：后台生成任务与节点级 journal（对应 learn-claude-code 的 s11 后台任务 / s16 workflow journal）
 CREATE TABLE IF NOT EXISTS graph_run (
     thread_id     TEXT PRIMARY KEY,
@@ -285,6 +298,69 @@ def load_journal(thread_id: str) -> list[dict[str, Any]]:
         }
         for row in rows
     ]
+
+
+def save_job(
+    thread_id: str,
+    *,
+    status: str,
+    events: list[dict[str, Any]],
+    result: Optional[dict[str, Any]] = None,
+    error: str = "",
+    started_at: float = 0.0,
+    finished_at: Optional[float] = None,
+) -> None:
+    """把后台任务的状态写进库（每个进度事件后都刷一次）。
+
+    为什么每个事件都写：SSE 是"随时可能断"的。断线重连后要能把已发生的事件重放出来，
+    所以事件必须落盘，不能只活在内存里。写放大是每请求个位数次，SQLite 完全扛得住。
+    """
+    with _connect() as conn:
+        conn.execute(
+            """
+            INSERT INTO job_state (thread_id, status, events_json, result_json, error,
+                                   started_at, finished_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(thread_id) DO UPDATE SET
+                status      = excluded.status,
+                events_json = excluded.events_json,
+                result_json = excluded.result_json,
+                error       = excluded.error,
+                finished_at = excluded.finished_at,
+                updated_at  = excluded.updated_at
+            """,
+            (
+                thread_id,
+                status,
+                json.dumps(events, ensure_ascii=False, default=_json_default),
+                json.dumps(result, ensure_ascii=False, default=_json_default) if result else None,
+                error,
+                started_at,
+                finished_at,
+                _now(),
+            ),
+        )
+
+
+def load_job(thread_id: str) -> Optional[dict[str, Any]]:
+    """从库里读回任务状态（内存里没有时用它兜底）。"""
+    with _connect() as conn:
+        row = conn.execute(
+            "SELECT status, events_json, result_json, error, started_at, finished_at, updated_at "
+            "FROM job_state WHERE thread_id = ?",
+            (thread_id,),
+        ).fetchone()
+    if row is None:
+        return None
+    return {
+        "status": row["status"],
+        "events": json.loads(row["events_json"] or "[]"),
+        "result": json.loads(row["result_json"]) if row["result_json"] else None,
+        "error": row["error"] or "",
+        "started_at": row["started_at"],
+        "finished_at": row["finished_at"],
+        "updated_at": row["updated_at"],
+    }
 
 
 def stats() -> dict[str, Any]:

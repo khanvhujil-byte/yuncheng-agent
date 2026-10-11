@@ -1,0 +1,38 @@
+# 一条命令起前后端：docker compose up --build  →  http://127.0.0.1:8080
+#
+# 三个刻意的设计：
+#   1. 前端不直连后端，而是由 nginx 反代 /api —— 同源就没有 CORS，也不用把后端端口暴露给浏览器
+#   2. 行程库挂成 volume —— 容器删了重建，历史行程与 run_log 还在
+#   3. 密钥走 env_file 注入，绝不进镜像（.env 在 .gitignore 与 .dockerignore 里）
+
+services:
+  backend:
+    build:
+      context: ./backend
+    # 密钥与开关都从这里进：LLM_API_KEY / AMAP_API_KEY / PROMPT_COMPACT / WEATHER_USE_AGENT ...
+    # 缺这个文件时 compose 会直接报错 —— 这是有意的：宁可起不来，也别起来后静默用空 Key 跑。
+    env_file:
+      - ./backend/.env
+    environment:
+      APP_HOST: 0.0.0.0
+      APP_PORT: "8000"
+    volumes:
+      - trip_data:/app/data
+    ports:
+      # 只给本机调试用；生产应该去掉这一行，让流量只经 nginx
+      - "127.0.0.1:8000:8000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  trip_data:

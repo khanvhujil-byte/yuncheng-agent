@@ -26,7 +26,7 @@ import statistics
 import sys
 import time
 from dataclasses import dataclass, field
-from datetime import date, timedelta
+from datetime import date
 from pathlib import Path
 
 BACKEND = Path(__file__).resolve().parents[1]

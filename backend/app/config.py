@@ -83,6 +83,16 @@ class Settings(BaseSettings):
     app_port: int = 8000
     log_level: str = "INFO"
 
+    # ---- 上线必备：访问控制与限流（默认关，生产必须显式打开）----
+    api_key: str = ""
+    # ↑ 为空表示**不校验**（本地开发与 CI 友好）。生产设一个随机串：
+    #   python -c "import secrets;print(secrets.token_urlsafe(32))"
+    #   之后请求带 `X-API-Key: <key>` 或 `Authorization: Bearer <key>`。
+    rate_limit_per_minute: int = 0
+    # ↑ 每客户端每分钟请求数上限。<=0 表示关闭（默认）。
+    #   一次规划要花几十秒与一万多 token，生产建议 5~10 —— 限流保护的是上游配额和钱包。
+    #   V0 是进程内滑动窗口；多副本要换 Redis 计数器。
+
 
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:

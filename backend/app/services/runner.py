@@ -42,7 +42,7 @@ NODE_ORDER: list[str] = list(NODE_LABELS)
 @dataclass
 class Job:
     thread_id: str
-    request: TripRequest
+    request: Optional[TripRequest] = None
     status: str = "running"  # running / done / error
     events: list[dict[str, Any]] = field(default_factory=list)
     result: Optional[dict[str, Any]] = None  # TripPlanResponse 的 dict 形式
@@ -60,14 +60,59 @@ _jobs: dict[str, Job] = {}
 _lock = threading.Lock()
 
 
+def _persist(job: Job) -> None:
+    """把任务状态落库。
+
+    这是 12-Factor F12（agent 应该是无状态 reducer）的落点：
+    内存里的 `_jobs` 只是**缓存**，真正的状态在 SQLite 里 —— 所以多副本部署或进程重启后，
+    `/result` 与 `/stream` 依然能用。否则"用户在 A 副本提交、拉流打到 B 副本"就直接找不到任务。
+    落盘失败不能影响任务本身，所以这里吞掉异常、只记日志。
+    """
+    try:
+        # started_at 存 epoch 秒（不是进程内的 perf_counter），重启后算耗时才有意义
+        epoch_start = time.time() - job.elapsed_ms / 1000
+        store.save_job(
+            job.thread_id,
+            status=job.status,
+            events=job.events,
+            result=job.result,
+            error=job.error,
+            started_at=epoch_start,
+            finished_at=(epoch_start + job.elapsed_ms / 1000) if job.finished_at else None,
+        )
+    except Exception:  # noqa: BLE001
+        logger.exception("任务状态落盘失败 | %s", job.thread_id[:8])
+
+
 def get_job(thread_id: str) -> Optional[Job]:
+    """先查内存（快），再查库（跨进程 / 重启后的兜底）。"""
     with _lock:
-        return _jobs.get(thread_id)
+        job = _jobs.get(thread_id)
+    if job is not None:
+        return job
+
+    stored = store.load_job(thread_id)
+    if stored is None:
+        return None
+
+    job = Job(thread_id=thread_id, status=stored["status"])
+    job.events = list(stored["events"])
+    job.result = stored["result"]
+    job.error = stored["error"]
+    # 从 epoch 秒反推 perf_counter 起点：让重建出来的任务也能报出合理耗时
+    elapsed = (stored["finished_at"] or time.time()) - (stored["started_at"] or time.time())
+    job.started_at = time.perf_counter() - elapsed
+    job.finished_at = time.perf_counter() if stored["finished_at"] else None
+    logger.info("任务状态从库里恢复 | %s | status=%s", thread_id[:8], job.status)
+    with _lock:
+        _jobs[thread_id] = job
+    return job
 
 
 def _emit(job: Job, event: dict[str, Any]) -> None:
     with _lock:
         job.events.append(event)
+    _persist(job)  # 每个事件都落盘：SSE 断线重连后要能把已发生的事件重放出来
 
 
 def start_job(
@@ -101,6 +146,7 @@ def register_done_job(thread_id: str, req: TripRequest, result: dict[str, Any]) 
     job.finished_at = time.perf_counter()
     with _lock:
         _jobs[thread_id] = job
+    _persist(job)
     return job
 
 
@@ -140,6 +186,7 @@ def _run(job: Job, initial_state: dict[str, Any], finalize: Callable[[dict[str, 
         logger.exception("后台任务失败 | %s", job.thread_id[:8])
     finally:
         job.finished_at = time.perf_counter()
+        _persist(job)
 
 
 # ================================================================ 断点续跑

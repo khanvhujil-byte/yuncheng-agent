@@ -19,7 +19,7 @@ import logging
 import math
 from dataclasses import dataclass, field
 from datetime import date, timedelta
-from typing import Any, Callable, Optional
+from typing import Any, Optional
 
 from ..models.schemas import Attraction, Hotel, Location, WeatherInfo
 from . import amap
