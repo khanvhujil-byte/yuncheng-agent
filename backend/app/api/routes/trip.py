@@ -30,6 +30,7 @@ from fastapi.responses import StreamingResponse
 
 from ...agents.graph import app as trip_graph
 from ...agents.graph import build_graph
+from ...agents.verify_budget import verify_budget
 from ...agents.verify_plan import verify_plan
 from ...agents.weather_agent import weather_warnings
 from ...models.schemas import TripPlanResponse, TripRequest
@@ -161,6 +162,32 @@ def _degraded_sources(payload: dict) -> list[str]:
     return [key for key, value in (payload.get("sources") or {}).items() if value == "degraded"]
 
 
+def _budget_reasons(verdict: dict | None) -> list[str]:
+    """预算复核结论里**不能算成功**的那几种（v0.7）。
+
+    注意 `unverified`（存在未知项）**不在这里**：它是"我们没确认"，不是"确实超了"。
+    它照样会作为 warning 告诉用户，也照样会阻止入库，但不把整份行程判成失败 ——
+    否则只要有一个景点门票查不到，所有行程都会变成"部分结果"，那是在惩罚用户。
+    """
+    if not verdict:
+        return []
+    status = verdict.get("status")
+    if status == "known_exceeded":
+        return [f"预算已超限（已知费用已超）：{verdict.get('basis', '')}"]
+    if status == "estimated_exceeded":
+        return [f"按估算很可能超预算：{verdict.get('basis', '')}"]
+    return []
+
+
+def _cacheable_budget_status(verdict: dict | None) -> bool:
+    """只有"没设上限"或"确认在上限内"的行程才允许进缓存。
+
+    为什么 `unverified` 也不行：缓存是**给之后的人复用**的答案。
+    把一份"预算没验证过"的行程存进去，等于把一次不确定性固化成默认答案。
+    """
+    return ((verdict or {}).get("status") or "none") in ("none", "within")
+
+
 def _unresolved_reasons(final: dict, data: dict) -> list[str]:
     """这份计划**还没解决掉**的问题（用来判 success，也用来决定能不能入库）。
 
@@ -248,20 +275,22 @@ def _finalize(
     # ★ 成功 = 有行程 **且** 数据没降级 **且** 校验没有未解决项。
     #   第三个条件是补上的（见 _unresolved_reasons 的说明）：只看前两个会把
     #   "重试用尽的不合格计划"标成成功，并让它进缓存。
-    unresolved = _unresolved_reasons(final, data)
+    unresolved = _unresolved_reasons(final, data) + _budget_reasons(final.get("budget_verdict"))
     ok = bool(days) and not degraded and not unresolved
     message = "" if ok else _partial_message(degraded, unresolved, bool(days))
 
-    # 只有「完整、无降级、且通过校验」的行程才入库。
-    # 两个都不能省：降级的入库 = 把一次故障永久固化；
-    # 不合格的入库 = 把一份"系统自己知道排不下"的计划变成之后所有人的默认答案。
-    if ok and not cached:
+    # 只有「完整、无降级、通过校验、且预算状态可确认」的行程才入库。
+    # 后两条都不能省：降级的入库 = 把一次故障永久固化；
+    # 不合格的入库 = 把一份"系统自己知道排不下"的计划变成之后所有人的默认答案；
+    # 预算未验证的入库 = 把一次不确定性固化成默认答案。
+    if ok and not cached and _cacheable_budget_status(final.get("budget_verdict")):
         store.save_itinerary(fingerprint, req, data)
         logger.info("行程已入库 | fingerprint=%s days=%d", fingerprint[:8], len(days))
-    elif not ok:
+    elif not ok or not _cacheable_budget_status(final.get("budget_verdict")):
         logger.info(
-            "行程**不入库**（未通过校验或数据降级）| fingerprint=%s degraded=%s unresolved=%s",
+            "行程**不入库** | fingerprint=%s degraded=%s unresolved=%s budget=%s",
             fingerprint[:8], degraded, unresolved[:2],
+            (final.get("budget_verdict") or {}).get("status"),
         )
 
     usage = final.get("usage") or {}
@@ -307,6 +336,10 @@ def _cached_response(
     if audit.get("validate_error"):
         unresolved.append(str(audit["validate_error"]))
     unresolved.extend(_unresolved_reasons({}, data))
+    # 预算也要重算一遍结论：复用的是历史行程，而这次请求的上限来自本次 request。
+    # verify_budget 是纯代码（0 次 LLM），在这里跑没有任何成本。
+    budget_verdict = verify_budget({"plan": data, "request": req}).get("budget_verdict")
+    unresolved.extend(_budget_reasons(budget_verdict))
 
     ok = bool(days) and not degraded and not unresolved
     warnings = list(data.get("warnings") or [])

@@ -13,6 +13,7 @@ from .budget import patch_budget
 from .city import validate_city
 from .hotel_agent import resolve_hotel
 from .planner_agent import compose_plan
+from .verify_budget import verify_budget
 from .verify_plan import verify_plan
 from .weather_agent import collect_weather
 
@@ -63,6 +64,7 @@ def build_graph(start_at: str | None = None):
     g.add_node("verify_plan", verify_plan)
     g.add_node("resolve_hotel", resolve_hotel)
     g.add_node("patch_budget", patch_budget)
+    g.add_node("verify_budget", verify_budget)
 
     # ---- 入口 ----
     # start_at：**断点续跑**用。默认从 validate_city 开始；
@@ -107,9 +109,14 @@ def build_graph(start_at: str | None = None):
         {"retry": "compose_plan", "next": "resolve_hotel"},
     )
 
-    # ---- v0.2：酒店后置，然后算钱 ----
+    # ---- v0.2：酒店后置，然后算钱；v0.7：算完钱之后**独立复核预算** ----
     g.add_edge("resolve_hotel", "patch_budget")
-    g.add_edge("patch_budget", END)
+    # ★ 复核必须在汇总**之后**。原先的费用检查写在 verify_plan 里，而图顺序是
+    #   verify_plan → resolve_hotel → patch_budget —— 检查发生时预算还没算出来，
+    #   那条"单日占比"检查因此从来没触发过：它看起来在工作，实际永远不执行。
+    #   这也是"代码里有名字有接口，但缺少严格完成条件"的典型。
+    g.add_edge("patch_budget", "verify_budget")
+    g.add_edge("verify_budget", END)
 
     return g.compile()
 

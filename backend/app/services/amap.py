@@ -216,9 +216,13 @@ def search_poi(keywords: str, city: str, offset: int = 20, page: int = 1) -> lis
                 photos=photos,
                 image_url=photos[0] if photos else None,
                 poi_id=_s(poi.get("id")),
-                # 门票价：高德 biz_ext.cost 实测为空 []，所以这里恒为 0。
-                # 0 有两种含义（真免费 / 高德没给），由 sources 区分，不能自己猜。
-                ticket_price=0,
+                # ★ v0.7：门票价改成"未知"（None + unknown），不再写 0。
+                #   高德 biz_ext.cost 实测恒为空 []（见本模块开头的实测记录），
+                #   所以 0 **不是**"真免费"，而是"我们不知道"。原先写 0 的后果是：
+                #   预算里门票恒为 0 元，用户看到的"总计 2060"其实漏掉了所有门票，
+                #   而系统还宣称"在当前口径内未超限"。未知就是未知。
+                ticket_price=None,
+                ticket_price_status="unknown",
             )
         )
     return result

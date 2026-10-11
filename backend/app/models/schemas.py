@@ -33,6 +33,17 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 #            一个前端不认识的来源值会一路流到页面上，只是标签不显示而已（最难查的那种 bug）。
 DataSource = Literal["amap", "llm_estimated", "degraded", "user", "java"]
 
+# 费用项的**置信度**（v0.7 新增）。三态是"每一项费用自己的属性"，不是一个全局开关：
+#   known      有确切来源的真实金额（高德门票、免费景点、用户已定酒店）
+#   estimated  模型或固定规则估出来的金额（餐饮、交通、酒店价）
+#   unknown    金额未知 —— **amount 必须是 None，绝不能用 0**
+#              （0 的含义是"真免费"，把"未知"写成 0 就是"按零元通过预算"，那是撒谎）
+CostStatus = Literal["known", "estimated", "unknown"]
+
+# 费用的来源。和 DataSource 分开是因为语义不同：
+#   static_estimate 是我们自己的固定表（比如交通费按每人每天 40 元），既不是高德也不是模型
+CostSource = Literal["amap", "llm_estimated", "static_estimate", "unknown"]
+
 
 # ================================================================ 输入
 
@@ -76,6 +87,13 @@ class TripRequest(BaseModel):
     travel_days: int = Field(ge=1, le=30)  # 用 Field 声明约束，比手写 validator 好：约束会进 OpenAPI schema
     end_date: Optional[str] = None  # v0.2：可选。提供则须与 travel_days 一致，否则 422
     nights: Optional[int] = None  # v0.2：可选。默认 travel_days - 1；住宿费按它算
+
+    # ---- 预算约束（v0.7 新增：预算从"事后估算"变成"规划约束"）----
+    budget_limit: Optional[int] = Field(default=None, ge=1, le=10_000_000)
+    # ↑ 用户能给的总预算上限（元）。None = 不限。
+    #   它是**约束**而不是"期望值"：verify_budget 会拿汇总结果与它比对，把结论写进
+    #   Budget.limit_status（within / known_exceeded / estimated_exceeded / unverified）。
+    #   以前只有"事后报个估算总价"，用户无法知道这份行程到底在不在他的预算内。
 
     # ---- 偏好（软约束，填不满可以让位）----
     transportation: str  # 公共交通 / 自驾 / 步行 / 混合；用于估算交通费
@@ -125,7 +143,13 @@ class Attraction(BaseModel):
     photos: List[str] = Field(default_factory=list)  # 高德 pois[].photos[].url 自带图片，所以本项目不需要 Unsplash
     poi_id: Optional[str] = None  # 高德 POI ID。去重要按它做，不能按 name（「西湖」和「西湖风景区」是两条）
     image_url: Optional[str] = None  # 主图，通常取 photos[0]
-    ticket_price: int = 0  # 门票价。0 有两种含义：真免费 / 高德没给，靠 sources 区分，不能自己猜
+    # ★ v0.7：门票价改成**可空 + 带三态**。原先 `int = 0` 的注释自己就承认
+    #   "0 有两种含义：真免费 / 高德没给" —— 那就是把"未知"混进了数字里。
+    #   后果很具体：高德 biz_ext.cost 实测恒为空（见 amap.py），于是所有门票都是 0，
+    #   预算里"门票 0 元"，而用户在预算卡上看到的是"总计 2060"这种像模像样的数字。
+    #   现在：未知就是 None，并且逐项标明 known/estimated/unknown。
+    ticket_price: Optional[int] = None
+    ticket_price_status: CostStatus = "unknown"
     required: bool = False  # v0.2：是否来自用户的 must_visit（前端给「必去」打标，也用于满足性对账）
 
 
@@ -205,11 +229,37 @@ class WeatherInfo(BaseModel):
 # ================================================================ 行程结构
 
 
+class CostItem(BaseModel):
+    """一条费用项（v0.7 新增）—— **三态落在费用项上，而不是只给汇总打一个标记**。
+
+    为什么必须逐项：只知道"总预算里有未知项"没法回答用户真正的问题
+    （"到底是哪一项不确定？能不能把它查清楚？"）。逐项记下来，前端才能指着某一项说
+    "这个景点门票没查到"，用户也才知道该去补什么信息。
+
+    不变式：`status == "unknown"` 时 `amount` 必须是 None。代码里有断言守着。
+    """
+
+    category: Literal["attraction", "meal", "hotel", "transportation"]
+    name: str
+    day_index: Optional[int] = None  # 行程级开销（住宿 / 交通）为 None
+    # ★ 未知用 None，不是 0。0 是"真免费"，None 是"不知道"——这两件事差一个数量级
+    amount: Optional[int] = None
+    status: CostStatus
+    source: CostSource
+    note: str = ""
+
+
 class Budget(BaseModel):
     """预算汇总。由 agents/budget.py 纯代码计算，不过 LLM。
 
     加法是确定性的，模型做加法会错，而且这种错误很难被发现——
     预算卡上写着「总计 2060」，你不会真去逐项加一遍。
+
+    ★ v0.7 起它**不再代表"够不够"**：
+        `total` 只是"已知 + 估算"的和（保留它是为了前端平滑迁移），
+        够不够看 `limit_status` —— 它由 `agents/verify_budget.py` 在汇总之后独立复核得出。
+        原先 `verify_plan` 里的"单日费用占比"检查读的是这个 total，而那时预算还没算出来
+        （图顺序是 verify_plan → resolve_hotel → patch_budget），所以那条检查从来没触发过。
     """
 
     total_attractions: int = 0  # 各天 Attraction.ticket_price 求和
@@ -219,6 +269,24 @@ class Budget(BaseModel):
     total_meals: int = 0  # 各天三餐 Meal.estimated_cost 求和
     total_transportation: int = 0  # 由模型按交通方式与天数估算（这一项是估算，不是求和）
     total: int = 0  # 四项之和。必须代码算，禁止模型生成
+
+    # ---- v0.7：逐项三态 + 分类汇总 ----
+    items: List[CostItem] = []
+    known_total: int = 0  # status == known 的金额合计（真实可核对的部分）
+    estimated_total: int = 0  # status == estimated 的金额合计（估算部分）
+    unknown_items: List[str] = []  # 金额未知的费用项名称。**它们没有被算进 total**
+    # ↑ 这就是"不能按零元通过"的落点：total 里没有它们，但它们的存在会改变结论。
+
+    # ---- v0.7：用户上限与预算结论（由 verify_budget 独立复核）----
+    limit: Optional[int] = None  # 用户给的总预算上限；None = 没给，不做预算约束
+    limit_status: Literal[
+        "none",  # 用户没给上限
+        "within",  # 在当前数据与估算口径内未超限（依据见 limit_basis）
+        "known_exceeded",  # 已知费用就已超限 —— 这是**硬违反**
+        "estimated_exceeded",  # 加入估算后超限 —— 不能据此断言实际无解
+        "unverified",  # 存在影响判断的未知项 —— **无法确认**满足预算
+    ] = "none"
+    limit_basis: str = ""  # 结论的依据（写清楚是按哪些数、哪个口径算的）
 
 
 class ConstraintReport(BaseModel):

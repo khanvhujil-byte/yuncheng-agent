@@ -123,7 +123,9 @@ class TestJobRegistry:
 
     def test_node_labels_are_chinese(self):
         assert runner.NODE_LABELS["verify_plan"] == "独立复核"
+        assert runner.NODE_LABELS["verify_budget"] == "预算复核"
         assert set(runner.NODE_LABELS) == {
             "validate_city", "collect_attractions", "collect_weather",
             "compose_plan", "verify_plan", "resolve_hotel", "patch_budget",
+            "verify_budget",
         }

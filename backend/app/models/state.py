@@ -171,6 +171,14 @@ class TripState(TypedDict):
     #   ★ 这个键必须在 TypedDict 里声明：未声明的键会被 LangGraph **静默丢弃**
     #     （我们已经被这个坑咬过一次：hotel_nights 丢失导致住宿费算成 0）。
 
+    # ---- 预算复核结论（v0.7：预算从"事后估算"变成"规划约束"）----
+    budget_verdict: Optional[Dict[str, object]]
+    # ↑ 由 `agents/verify_budget.py` 在 patch_budget **之后**写：
+    #   {status, limit, known_total, estimated_total, unknown_items, basis}。
+    #   为什么单独一个键而不是塞回 plan.budget：结论要参与**最终 success 与缓存准入**的判断，
+    #   而 plan 是给用户看的产物、会被序列化进行程库；结论属于"过程判定"，分开更清楚。
+    #   ★ 同样必须声明 —— 未声明的键会被 LangGraph 静默丢弃。
+
     # ---- 可观测性与上下文计量 ----
     trace: Annotated[List[TraceEntry], operator.add]  # 每完成一个节点追加一条
     usage: Annotated[Dict[str, int], _merge_usage]

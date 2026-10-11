@@ -66,9 +66,39 @@ class TestTotals:
         assert budget["total_attractions"] == 100
         assert budget["total_meals"] == 150  # 三餐，每餐 50
 
-    def test_zero_ticket_prices_are_warned(self):
+    def test_price_without_status_is_estimated(self):
+        """★ v0.7 语义变更（这条原先断言"0 会触发门票未获取警告"，已按新契约改写）。
+
+        旧语义：门票的 0 有两种含义（真免费 / 高德没给），靠 sources 区分 —— 于是"未知"混进了数字里。
+        新语义：未知一律是 `None` + `status=unknown`；**带了价格却没标来源**的按"估算"处理
+                （有信息的输入不该被当成没信息）。真实链路里 amap 给的就是 None，
+                所以会走 unknown 那条（见下面那个用例）。
+        """
         days = [make_day(0, "2026-10-10", [make_attraction("免费公园", ticket_price=0)])]
         result = patch_budget(_state(days, hotel=make_hotel()))
+        items = result["plan"]["budget"]["items"]
+        attraction = next(i for i in items if i["category"] == "attraction")
+        assert attraction["status"] == "estimated"
+        assert attraction["amount"] == 0
+
+    def test_unknown_ticket_price_is_excluded_from_total(self):
+        """★ 核心不变量：金额未知的费用项**不进 total**，而是列进 unknown_items。
+
+        这是"未知不能按零元通过"的落点：以前未知写 0 会被当成"免费"，
+        预算卡上的总价看起来像真的，实际漏掉了这些项。
+        """
+        spot = make_attraction("门票不明的景点")
+        spot.ticket_price = None
+        spot.ticket_price_status = "unknown"
+        days = [make_day(0, "2026-10-10", [spot])]
+        result = patch_budget(_state(days, hotel=make_hotel(price=200, nights=1),
+                                     nights=1, travel_days=1))
+        budget = result["plan"]["budget"]
+
+        assert budget["total_attractions"] == 0
+        assert "门票不明的景点" in budget["unknown_items"]
+        # 总计 = 已知 + 估算，绝不含那个"未知当 0"的项
+        assert budget["known_total"] + budget["estimated_total"] == budget["total"]
         assert any("门票价未获取" in w for w in result["warnings"])
 
 

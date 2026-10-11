@@ -35,6 +35,7 @@ NODE_LABELS: dict[str, str] = {
     "verify_plan": "独立复核",
     "resolve_hotel": "选择住宿",
     "patch_budget": "计算预算",
+    "verify_budget": "预算复核",
 }
 NODE_ORDER: list[str] = list(NODE_LABELS)
 

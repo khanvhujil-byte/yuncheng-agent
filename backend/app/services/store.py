@@ -159,6 +159,10 @@ def fingerprint_of(req: TripRequest) -> str:
         "must_visit": sorted(m.strip() for m in (req.must_visit or []) if m.strip()),
         "fixed_hotel": (req.fixed_hotel or "").strip(),
         "free_text_input": (req.free_text_input or "").strip(),
+        # ★ 预算上限必须进指纹：它是**约束**，不是展示字段。
+        #   不写进来的话，"预算 2000 的杭州 3 天"会命中"预算不限的杭州 3 天"，
+        #   把一份可能超限的行程当成合格答案返回 —— 这是最典型的缓存语义错误。
+        "budget_limit": req.budget_limit,
     }
     raw = json.dumps(payload, ensure_ascii=False, sort_keys=True)
     return hashlib.sha256(raw.encode("utf-8")).hexdigest()

@@ -275,6 +275,11 @@ def _enrich(days: list[DayPlan], candidates: list[Attraction]) -> int:
             #   要么漏报真实的长距离奔波，要么报出一个不存在的问题。
             #   原则与"天气不让模型复述"完全一致：**地理事实来自数据快照，模型只负责点哪个景点**。
             item.location = source.location
+            # ★ 门票价同样用池子里的值覆盖（含"未知"这个状态）：
+            #   prompt 里教模型输出 ticket_price=0，而池子里其实是 unknown ——
+            #   不覆盖的话，模型那句 0 会被当成"免费"，正好把"未知"洗成"不要钱"。
+            item.ticket_price = source.ticket_price
+            item.ticket_price_status = source.ticket_price_status
             item.image_url = item.image_url or source.image_url
             item.photos = item.photos or list(source.photos)
             item.required = item.required or source.required
