@@ -27,17 +27,17 @@
 
 | 任务 | 基线判定 | 基线打分 | CP-SAT 判定 | 求解状态 | 打分 | 求解耗时(s) | 预算状态 | 与 expect 是否一致 |
 |---|---|---|---|---|---|---|---|---|
-| T01_relaxed_feasible | FEASIBLE | PASS | FEASIBLE | OPTIMAL | PASS | 0.154 | unverified | 一致 |
-| T02_capacity_style_infeasible | INFEASIBLE | FAIL | INFEASIBLE | INFEASIBLE | FAIL | 0.157 | - | 一致 |
-| T03_unknown_cost | FEASIBLE | PASS | FEASIBLE | OPTIMAL | PASS | 0.132 | unverified | 一致 |
-| T04_tight_window_feasible | INFEASIBLE | FAIL | FEASIBLE | OPTIMAL | PASS | 0.014 | within | 一致 |
-| T05_five_minutes_short | INFEASIBLE | FAIL | INFEASIBLE | INFEASIBLE | FAIL | 0.121 | - | 一致 |
-| T06_cross_day_split | FEASIBLE | PASS | FEASIBLE | OPTIMAL | PASS | 0.075 | within | 一致 |
-| T07_two_must_one_slot | FEASIBLE | PASS | FEASIBLE | OPTIMAL | PASS | 0.007 | within | 一致 |
-| T08_budget_tight | FEASIBLE | PASS | FEASIBLE | OPTIMAL | PASS | 0.194 | estimated_exceeded | 一致 |
-| T09_budget_unverified | FEASIBLE | PASS | FEASIBLE | OPTIMAL | PASS | 0.124 | unverified | 一致 |
-| T10_unknown_bound_trips | FEASIBLE | PASS | FEASIBLE | OPTIMAL | PASS | 0.030 | unverified | 一致 |
-| T11_known_price_over_budget | FEASIBLE | FAIL | INFEASIBLE | INFEASIBLE | FAIL | 0.053 | - | 一致 |
+| T01_relaxed_feasible | FEASIBLE | PASS | FEASIBLE | OPTIMAL | PASS | 0.153 | unverified | 一致 |
+| T02_capacity_style_infeasible | INFEASIBLE | FAIL | INFEASIBLE | INFEASIBLE | FAIL | 0.159 | - | 一致 |
+| T03_unknown_cost | FEASIBLE | PASS | FEASIBLE | OPTIMAL | PASS | 0.160 | unverified | 一致 |
+| T04_tight_window_feasible | INFEASIBLE | FAIL | FEASIBLE | OPTIMAL | PASS | 0.013 | within | 一致 |
+| T05_five_minutes_short | INFEASIBLE | FAIL | INFEASIBLE | INFEASIBLE | FAIL | 0.102 | - | 一致 |
+| T06_cross_day_split | FEASIBLE | PASS | FEASIBLE | OPTIMAL | PASS | 0.076 | within | 一致 |
+| T07_two_must_one_slot | FEASIBLE | PASS | FEASIBLE | OPTIMAL | PASS | 0.006 | within | 一致 |
+| T08_budget_tight | FEASIBLE | PASS | FEASIBLE | OPTIMAL | PASS | 0.185 | estimated_exceeded | 一致 |
+| T09_budget_unverified | FEASIBLE | PASS | FEASIBLE | OPTIMAL | PASS | 0.125 | unverified | 一致 |
+| T10_unknown_bound_trips | FEASIBLE | PASS | FEASIBLE | OPTIMAL | PASS | 0.031 | unverified | 一致 |
+| T11_known_price_over_budget | FEASIBLE | FAIL | INFEASIBLE | INFEASIBLE | FAIL | 0.045 | - | 一致 |
 
 ## 不可行诊断（充分子集，不是最小冲突集）
 
