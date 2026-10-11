@@ -207,11 +207,29 @@ async def main() -> int:
 
         # ---------------------------------------------------------- 6. 排行榜
         print("\n=== 6) 排行榜（时间衰减）===", flush=True)
-        board = (await client.get(f"{JAVA}/leaderboard", params={"type": "hot", "limit": 10}, timeout=20)).json()
-        top = (board.get("items") or [{}])[0]
-        require("目标行程进了热榜第一", top.get("itineraryId") == itinerary_id,
-                f"top={top.get('title')} likes={top.get('likeCount')} hot={top.get('hotScore')}")
-        require("热榜带了 aiSummary（Java 回填的）", bool(top.get("aiSummary")), "")
+        board = (await client.get(f"{JAVA}/leaderboard", params={"type": "hot", "limit": 20}, timeout=20)).json()
+        items = board.get("items") or []
+
+        # ★ 断言的是**不变量**，不是"排第几"。
+        #   原先这里写的是"目标行程必须是热榜第一" —— 它只在库里没有更热行程时成立，
+        #   多次跑批攒下数据后必然失败。那是测试写脆了，不是产品坏了：
+        #   系统从没承诺"新点的赞一定登顶"（时间衰减 + 已有票数共同决定名次）。
+        entry = next((item for item in items if item.get("itineraryId") == itinerary_id), None)
+        require("目标行程出现在热榜里", entry is not None,
+                f"榜上 id = {[item.get('itineraryId') for item in items]}")
+        if entry is not None:
+            require("热榜里的点赞数与 Redis 一致", entry.get("likeCount") == expected,
+                    f"榜上 {entry.get('likeCount')} vs 期望 {expected}")
+        scores = [float(item.get("hotScore") or 0) for item in items]
+        require("热榜按热度分降序", scores == sorted(scores, reverse=True),
+                f"hotScore = {scores[:6]}")
+        require("热榜里的行程都带 aiSummary（Java 回填的）",
+                all(item.get("aiSummary") for item in items), "")
+        if items:
+            print(f"     榜首: {items[0].get('title')} | {items[0].get('likeCount')} 赞 "
+                  f"| 热度 {items[0].get('hotScore')}", flush=True)
+            print(f"     目标 #{itinerary_id} 名次: {[i.get('itineraryId') for i in items].index(itinerary_id) + 1}"
+                  f"/{len(items)}", flush=True)
 
         newest = (await client.get(f"{JAVA}/leaderboard", params={"type": "new", "limit": 5}, timeout=20)).json()
         require("最新榜可用", newest.get("count", 0) >= 1, f"count={newest.get('count')}")

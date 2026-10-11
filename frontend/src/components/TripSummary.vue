@@ -34,6 +34,12 @@ const props = defineProps<{
   cacheHitCount?: number
   /** 最初生成时间（ISO 字符串） */
   cacheSavedAt?: string | null
+  /**
+   * 生成这份行程时用的偏好标签（由 HomeView 提交时快照传入）。
+   * 为什么由外面传：TripPlan 里没有偏好 —— 它只记录"排好的每天去哪"，
+   * 而偏好是**请求**的信息。发布到社区时 Java 要靠它累积"常见偏好"热度。
+   */
+  preferences?: string[]
 }>()
 
 /** 只有显式 cached === true 才显示徽标：undefined / false 都当没命中 */
@@ -282,7 +288,7 @@ function tempText(value: number | string | undefined): string {
 
     <!-- 导出面板放最底部：它是「整份行程看完了，要带走」的收尾动作，
          放顶部会打断阅读，放底部符合流程顺序（先看，再导出） -->
-    <ExportPanel :plan="plan" />
+    <ExportPanel :plan="plan" :preferences="preferences" />
   </section>
 </template>
 

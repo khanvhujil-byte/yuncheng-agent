@@ -14,12 +14,21 @@
  * 能被任何笔记软件打开，是「带出门」最实用的格式。
  * 打印 / 存 PDF 交给浏览器原生的 window.print()，不额外引入渲染逻辑。
  */
-import { Download, Printer } from 'lucide-vue-next'
-import { computed } from 'vue'
+import { Download, Printer, Send, TrendingUp } from 'lucide-vue-next'
+import { computed, ref } from 'vue'
 
+import { ApiError, publishToCommunity } from '@/services/api'
 import type { DataSource, DayPlan, Meal, TripPlan } from '@/types/trip'
 
-const props = defineProps<{ plan: TripPlan }>()
+const props = defineProps<{
+  plan: TripPlan
+  /**
+   * 生成这份行程时用的偏好标签（HomeView 在提交时快照、经 TripSummary 传下来）。
+   * 发布到社区时要一起上报：Java 靠它累积"常见偏好"热度，那正是反哺生成时最有用的数据。
+   * TripPlan 里没有偏好 —— 偏好属于"请求"，不属于"结果"。
+   */
+  preferences?: string[]
+}>()
 
 /** 数据来源 → 中文说明。和后端 DataSource 联合类型逐字对应 */
 const SOURCE_LABELS: Record<DataSource, string> = {
@@ -27,6 +36,9 @@ const SOURCE_LABELS: Record<DataSource, string> = {
   llm_estimated: '模型估算',
   degraded: '获取失败（已降级）',
   user: '用户指定',
+  // ★ 这是个穷尽映射（Record<DataSource, string>）：后端新增一种来源而这里没补，
+  //   vue-tsc 会直接报错 —— 比运行时发现"标签没显示"强得多。
+  java: '来自社区统计',
 }
 
 /** 来源 key → 中文名。key 的约定写在 types/trip.ts 的 SourceMap 注释里 */
@@ -258,6 +270,41 @@ const fileName = computed(() => {
   return `${city}${props.plan.days.length}日行程.md`
 })
 
+// ================================================================ 发布到社区
+
+const publishState = ref<'idle' | 'sending' | 'done' | 'error'>('idle')
+const publishMessage = ref('')
+const publishedId = ref<number | null>(null)
+
+const publishButtonText = computed(() => {
+  if (publishState.value === 'sending') return '发布中…'
+  if (publishState.value === 'done') return `已发布（#${publishedId.value}）`
+  return '发布到社区'
+})
+
+async function publish() {
+  publishState.value = 'sending'
+  publishMessage.value = ''
+  try {
+    const result = await publishToCommunity(props.plan, undefined, props.preferences)
+    if (result.success && result.itinerary_id) {
+      publishedId.value = result.itinerary_id
+      publishState.value = 'done'
+      publishMessage.value = result.message
+    } else {
+      // 业务层面的失败（社区服务不可用）：行程还在用户手上，这一点要说清楚
+      publishState.value = 'error'
+      publishMessage.value = `${result.message}（这份行程仍在你本地，不会丢）`
+    }
+  } catch (error) {
+    publishState.value = 'error'
+    publishMessage.value =
+      error instanceof ApiError
+        ? `${error.message}（这份行程仍在你本地，不会丢）`
+        : '发布失败，请稍后重试。'
+  }
+}
+
 function download(): void {
   // 开头的 \uFEFF 是 UTF-8 BOM。
   // 为什么必须加：Windows 记事本 / Excel 打开没有 BOM 的 UTF-8 文件时
@@ -304,6 +351,41 @@ function print(): void {
       <p class="footnote">
         「打印 / 存 PDF」会调用浏览器打印对话框，在目标位置选「另存为 PDF」即可。
         导出文件名：{{ fileName }}
+      </p>
+    </div>
+
+    <!--
+      发布到社区：这条路是**跨服务的**（Python 收到请求 → 转发给 Java 入库 →
+      Java 再回调 Python 生成简介）。所以三种结果要分清楚给用户：
+        成功   → 给出编号 + 去榜单看看
+        失败   → 说清"社区服务不可用"，并且强调"行程还在你这儿"
+    -->
+    <div class="card publish">
+      <div class="card-title">
+        <Send :size="16" />
+        发布到社区
+      </div>
+      <p class="hint">
+        把这份行程交给 Java 社区服务入库（它持有数据库），
+        发布时会调用模型生成一句简介。发布后别人可以点赞、看到它上榜。
+      </p>
+      <div class="actions">
+        <button
+          class="action-btn primary"
+          type="button"
+          :disabled="publishState === 'sending' || publishState === 'done'"
+          @click="publish"
+        >
+          <Send :size="15" />
+          {{ publishButtonText }}
+        </button>
+        <router-link v-if="publishState === 'done'" class="action-btn" to="/community">
+          <TrendingUp :size="15" />
+          去社区榜看看
+        </router-link>
+      </div>
+      <p v-if="publishMessage" :class="['publish-msg', publishState === 'error' ? 'bad' : 'good']">
+        {{ publishMessage }}
       </p>
     </div>
   </section>
@@ -378,6 +460,24 @@ function print(): void {
   line-height: 1.8;
   word-break: break-all;
 }
+
+.publish {
+  margin-top: 12px;
+}
+
+.publish-msg {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.publish-msg.good {
+  color: #2f7d54;
+}
+
+.publish-msg.bad {
+  color: #b4453f;
+}
 </style>
 
 <!--
@@ -430,6 +530,11 @@ function print(): void {
   /* 本组件自己的按钮不该出现在纸上 */
   .export-panel .actions,
   .export-panel .footnote {
+    display: none;
+  }
+
+  /* 「发布到社区」是纯线上动作，纸上没有任何意义，整块不打印 */
+  .export-panel .publish {
     display: none;
   }
 

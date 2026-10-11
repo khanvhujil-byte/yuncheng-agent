@@ -144,6 +144,22 @@ public class LikeService {
         return true;
     }
 
+    /**
+     * 让一条新行程**进入榜单**（score = 0）。
+     *
+     * <p>为什么发布时就要写 ZSET：热榜是从 Redis ZSET 读的，而 ZSET 原先只在"被点赞"时写入，
+     * 结果就是**刚发布的行程在热榜里根本不存在** —— 用户发布后点"去社区榜看看"
+     * 落在默认的热门榜上，看不到自己刚发的东西，会以为发布失败。
+     * （真机验证时被抓到的产品问题。）
+     *
+     * <p>给它 0 分而不是"直接排前面"：热度就是热度，新发布且没人赞就该在榜尾，
+     * 时间衰减会随着时间推移自然把它往上带。这里只解决"可见性"，不伪造热度。
+     */
+    public void enterLeaderboard(long itineraryId) {
+        redis.opsForZSet().add(LEADERBOARD_KEY, String.valueOf(itineraryId), 0);
+        log.debug("行程进入榜单（0 赞） | id={}", itineraryId);
+    }
+
     /** 把 Redis 里的计数回填进 meta，供排行榜读取时做时间衰减。 */
     public void warmMeta(long itineraryId, String city, String createdAt) {
         String metaKey = META_KEY.formatted(itineraryId);

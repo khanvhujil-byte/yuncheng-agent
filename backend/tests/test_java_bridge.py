@@ -88,12 +88,15 @@ class TestPublish:
         monkeypatch.setattr(java_bridge.httpx, "post", fake_post)
         itinerary_id = java_bridge.publish_itinerary(
             title="杭州两日", city="杭州", travel_days=2,
-            start_date="2026-10-20", plan={"city": "杭州", "days": []}, user_id=7)
+            start_date="2026-10-20", plan={"city": "杭州", "days": []},
+            preferences=["自然风光", "博物馆"], user_id=7)
 
         assert itinerary_id == 42
         assert captured["url"].endswith("/itineraries")
         assert captured["json"]["travelDays"] == 2          # 字段名按 Java 的驼峰契约
         assert captured["json"]["plan"]["city"] == "杭州"    # 行程原样透传，不做翻译
+        # ★ 偏好必须显式传：plan 里没有它，而 Java 要靠它累积"常见偏好"热度
+        assert captured["json"]["preferences"] == ["自然风光", "博物馆"]
         assert captured["headers"]["X-User-Id"] == "7"
 
     def test_publish_failure_returns_none(self):
@@ -163,16 +166,44 @@ class TestPublishRoute:
 
         from app.api.main import app
 
-        monkeypatch.setattr(java_bridge.httpx, "post",
-                            lambda *a, **k: FakeResponse({"success": True, "itineraryId": 99}))
+        captured = {}
+
+        def fake_post(url, json=None, headers=None, timeout=None):
+            captured["json"] = json
+            return FakeResponse({"success": True, "itineraryId": 99})
+
+        monkeypatch.setattr(java_bridge.httpx, "post", fake_post)
         client = TestClient(app)
         body = {"plan": {"city": "杭州", "start_date": "2026-10-20",
-                         "days": [{"date": "2026-10-20", "day_index": 0}]}}
+                         "days": [{"date": "2026-10-20", "day_index": 0}]},
+                "preferences": ["自然风光", "美食"]}
         response = client.post("/api/community/publish", json=body)
 
         assert response.status_code == 200
         payload = response.json()
         assert payload["success"] is True and payload["itinerary_id"] == 99
+        # 前端传的偏好要一路带到 Java（否则社区"常见偏好"永远是空的 —— 真发生过）
+        assert captured["json"]["preferences"] == ["自然风光", "美食"]
+
+    def test_publish_without_preferences_still_works(self, monkeypatch):
+        """偏好是可选的：老客户端不传也不能失败，只是不累积偏好热度。"""
+        from fastapi.testclient import TestClient
+
+        from app.api.main import app
+
+        captured = {}
+
+        def fake_post(url, json=None, headers=None, timeout=None):
+            captured["json"] = json
+            return FakeResponse({"itineraryId": 5})
+
+        monkeypatch.setattr(java_bridge.httpx, "post", fake_post)
+        client = TestClient(app)
+        response = client.post("/api/community/publish", json={
+            "plan": {"city": "杭州", "days": [{"date": "2026-10-20", "day_index": 0}]}})
+
+        assert response.json()["success"] is True
+        assert captured["json"]["preferences"] == []
 
     def test_publish_endpoint_degrades_when_java_is_down(self):
         """Java 挂了返回 200 + success=False（不是 500）—— 与项目既有的口径一致。"""

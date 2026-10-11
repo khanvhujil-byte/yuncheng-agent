@@ -1,28 +1,102 @@
-# 一条命令起前后端：docker compose up --build  →  http://127.0.0.1:8080
+# 一条命令起**整套系统**：docker compose up --build  →  http://127.0.0.1:8080
 #
-# 三个刻意的设计：
-#   1. 前端不直连后端，而是由 nginx 反代 /api —— 同源就没有 CORS，也不用把后端端口暴露给浏览器
-#   2. 行程库挂成 volume —— 容器删了重建，历史行程与 run_log 还在
-#   3. 密钥走 env_file 注入，绝不进镜像（.env 在 .gitignore 与 .dockerignore 里）
+# 五个服务（这是 v0.6 之后的样子）：
+#   frontend (nginx)  → 托管前端 + 反代 /api 到 Python、/community 到 Java
+#   backend  (Python) → 多智能体生成 / SSE / 生成缓存（SQLite）
+#   community (Java)  → 点赞 / 排行榜 / **唯一持有业务库连接**
+#   mysql             → 业务库（用户 / 行程 / 点赞 / 热度）
+#   redis             → 点赞去重 / ZSET 排行 / 限频
+#
+# 几个刻意的设计：
+#   1. 前端不直连后端，由 nginx 反代 —— 同源就没有 CORS，也只暴露一个端口
+#   2. 两个数据卷：SQLite（生成缓存，可丢）与 MySQL（业务数据，不可丢）分开，
+#      因为它们的生命周期完全不同
+#   3. 密钥只从 env_file 注入，绝不进镜像（.env 在 .gitignore 与 .dockerignore 里）
+#   4. Java 连的库与缓存都用**服务名**（mysql / redis），不是 localhost ——
+#      容器里的 localhost 是它自己
 
 services:
+  # ---------------------------------------------------------------- 业务库
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: trip_community
+      TZ: Asia/Shanghai
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      # 只绑本机，方便用客户端连进去看数据；生产应删掉
+      - "127.0.0.1:3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # ---------------------------------------------------------------- 缓存与排行
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "127.0.0.1:6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # ---------------------------------------------------------------- Python（AI 能力）
   backend:
     build:
       context: ./backend
-    # 密钥与开关都从这里进：LLM_API_KEY / AMAP_API_KEY / PROMPT_COMPACT / WEATHER_USE_AGENT ...
-    # 缺这个文件时 compose 会直接报错 —— 这是有意的：宁可起不来，也别起来后静默用空 Key 跑。
+    # 密钥与开关：LLM_API_KEY / AMAP_API_KEY / PROMPT_COMPACT / API_KEY / RATE_LIMIT_PER_MINUTE ...
     env_file:
       - ./backend/.env
     environment:
       APP_HOST: 0.0.0.0
       APP_PORT: "8000"
+      # 热度反哺与发布都指向容器里的 Java 服务（服务名解析）
+      COMMUNITY_ENABLED: "true"
+      COMMUNITY_BASE_URL: http://community:8080/community
     volumes:
       - trip_data:/app/data
     ports:
-      # 只给本机调试用；生产应该去掉这一行，让流量只经 nginx
       - "127.0.0.1:8000:8000"
+    depends_on:
+      community:
+        condition: service_started
     restart: unless-stopped
 
+  # ---------------------------------------------------------------- Java（业务与高并发）
+  community:
+    build:
+      context: ./java-community
+    environment:
+      SPRING_DATASOURCE_URL: >-
+        jdbc:mysql://mysql:3306/trip_community?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATA_REDIS_HOST: redis
+      # Java 回调 Python 生成摘要（容器内走服务名）
+      AI_BASE_URL: http://backend:8000
+      AI_ENABLED: "true"
+      TZ: Asia/Shanghai
+    ports:
+      # 前端 nginx 占了 8080（那是唯一的对外入口），Java 的调试端口挪到 8081。
+      # nginx 是通过容器网络里的服务名 community:8080 访问它的，不依赖这个映射。
+      - "127.0.0.1:8081:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------- 前端（nginx）
   frontend:
     build:
       context: .
@@ -30,9 +104,14 @@ services:
     ports:
       - "8080:80"
     depends_on:
-      backend:
-        condition: service_healthy
+      - backend
+      - community
     restart: unless-stopped
 
 volumes:
+  # 生成缓存（可丢，重跑就有）
   trip_data:
+  # 业务数据（不可丢）
+  mysql_data:
+  # 点赞去重集合与排行榜（丢了会有一致性问题，但不致命）
+  redis_data:

@@ -64,10 +64,13 @@ def publish_itinerary(
     travel_days: int,
     start_date: str,
     plan: dict[str, Any],
+    preferences: Optional[list[str]] = None,
     user_id: int = 1,
 ) -> Optional[int]:
     """把行程发布到 Java 社区。
 
+    @param preferences 用户勾选的偏好标签。**必须显式传**：行程 JSON（plan）里没有它，
+            而 Java 的热度统计要靠它累积"常见偏好"，那正是反哺生成时最有用的那一路数据。
     @return 新行程 id；失败时返回 None（调用方据此给用户"发布失败，可重试"的提示）。
     """
     if not _enabled():
@@ -80,6 +83,7 @@ def publish_itinerary(
                 "city": city,
                 "travelDays": travel_days,
                 "startDate": start_date,
+                "preferences": preferences or [],
                 "plan": plan,  # 原样透传 TripPlan，Java 不解析内部结构
             },
             headers={"X-User-Id": str(user_id)},

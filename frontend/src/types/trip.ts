@@ -21,8 +21,11 @@
  *   degraded       该路数据获取失败，已降级
  *   user           用户自己指定的锚点（v0.2 新增）—— 既不是高德实查也不是模型估算，
  *                  界面上要显示「你指定的」，不能混进「预估」里
+ *   java           来自 Java 社区服务的数据（v0.6 新增）：热度反哺。
+ *                  ★ 后端 schemas.py 的 DataSource 是 Literal，没登记的值会直接 500，
+ *                    所以这里必须同步加上 —— 两份文件是同一份契约的两种语言表达。
  */
-export type DataSource = 'amap' | 'llm_estimated' | 'degraded' | 'user'
+export type DataSource = 'amap' | 'llm_estimated' | 'degraded' | 'user' | 'java'
 
 /**
  * sources 字段的 key 约定（后端按这些 key 填，前端按这些 key 查）。
@@ -255,4 +258,66 @@ export interface ApiErrorBody {
   success?: boolean
   message?: string
   error_code?: string
+}
+
+// ================================================================ 社区（Java 侧，v0.6）
+
+/**
+ * 排行榜里的一条行程。
+ *
+ * 注意这是 **Java 侧的数据结构**（`LeaderboardService` 组装），不是 Python 的 TripPlan ——
+ * 榜上只需要展示用的轻字段，完整行程要点进详情才拉。
+ * 所以字段是驼峰命名：Java 的 Jackson 默认驼峰，前端照着接，不做转换。
+ */
+export interface LeaderboardItem {
+  itineraryId: number
+  title: string
+  city: string
+  travelDays: number
+  /** Java 发布时回调 Python 生成的简介（可能为空串） */
+  aiSummary: string
+  likeCount: number
+  /** 热度分 = 点赞数 / (发布至今小时数 + 2) ^ 1.5，只在热榜里有 */
+  hotScore?: number
+  /** 只在最新榜里有 */
+  createdAt?: string
+}
+
+/** 点赞接口的返回。注意：它是 HTTP 200 + `success` 标记业务结果，不是靠状态码。 */
+export interface LikeResult {
+  success: boolean
+  /** false = 你之前已经点过（幂等，不算错误） */
+  liked: boolean
+  likeCount: number
+  /** RATE_LIMITED = 点太快了；NOT_FOUND = 行程不存在或已下架 */
+  errorCode?: string
+  message: string
+}
+
+/** 一条热度统计项 */
+export interface HotStat {
+  key: string
+  score: number
+}
+
+/** 三类热度（来自 Java 的 tb_hot_stat，由已发布行程累积） */
+export interface HotStats {
+  city?: HotStat[]
+  preference?: HotStat[]
+  attraction?: HotStat[]
+}
+
+/** 社区热度接口的返回；`available=false` 时说明 Java 侧不可用（前端要如实提示，不要编数据） */
+export interface CommunityHotResponse {
+  enabled: boolean
+  available: boolean
+  stats: HotStats
+  message: string
+}
+
+/** 发布行程的结果 */
+export interface PublishResult {
+  success: boolean
+  itinerary_id: number | null
+  message: string
 }

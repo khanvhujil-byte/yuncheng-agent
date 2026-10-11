@@ -7,7 +7,16 @@
 
 import axios, { AxiosError } from 'axios'
 
-import type { ApiErrorBody, TripPlanResponse, TripRequest } from '@/types/trip'
+import type {
+  ApiErrorBody,
+  CommunityHotResponse,
+  LeaderboardItem,
+  LikeResult,
+  PublishResult,
+  TripPlan,
+  TripPlanResponse,
+  TripRequest,
+} from '@/types/trip'
 
 /**
  * 解析后的后端地址。
@@ -564,4 +573,149 @@ function toApiError(error: unknown): ApiError {
 
   const backendMessage = axiosError.response.data?.message
   return new ApiError(backendMessage || FALLBACK_MESSAGE, errorCode)
+}
+
+// ================================================================ 社区（Java 侧，v0.6）
+//
+// 这里和上面最大的不同：**多了一个服务**。
+// Python（8000）负责生成，Java（8080）负责业务与高并发，两者是两个进程。
+// 所以这一段的每个函数都要考虑「另一个服务挂了怎么办」——
+// 生成接口挂了是"重试"，社区接口挂了是"这次先不玩社区"，两者对用户的含义完全不同。
+
+/**
+ * 社区服务地址。开发环境走 Vite 代理，生产走 nginx 反代，所以是同一个相对路径。
+ *
+ * ★ 前缀刻意用 `/community-api` 而不是 `/community`：
+ *   前端有一个页面路由就叫 `/community`。两者同名时，代理会把**整页导航**也接走
+ *   （不只是 XHR），导致"刷新 / 直接输网址"白屏、而所有接口调用看起来都正常 ——
+ *   我们真的踩过一次（真机浏览器测出来的）。规则定死：API 前缀一律带 `-api` 后缀。
+ */
+const COMMUNITY_BASE_URL = import.meta.env.VITE_COMMUNITY_BASE_URL || '/community-api'
+
+const communityHttp = axios.create({
+  baseURL: COMMUNITY_BASE_URL,
+  timeout: 20_000,
+  headers: { 'Content-Type': 'application/json' },
+})
+
+/**
+ * 当前用户标识（游客身份）。
+ *
+ * 为什么要有它：点赞是"一人一赞"，服务端必须知道你是谁。
+ * 真正的做法是登录 + JWT（Java 签发、Python 也用同一份校验），
+ * 但那属于微服务鉴权的范畴，这一版先用**浏览器本地随机 ID** 顶上：
+ * 同一个浏览器 = 同一个用户，换浏览器 = 换个人。它足够验证"一人一赞"这条逻辑，
+ * 也不假装自己是安全方案（这个 ID 完全可以被伪造）。
+ */
+const USER_ID_KEY = 'trip_community_user_id'
+
+export function getCommunityUserId(): string {
+  try {
+    const existing = window.localStorage.getItem(USER_ID_KEY)
+    if (existing) return existing
+    // 取 1~99999 的随机数，够用且一眼能看出是"游客"
+    const generated = String(Math.floor(Math.random() * 99_999) + 1)
+    window.localStorage.setItem(USER_ID_KEY, generated)
+    return generated
+  } catch {
+    // 隐私模式下 localStorage 可能不可用 —— 退化成固定值，功能不崩
+    return '1'
+  }
+}
+
+function communityHeaders() {
+  return { 'X-User-Id': getCommunityUserId() }
+}
+
+/** 读排行榜。type=hot 按热度（带时间衰减），type=new 按发布顺序。 */
+export async function fetchLeaderboard(
+  type: 'hot' | 'new' = 'hot',
+  limit = 20,
+): Promise<LeaderboardItem[]> {
+  try {
+    const response = await communityHttp.get<{ items: LeaderboardItem[] }>('/leaderboard', {
+      params: { type, limit },
+    })
+    return response.data?.items ?? []
+  } catch (error) {
+    throw toCommunityError(error)
+  }
+}
+
+/** 点赞。幂等：重复点返回 `liked=false` 且不是错误。 */
+export async function likeItinerary(itineraryId: number): Promise<LikeResult> {
+  try {
+    const response = await communityHttp.post<LikeResult>(
+      `/itineraries/${itineraryId}/like`,
+      {},
+      { headers: communityHeaders() },
+    )
+    return response.data
+  } catch (error) {
+    throw toCommunityError(error)
+  }
+}
+
+/** 查点赞状态（数量 + 我点过没），用于页面加载时把按钮置为正确状态。 */
+export async function fetchLikeStatus(
+  itineraryId: number,
+): Promise<{ likeCount: number; hasLiked: boolean }> {
+  try {
+    const response = await communityHttp.get<{ likeCount: number; hasLiked: boolean }>(
+      `/itineraries/${itineraryId}/like`,
+      { headers: communityHeaders() },
+    )
+    return response.data
+  } catch (error) {
+    throw toCommunityError(error)
+  }
+}
+
+/** 社区热度（走 Python 的 /api/community/hot，它再去读 Java —— 这是"反哺"那条边）。 */
+export async function fetchCommunityHot(limit = 5): Promise<CommunityHotResponse> {
+  try {
+    const response = await http.get<CommunityHotResponse>('/api/community/hot', {
+      params: { limit },
+    })
+    return response.data
+  } catch (error) {
+    throw toApiError(error)
+  }
+}
+
+/** 把一份行程发布到社区（Python 转发给 Java 入库，Java 再回调 Python 生成简介）。 */
+export async function publishToCommunity(
+  plan: TripPlan,
+  title?: string,
+  preferences?: string[],
+): Promise<PublishResult> {
+  try {
+    // 发布链路里有 Python → Java → Python 三次跳转（Java 要回调生成摘要），超时给足
+    const response = await http.post<PublishResult>(
+      '/api/community/publish',
+      { plan, title: title || undefined, preferences: preferences ?? [] },
+      { timeout: 60_000 },
+    )
+    return response.data
+  } catch (error) {
+    throw toApiError(error)
+  }
+}
+
+/**
+ * 社区接口的错误转换：**重点是区分"社区服务挂了"和"这次操作本身失败"**。
+ * 前者用户该看到"社区暂时不可用，你的行程还在"，后者才是"点赞失败，重试"。
+ */
+function toCommunityError(error: unknown): ApiError {
+  if (!axios.isAxiosError(error)) {
+    return new ApiError(FALLBACK_MESSAGE)
+  }
+  const axiosError = error as AxiosError<{ message?: string }>
+  if (!axiosError.response) {
+    return new ApiError('社区服务（Java）暂时连不上，请稍后重试。', 'COMMUNITY_UNAVAILABLE')
+  }
+  return new ApiError(
+    axiosError.response.data?.message || `社区服务返回 HTTP ${axiosError.response.status}。`,
+    'COMMUNITY_ERROR',
+  )
 }

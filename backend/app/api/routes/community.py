@@ -31,6 +31,9 @@ class PublishPayload(BaseModel):
 
     plan: dict[str, Any] = Field(..., description="完整行程（TripPlan 结构）")
     title: Optional[str] = Field(None, description="标题；不填用「城市 + 天数」拼")
+    preferences: Optional[list[str]] = Field(
+        None, description="用户勾选的偏好标签（TripPlan 里没有，用于累积社区偏好热度）"
+    )
 
 
 @router.post("/publish", summary="把行程发布到 Java 社区")
@@ -57,6 +60,7 @@ def publish(payload: PublishPayload) -> dict:
         travel_days=len(days),
         start_date=start_date,
         plan=plan,
+        preferences=payload.preferences,
     )
     if itinerary_id is None:
         return {"success": False, "itinerary_id": None,

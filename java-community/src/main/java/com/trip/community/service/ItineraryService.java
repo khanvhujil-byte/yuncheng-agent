@@ -39,11 +39,12 @@ public class ItineraryService {
     /**
      * 发布一条行程。
      *
-     * @param plan Python 生成的 TripPlan（原样存 JSON）
+     * @param plan        Python 生成的 TripPlan（原样存 JSON）
+     * @param preferences 用户勾选的偏好标签（TripPlan 里没有，必须显式传）
      * @return 新行程的 id
      */
     public long publish(long userId, String title, String city, Integer travelDays,
-                        String startDate, JsonNode plan) {
+                        String startDate, JsonNode plan, List<String> preferences) {
         Itinerary itinerary = new Itinerary();
         itinerary.setUserId(userId);
         itinerary.setTitle(title == null || title.isBlank() ? city + "行程" : title);
@@ -74,8 +75,11 @@ public class ItineraryService {
         // 预热 Redis：让点赞路径第一次就命中 meta（省一次 DB 查询），同时防穿透
         likeService.warmMeta(id, city,
                 itinerary.getCreatedAt() == null ? "" : itinerary.getCreatedAt().toString());
-        // 热度统计：给 Python 反哺用（"哪些城市/偏好正在变热"）
-        hotStatService.accumulatePublish(city, plan);
+        // 让新行程立刻**可见地**进入榜单（0 赞）。不写这一步的话，
+        // 用户发布后点"去社区榜看看"在热门榜里看不到自己刚发的东西。
+        likeService.enterLeaderboard(id);
+        // 热度统计：给 Python 反哺用（"哪些城市/偏好/景点正在变热"）
+        hotStatService.accumulatePublish(city, plan, preferences);
 
         log.info("行程已发布 | id={} city={} days={} summary={}字",
                 id, city, itinerary.getTravelDays(),

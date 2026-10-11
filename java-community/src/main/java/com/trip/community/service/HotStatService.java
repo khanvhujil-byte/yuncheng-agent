@@ -35,10 +35,23 @@ public class HotStatService {
     private final HotStatMapper hotStatMapper;
     private final JdbcTemplate jdbcTemplate;
 
-    /** 发布一条行程时累加热度（城市 + 偏好标签 + 必去景点）。 */
-    public void accumulatePublish(String city, JsonNode plan) {
+    /**
+     * 发布一条行程时累加热度（城市 + 偏好标签 + 景点）。
+     *
+     * <p>偏好为什么必须单独传进来：行程 JSON 里只有排好的每天去哪，
+     * **不含用户当初勾的偏好标签**（那是请求的信息）。而"大家最爱选什么偏好"
+     * 恰恰是反哺生成时最有用的那一路数据 —— 所以由调用方显式传。
+     */
+    public void accumulatePublish(String city, JsonNode plan, List<String> preferences) {
         if (city != null && !city.isBlank()) {
             upsert("city", city, 1);
+        }
+        if (preferences != null) {
+            for (String preference : preferences) {
+                if (preference != null && !preference.isBlank()) {
+                    upsert("preference", preference.trim(), 1);
+                }
+            }
         }
         JsonNode days = plan == null ? null : plan.get("days");
         if (days != null && days.isArray()) {

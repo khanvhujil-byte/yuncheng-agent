@@ -15,6 +15,9 @@ const SOURCE_LABELS: Record<DataSource, string> = {
   // v0.2 新增：用户自己指定的锚点（规格化酒店）。它既不是查到的、也不是估算的，
   // 所以必须单独一档，否则会被误标成「模型估算」。
   user: '你指定的',
+  // v0.6 新增：来自 Java 社区统计的热度数据（反哺生成）。
+  // 它既不是高德查的、也不是模型估的 —— 是"别人的行为统计出来的"，所以也要单独一档。
+  java: '来自社区统计',
 }
 
 export function sourceLabel(source: DataSource | undefined): string {

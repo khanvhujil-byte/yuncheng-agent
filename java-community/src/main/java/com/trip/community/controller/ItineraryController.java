@@ -39,7 +39,7 @@ public class ItineraryController {
 
         long id = itineraryService.publish(
                 userId, request.title(), request.city(),
-                request.travelDays(), request.startDate(), request.plan());
+                request.travelDays(), request.startDate(), request.plan(), request.preferences());
 
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("success", true);

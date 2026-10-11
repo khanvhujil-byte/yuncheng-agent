@@ -18,6 +18,7 @@ import {
   LoaderCircle,
   RotateCcw,
   Search,
+  TrendingUp,
   TriangleAlert,
 } from 'lucide-vue-next'
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
@@ -104,6 +105,12 @@ const backendOnline = ref<boolean | null>(null)
 const cityMissing = ref(false)
 /** 当前等待阶段的说明文字（流式 / 轮询 / 同步 三种文案不同） */
 const loadingHint = ref('')
+/**
+ * 本次**提交时**用的偏好标签快照。
+ * 为什么不能直接用表单的 form.preferences：用户拿到结果后可能回去改表单，
+ * 而"发布到社区"要上报的是当初生成这份行程时用的偏好（否则社区热度会被没生成过的偏好污染）。
+ */
+const submittedPreferences = ref<string[]>([])
 /** 断点续跑：后端说能从哪个节点接着跑；null = 没有可续的断点 */
 const canResumeFrom = ref<string | null>(null)
 const resuming = ref(false)
@@ -383,6 +390,9 @@ async function submit(): Promise<void> {
   startTimer()
 
   const request = buildRequest()
+  // 快照一份"这次提交用的偏好"：用户拿到结果后可能回去改表单，
+  // 而发布到社区时要上报的是**当初生成这份行程时用的偏好**（不是现在表单里的）。
+  submittedPreferences.value = [...request.preferences]
 
   try {
     // ---- 路径 1 / 2：异步 + 流式，失败就降级 ----
@@ -506,6 +516,11 @@ function reset(): void {
       <div class="brand">
         <Compass :size="26" />
         <span>多智能体旅行规划助手</span>
+        <!-- 社区页的数据来自另一个服务（Java），但对用户来说只是"换个页面看看别人去哪" -->
+        <router-link class="nav-link" to="/community">
+          <TrendingUp :size="15" />
+          社区行程榜
+        </router-link>
       </div>
       <p class="subtitle">
         景点搜集 · 天气查询 · 行程编排 · 住宿求解（两路并行 + 住宿后置）
@@ -737,6 +752,7 @@ function reset(): void {
             :cached="cacheInfo.cached"
             :cache-hit-count="cacheInfo.count"
             :cache-saved-at="cacheInfo.savedAt"
+            :preferences="submittedPreferences"
           />
           <DayTimeline v-if="plan" :days="plan.days" :sources="plan.sources" />
         </template>
@@ -1034,5 +1050,26 @@ function reset(): void {
   .layout {
     grid-template-columns: 1fr;
   }
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 10px;
+  padding: 4px 12px;
+  border: 1px solid #e3e6ec;
+  border-radius: 999px;
+  background: #fff;
+  color: #4a5261;
+  font-size: 13px;
+  font-weight: 400;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.nav-link:hover {
+  border-color: #c9cfd9;
+  color: #1b1f27;
 }
 </style>
