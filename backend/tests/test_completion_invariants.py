@@ -211,7 +211,122 @@ class TestGraphWiring:
         assert calls == ["validate_city"], f"预检失败却跑了下游节点：{calls}"
 
 
-# ================================================================ 7. 两个上限的职责
+# ================================================================ 7. 预算复核与有界重排
+
+def _budget_state(*, limit=None, known=0, estimated=0, unknown=None,
+                  retries=0, validate_error=None) -> dict:
+    """造一个"刚算完钱"的最小状态，用来单测 verify_budget 的判定。"""
+    items = []
+    if known:
+        items.append({"category": "hotel", "name": "住宿", "amount": known,
+                      "status": "known", "source": "amap"})
+    if estimated:
+        items.append({"category": "meal", "name": "餐饮", "amount": estimated,
+                      "status": "estimated", "source": "llm_estimated"})
+    for name in (unknown or []):
+        items.append({"category": "attraction", "name": name, "amount": None,
+                      "status": "unknown", "source": "unknown"})
+    plan = {
+        "city": "杭州",
+        "days": [{"date": "2026-10-10", "day_index": 0, "attractions": [], "meals": [],
+                  "day_total_cost": known + estimated}],
+        "budget": {"items": items, "known_total": known, "estimated_total": estimated,
+                   "unknown_items": list(unknown or []), "total": known + estimated, "limit": limit},
+    }
+    return {"plan": plan, "request": make_request(budget_limit=limit),
+            "budget_retries": retries, "validate_error": validate_error}
+
+
+class TestBudgetVerdict:
+    """承诺：预算结论能区分"超了""很可能超""没验证过"，且未知绝不按零元通过。"""
+
+    def test_no_limit_means_no_constraint(self):
+        from app.agents.verify_budget import verify_budget
+
+        verdict = verify_budget(_budget_state(limit=None, known=500))["budget_verdict"]
+        assert verdict["status"] == "none"
+
+    def test_known_exceeded_is_hard(self):
+        from app.agents.verify_budget import verify_budget
+
+        verdict = verify_budget(_budget_state(limit=100, known=500))["budget_verdict"]
+        assert verdict["status"] == "known_exceeded"
+        assert "硬违反" in verdict["basis"]
+
+    def test_estimated_exceeded_says_not_infeasible(self):
+        """估算超限**不能**被说成"无解"—— 必须写明它只是"按当前口径很可能超"。"""
+        from app.agents.verify_budget import verify_budget
+
+        verdict = verify_budget(_budget_state(limit=100, known=50, estimated=80))["budget_verdict"]
+        assert verdict["status"] == "estimated_exceeded"
+        assert "不等于实际旅行不可行" in verdict["basis"]
+
+    def test_unknown_items_block_confirmation(self):
+        """有未知项时不能宣称满足预算 —— 这是"未知不按零元通过"的落点。"""
+        from app.agents.verify_budget import verify_budget
+
+        state = _budget_state(limit=1000, known=50, estimated=80, unknown=["西湖", "灵隐寺"])
+        verdict = verify_budget(state)["budget_verdict"]
+
+        assert verdict["status"] == "unverified"
+        assert "无法确认" in verdict["basis"]
+        assert verdict["unknown_items"] == ["西湖", "灵隐寺"]
+
+    def test_within_states_its_basis(self):
+        from app.agents.verify_budget import verify_budget
+
+        verdict = verify_budget(_budget_state(limit=1000, known=50, estimated=80))["budget_verdict"]
+        assert verdict["status"] == "within"
+        assert "上限" in verdict["basis"] and "范围" in verdict["basis"]
+
+
+class TestBudgetRetryIsBounded:
+    """★ 防死循环：预算超限最多重排 BUDGET_RETRY_LIMIT 次。
+
+    写这条时的第一版**复用了 `retries`** —— 而重排场景下 compose_plan 是成功的，
+    `retries` 根本不会自增，条件边会无限重排。所以必须用独立的 budget_retries，
+    并且这个不变量要被测试钉住。
+    """
+
+    def test_router_retries_then_stops(self):
+        from app.agents.graph import route_after_budget
+        from app.agents.verify_budget import BUDGET_RETRY_LIMIT
+
+        overloaded = {"budget_verdict": {"status": "estimated_exceeded"}}
+        assert route_after_budget({**overloaded, "budget_retries": 1}) == "retry"
+        assert route_after_budget(
+            {**overloaded, "budget_retries": BUDGET_RETRY_LIMIT}) == "next"
+
+    def test_router_does_not_retry_when_budget_is_fine(self):
+        from app.agents.graph import route_after_budget
+
+        assert route_after_budget({"budget_retries": 1, "budget_verdict": {"status": "within"}}) == "next"
+
+    def test_retry_signals_and_counts(self):
+        from app.agents.verify_budget import verify_budget
+
+        result = verify_budget(_budget_state(limit=100, known=500))
+        assert result["budget_retries"] == 1
+        assert str(result["validate_error"]).startswith("预算复核不通过")
+
+    def test_exhausted_retries_stop_signalling(self):
+        from app.agents.verify_budget import BUDGET_RETRY_LIMIT, verify_budget
+
+        result = verify_budget(_budget_state(limit=100, known=500, retries=BUDGET_RETRY_LIMIT))
+        assert "budget_retries" not in result
+        assert "validate_error" not in result  # 不再触发重排，交给 budget_verdict 参与最终判定
+
+    def test_solved_budget_clears_its_own_stale_error(self):
+        """重排后预算通过了，就得把上一轮那条错误清掉 —— 否则已经解决的问题会把结果判成失败。"""
+        from app.agents.verify_budget import verify_budget
+
+        result = verify_budget(_budget_state(
+            limit=1000, known=50, retries=1,
+            validate_error="预算复核不通过（estimated_exceeded）：上一轮的说明"))
+        assert result["validate_error"] is None
+
+
+# ================================================================ 8. 两个上限的职责
 
 class TestTwoLimitsHaveDifferentJobs:
     """`capacity`（物理上限）与 `MAX_MUST_VISIT`（我们的配额）不能混为一谈。"""

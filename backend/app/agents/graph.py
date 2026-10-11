@@ -13,7 +13,7 @@ from .budget import patch_budget
 from .city import validate_city
 from .hotel_agent import resolve_hotel
 from .planner_agent import compose_plan
-from .verify_budget import verify_budget
+from .verify_budget import BUDGET_RETRY_LIMIT, verify_budget
 from .verify_plan import verify_plan
 from .weather_agent import collect_weather
 
@@ -50,6 +50,20 @@ def route_after_audit(state: TripState) -> str:
     """
     if state.get("validate_error") and state.get("retries", 0) < 2:
         return "retry"
+    return "next"
+
+
+def route_after_budget(state: TripState) -> str:
+    """预算复核之后：还能重排就回 compose_plan，否则结束。
+
+    判据刻意**只看计数器 + 结论**，不看 `validate_error` 有没有被清掉：
+    重排场景里 compose_plan 是成功的（`validate_error` 可能被它清成 None、也可能没清），
+    依赖那个字段会让路由时灵时不灵。计数器由 verify_budget 自己维护，行为确定。
+    """
+    if int(state.get("budget_retries") or 0) < BUDGET_RETRY_LIMIT:
+        status = (state.get("budget_verdict") or {}).get("status")
+        if status in ("known_exceeded", "estimated_exceeded"):
+            return "retry"
     return "next"
 
 
@@ -116,7 +130,13 @@ def build_graph(start_at: str | None = None):
     #   那条"单日占比"检查因此从来没触发过：它看起来在工作，实际永远不执行。
     #   这也是"代码里有名字有接口，但缺少严格完成条件"的典型。
     g.add_edge("patch_budget", "verify_budget")
-    g.add_edge("verify_budget", END)
+    # 预算复核不通过时回炉重排**一次或两次**（上限见 verify_budget.BUDGET_RETRY_LIMIT）。
+    # 判据用独立的 budget_retries，不能用 verify_plan 那个 retries（原因见那条注释）。
+    g.add_conditional_edges(
+        "verify_budget",
+        route_after_budget,
+        {"retry": "compose_plan", "next": END},
+    )
 
     return g.compile()
 

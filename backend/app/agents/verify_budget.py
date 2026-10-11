@@ -37,6 +37,10 @@ logger = logging.getLogger(__name__)
 # 一天就花掉大头可能是合理的（比如那天有张贵票），所以不参与 limit_status 的判定。
 SINGLE_DAY_SHARE_HINT = 0.6
 
+# 预算超限最多触发几次**重排**。为什么值得重排：估算超限通常是"选了一批偏贵的景点"，
+# 换更省的组合就能救回来。为什么必须封顶：不能因为预算卡住就让请求反复重排（成本 + 延迟）。
+BUDGET_RETRY_LIMIT = 2
+
 
 def verify_budget(state: TripState) -> dict:
     """复核预算汇总，产出 `budget_verdict`。"""
@@ -142,6 +146,33 @@ def verify_budget(state: TripState) -> dict:
         status, known, estimated, subtotal, limit, len(unknown_items),
     )
     result: dict = {"plan": {**plan, "budget": updated_budget}, "budget_verdict": verdict}
+
+    # ---- 重排之后预算已经通过：清掉**自己上一轮**留下的那条错误 ----
+    # 不清的话，最终 success 会被一条"已经解决了的"错误判成部分结果 ——
+    # 那等于自己给自己挖坑。只清自己写的（按前缀识别），不碰 verify_plan 留下的。
+    if status in ("within", "none", "unverified") and state.get("validate_error"):
+        if str(state["validate_error"]).startswith("预算复核不通过"):
+            result["validate_error"] = None
+            logger.info("预算已通过，清掉上一轮的重排提示")
+
+    # ---- 超预算时给一次**有界**的重排机会 ----
+    # 复用项目既有的重试信号 `validate_error`（compose_plan 会把这条错误回喂给自己重排），
+    # 但计数用**独立的 budget_retries** —— 理由写在 state.py 那条注释里：
+    # compose_plan 成功时 `retries` 不动，复用它会死循环。
+    if status in ("known_exceeded", "estimated_exceeded"):
+        used = int(state.get("budget_retries") or 0)
+        if used < BUDGET_RETRY_LIMIT:
+            result["budget_retries"] = used + 1
+            result["validate_error"] = (
+                f"预算复核不通过（{status}）：{basis} "
+                f"请在保持必去景点与已定酒店的前提下，改选更省的景点组合。"
+            )
+            result["errors"] = [f"verify_budget: {basis}"]
+            logger.info("预算超限，回炉重排 | 第 %d/%d 次", used + 1, BUDGET_RETRY_LIMIT)
+        else:
+            # 重排次数用尽：不再写 validate_error（否则会误触发重排），
+            # 由 budget_verdict 参与最终判定 —— `_budget_reasons` 会把它算成"不算成功"。
+            logger.warning("预算超限且重排次数已用尽 | status=%s", status)
     if warnings:
         result["warnings"] = warnings
     return result

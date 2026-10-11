@@ -179,6 +179,13 @@ class TripState(TypedDict):
     #   而 plan 是给用户看的产物、会被序列化进行程库；结论属于"过程判定"，分开更清楚。
     #   ★ 同样必须声明 —— 未声明的键会被 LangGraph 静默丢弃。
 
+    budget_retries: int
+    # ↑ 预算超限导致的**重排**次数（v0.7）。为什么要单独一个计数器、不复用 `retries`：
+    #   重排是"compose_plan 这一轮成功了、但算完钱发现超预算"，
+    #   而 `retries` 只在 compose_plan **自己校验失败**时才自增 ——
+    #   复用的话这个计数永远不动，条件边会一直在"重排 → 又不通过 → 再重排"之间死循环。
+    #   （写这段时的第一版就是复用的，正是靠这句才没让它进主干。）
+
     # ---- 可观测性与上下文计量 ----
     trace: Annotated[List[TraceEntry], operator.add]  # 每完成一个节点追加一条
     usage: Annotated[Dict[str, int], _merge_usage]
