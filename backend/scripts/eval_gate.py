@@ -164,8 +164,19 @@ def run_case(case: Case) -> tuple[bool, list[str]]:
         reasons.append("出发日期全在窗口外时，天气应该全是占位项")
 
     report = final.get("constraint_report")
-    if expect.get("satisfied_all") and report and report.unsatisfied:
-        reasons.append(f"硬约束未满足：{report.unsatisfied}")
+    if expect.get("satisfied_all"):
+        if report is None:
+            # ★ 原先 report 为 None 时直接跳过检查 —— 等于"没有报告就算通过"。
+            #   评测自己的漏洞比被测代码的漏洞更危险：它会让失败看起来像成功。
+            reasons.append("缺 constraint_report：无法证明硬约束被满足（不能算通过）")
+        elif report.unsatisfied:
+            reasons.append(f"硬约束未满足：{report.unsatisfied}")
+
+    # ★ 最终校验结论必须为空。存在 validate_error 就说明"两层校验或独立复核"
+    #   给出了未解决的失败原因 —— 这样的计划不能作为成功样例。
+    #   （它曾经会被标成 success=True 并写进行程库，这是这套评测要守住的第一条不变量。）
+    if expect.get("verified", True) and final.get("validate_error"):
+        reasons.append(f"存在未解决的校验错误：{final.get('validate_error')}")
 
     if expect.get("sources_ok"):
         bad = [k for k, v in (final.get("sources") or {}).items() if v == "degraded"]
@@ -185,6 +196,7 @@ def main() -> int:
 
     passed = 0
     failures: list[str] = []
+    critical_failures: list[str] = []
     for case in cases:
         try:
             ok, reasons = run_case(case)
@@ -195,9 +207,18 @@ def main() -> int:
         passed += int(ok)
         if not ok:
             failures.append(case.name)
+            if case.critical:
+                critical_failures.append(case.name)
 
     rate = passed / len(cases) if cases else 0
     print(f"\n通过 {passed}/{len(cases)}（{rate:.0%}）", flush=True)
+
+    # ---- 关键用例：一票否决 ----
+    # 为什么要在通过率之外单列：0.85 的阈值意味着"错 1 个也能过"，
+    # 但编造天气、不合格计划被当成功这类是**安全性质**，不能靠平均分盖过去。
+    if critical_failures:
+        print("门禁不通过：关键用例失败 → " + "、".join(critical_failures), flush=True)
+        return 1
 
     # ---- 门禁阈值：不达标就 exit(1)，CI 才能真正挡住退化 ----
     threshold = 1.0 if args.mode == "fast" else 0.85

@@ -27,6 +27,17 @@ def route_after_city(state: TripState) -> str:
     return "fail"
 
 
+def route_after_city_weather(state: TripState) -> str:
+    """与 `route_after_city` **同判据**，但必须是另一个函数对象。
+
+    ★ 这是一个真踩到的坑：LangGraph 用**函数名**给分支命名，
+      同一个节点上挂两条由同一个函数产生的条件边会直接报
+      `ValueError: Branch with name 'route_after_city' already exists for node 'validate_city'`。
+      两条并行的 fan-out 边需要两个不同名的路由函数 —— 逻辑共用，名字分开。
+    """
+    return route_after_city(state)
+
+
 def route_after_audit(state: TripState) -> str:
     """独立复核之后：还能重试就回 compose_plan，否则继续往下走。
 
@@ -59,15 +70,27 @@ def build_graph(start_at: str | None = None):
     # （省掉的是 search 调用与整段 LLM 编排）。图的结构本身一行都不用改。
     g.add_edge(START, start_at or "validate_city")
 
-    # ---- 预检分叉：ok 走采集，fail 直接 END（不花 LLM 钱）----
+    # ---- 预检分叉：ok 才走两路采集，fail 直接 END ----
+    #
+    # ★ 两条边**都必须走条件路由**（这是真 bug 的修法，不是风格问题）：
+    #   原先景点那条是条件边、天气那条是**普通边** `g.add_edge("validate_city", "collect_weather")`。
+    #   普通边一定会触发 —— 所以预检失败时，条件边把流程导向 END 的同时，
+    #   天气那一路照样执行，并顺着 collect_weather → compose_plan → verify_plan →
+    #   resolve_hotel 把整条下游链跑完（沿途节点各自"跳过"，但 resolve_hotel 会真的起 LLM 循环）。
+    #
+    #   实测证据：eval_gate 跑一个"必去景点搜不到"的任务，预检已经拦下了，
+    #   日志里却出现 `Agent(hotels) 到达步数上限 5，强制结束` —— 白烧一次 LLM 调用与配额。
+    #   这不只是浪费钱：**被拦下的请求不该产生任何语义上的下游动作**。
     g.add_conditional_edges(
         "validate_city",
         route_after_city,
         {"ok": "collect_attractions", "fail": END},
     )
-
-    # ---- 两路 fan-out：validate_city 同时分出第二条边 ----
-    g.add_edge("validate_city", "collect_weather")
+    g.add_conditional_edges(
+        "validate_city",
+        route_after_city_weather,  # 同逻辑、不同函数名（分支名不能重复）
+        {"ok": "collect_weather", "fail": END},
+    )
 
     # ---- 汇聚：两条边都指向 compose_plan，它会自动等两路都完成 ----
     g.add_edge("collect_attractions", "compose_plan")

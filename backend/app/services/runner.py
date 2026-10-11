@@ -226,21 +226,41 @@ def rebuild_state(initial_state: dict[str, Any], thread_id: str) -> tuple[dict[s
     return state, completed
 
 
-def can_resume_from(completed: list[str]) -> Optional[str]:
+def can_resume_from(completed: list[str], state: Optional[dict[str, Any]] = None) -> Optional[str]:
     """能从哪里续跑。
 
     V0 只在**两路采集都已完成**之后的线性段支持续跑：
-        采集都完成        → 从 compose_plan 续跑（省掉搜索与两次 Agent 的 LLM 调用）
-        compose_plan 完成 → 从 resolve_hotel 续跑（省掉最贵的编排调用）
-        resolve_hotel 完成 → 从 patch_budget 续跑（省掉一次住宿 Agent）
+        采集都完成            → 从 compose_plan 续跑（省掉搜索与两次 Agent 的 LLM 调用）
+        编排完成 + 复核完成    → 从 resolve_hotel 续跑（省掉最贵的编排调用）
+        resolve_hotel 完成    → 从 patch_budget 续跑（省掉一次住宿 Agent）
     再往前的断点（城市都没解析完）就老实从头跑 —— 假装能续跑比不能续跑更糟。
+
+    ★ 光看"节点出现过"是不够的（这是一个真 bug）：重试会让**同一个节点出现多次**，
+      于是"compose_plan 出现过"既可能是
+        ① 编排完成、独立复核也做过、等着选酒店
+        ② 复核判了不合格、正等着重排（retries 还没用完）
+        ③ 编排完成但复核还没跑（在 verify_plan 之前崩的）
+      旧实现一律返回 resolve_hotel，于是 ② 会丢掉那次重试、③ 会**整个绕过独立复核**。
+      判据必须结合状态：有未解决的 `validate_error` 就说明还等着重排。
+
+    @param state 重建后的状态（用来判断"有没有未解决的校验错误"）。
+                 不传时退回旧的保守行为：只要没法确认复核做过，就不续跑。
     """
     if "patch_budget" in completed:
         return None  # 全跑完了，没有可续的
     if "resolve_hotel" in completed:
         return "patch_budget"
+
     if "compose_plan" in completed:
-        return "resolve_hotel"
+        has_unresolved_error = bool((state or {}).get("validate_error"))
+        if has_unresolved_error:
+            return "compose_plan"  # 复核要求重试，那次重排还没做 —— 不能跳过
+        if "verify_plan" in completed:
+            return "resolve_hotel"
+        # 编排完成但独立复核没跑过：从这里续会绕过复核，宁可不续
+        logger.info("不续跑：compose_plan 已完成但 verify_plan 没跑过，续跑会绕过独立复核")
+        return None
+
     if "collect_attractions" in completed and "collect_weather" in completed:
         return "compose_plan"
     return None

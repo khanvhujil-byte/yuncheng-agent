@@ -30,6 +30,7 @@ from fastapi.responses import StreamingResponse
 
 from ...agents.graph import app as trip_graph
 from ...agents.graph import build_graph
+from ...agents.verify_plan import verify_plan
 from ...agents.weather_agent import weather_warnings
 from ...models.schemas import TripPlanResponse, TripRequest
 from ...services import amap, runner, store
@@ -156,8 +157,51 @@ def _to_trip_plan(final: dict, req: TripRequest) -> dict:
 
 
 def _degraded_sources(payload: dict) -> list[str]:
-    """哪些数据源降级了。`success` 的判据就是它，而不是「warnings 是否为空」。"""
+    """哪些数据源降级了。`success` 的判据之一是它，而不是「warnings 是否为空」。"""
     return [key for key, value in (payload.get("sources") or {}).items() if value == "degraded"]
+
+
+def _unresolved_reasons(final: dict, data: dict) -> list[str]:
+    """这份计划**还没解决掉**的问题（用来判 success，也用来决定能不能入库）。
+
+    ★ 这是一个真 bug 的修法。原先的判据是 `bool(days) and not degraded` ——
+    只看"有没有数据"和"数据路有没有降级"，完全没看**校验结论**。于是：
+
+        两层校验 / 独立复核 判定不合格（写了 validate_error），但 retries 用尽后
+        流程会继续往下走（选酒店、算预算），最后这份不合格计划
+        「有 days + 无降级」→ 被标成 success=True 并写进行程库。
+
+    后果有两层：① 用户看到"成功"，而系统自己知道这份计划排不下；
+    ② 更糟的是**它进了缓存**，之后每次命中都拿到这份不合格计划（把一次失败永久固化）。
+
+    两个来源：
+        validate_error          最后一次校验给出的具体原因（两层校验或独立复核写的）
+        constraint_report.unsatisfied  硬约束（必去景点）未满足项
+    """
+    reasons: list[str] = []
+    if final.get("validate_error"):
+        reasons.append(str(final["validate_error"]))
+
+    report = final.get("constraint_report") or data.get("constraint_report")
+    unsatisfied: list = []
+    if report is not None:
+        # constraint_report 是 Pydantic 对象（来自图）或 dict（来自行程库反序列化），两种都要认
+        unsatisfied = list(getattr(report, "unsatisfied", None) or (report.get("unsatisfied") if isinstance(report, dict) else None) or [])
+    reasons.extend(str(item) for item in unsatisfied)
+    return reasons
+
+
+def _partial_message(degraded: list[str], unresolved: list[str], has_days: bool) -> str:
+    """部分结果的说明。**必须说清是"哪一类"没达成**，不能只丢一句"部分结果"。"""
+    parts: list[str] = []
+    if not has_days:
+        parts.append("行程未生成")
+    if degraded:
+        parts.append(f"{'、'.join(degraded)} 未取到完整数据")
+    if unresolved:
+        # 去掉校验原因自带的句号：否则拼出来是"……请去掉重复。，请见上方提示。"
+        parts.append("未通过校验：" + "；".join(reason.rstrip("。") for reason in unresolved[:2]))
+    return "已返回部分结果：" + "，".join(parts) + "，请见上方提示。"
 
 
 def _finalize(
@@ -201,16 +245,24 @@ def _finalize(
     data = _to_trip_plan(final, req)
     days = data.get("days") or []
     degraded = _degraded_sources(data)
-    ok = bool(days) and not degraded
-    message = (
-        "" if ok
-        else f"已返回部分结果：{'、'.join(degraded) or '行程未生成'} 未取到完整数据，请见上方提示。"
-    )
+    # ★ 成功 = 有行程 **且** 数据没降级 **且** 校验没有未解决项。
+    #   第三个条件是补上的（见 _unresolved_reasons 的说明）：只看前两个会把
+    #   "重试用尽的不合格计划"标成成功，并让它进缓存。
+    unresolved = _unresolved_reasons(final, data)
+    ok = bool(days) and not degraded and not unresolved
+    message = "" if ok else _partial_message(degraded, unresolved, bool(days))
 
-    # 只有「完整且无降级」的行程才入库：
-    # 把降级结果缓存下来 = 把一次故障永久固化，之后每次命中都拿到缺数据的那份。
+    # 只有「完整、无降级、且通过校验」的行程才入库。
+    # 两个都不能省：降级的入库 = 把一次故障永久固化；
+    # 不合格的入库 = 把一份"系统自己知道排不下"的计划变成之后所有人的默认答案。
     if ok and not cached:
         store.save_itinerary(fingerprint, req, data)
+        logger.info("行程已入库 | fingerprint=%s days=%d", fingerprint[:8], len(days))
+    elif not ok:
+        logger.info(
+            "行程**不入库**（未通过校验或数据降级）| fingerprint=%s degraded=%s unresolved=%s",
+            fingerprint[:8], degraded, unresolved[:2],
+        )
 
     usage = final.get("usage") or {}
     store.log_run(
@@ -238,21 +290,46 @@ def _finalize(
 def _cached_response(
     hit: dict, req: TripRequest, thread_id: str, fingerprint: str, elapsed_ms: int
 ) -> TripPlanResponse:
-    """命中行程库时的响应（同步路径与后台路径共用）。"""
+    """命中行程库时的响应（同步路径与后台路径共用）。
+
+    ★ 命中也要**重新复核**（不能因为"它当初合格"就当现在也合格）：
+        - 行程库里的计划是当初某个日期的确通过的，但复用时会平移日期；
+        - 更要紧的是：入库判据本身就是这一版才收紧的，库里可能存着
+          "按老判据算合格、实际有未解决校验项"的历史数据。
+      复核是纯代码（verify_plan，0 次 LLM），在这里跑几乎不花任何代价。
+    """
     data = _reuse_with_new_dates(hit["plan"], req)
     days = data.get("days") or []
-    ok = bool(days) and not _degraded_sources(data)
+    degraded = _degraded_sources(data)
+
+    audit = verify_plan({"plan": data, "retries": 0, "validate_error": None})
+    unresolved: list[str] = []
+    if audit.get("validate_error"):
+        unresolved.append(str(audit["validate_error"]))
+    unresolved.extend(_unresolved_reasons({}, data))
+
+    ok = bool(days) and not degraded and not unresolved
+    warnings = list(data.get("warnings") or [])
+    warnings.extend(audit.get("warnings") or [])
+
     store.log_run(
         thread_id=thread_id, fingerprint=fingerprint, cached=True, success=ok,
         elapsed_ms=elapsed_ms, plan_days=len(days),
         budget_total=int((data.get("budget") or {}).get("total") or 0),
     )
-    logger.info("行程命中复用 | %s | %d ms（未花 LLM）", fingerprint[:12], elapsed_ms)
+    logger.info(
+        "行程命中复用 | %s | %d ms（未花 LLM）| 复核%s",
+        fingerprint[:12], elapsed_ms, "通过" if ok else f"发现问题：{unresolved[:1] or degraded}",
+    )
+    if ok:
+        message = f"复用了一条已生成的行程（第 {hit['hit_count']} 次复用，日期已按本次请求平移）"
+    else:
+        message = "复用了一条历史行程，但" + _partial_message(degraded, unresolved, bool(days))
     return TripPlanResponse(
         success=ok,
-        message=f"复用了一条已生成的行程（第 {hit['hit_count']} 次复用，日期已按本次请求平移）",
+        message=message,
         data=data,
-        warnings=list(data.get("warnings") or []),
+        warnings=warnings,
         thread_id=thread_id,
         cached=True,
         cache_hit_count=hit["hit_count"],
@@ -429,10 +506,13 @@ def get_journal(thread_id: str) -> dict:
     """看这次任务完成了哪些节点、能不能续跑 —— 断点续跑的入口。"""
     records = store.load_journal(thread_id)
     completed = [record["node"] for record in records]
+    # 和真正的续跑走**同一套判断**（含"有没有未解决的校验错误"），
+    # 否则这个调试接口会报出一个与真实续跑起点不一致的值 —— 调试信息撒谎比没有更糟。
+    state, _ = runner.rebuild_state({}, thread_id)
     return {
         "thread_id": thread_id,
         "completed_nodes": completed,
-        "can_resume_from": runner.can_resume_from(completed),
+        "can_resume_from": runner.can_resume_from(completed, state),
         "nodes": [
             {"node": r["node"], "seq": r["seq"], "elapsed_ms": r["elapsed_ms"]} for r in records
         ],
@@ -456,7 +536,9 @@ def resume_plan(thread_id: str) -> TripPlanResponse:
     started = time.perf_counter()
 
     state, completed = runner.rebuild_state(_initial_state(req), thread_id)
-    start_at = runner.can_resume_from(completed)
+    # 把重建后的 state 一起传进去：判断"能不能续"必须知道**有没有未解决的校验错误**，
+    # 只看"节点出现过"会把"复核要求重试"误判成"复核已通过"（真 bug）。
+    start_at = runner.can_resume_from(completed, state)
     if start_at is None:
         return TripPlanResponse(
             success=False,

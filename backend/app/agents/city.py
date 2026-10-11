@@ -97,7 +97,18 @@ def validate_city(state: TripState) -> dict:
     if not 0 <= nights <= travel_days:
         return fail("INVALID_REQUEST", f"nights={nights} 越界（应在 0~{travel_days}）")
 
-    # ---- 预检 3：容量（必去景点装不下就别花钱）----
+    # ---- 预检 3：必去列容量（用**原始的必去个数**判，别先截断）----
+    #
+    # ★ 这里有两个长得像、但**职责完全不同**的上限，顺序不能反（我一度改反过，写测试时才发现）：
+    #
+    #   1) capacity = 天数 × 每天上限  →  **物理上限**。用户说"15 个必去、玩 3 天"，
+    #      这个要求本身就不可行，应该**拒绝**并告诉他"3 天最多 12 个"（他可以加天数或减景点）。
+    #      如果先按配额截到 10 个再判容量，就会"接受"一个 15 个必去的请求，
+    #      然后悄悄只排 10 个 —— 用户以为 15 个都排进去了。
+    #   2) MAX_MUST_VISIT = 10  →  **我们自己的配额保护**（别一次调 15 次高德接口）。
+    #      它不该表现为"拒绝"，而是"截断 + 如实告知"，所以在下面解析前才生效。
+    #
+    # 结论：先判容量（用原始个数，拒绝真不可行的请求），再按配额截断（放行但说清只排了几个）。
     must_visit = [s.strip() for s in (req.must_visit or []) if s and s.strip()]
     capacity = travel_days * MAX_SPOTS_PER_DAY
     if len(must_visit) > capacity:
@@ -136,12 +147,13 @@ def validate_city(state: TripState) -> dict:
     if center is None or not adcode:
         return fail("CITY_NOT_FOUND", f"地理编码查不到 {req.city!r}")
     # ---- 解析 must_visit（硬约束的锚点）----
-    # must_visit 在预检 3 里已经算过（已 strip、已去空），直接复用。
-    # 配额保护：每个名字要调一次高德搜索，先截断再解析（只提醒，不拦）。
+    # must_visit 在预检 3 里已经 strip 过、去空了。容量（物理上限）也已判过；
+    # 这里处理的是**我们的配额上限**：每个名字要调一次高德搜索，所以截断 + 如实告知。
+    # 两者的区别写在预检 3 的注释里 —— 一个是"你的要求不可行"，一个是"我们这次只查这么多"。
     if len(must_visit) > MAX_MUST_VISIT:
         warnings.append(
             f"必去景点共 {len(must_visit)} 个，超过单次上限 {MAX_MUST_VISIT} 个；"
-            f"已解析前 {MAX_MUST_VISIT} 个，其余请分次规划。"
+            f"本次只排前 {MAX_MUST_VISIT} 个，其余请分次规划。"
         )
         must_visit = must_visit[:MAX_MUST_VISIT]
 

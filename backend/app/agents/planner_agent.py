@@ -268,6 +268,13 @@ def _enrich(days: list[DayPlan], candidates: list[Attraction]) -> int:
             filled += 1
             item.poi_id = item.poi_id or source.poi_id
             item.typecode = item.typecode or source.typecode
+            # ★ 坐标用候选池的**规范化坐标覆盖**模型输出（真 bug 的修法，不是防御性代码）。
+            #   原先这里只补图片/评分/poi_id，**坐标沿用模型给的值**。而下一个节点
+            #   verify_plan 判定"一天地理跨度是否超过 25km"用的就是这些坐标 ——
+            #   于是可能出现：模型点名正确、坐标写错，地理复核建立在一个错误坐标上，
+            #   要么漏报真实的长距离奔波，要么报出一个不存在的问题。
+            #   原则与"天气不让模型复述"完全一致：**地理事实来自数据快照，模型只负责点哪个景点**。
+            item.location = source.location
             item.image_url = item.image_url or source.image_url
             item.photos = item.photos or list(source.photos)
             item.required = item.required or source.required
