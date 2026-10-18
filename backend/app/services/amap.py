@@ -11,7 +11,7 @@
     4. 兜底   高德用空数组 [] 表示"没有"，不是 null 也不是 ""，必须统一清洗
 
 不做什么：不做去重、不做 typecode 过滤、不做多标签循环（那是 attraction_agent 的业务规则）；
-不做重试（V0 失败即降级）；不打印 Key（config.py 已把 httpx 日志压到 WARNING）。
+不自行重试（安全工具由运行时统一限次重试）；不打印 Key。
 
 使用的接口（全部在 restapi.amap.com，公共信封 {status, info, infocode, count}）：
     GET /v3/geocode/geo           城市/地址 → location("lng,lat") + adcode     【已实现】
@@ -39,12 +39,17 @@ Day 6 可选优化：给「城市→adcode」「城市+关键词→POI」加内�
 """
 
 import logging
+import math
 from typing import Any, Optional
 
 import httpx
 
 from ..config import get_settings
-from ..models.schemas import Attraction, Location, WeatherInfo
+from ..models.schemas import Attraction, Location, Restaurant, WeatherInfo
+from .tool_retry import remaining_seconds
+from .request_gate import AdmissionTimeout, RequestGate, parse_retry_after
+
+request_gate = RequestGate()
 
 logger = logging.getLogger(__name__)
 
@@ -53,6 +58,15 @@ GEOCODE_URL = f"{BASE_URL}/geocode/geo"
 POI_URL = f"{BASE_URL}/place/text"
 WEATHER_URL = f"{BASE_URL}/weather/weatherInfo"
 DISTANCE_URL = f"{BASE_URL}/distance"
+
+
+def _positive_number(value: Any) -> float | None:
+    """Provider numeric strings can be empty arrays, malformed or non-finite."""
+    try:
+        result = float(value)
+    except (TypeError, ValueError):
+        return None
+    return result if math.isfinite(result) and result >= 0 else None
 
 # 高德 infocode → 项目错误码（需求文档 8.4）。
 # 这里列的是「确定性错误」（配置/配额/参数），必须拦住，不让它静默降级。
@@ -86,6 +100,13 @@ class AmapUnreachable(RuntimeError):
 
     调用方（各 agent）捕到它应当写 warnings + 返回空列表，让主链路继续。
     """
+
+    def __init__(self, detail: str, *, retryable: bool = True, code: str = "UPSTREAM_TIMEOUT",
+                 retry_after_seconds: float | None = None) -> None:
+        super().__init__(detail)
+        self.retryable = retryable
+        self.code = code
+        self.retry_after_seconds = retry_after_seconds
 
 
 def _s(value: Any) -> Optional[str]:
@@ -123,17 +144,45 @@ def _loc(text: Any) -> Optional[Location]:
 def _get(url: str, params: dict) -> dict:
     """统一取数：拼 Key、超时、HTTP 检查、信封检查。**只有这里拼 Key。**"""
     settings = get_settings()
+    remaining = remaining_seconds()
+    if remaining is not None and remaining <= 0:
+        raise AmapUnreachable("工具查询时间预算已用尽", code="UPSTREAM_TIMEOUT")
+    try:
+        request_gate.acquire(interval=settings.amap_request_interval_seconds,
+                             budget=remaining if remaining is not None else settings.tool_retry_budget_seconds)
+    except AdmissionTimeout as exc:
+        raise AmapUnreachable(str(exc), code="UPSTREAM_RATE_LIMITED",
+                              retry_after_seconds=exc.wait_seconds) from exc
+    remaining = remaining_seconds()
+    if remaining is not None and remaining <= 0:
+        raise AmapUnreachable("工具查询时间预算已用尽", code="UPSTREAM_TIMEOUT")
     try:
         resp = httpx.get(
             url,
             params={"key": settings.amap_api_key, **params},
-            timeout=settings.amap_timeout,
+            timeout=min(settings.amap_timeout, remaining) if remaining is not None else settings.amap_timeout,
         )
         resp.raise_for_status()
         payload = resp.json()
-    except (httpx.HTTPError, ValueError) as exc:
-        # httpx.HTTPError 覆盖超时/连接失败/4xx/5xx；ValueError 覆盖响应不是 JSON
-        raise AmapUnreachable(f"{type(exc).__name__}: {exc}") from exc
+    except httpx.HTTPStatusError as exc:
+        retryable = exc.response.status_code in (408, 429, 500, 502, 503, 504)
+        retry_after = None
+        if exc.response.status_code in (429, 503):
+            retry_after = parse_retry_after(exc.response.headers.get("Retry-After"))
+        if exc.response.status_code == 429:
+            retry_after = max(retry_after or 0.0, settings.amap_rate_limit_cooldown_seconds)
+            request_gate.defer(retry_after)
+        elif retry_after is not None:
+            request_gate.defer(retry_after)
+        raise AmapUnreachable(f"{type(exc).__name__}: {exc}", retryable=retryable,
+                              code="UPSTREAM_RATE_LIMITED" if exc.response.status_code == 429 else "UPSTREAM_HTTP_ERROR",
+                              retry_after_seconds=retry_after) from exc
+    except httpx.HTTPError as exc:
+        code = "UPSTREAM_TIMEOUT" if isinstance(exc, httpx.TimeoutException) else "UPSTREAM_UNAVAILABLE"
+        raise AmapUnreachable(f"{type(exc).__name__}: {exc}", code=code) from exc
+    except ValueError as exc:
+        raise AmapUnreachable(f"{type(exc).__name__}: {exc}", retryable=False,
+                              code="UPSTREAM_INVALID_RESPONSE") from exc
 
     # 高德的坑：Key 无效时 HTTP 状态码也是 200，只有 infocode 不对。
     # 所以不能只看 resp.status_code。
@@ -280,3 +329,68 @@ def measure_distance(origin: Location, dest: Location, mode: int = 1) -> Optiona
         return None
     distance = _s(rows[0].get("distance"))
     return float(distance) if distance else None
+
+
+def search_restaurants(keywords: str, city: str, limit: int = 12) -> list[Restaurant]:
+    """Verified restaurant POIs; average spend is an estimate, never a quote."""
+    payload = _get(POI_URL, {"keywords": keywords, "city": city, "citylimit": "true",
+                             "types": "050000", "offset": min(max(limit, 1), 20),
+                             "page": 1, "extensions": "all"})
+    result = []
+    for poi in payload.get("pois") or []:
+        location = _loc(poi.get("location"))
+        identifier, name = _s(poi.get("id")), _s(poi.get("name"))
+        typecode = _s(poi.get("typecode"))
+        if not location or not identifier or not name or not any(code.startswith("05") for code in (typecode or "").split("|")):
+            continue
+        biz = poi.get("biz_ext") or {}
+        cost = _positive_number(_s(biz.get("cost")))
+        rating = _positive_number(_s(biz.get("rating")))
+        result.append(Restaurant(name=name, poi_id=identifier, location=location,
+                                 address=_s(poi.get("address")) or "", typecode=typecode,
+                                 rating=rating, avg_cost=round(cost) if cost is not None else None,
+                                 avg_cost_status="estimated" if cost is not None else "unknown",
+                                 cost_source="amap" if cost is not None else "unknown",
+                                 cuisine=_s(poi.get("type")), source="amap",
+                                 evidence_url=f"https://www.amap.com/place/{identifier}"))
+    return result
+
+
+def travel_route(origin: Location, destination: Location, mode: str = "driving", city: str | None = None) -> dict:
+    """Route time from official mode-specific APIs, never straight-line distance.
+
+    No route is an honest unknown. Transport/system failures preserve the typed
+    adapter exception so the runtime can decide whether a retry is appropriate.
+    """
+    aliases = {"自驾": "driving", "驾车": "driving", "步行": "walking", "骑行": "bicycling",
+               "公共交通": "transit", "公交": "transit", "混合": "transit"}
+    selected = aliases.get(mode, mode)
+    if selected not in {"driving", "walking", "bicycling", "transit"}:
+        raise AmapError("INVALID_REQUEST", "不支持的路线交通方式")
+    result = {"duration_minutes": None, "distance_meters": None, "status": "unknown", "source": "unknown", "mode": selected}
+    if origin == destination:
+        return {**result, "duration_minutes": 0, "distance_meters": 0, "status": "known", "source": "amap"}
+    params = {"origin": f"{origin.longitude},{origin.latitude}",
+              "destination": f"{destination.longitude},{destination.latitude}"}
+    if selected == "transit":
+        if not city:
+            return result
+        params.update({"city": city, "cityd": city, "strategy": "0"})
+        url = f"{BASE_URL}/direction/transit/integrated"
+    elif selected == "bicycling":
+        # Cycling is the v4 route API, whose envelope uses errcode/data.
+        # Avoid translating it through _get's v3 infocode contract.
+        return result
+    else:
+        url = f"{BASE_URL}/direction/{selected}"
+    payload = _get(url, params)
+    route = payload.get("route") or {}
+    paths = route.get("transits" if selected == "transit" else "paths") or []
+    if not paths:
+        return result
+    duration = _positive_number(paths[0].get("duration"))
+    distance = _positive_number(paths[0].get("distance"))
+    if duration is None or distance is None:
+        return result
+    return {**result, "duration_minutes": math.ceil(duration / 60), "distance_meters": round(distance),
+            "status": "known", "source": "amap"}

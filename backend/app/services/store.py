@@ -87,9 +87,11 @@ CREATE TABLE IF NOT EXISTS job_state (
 CREATE TABLE IF NOT EXISTS graph_run (
     thread_id     TEXT PRIMARY KEY,
     request_json  TEXT NOT NULL,   -- 原样存下来，续跑时才能重建初始 state
+    journal_version INTEGER NOT NULL DEFAULT 2,
     created_at    TEXT NOT NULL
 );
 
+-- 旧版覆盖式日志只保留供查看，不能用于可靠恢复。
 CREATE TABLE IF NOT EXISTS graph_journal (
     thread_id     TEXT NOT NULL,
     node          TEXT NOT NULL,
@@ -97,7 +99,18 @@ CREATE TABLE IF NOT EXISTS graph_journal (
     update_json   TEXT NOT NULL,             -- 该节点写回 state 的那部分（原样存）
     elapsed_ms    INTEGER NOT NULL DEFAULT 0,
     created_at    TEXT NOT NULL,
-    PRIMARY KEY (thread_id, node)            -- 同一节点重试时覆盖旧记录，不堆垃圾
+    PRIMARY KEY (thread_id, node)
+);
+
+-- 每次节点执行单独留一条，不允许覆盖已提交的执行。
+CREATE TABLE IF NOT EXISTS graph_journal_event (
+    thread_id     TEXT NOT NULL,
+    node          TEXT NOT NULL,
+    seq           INTEGER NOT NULL CHECK (seq > 0),
+    update_json   TEXT NOT NULL,
+    elapsed_ms    INTEGER NOT NULL DEFAULT 0,
+    created_at    TEXT NOT NULL,
+    PRIMARY KEY (thread_id, seq)
 );
 """
 
@@ -136,7 +149,13 @@ def _connect() -> sqlite3.Connection:
 def init_db() -> None:
     """建表。幂等，进程启动时调一次即可。"""
     with _connect() as conn:
-        conn.executescript(SCHEMA)
+        from .dialog_store import SCHEMA as dialog_schema
+        conn.executescript(SCHEMA + dialog_schema)
+        # ALTER 的默认值必须是 1：历史任务可能已被覆盖，不能冒充完整日志。
+        conn.execute("BEGIN IMMEDIATE")
+        columns = {row["name"] for row in conn.execute("PRAGMA table_info(graph_run)")}
+        if "journal_version" not in columns:
+            conn.execute("ALTER TABLE graph_run ADD COLUMN journal_version INTEGER NOT NULL DEFAULT 1")
     logger.info("行程库就绪 | %s", DB_PATH)
 
 
@@ -158,6 +177,9 @@ def fingerprint_of(req: TripRequest) -> str:
         "preferences": sorted(p.strip() for p in (req.preferences or []) if p.strip()),
         "must_visit": sorted(m.strip() for m in (req.must_visit or []) if m.strip()),
         "fixed_hotel": (req.fixed_hotel or "").strip(),
+        "fixed_hotel_address": (req.fixed_hotel_address or "").strip(),
+        "contract_version": 4,
+        "requirements": req.requirements.model_dump(),
         "free_text_input": (req.free_text_input or "").strip(),
         # ★ 预算上限必须进指纹：它是**约束**，不是展示字段。
         #   不写进来的话，"预算 2000 的杭州 3 天"会命中"预算不限的杭州 3 天"，
@@ -228,6 +250,9 @@ def log_run(
 ) -> None:
     """每次请求记一行。让"缓存命中率 / 平均耗时 / token 成本"可以直接 SQL 查出来。"""
     with _connect() as conn:
+        inserted = conn.execute("INSERT OR IGNORE INTO completed_run(run_id) VALUES(?)", (thread_id,))
+        if not inserted.rowcount:
+            return
         conn.execute(
             """
             INSERT INTO run_log (thread_id, fingerprint, cached, success, error_code, elapsed_ms,
@@ -246,7 +271,7 @@ def save_run(thread_id: str, req: TripRequest) -> None:
     with _connect() as conn:
         conn.execute(
             """
-            INSERT INTO graph_run (thread_id, request_json, created_at) VALUES (?, ?, ?)
+            INSERT INTO graph_run (thread_id, request_json, created_at, journal_version) VALUES (?, ?, ?, 2)
             ON CONFLICT(thread_id) DO UPDATE SET request_json = excluded.request_json
             """,
             (thread_id, json.dumps(req.model_dump(), ensure_ascii=False), _now()),
@@ -256,11 +281,12 @@ def save_run(thread_id: str, req: TripRequest) -> None:
 def load_run(thread_id: str) -> Optional[dict[str, Any]]:
     with _connect() as conn:
         row = conn.execute(
-            "SELECT request_json, created_at FROM graph_run WHERE thread_id = ?", (thread_id,)
+            "SELECT request_json, created_at, journal_version FROM graph_run WHERE thread_id = ?", (thread_id,)
         ).fetchone()
     if row is None:
         return None
-    return {"request": json.loads(row["request_json"]), "created_at": row["created_at"]}
+    return {"request": json.loads(row["request_json"]), "created_at": row["created_at"],
+            "journal_version": row["journal_version"]}
 
 
 def journal_node(thread_id: str, node: str, seq: int, update: dict[str, Any], elapsed_ms: int = 0) -> None:
@@ -270,14 +296,13 @@ def journal_node(thread_id: str, node: str, seq: int, update: dict[str, Any], el
     任何"为了好看"的转换都会在拼回去时变成 bug。
     """
     with _connect() as conn:
+        run = conn.execute("SELECT journal_version FROM graph_run WHERE thread_id = ?", (thread_id,)).fetchone()
+        if run is None or run["journal_version"] != 2:
+            raise ValueError("只有新版已登记任务可以追加执行日志")
         conn.execute(
             """
-            INSERT INTO graph_journal (thread_id, node, seq, update_json, elapsed_ms, created_at)
+            INSERT INTO graph_journal_event (thread_id, node, seq, update_json, elapsed_ms, created_at)
             VALUES (?, ?, ?, ?, ?, ?)
-            ON CONFLICT(thread_id, node) DO UPDATE SET
-                update_json = excluded.update_json,
-                elapsed_ms  = excluded.elapsed_ms,
-                seq         = excluded.seq
             """,
             (thread_id, node, seq,
              json.dumps(update, ensure_ascii=False, default=_json_default), elapsed_ms, _now()),
@@ -287,8 +312,10 @@ def journal_node(thread_id: str, node: str, seq: int, update: dict[str, Any], el
 def load_journal(thread_id: str) -> list[dict[str, Any]]:
     """按执行顺序返回该任务的节点记录。"""
     with _connect() as conn:
+        run = conn.execute("SELECT journal_version FROM graph_run WHERE thread_id = ?", (thread_id,)).fetchone()
+        table = "graph_journal" if run and run["journal_version"] == 1 else "graph_journal_event"
         rows = conn.execute(
-            "SELECT node, seq, update_json, elapsed_ms, created_at FROM graph_journal "
+            f"SELECT node, seq, update_json, elapsed_ms, created_at FROM {table} "
             "WHERE thread_id = ? ORDER BY seq",
             (thread_id,),
         ).fetchall()

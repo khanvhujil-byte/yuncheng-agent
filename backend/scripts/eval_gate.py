@@ -40,6 +40,7 @@ class Case:
     kind: str  # preflight / generate
     request: dict
     expect: dict = field(default_factory=dict)
+    critical: bool = False  # 关键正确性用例失败时，不允许被整体通过率掩盖
 
     def build(self) -> TripRequest:
         return TripRequest(**self.request)
@@ -54,11 +55,14 @@ def build_cases() -> list[Case]:
 
     负例用**预检拦截**当判据（不花 LLM），正例用**可计算的性质**当判据
     （编造天数、约束满足、天数吻合），而不是靠人眼看行程好不好。
+    当前七个用例检查的都是必须成立的规则，因此显式标为 critical。
+    将来加入允许按通过率衡量的普通质量用例时，可保留 critical=False。
     """
     return [
         # ---------------- 预检类（不花 LLM）----------------
         Case(
             name="城市不存在应被拦",
+            critical=True,
             kind="preflight",
             request={"city": "XyzNotACity", "start_date": _offset(0), "travel_days": 3,
                      "transportation": "公共交通", "accommodation": "经济型酒店"},
@@ -66,6 +70,7 @@ def build_cases() -> list[Case]:
         ),
         Case(
             name="必去景点超过容量应被拦",
+            critical=True,
             kind="preflight",
             request={"city": "杭州", "start_date": _offset(0), "travel_days": 2,
                      "transportation": "公共交通", "accommodation": "经济型酒店",
@@ -74,6 +79,7 @@ def build_cases() -> list[Case]:
         ),
         Case(
             name="日期与天数不一致应被拦",
+            critical=True,
             kind="preflight",
             request={"city": "杭州", "start_date": _offset(0), "end_date": _offset(5),
                      "travel_days": 3, "transportation": "公共交通",
@@ -82,6 +88,7 @@ def build_cases() -> list[Case]:
         ),
         Case(
             name="垃圾必去景点应被拦",
+            critical=True,
             kind="preflight",
             request={"city": "杭州", "start_date": _offset(0), "travel_days": 3,
                      "transportation": "公共交通", "accommodation": "经济型酒店",
@@ -91,6 +98,7 @@ def build_cases() -> list[Case]:
         # ---------------- 生成类（花真实 token）----------------
         Case(
             name="3 天行程应完整且满足硬约束",
+            critical=True,
             kind="generate",
             request={"city": "杭州", "start_date": _offset(0), "travel_days": 3,
                      "transportation": "公共交通", "accommodation": "经济型酒店",
@@ -100,6 +108,7 @@ def build_cases() -> list[Case]:
         ),
         Case(
             name="6 天行程超窗口必须留空且不编造",
+            critical=True,
             kind="generate",
             request={"city": "杭州", "start_date": _offset(0), "travel_days": 6,
                      "transportation": "公共交通", "accommodation": "经济型酒店",
@@ -109,6 +118,7 @@ def build_cases() -> list[Case]:
         ),
         Case(
             name="出发日期在预报窗口外也不能编造",
+            critical=True,
             kind="generate",
             request={"city": "杭州", "start_date": _offset(10), "travel_days": 3,
                      "transportation": "公共交通", "accommodation": "经济型酒店",

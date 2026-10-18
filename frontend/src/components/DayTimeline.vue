@@ -154,6 +154,7 @@ function unknownCostCount(day: DayPlan): number {
                 </div>
                 <p v-if="spot.description" class="spot-desc">{{ spot.description }}</p>
                 <div v-if="spot.address" class="spot-address muted">{{ spot.address }}</div>
+                <a v-if="spot.ticket_price_evidence_url && /^https:\/\//.test(spot.ticket_price_evidence_url)" :href="spot.ticket_price_evidence_url" target="_blank" rel="noopener noreferrer">门票资料出处</a>
               </div>
             </div>
           </div>
@@ -171,7 +172,7 @@ function unknownCostCount(day: DayPlan): number {
               <span class="meal-type">{{ mealLabel(meal.type) }}</span>
               <span class="meal-name">{{ meal.name }}</span>
               <!-- 餐费同样分三态：没给金额就是「待查」，不能什么都不显示（那和免费没区别） -->
-              <span v-if="amountState(meal.estimated_cost) === 'unknown'" class="meal-cost muted">
+              <span v-if="meal.cost_status === 'unknown' || amountState(meal.estimated_cost) === 'unknown'" class="meal-cost muted">
                 费用待查
               </span>
               <span v-else-if="amountState(meal.estimated_cost) === 'free'" class="meal-cost">
@@ -179,16 +180,31 @@ function unknownCostCount(day: DayPlan): number {
               </span>
               <span v-else class="meal-cost">
                 ¥{{ meal.estimated_cost }}
-                <span v-if="mealEstimated" class="tag-estimated">预估</span>
+                <span v-if="meal.cost_status ? meal.cost_status === 'estimated' : mealEstimated" class="tag-estimated">参考人均</span>
               </span>
               <span v-if="meal.description" class="meal-desc muted">
                 {{ meal.description }}
               </span>
+              <span v-if="meal.address" class="meal-desc muted">{{ meal.address }}</span>
+              <span v-if="meal.ranking_name" class="spot-category">{{ meal.ranking_name }}{{ meal.ranking_rank ? ` · 第 ${meal.ranking_rank} 位` : '' }}</span>
+              <a v-if="meal.ranking_url && /^https:\/\/(www\.)?amap\.com\//.test(meal.ranking_url)" :href="meal.ranking_url" target="_blank" rel="noopener noreferrer">查看榜单出处</a>
+              <span v-if="meal.cost_note" class="meal-desc muted">{{ meal.cost_note }}</span>
+              <a v-if="meal.evidence_url && /^https:\/\//.test(meal.evidence_url)" :href="meal.evidence_url" target="_blank" rel="noopener noreferrer">人均消费资料出处</a>
             </div>
           </div>
           <div v-else class="empty">未安排餐饮</div>
         </div>
 
+        <div v-if="day.schedule?.length" class="block">
+          <div class="block-title"><Clock :size="15" />时间安排<span class="count">含路程、用餐与休息</span></div>
+          <ol class="schedule-list"><li v-for="(item, index) in day.schedule" :key="index"><time>{{ item.start_time }}—{{ item.end_time }}</time><span>{{ item.name }}</span><small>{{ item.duration_minutes }} 分钟{{ item.status === 'unknown' ? ' · 待核实' : item.status === 'estimated' ? ' · 建议' : '' }}</small></li></ol>
+          <p class="muted">游玩 {{ day.visit_minutes }} 分钟 · 路程 {{ day.travel_minutes }} 分钟 · 休息 {{ day.rest_minutes }} 分钟 · 全日 {{ day.total_minutes }} 分钟</p>
+        </div>
+        <div v-if="day.route_legs?.length" class="block">
+          <div class="block-title"><Route :size="15" />逐段路程</div>
+          <div v-for="(leg, index) in day.route_legs" :key="index" class="route-leg"><span>{{ leg.from_name }} → {{ leg.to_name }}</span><strong>{{ leg.status === 'unknown' ? '耗时待查' : `${leg.duration_minutes} 分钟` }}</strong><small>{{ leg.mode }}{{ leg.distance_meters == null ? '' : ` · ${(leg.distance_meters / 1000).toFixed(1)} 公里` }}{{ leg.status === 'estimated' ? ' · 估算' : '' }}</small><small v-if="leg.note">{{ leg.note }}</small></div>
+        </div>
+        <p v-for="warning in day.comfort_warnings ?? []" :key="warning" class="comfort-warning">{{ warning }}</p>
         <!-- 当日小计 -->
         <!-- 当日小计：后端只把已知 + 估算摊进来，含未知项时必须点明，否则会读成当天全部开销 -->
         <div v-if="day.day_total_cost !== undefined" class="day-total">
@@ -205,6 +221,7 @@ function unknownCostCount(day: DayPlan): number {
 </template>
 
 <style scoped>
+.schedule-list{padding:0;list-style:none;font-size:13px}.schedule-list li{display:flex;gap:12px;flex-wrap:wrap;padding:8px 0;border-bottom:1px solid #f0f2f6}.schedule-list time{font-variant-numeric:tabular-nums;color:#3566c9;min-width:105px}.schedule-list small,.route-leg small{color:#788598}.route-leg{display:flex;gap:10px;flex-wrap:wrap;padding:9px 12px;margin:6px 0;background:#f7f9fc;border-radius:7px;font-size:13px}.route-leg strong{font-weight:500}.comfort-warning{background:#fff6e6;padding:9px 12px;border-radius:6px;font-size:13px;color:#8a6100}
 .timeline {
   display: flex;
   flex-direction: column;

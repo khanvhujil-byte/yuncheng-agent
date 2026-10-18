@@ -9,7 +9,7 @@
  *   2. 兜底轮询 /api/trip/plan/result（推送通道断了，但任务还在跑）
  *   3. 同步 planTrip（后端还没上线异步接口时的老路径）
  * 三条路的区别只体现在「等待期间看到什么」；拿到结果之后的渲染完全共用。
- * 关键约束：1 和 2 失败必须静默降级，绝不能让用户看到比以前更差的体验。
+ * 已提交的任务只能查询或续跑，等待超时不能自动重发生成请求。
  */
 import dayjs, { type Dayjs } from 'dayjs'
 import {
@@ -22,9 +22,15 @@ import {
   TriangleAlert,
 } from 'lucide-vue-next'
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 import DayTimeline from '@/components/DayTimeline.vue'
+import JourneyArtwork from '@/components/JourneyArtwork.vue'
+import ExportPanel from '@/components/ExportPanel.vue'
 import TripSummary from '@/components/TripSummary.vue'
+import { finishPlanning } from '@/services/planningFlow'
+import { hasSession, request as dialogRequest } from '@/services/dialog'
+import type { Conversation } from '@/services/dialog'
 import {
   ApiError,
   PIPELINE_NODES,
@@ -55,6 +61,10 @@ const PREFERENCE_OPTIONS = [
 ]
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
+const router = useRouter()
+const transferring = ref(false)
+const transferError = ref('')
+const completeResult = ref(false)
 
 /** 推送给界面的进度行状态。waiting = 还没轮到，running = 前端推断出的「正在跑」 */
 type NodeState = 'waiting' | 'running' | 'done' | 'degraded' | 'failed'
@@ -81,7 +91,7 @@ const form = reactive<TripRequest>({
   budget_limit: undefined,
   transportation: '公共交通',
   accommodation: '经济型酒店',
-  preferences: ['自然风光'],
+  preferences: ['自然风光', '美食'],
   // v0.2 锚点（硬约束）
   must_visit: [],
   fixed_hotel: '',
@@ -102,7 +112,7 @@ const errorMessage = ref('')
 const errorCode = ref<string | undefined>(undefined)
 const plan = ref<TripPlan | null>(null)
 const warnings = ref<string[]>([])
-const threadId = ref<string | undefined>(undefined)
+const threadId = ref<string | undefined>(sessionStorage.getItem('trip-form-run') || undefined)
 const backendOnline = ref<boolean | null>(null)
 const cityMissing = ref(false)
 /** 当前等待阶段的说明文字（流式 / 轮询 / 同步 三种文案不同） */
@@ -132,8 +142,10 @@ const NODE_LABELS: Record<string, string> = {
   validate_city: '解析城市',
   collect_attractions: '搜集景点',
   collect_weather: '查询天气',
+  collect_food: '搜集本地美食',
   compose_plan: '编排行程',
   resolve_hotel: '选择住宿',
+  enrich_experience: '计算路程和舒适度',
   patch_budget: '计算预算',
 }
 
@@ -287,8 +299,11 @@ function buildRequest(): TripRequest {
 
 /** 把一份响应铺到界面上。三条路径拿到结果后都走这里，渲染逻辑只有一份 */
 function applyResponse(response: TripPlanResponse): void {
+  completeResult.value = response.success
   warnings.value = response.warnings ?? []
   threadId.value = response.thread_id ? response.thread_id : threadId.value
+  errorCode.value = response.error_code ?? undefined
+  if (threadId.value) sessionStorage.setItem('trip-form-run', threadId.value)
   plan.value = response.data ?? null
   backendOnline.value = true
   cacheInfo.value = {
@@ -307,6 +322,18 @@ function applyResponse(response: TripPlanResponse): void {
     status.value = 'error'
     errorMessage.value = response.message || '生成失败，请重试。'
   }
+}
+
+async function editSavedPlan() {
+  if (!threadId.value || transferring.value) return
+  if (!hasSession()) { transferError.value = '请在对话页登录后再从表单生成行程，系统会将它绑定到你的账号。'; return }
+  transferring.value = true; transferError.value = ''
+  try {
+    const current = await dialogRequest<Conversation>('/conversations/from-run', 'POST', { thread_id: threadId.value })
+    sessionStorage.setItem('trip-conversation', current.conversation_id)
+    await router.push('/chat')
+  } catch (e) { transferError.value = e instanceof Error ? e.message : '无法保存行程' }
+  finally { transferring.value = false }
 }
 
 /**
@@ -353,9 +380,10 @@ async function runStreaming(request: TripRequest): Promise<'done' | 'poll' | 'un
     const started = await startPlan(request)
     id = started.thread_id
     threadId.value = id
-  } catch {
-    // 后端没有 /async（404）、连不上、或返回体不对 —— 都归为「这条路没铺好」
-    return 'unavailable'
+    sessionStorage.setItem('trip-form-run', id)
+  } catch (error) {
+    if (error instanceof ApiError && error.code === 'ASYNC_UNAVAILABLE') return 'unavailable'
+    throw error
   }
 
   loadingHint.value = '正在订阅进度推送，节点完成后会立刻显示在这里。'
@@ -364,7 +392,7 @@ async function runStreaming(request: TripRequest): Promise<'done' | 'poll' | 'un
     cancelStream = streamPlan(id, {
       onNode: (event) => {
         // 同一个节点理论上只推一次，去重是为了防后端重发导致列表出现两行
-        if (!nodeEvents.value.some((item) => item.node === event.node)) {
+        if (!nodeEvents.value.some((item) => event.seq !== undefined ? item.seq === event.seq : JSON.stringify(item) === JSON.stringify(event))) {
           nodeEvents.value.push(event)
         }
       },
@@ -402,49 +430,18 @@ async function submit(): Promise<void> {
 
   try {
     // ---- 路径 1 / 2：异步 + 流式，失败就降级 ----
-    let outcome: 'done' | 'poll' | 'unavailable' = 'unavailable'
-    try {
-      outcome = await runStreaming(request)
-    } catch {
-      // runStreaming 内部已经吞掉了预期的异常；这里兜住任何意外，保证还能降级
-      outcome = 'unavailable'
-    }
-
-    if (outcome === 'done') return
-
-    if (outcome === 'poll' && threadId.value) {
-      loadingHint.value = '进度推送中断，正在改用轮询确认结果（不会重新生成）。'
-      let polled: TripPlanResponse | null = null
-      try {
-        polled = await pollUntilReady(threadId.value)
-      } catch (error) {
-        // 轮询路上出现「会话没了」这种硬错误，直接报出来比再发同步请求更诚实
-        if (error instanceof ApiError && error.code === 'THREAD_GONE') {
-          status.value = 'error'
-          errorMessage.value = error.message
-          errorCode.value = error.code
-          return
-        }
-        polled = null
-      }
-      if (polled) {
-        applyResponse(polled)
-        return
-      }
-      // 轮询也没等到：退回同步请求（这是最后一条路，宁可多花一次调用也不能让用户空手而归）
-    }
-
-    // ---- 路径 3：原有同步接口，行为与改动前完全一致 ----
-    loadingHint.value = '完整规划通常需要 20~40 秒，要调外部接口多次，请不要关闭页面。'
-    const response = await planTrip(request, {
-      onProgress: (event) => {
-        progress.value.push(event)
-      },
-      onComplete: (result) => {
-        threadId.value = result.thread_id
-      },
+    const outcome = await finishPlanning(() => runStreaming(request), async () => {
+      loadingHint.value = '进度推送中断，正在轮询原任务结果。'
+      return threadId.value ? pollUntilReady(threadId.value) : null
+    }, async () => {
+      loadingHint.value = '正在生成，请保留页面等待结果。'
+      return planTrip(request, {
+        onProgress: event => progress.value.push(event),
+        onComplete: result => { threadId.value = result.thread_id },
+      })
     })
-    applyResponse(response)
+    if (outcome.kind === 'result') applyResponse(outcome.response)
+    else if (outcome.kind === 'waiting') throw new ApiError('等待超时，原任务可能仍在执行。请检查任务结果或断点后继续。', 'WAIT_TIMEOUT')
   } catch (error) {
     status.value = 'error'
     // 只有同步路径的异常才能断定「后端不在线」；异步失败是静默降级的，不该影响这个判断
@@ -501,6 +498,18 @@ async function checkResume(): Promise<void> {
   }
 }
 
+async function checkExistingResult(): Promise<void> {
+  if (!threadId.value) return
+  status.value = 'loading'; startTimer()
+  loadingHint.value = '正在查询原任务结果。'
+  try {
+    const response = await getPlanResult(threadId.value)
+    if (response) applyResponse(response)
+    else { status.value = 'error'; errorMessage.value = '原任务尚未完成，可稍后再次查询。'; await refreshJournal() }
+  } catch (e) { status.value = 'error'; errorMessage.value = e instanceof Error ? e.message : '查询失败' }
+  finally { stopTimer() }
+}
+
 function reset(): void {
   cancelStream?.()
   cancelStream = undefined
@@ -521,16 +530,16 @@ function reset(): void {
     <header class="hero">
       <div class="brand">
         <Compass :size="26" />
-        <span>多智能体旅行规划助手</span>
+        <span>漫游 <small>ROAM</small></span>
+        <router-link class="nav-link" to="/chat">旅行工作台</router-link>
         <!-- 社区页的数据来自另一个服务（Java），但对用户来说只是"换个页面看看别人去哪" -->
         <router-link class="nav-link" to="/community">
           <TrendingUp :size="15" />
           社区行程榜
         </router-link>
       </div>
-      <p class="subtitle">
-        景点搜集 · 天气查询 · 行程编排 · 住宿求解（两路并行 + 住宿后置）
-      </p>
+      <div class="form-hero"><span>LET’S MAKE A LITTLE ROOM FOR TRAVEL</span><h1>把向往，排进日常之外。</h1><p class="subtitle">说说目的地和旅行偏好，让美食、风景与好时光顺路相遇。</p></div>
+      <a-button v-if="threadId" :disabled="status === 'loading'" @click="checkExistingResult">查看上次任务结果</a-button>
       <div v-if="backendOnline === false" class="offline">
         <TriangleAlert :size="14" />
         后端未连接（http://127.0.0.1:8000）。请先启动后端，再点「生成行程」。
@@ -540,6 +549,7 @@ function reset(): void {
     <div class="layout">
       <!-- ---------- 左：表单 ---------- -->
       <aside class="panel">
+        <div class="form-section-heading"><span>01</span><div><h2>你的旅行设定</h2><p>安排好必要的，留白给惊喜。</p></div></div>
         <a-form layout="vertical" :model="form">
           <a-form-item label="目的地城市" :validate-status="cityMissing ? 'error' : ''">
             <a-input
@@ -685,13 +695,11 @@ function reset(): void {
       <main class="panel result">
         <!-- 初始 -->
         <div v-if="status === 'idle'" class="placeholder">
-          <Compass :size="36" class="placeholder-icon" />
-          <p class="placeholder-title">填好左边，点「生成行程」</p>
-          <p class="placeholder-text">
-            系统会先确认城市位置（顺手做可行性预检），再让景点与天气两路并行采集，
-            然后由编排助手汇总成逐日行程，最后统一求解住宿与预算。
-            你填的「必去景点」和「已订酒店」是硬约束，排不进去会如实告诉你。
-          </p>
+          <span class="placeholder-kicker">YOUR NEXT CHAPTER</span>
+          <p class="placeholder-title">不必赶路，<br>让旅行有自己的节奏。</p>
+          <p class="placeholder-text">填好左侧的旅行信息，景点、美食、住处与路程，<br>会一起出现在你的旅行手册里。</p>
+          <JourneyArtwork />
+          <div class="placeholder-tags"><span>当地美食</span><i></i><span>顺路安排</span><i></i><span>舒适节奏</span></div>
         </div>
 
         <!-- 加载中：进度列表来自 SSE（每个节点完成后立刻点亮），
@@ -719,7 +727,7 @@ function reset(): void {
           </ul>
           <p class="loading-hint">{{ loadingHint }}</p>
           <p class="loading-hint muted-hint">
-            节点按固定顺序推进；「搜集景点」和「查询天气」是并行分支，先后到达属于正常现象。
+            正在核对景点、美食、住宿与天气。你可以在这里查看进度，无需重复提交。
           </p>
         </div>
 
@@ -763,20 +771,24 @@ function reset(): void {
               实际耗时 {{ elapsedText }} 秒
               <span v-if="threadId" class="thread">会话 {{ threadId.slice(0, 8) }}</span>
             </span>
+            <a-button v-if="completeResult" :loading="transferring" @click="editSavedPlan">保存并局部修改</a-button>
             <a-button type="text" size="small" @click="reset">
               <template #icon><RotateCcw :size="14" /></template>
               重新规划
             </a-button>
           </div>
+          <p v-if="transferError" role="alert" class="error-message">{{ transferError }} <router-link v-if="!hasSession()" to="/chat">前往登录</router-link></p>
           <TripSummary
             v-if="plan"
             :plan="plan"
+            hide-actions
             :cached="cacheInfo.cached"
             :cache-hit-count="cacheInfo.count"
             :cache-saved-at="cacheInfo.savedAt"
             :preferences="submittedPreferences"
           />
           <DayTimeline v-if="plan" :days="plan.days" :sources="plan.sources" />
+          <details v-if="plan" class="export-options"><summary>把旅行手册带走或分享</summary><ExportPanel :plan="plan" :preferences="submittedPreferences" /></details>
         </template>
       </main>
     </div>
@@ -922,6 +934,7 @@ function reset(): void {
 }
 
 /* 还没轮到的节点压暗，让「进度往前走」这件事一眼可见 */
+
 .progress-item.waiting {
   color: #a8b0be;
 }
@@ -935,6 +948,7 @@ function reset(): void {
 }
 
 /* 状态标记用「圆点 / 转圈」区分，不用 emoji（GBK 环境下 emoji 会崩） */
+
 .marker {
   flex: 0 0 auto;
   width: 9px;
@@ -1001,6 +1015,7 @@ function reset(): void {
 }
 
 /* 断点续跑提示块：和上面的错误说明隔开，避免用户以为「又报了一个错」 */
+
 .resume-box {
   margin-top: 16px;
   padding: 14px 16px;
@@ -1093,5 +1108,436 @@ function reset(): void {
 .nav-link:hover {
   border-color: #c9cfd9;
   color: #1b1f27;
+}
+
+.page {
+  max-width: 1320px;
+  padding: 0 36px 50px;
+  color: #344b35;
+}
+
+.hero {
+  margin-bottom: 28px;
+}
+
+.brand {
+  height: 82px;
+  border-bottom: 1px solid #e2e6d9;
+  color: #35543b;
+  font-size: 21px;
+  gap: 10px;
+}
+
+.brand>svg {
+  background: #315a43;
+  color: #fff;
+  padding: 8px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+}
+
+.brand>span {
+  font-weight: 650;
+  letter-spacing: 2px;
+}
+
+.brand>span>small {
+  font-size: 9px;
+  letter-spacing: 3px;
+  font-weight: 500;
+  vertical-align: middle;
+  color: #8c9b7b;
+  margin-left: 7px;
+}
+
+.nav-link {
+  margin-left: auto;
+  font-size: 12px;
+  border: 0;
+  background: none;
+  color: #7f8c71;
+  padding: 8px 0;
+}
+
+.nav-link+.nav-link {
+  margin-left: 22px;
+}
+
+.form-hero {
+  padding: 37px 0 5px;
+}
+
+.form-hero>span {
+  font-size: 8px;
+  letter-spacing: 2.3px;
+  color: #9ba88a;
+}
+
+.form-hero>h1 {
+  font-family: 'Noto Serif SC','STZhongsong','Songti SC','SimSun',serif;
+  font-size: 32px;
+  letter-spacing: .5px;
+  font-weight: 500;
+  color: #425a3e;
+  margin: 14px 0 13px;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: #929d84;
+  margin: 0;
+}
+
+.layout {
+  grid-template-columns: 345px minmax(0,1fr);
+  gap: 26px;
+}
+
+.panel {
+  background: #fffefa;
+  border-color: #e1e6d8;
+  border-radius: 15px;
+  padding: 25px;
+}
+
+.form-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 25px;
+  padding-bottom: 21px;
+  border-bottom: 1px solid #ebeee3;
+}
+
+.form-section-heading>span {
+  display: grid;
+  place-items: center;
+  width: 33px;
+  height: 33px;
+  border: 1px solid #e0e7d4;
+  background: #f2f6e8;
+  border-radius: 9px;
+  color: #80966b;
+  font-family: Georgia,serif;
+  font-size: 12px;
+}
+
+.form-section-heading h2 {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+  color: #4e6545;
+}
+
+.form-section-heading p {
+  font-size: 10px;
+  color: #a0aa90;
+  margin: 5px 0 0;
+}
+
+.panel :deep(.ant-form-item-label>label) {
+  font-size: 12px;
+  color: #69785b;
+}
+
+.panel :deep(.ant-form-item) {
+  margin-bottom: 20px;
+}
+
+.panel :deep(.ant-input-affix-wrapper),.panel :deep(.ant-input-number),.panel :deep(.ant-picker),.panel :deep(.ant-select-selector) {
+  background: #fdfdf8 !important;
+  border-color: #e1e6d7 !important;
+}
+
+.panel :deep(.ant-checkbox-wrapper) {
+  font-size: 12px;
+  color: #89977a;
+}
+
+.panel :deep(.ant-input),.panel :deep(.ant-input-number-input) {
+  font-size: 12px;
+}
+
+.panel :deep(.ant-btn-primary) {
+  box-shadow: none;
+}
+
+.result {
+  padding: 25px;
+  min-height: 640px;
+  background: #fcfcf7;
+}
+
+.placeholder {
+  height: auto;
+  min-height: 590px;
+  text-align: left;
+  align-items: stretch;
+  padding: 20px 10px 0;
+}
+
+.placeholder-kicker {
+  font-size: 8px;
+  letter-spacing: 2.6px;
+  color: #9aa887;
+}
+
+.placeholder-title {
+  font-family: 'Noto Serif SC','STZhongsong','Songti SC','SimSun',serif;
+  font-size: 34px;
+  line-height: 1.6;
+  font-weight: 500;
+  color: #526b47;
+  margin: 17px 0;
+}
+
+.placeholder-text {
+  font-size: 12px;
+  line-height: 2;
+  color: #a0aa91;
+  max-width: none;
+}
+
+.placeholder>.journey-art {
+  margin: 30px 0 0;
+  max-width: 650px;
+}
+
+.placeholder-tags {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  border-top: 1px dashed #e2e8d5;
+  padding-top: 22px;
+  margin-top: 30px;
+  font-size: 10px;
+  color: #9eac8a;
+}
+
+.placeholder-tags>i {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #b4bfa3;
+}
+
+.result :deep(.card),.result :deep(.day-card) {
+  background: #fffefa;
+  border-color: #e2e8d7;
+  border-radius: 12px;
+}
+
+.result :deep(.hero-card) {
+  background: #edf3e3;
+  border: 0;
+}
+
+.result :deep(.city) {
+  color: #45613a;
+}
+
+.result :deep(.budget-item),.result :deep(.weather-item),.result :deep(.meal) {
+  background: #f5f8ed;
+}
+
+.result :deep(.card-title),.result :deep(.block-title) {
+  color: #617b4e;
+}
+
+.result :deep(.budget-value),.result :deep(.date-day) {
+  color: #577441;
+}
+
+.result :deep(.date-index) {
+  background: #edf2e1;
+  color: #8b9f73;
+}
+
+.result :deep(.meal) {
+  border: 1px solid #e7ebdc;
+  border-left: 3px solid #c6a371;
+}
+
+.result :deep(.meal-type) {
+  background: #f3e9d7;
+  color: #ae8e60;
+}
+
+.result :deep(.muted),.result :deep(.date-range) {
+  color: #98a48a;
+}
+
+.result :deep(.alert-card) {
+  background: #fbf7e9;
+  border-color: #e8dfc4;
+}
+
+.result :deep(a) {
+  color: #69864f;
+}
+
+.loading-head {
+  color: #5c7648;
+}
+
+.spin {
+  color: #69894e;
+}
+
+.marker.running {
+  border-color: #78955d;
+  border-top-color: transparent;
+}
+
+.loading-hint {
+  color: #99a889;
+}
+
+.result-meta {
+  color: #a0ad90;
+}
+
+.thread {
+  background: #f0f4e6;
+  color: #98a883;
+}
+
+.progress-item {
+  color: #8c9d79;
+}
+
+.progress-item.done .progress-label {
+  color: #5d7748;
+}
+
+.progress-tag.running {
+  background: #edf4e1;
+  color: #7b965f;
+}
+
+@media (max-width:940px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .page {
+    padding: 0 22px 40px;
+  }
+  .placeholder {
+    min-height: 520px;
+  }
+  .placeholder>.journey-art {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .result {
+    min-height: 0;
+  }
+  .form-hero {
+    padding-top: 28px;
+  }
+  .form-hero>h1 {
+    font-size: 29px;
+  }
+}
+
+@media (max-width:600px) {
+  .page {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .brand {
+    height: 70px;
+    font-size: 18px;
+  }
+  .brand>span>small {
+    display: none;
+  }
+  .nav-link {
+    font-size: 10px;
+  }
+  .nav-link+.nav-link {
+    margin-left: 10px;
+  }
+  .brand>svg {
+    width: 34px;
+    height: 34px;
+    padding: 7px;
+    border-radius: 10px;
+  }
+  .form-hero>h1 {
+    font-size: 26px;
+  }
+  .form-hero>span {
+    font-size: 6px;
+    letter-spacing: 1.8px;
+  }
+  .subtitle {
+    font-size: 11px;
+    line-height: 1.9;
+  }
+  .panel {
+    padding: 21px;
+  }
+  .placeholder {
+    padding: 8px 0 0;
+    min-height: 0;
+  }
+  .placeholder-title {
+    font-size: 30px;
+  }
+  .placeholder-text {
+    font-size: 11px;
+  }
+  .placeholder-tags {
+    gap: 15px;
+    font-size: 9px;
+  }
+  .placeholder>.journey-art {
+    margin-top: 25px;
+  }
+  .result {
+    padding: 21px;
+  }
+}
+
+.result :deep(.spot) {
+  background: #f4f7ec;
+  border: 1px solid #e8ecdf;
+}
+
+.result :deep(.spot-index) {
+  background: #789563;
+}
+
+.result :deep(.spot-desc) {
+  color: #7f8e70;
+}
+
+.result :deep(.schedule-list time) {
+  color: #6d8955;
+}
+
+.result :deep(.action-btn.primary) {
+  background: #315a43;
+  border-color: #315a43;
+}
+
+.export-options {
+  border-top: 1px solid #e2e8d6;
+  margin-top: 24px;
+  padding-top: 18px;
+  font-size: 12px;
+  color: #789062;
+}
+
+.export-options>summary {
+  cursor: pointer;
+}
+
+.export-options :deep(.export-panel) {
+  margin-top: 18px;
 }
 </style>

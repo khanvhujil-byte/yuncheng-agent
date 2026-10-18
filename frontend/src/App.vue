@@ -1,5 +1,7 @@
 <template>
-  <router-view />
+  <a-config-provider :theme="{ token: { colorPrimary: '#315a43', colorText: '#304331', colorBorder: '#dde3d3', borderRadius: 9, colorBgContainer: '#fffefa', fontFamily: 'Inter, Segoe UI, Microsoft YaHei, sans-serif' } }">
+    <router-view />
+  </a-config-provider>
 </template>
 
 <style>
@@ -14,8 +16,8 @@ body {
 }
 
 body {
-  background: #f5f7fa;
-  color: #1b1f27;
+  background: #f7f7f1;
+  color: #304331;
   font-family: system-ui, -apple-system, 'Segoe UI', 'Microsoft YaHei', 'PingFang SC',
     sans-serif;
   -webkit-font-smoothing: antialiased;

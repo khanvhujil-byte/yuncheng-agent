@@ -17,3 +17,5 @@ httpx
 langgraph
 langchain-core
 langchain-openai
+mcp==1.30.0
+jsonschema>=4.20,<5

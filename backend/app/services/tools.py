@@ -9,20 +9,25 @@
         这样既拿到多智能体的自主性，又不丢确定性。
 
 两条硬性约定：
-    1. **工具永远不抛异常**。出错就返回一句人话，让 Agent 决定下一步
+    1. **工具边界统一返回 ToolResult**。捕获异常时保存错误码与可重试性，交给运行时决策
        （它可能换个关键词再试）—— 对应需求文档 FR-03：工具失败不能崩掉整条请求。
-    2. **工具返回给模型的只有摘要字符串**；原始结构化数据写进 ctx（收集箱），不进对话历史。
+    2. **模型工具消息是结果摘要的 JSON 字符串**；领域数据写进 ctx，不进对话历史。
        理由：省 token / 不丢数据 / 数据不经过模型的手，就不可能被编造。
 """
 
 import logging
 import math
+import json
 from dataclasses import dataclass, field
 from datetime import date, timedelta
 from typing import Any, Optional
 
 from ..models.schemas import Attraction, Hotel, Location, WeatherInfo
-from . import amap
+from ..models.requirements import Requirements
+from ..config import get_settings
+from . import map_gateway as amap
+from .tool_result import ToolResult
+from .tool_retry import ExecutionReport, RetryPolicy, run
 
 logger = logging.getLogger(__name__)
 
@@ -61,6 +66,7 @@ class ToolContext:
     start_date: str
     travel_days: int
     nights: int = 0
+    requirements: Requirements = field(default_factory=Requirements)
 
     # ---- 收集箱（结构化数据，不进对话）----
     attractions: dict[str, Attraction] = field(default_factory=dict)
@@ -74,6 +80,8 @@ class ToolContext:
     calls: list[dict[str, Any]] = field(default_factory=list)  # 每次工具调用一条记录（trace/实验用）
     distance_cache: dict[str, float] = field(default_factory=dict)
     errors: list[str] = field(default_factory=list)
+    # Exhausted transient failures, scoped to this context. JSON-safe for tracing.
+    exhausted_queries: dict[str, dict] = field(default_factory=dict)
 
 
 # ================================================================ 纯函数小工具
@@ -178,53 +186,67 @@ def _hotel_of(poi: Attraction, nights: int) -> Hotel:
 # ================================================================ 工具实现
 
 
-def _search_attractions(args: dict, ctx: ToolContext) -> str:
+def _upstream_failure(ctx: ToolContext, operation: str, exc: amap.AmapError | amap.AmapUnreachable) -> ToolResult:
+    """Capture metadata while the original typed exception is still available."""
+    ctx.errors.append(f"{exc.code}: {operation}失败（{exc}）")
+    if isinstance(exc, amap.AmapError):
+        return ToolResult.failure(f"{operation}失败（{exc.code}）：地图服务暂不可用。", exc.code)
+    if exc.code == "UPSTREAM_RATE_LIMITED":
+        return ToolResult.failure(f"{operation}暂未完成：地图服务请求受到限流，请稍后再试。", exc.code,
+                                  retryable=exc.retryable, retry_after_seconds=exc.retry_after_seconds)
+    return ToolResult.failure(f"{operation}失败（网络不可达或上游响应异常）。", exc.code,
+                              retryable=exc.retryable, retry_after_seconds=exc.retry_after_seconds)
+
+
+def _search_attractions(args: dict, ctx: ToolContext) -> ToolResult:
     keyword = str(args.get("keyword") or "").strip()
     if not keyword:
-        return "错误：keyword 不能为空。请给出搜索关键词（建议用用户的偏好标签）。"
+        return ToolResult.failure("错误：keyword 不能为空。请给出搜索关键词（建议用用户的偏好标签）。", "INVALID_ARGUMENT")
     limit = min(int(args.get("limit") or MAX_PAGE_SIZE), MAX_PAGE_SIZE)
 
     try:
         hits = amap.search_poi(keyword, ctx.city, offset=limit, page=1)
     except amap.AmapError as exc:
-        ctx.errors.append(f"{exc.code}: 搜索「{keyword}」失败（{exc.detail}）")
-        return f"搜索失败（{exc.code}）：{exc.detail}。这是配置/配额问题，重试无用。"
+        return _upstream_failure(ctx, f"搜索「{keyword}」", exc)
     except amap.AmapUnreachable as exc:
-        ctx.errors.append(f"UPSTREAM_TIMEOUT: 搜索「{keyword}」失败（{exc}）")
-        return f"搜索失败（网络不可达）：{exc}。可以再试一次。"
+        return _upstream_failure(ctx, f"搜索「{keyword}」", exc)
 
-    added = dropped = 0
+    added = dropped = duplicates = 0
+    from .price_catalog import apply_prices
+    hits = apply_prices(ctx.city, "attraction", hits, service_date=ctx.start_date, travel_days=ctx.travel_days)
     for poi in hits:
         # 这里**不做相关性判定**：关键词是偏好标签（自然风光/博物馆）而不是地名，
         # 按字面比对会误杀正确结果（见 is_relevant 的说明）。类目过滤到此为止。
-        if not _is_attraction(poi):
+        from .requirements import excluded
+        if not _is_attraction(poi) or excluded(poi.name, ctx.requirements.attractions):
             dropped += 1
             continue
         key = poi.poi_id or poi.name
         if key in ctx.attractions:
+            duplicates += 1
             continue
         ctx.attractions[key] = poi
         added += 1
 
     sample = "、".join(poi.name for poi in hits[:3]) or "无"
-    return (
+    return ToolResult.success(
         f"关键词「{keyword}」：返回 {len(hits)} 条，采纳 {added} 条，"
         f"过滤 {dropped} 条（餐饮/住宿类目）。"
-        f"累计候选 {len(ctx.attractions)} 条。返回的前几条：{sample}。"
+        f"累计候选 {len(ctx.attractions)} 条。返回的前几条：{sample}。",
+        returned_count=len(hits), filtered_count=dropped, duplicate_count=duplicates,
+        added_count=added, candidate_count=len(ctx.attractions),
     )
 
 
-def _get_weather(args: dict, ctx: ToolContext) -> str:
+def _get_weather(args: dict, ctx: ToolContext) -> ToolResult:
     if not ctx.adcode:
-        return "错误：缺少城市编码（adcode），无法查询天气。"
+        return ToolResult.failure("错误：缺少城市编码（adcode），无法查询天气。", "MISSING_ADCODE")
     try:
         forecast = amap.get_weather(ctx.adcode)
     except amap.AmapError as exc:
-        ctx.errors.append(f"{exc.code}: 天气查询失败（{exc.detail}）")
-        return f"天气查询失败（{exc.code}）：{exc.detail}。"
+        return _upstream_failure(ctx, "天气查询", exc)
     except amap.AmapUnreachable as exc:
-        ctx.errors.append(f"UPSTREAM_TIMEOUT: 天气查询失败（{exc}）")
-        return f"天气查询失败（网络不可达）：{exc}。可以再试一次。"
+        return _upstream_failure(ctx, "天气查询", exc)
 
     days = _trip_dates(ctx.start_date, ctx.travel_days)
     by_date = {item.date: item for item in forecast}
@@ -241,46 +263,56 @@ def _get_weather(args: dict, ctx: ToolContext) -> str:
     text = f"预报覆盖 {covered}/{len(days)} 天（高德只提供今天起 4 天）。{line}"
     if missing:
         text += f"。以下日期**没有预报**，必须留空、不许编造：{'、'.join(missing)}"
-    return text
+    return ToolResult.success(text, returned_count=len(forecast), covered_count=covered,
+                              requested_days=len(days))
 
 
-def _search_hotels(args: dict, ctx: ToolContext) -> str:
+def _search_hotels(args: dict, ctx: ToolContext) -> ToolResult:
     keyword = str(args.get("keyword") or "").strip() or "酒店"
     keyword = HOTEL_KEYWORDS.get(keyword, keyword)
 
     try:
         hits = amap.search_poi(keyword, ctx.city, offset=MAX_PAGE_SIZE, page=1)
     except amap.AmapError as exc:
-        ctx.errors.append(f"{exc.code}: 搜索酒店失败（{exc.detail}）")
-        return f"搜索酒店失败（{exc.code}）：{exc.detail}。"
+        return _upstream_failure(ctx, "搜索酒店", exc)
     except amap.AmapUnreachable as exc:
-        ctx.errors.append(f"UPSTREAM_TIMEOUT: 搜索酒店失败（{exc}）")
-        return f"搜索酒店失败（网络不可达）：{exc}。"
+        return _upstream_failure(ctx, "搜索酒店", exc)
 
-    added = 0
+    added = dropped = duplicates = 0
     for poi in hits:
-        if not _is_hotel(poi) or poi.location is None:
+        from .requirements import excluded
+        if not _is_hotel(poi) or poi.location is None or excluded(poi.name, ctx.requirements.hotel):
+            dropped += 1
             continue
         key = poi.poi_id or poi.name
         if key in ctx.hotels:
+            duplicates += 1
             continue
-        ctx.hotels[key] = _hotel_of(poi, ctx.nights)
+        from .price_catalog import apply_prices
+        ctx.hotels[key] = apply_prices(ctx.city, "hotel", [_hotel_of(poi, ctx.nights)],
+                                       service_date=ctx.start_date, nights=ctx.nights)[0]
         added += 1
 
     sample = "、".join(h.name for h in list(ctx.hotels.values())[:3]) or "无"
-    return (
+    if added:
+        # Candidate changes invalidate the previous ordering used by fallback.
+        ctx.ranked = []
+        ctx.distance_cache.pop("__rank_best__", None)
+    return ToolResult.success(
         f"关键词「{keyword}」：返回 {len(hits)} 条，采纳住宿类 {added} 条，"
-        f"累计候选 {len(ctx.hotels)} 家。前几家：{sample}。"
+        f"累计候选 {len(ctx.hotels)} 家。前几家：{sample}。",
+        returned_count=len(hits), filtered_count=dropped, duplicate_count=duplicates,
+        added_count=added, candidate_count=len(ctx.hotels),
     )
 
 
-def _measure_distance(args: dict, ctx: ToolContext) -> str:
+def _measure_distance(args: dict, ctx: ToolContext) -> ToolResult:
     hotel = _find_in(ctx.hotels, str(args.get("hotel") or ""))
     attraction = _find_in(ctx.attractions, str(args.get("attraction") or ""))
     if hotel is None or attraction is None:
-        return "错误：没在候选里找到这家酒店或这个景点。请先用 search_hotels / search_attractions 取回候选。"
+        return ToolResult.failure("错误：没在候选里找到这家酒店或这个景点。请先用 search_hotels / search_attractions 取回候选。", "CANDIDATE_NOT_FOUND")
     if hotel.location is None or attraction.location is None:
-        return "错误：其中一方缺少坐标，无法测距。"
+        return ToolResult.failure("错误：其中一方缺少坐标，无法测距。", "MISSING_LOCATION")
 
     cache_key = f"{hotel.name}->{attraction.name}"
     if cache_key in ctx.distance_cache:
@@ -289,32 +321,32 @@ def _measure_distance(args: dict, ctx: ToolContext) -> str:
         try:
             result = amap.measure_distance(hotel.location, attraction.location)
         except amap.AmapError as exc:
-            return f"测距失败（{exc.code}）：{exc.detail}。"
+            return _upstream_failure(ctx, "测距", exc)
         except amap.AmapUnreachable as exc:
-            return f"测距失败（网络不可达）：{exc}。"
+            return _upstream_failure(ctx, "测距", exc)
         if result is None:
-            return "测距失败：高德没有返回距离。"
+            return ToolResult.failure("测距失败：高德没有返回距离。", "DISTANCE_UNAVAILABLE")
         meters = result
         ctx.distance_cache[cache_key] = meters
 
-    return f"{hotel.name} → {attraction.name}：{meters / 1000:.1f} 公里（驾车，高德实测）。"
+    return ToolResult.success(f"{hotel.name} → {attraction.name}：{meters / 1000:.1f} 公里（驾车，高德实测）。")
 
 
-def _rank_hotels(args: dict, ctx: ToolContext) -> str:
+def _rank_hotels(args: dict, ctx: ToolContext) -> ToolResult:
     """加权选址：cost(h) = Σ 距离(h, 景点i) × visit_duration(i) / Σ visit_duration(i)。
 
     权重用「建议游览时长」——用户在一个景点待得越久，酒店离它近就越值钱。
     排序用**球面直线距离**（本地算，0 配额）；结论建议再用 measure_distance 核一次。
     """
     if not ctx.hotels:
-        return "错误：还没有酒店候选，先调 search_hotels。"
+        return ToolResult.failure("错误：还没有酒店候选，先调 search_hotels。", "NO_HOTEL_CANDIDATES")
     if not ctx.attractions:
-        return "错误：还没有景点候选，先调 search_attractions。"
+        return ToolResult.failure("错误：还没有景点候选，先调 search_attractions。", "NO_ATTRACTION_CANDIDATES")
 
     attractions = list(ctx.attractions.values())[:RANK_MAX_ATTRACTIONS]
     weighted = [a for a in attractions if a.location is not None]
     if not weighted:
-        return "错误：候选景点都缺坐标，无法排序。"
+        return ToolResult.failure("错误：候选景点都缺坐标，无法排序。", "MISSING_LOCATION")
     total_weight = sum(max(a.visit_duration, 1) for a in weighted)
 
     ranking: list[tuple[float, str, Hotel]] = []
@@ -327,7 +359,7 @@ def _rank_hotels(args: dict, ctx: ToolContext) -> str:
         ranking.append((cost, hotel.name, hotel))
 
     if not ranking:
-        return "错误：候选酒店都缺坐标，无法排序。"
+        return ToolResult.failure("错误：候选酒店都缺坐标，无法排序。", "MISSING_LOCATION")
     ranking.sort(key=lambda item: item[0])
 
     top_n = max(1, min(int(args.get("top_n") or 3), len(ranking)))
@@ -336,29 +368,43 @@ def _rank_hotels(args: dict, ctx: ToolContext) -> str:
     ctx.ranked = [name for _, name, _ in ranking]
     ctx.distance_cache["__rank_best__"] = ranking[0][0]
     logger.info("酒店排序完成 | 候选 %d 家 / 景点 %d 个 | 最优 %s", len(ranking), len(weighted), ranking[0][1])
-    return "加权距离排序（越小越好，已按建议游览时长加权）：" + "；".join(lines) + "。可用 measure_distance 对心仪的酒店实测驾车距离。"
+    return ToolResult.success("加权距离排序（越小越好，已按建议游览时长加权）：" + "；".join(lines) + "。可用 measure_distance 对心仪的酒店实测驾车距离。")
 
 
-def _choose_hotel(args: dict, ctx: ToolContext) -> str:
+def _choose_hotel(args: dict, ctx: ToolContext) -> ToolResult:
     """把 Agent 的决定**落到收集箱**，而不是让它写在自然语言里再被解析。"""
     hotel = _find_in(ctx.hotels, str(args.get("hotel") or ""))
     if hotel is None:
-        return "错误：没在候选里找到这家酒店。请先用 search_hotels 取回候选，再选。"
-    try:
-        price = int(args.get("price_per_night") or 0)
-    except (TypeError, ValueError):
-        price = 0
-    if price <= 0:
-        return "错误：price_per_night 必须是正整数（元/晚）。这是估算值，系统会标注为「预估」。"
+        return ToolResult.failure("错误：没在候选里找到这家酒店。请先用 search_hotels 取回候选，再选。", "CANDIDATE_NOT_FOUND")
+    sourced = hotel.cost_source == "imported" and hotel.cost_status in ("known", "estimated")
+    if sourced:
+        price = hotel.estimated_cost
+    else:
+        try:
+            price = int(args.get("price_per_night") or 0)
+        except (TypeError, ValueError):
+            price = 0
+        if price <= 0:
+            return ToolResult.failure("错误：price_per_night 必须是正整数（元/晚）。这是估算值，系统会标注为「预估」。", "INVALID_ARGUMENT")
     if ctx.nights <= 0:
-        return "错误：本次行程晚数为 0，不需要住宿。请直接结束。"
+        return ToolResult.failure("错误：本次行程晚数为 0，不需要住宿。请直接结束。", "NO_HOTEL_NEEDED")
+
+    from .requirements import hotel_allowed
+    proposed = hotel.model_copy(update={"estimated_cost": price,
+                                       "cost_status": hotel.cost_status if sourced else "estimated"})
+    if not hotel_allowed(proposed, ctx.requirements.hotel):
+        return ToolResult.failure("这家酒店不符合用户排除名单或每晚参考价上限，请选择其他候选。", "REQUIREMENT_VIOLATION")
 
     hotel.estimated_cost = price
+    if not sourced:
+        hotel.cost_status = "estimated"
+        hotel.cost_source = "llm_estimated"
     ctx.chosen_hotel = hotel
     ctx.chosen_reason = str(args.get("reason") or "")
-    return (
+    return ToolResult.success(
         f"已选定：{hotel.name}，{price} 元/晚 × {ctx.nights} 晚 = {price * ctx.nights} 元。"
-        f"请结束本轮，不要再调用工具。"
+        + ("价格来自有日期和出处的资料，已保留原值。" if sourced else "价格为模型估算。")
+        + "请结束本轮，不要再调用工具。"
     )
 
 
@@ -381,7 +427,9 @@ TOOLS: dict[str, dict[str, Any]] = {
             "required": ["keyword"],
         },
         "handler": _search_attractions,
+        "retry_safe": True,
         "roles": ("attractions",),
+        "parallel_search": True,
     },
     "get_weather": {
         "description": (
@@ -390,6 +438,7 @@ TOOLS: dict[str, dict[str, Any]] = {
         ),
         "parameters": {"type": "object", "properties": {}},
         "handler": _get_weather,
+        "retry_safe": True,
         "roles": ("weather",),
     },
     "search_hotels": {
@@ -404,7 +453,9 @@ TOOLS: dict[str, dict[str, Any]] = {
             },
         },
         "handler": _search_hotels,
+        "retry_safe": True,
         "roles": ("hotels",),
+        "parallel_search": True,
     },
     "rank_hotels": {
         "description": (
@@ -417,6 +468,7 @@ TOOLS: dict[str, dict[str, Any]] = {
         },
         "handler": _rank_hotels,
         "roles": ("hotels",),
+        "batch_stage": 1,
     },
     "measure_distance": {
         "description": "实测某家酒店到某个景点的驾车距离（高德距离接口，消耗配额，有缓存）。",
@@ -429,7 +481,10 @@ TOOLS: dict[str, dict[str, Any]] = {
             "required": ["hotel", "attraction"],
         },
         "handler": _measure_distance,
+        "retry_safe": True,
         "roles": ("hotels",),
+        "batch_stage": 2,
+        "observe_after": ("search_hotels", "rank_hotels"),
     },
     "choose_hotel": {
         "description": (
@@ -447,6 +502,8 @@ TOOLS: dict[str, dict[str, Any]] = {
         },
         "handler": _choose_hotel,
         "roles": ("hotels",),
+        "batch_stage": 3,
+        "observe_after": ("search_hotels", "rank_hotels", "measure_distance"),
     },
 }
 
@@ -460,18 +517,54 @@ def schemas_for(role: str) -> list[dict[str, Any]]:
     ]
 
 
-def execute(role: str, name: str, args: dict[str, Any], ctx: ToolContext) -> str:
-    """执行一次工具调用。**永不抛异常** —— 失败也返回一句人话给模型。"""
+def _execute_once(role: str, name: str, args: dict[str, Any], ctx: ToolContext) -> ToolResult:
+    """Success, authorization failures and unexpected exceptions share one contract."""
     spec = TOOLS.get(name)
     if spec is None:
-        return f"错误：没有名为 {name} 的工具。"
+        return ToolResult.failure(f"错误：没有名为 {name} 的工具。", "TOOL_NOT_FOUND")
     if role not in spec["roles"]:
-        return f"错误：{role} 这个角色无权使用 {name}。"
+        return ToolResult.failure(f"错误：{role} 这个角色无权使用 {name}。", "TOOL_FORBIDDEN")
+    from jsonschema import Draft202012Validator
+    schema = {**spec["parameters"], "additionalProperties": False}
+    if not Draft202012Validator(schema).is_valid(args):
+        return ToolResult.failure("工具参数类型、必填字段或字段名不符合契约，请修正调用。", "INVALID_ARGUMENT")
     try:
         result = spec["handler"](args or {}, ctx)
+        if not isinstance(result, ToolResult):
+            ctx.errors.append(f"TOOL_RESULT_INVALID: {name} 未返回 ToolResult")
+            return ToolResult.failure("工具返回结构不符合约定，请联系维护者。", "TOOL_RESULT_INVALID")
     except Exception as exc:  # noqa: BLE001 —— 工具绝不能让整条请求崩
         logger.exception("工具执行异常 | role=%s tool=%s", role, name)
         ctx.errors.append(f"TOOL_ERROR: {name} 执行异常（{type(exc).__name__}: {exc}）")
-        return f"工具执行异常（{type(exc).__name__}）：{exc}。请不要重复调用同样的参数。"
-    logger.info("工具调用 | role=%s tool=%s args=%s -> %s", role, name, args, result[:80])
+        return ToolResult.failure("工具执行异常，请调整调用或联系维护者。", "TOOL_ERROR")
+    logger.info("工具调用 | role=%s tool=%s args=%s status=%s code=%s -> %s",
+                role, name, args, result.status, result.error_code, result.message[:80])
+    return result
+
+
+def query_key(role: str, name: str, args: dict[str, Any], ctx: ToolContext) -> str:
+    return json.dumps([role, name, args or {}, ctx.city, ctx.adcode, ctx.start_date, ctx.travel_days],
+                      ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def execute(role: str, name: str, args: dict[str, Any], ctx: ToolContext,
+            *, tool_call_id: str | None = None) -> ToolResult:
+    """One logical call, bounded physical attempts, and one trace for every entry path."""
+    settings = get_settings()
+    key = query_key(role, name, args, ctx)
+    cached = ctx.exhausted_queries.get(key)
+    if cached is not None:
+        report = ExecutionReport(ToolResult(**cached), [], "query_exhausted")
+    else:
+        report = run(lambda: _execute_once(role, name, args, ctx),
+                     safe=TOOLS.get(name, {}).get("retry_safe", False),
+                     policy=RetryPolicy(settings.tool_max_attempts, settings.tool_retry_budget_seconds,
+                                        settings.tool_retry_base_delay))
+        if report.stop_reason in ("attempt_limit", "time_budget"):
+            ctx.exhausted_queries[key] = report.result.to_dict()
+    result = report.result
+    ctx.calls.append({"role": role, "tool": name, "args": args, "tool_call_id": tool_call_id,
+                      "result": result.message[:200], "outcome": result.to_dict(),
+                      "next_action": report.next_action, "attempts": report.attempts,
+                      "attempt_count": len(report.attempts), "stop_reason": report.stop_reason})
     return result

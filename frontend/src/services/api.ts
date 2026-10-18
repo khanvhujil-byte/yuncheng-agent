@@ -6,6 +6,7 @@
  */
 
 import axios, { AxiosError } from 'axios'
+import { completedResult } from './planningFlow'
 
 import type {
   ApiErrorBody,
@@ -71,6 +72,12 @@ const http = axios.create({
   timeout: 90_000,
   headers: { 'Content-Type': 'application/json' },
 })
+function authHeaders(): Record<string, string> {
+  const token = sessionStorage.getItem('trip-session')
+  return { ...(token ? { 'X-Session-Token': token } : {}),
+    ...(import.meta.env.VITE_API_KEY ? { 'X-API-Key': import.meta.env.VITE_API_KEY } : {}) }
+}
+http.interceptors.request.use(config => { Object.assign(config.headers, authHeaders()); return config })
 
 /**
  * 一个规划阶段的进度事件。
@@ -156,9 +163,13 @@ export const PIPELINE_NODES = [
   'validate_city',
   'collect_attractions',
   'collect_weather',
+  'collect_food',
   'compose_plan',
+  'verify_plan',
   'resolve_hotel',
+  'enrich_experience',
   'patch_budget',
+  'verify_budget',
 ] as const
 
 /** 节点中文名。只在后端没给 label 时兜底用，正常情况下直接用后端的 label */
@@ -166,13 +177,18 @@ const NODE_LABELS: Record<string, string> = {
   validate_city: '解析城市',
   collect_attractions: '搜集景点',
   collect_weather: '查询天气',
+  collect_food: '搜集本地美食',
   compose_plan: '编排行程',
+  verify_plan: '复核行程',
   resolve_hotel: '选择住宿',
+  enrich_experience: '计算路程和舒适度',
   patch_budget: '计算预算',
+  verify_budget: '复核预算',
 }
 
 /** 一个节点完成事件（后端 label 直接透传，前端不做映射） */
 export interface PlanNodeEvent {
+  seq?: number
   node: string
   label: string
   status: string
@@ -230,7 +246,7 @@ async function fetchWithTimeout(
   const controller = new AbortController()
   const timer = window.setTimeout(() => controller.abort(), timeoutMs)
   try {
-    return await fetch(url, { ...init, signal: controller.signal })
+    return await fetch(url, { ...init, headers: { ...authHeaders(), ...init.headers }, signal: controller.signal })
   } finally {
     window.clearTimeout(timer)
   }
@@ -249,19 +265,19 @@ async function fetchWithTimeout(
 export async function startPlan(request: TripRequest): Promise<{ thread_id: string }> {
   let response: Response
   try {
-    response = await fetch(`${API_BASE_URL}/api/trip/plan/async`, {
+    response = await fetchWithTimeout(`${API_BASE_URL}/api/trip/plan/async`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(request),
-    })
+    }, 15_000)
   } catch {
     // 连不上后端：归到「异步不可用」，由调用方决定降级还是报错，
     // 这里不直接抛 NETWORK_ERROR，否则会绕过降级路径
-    throw new ApiError('异步接口连不上。', 'ASYNC_UNAVAILABLE')
+    throw new ApiError('提交结果尚未确认，请检查任务记录，避免重复生成。', 'SUBMISSION_UNCERTAIN')
   }
 
   if (!response.ok) {
-    throw new ApiError(`异步接口返回 ${response.status}。`, 'ASYNC_UNAVAILABLE')
+    throw new ApiError(`异步接口返回 ${response.status}。`, [404, 405].includes(response.status) ? 'ASYNC_UNAVAILABLE' : 'SUBMISSION_FAILED')
   }
 
   const body = (await response.json()) as {
@@ -271,7 +287,7 @@ export async function startPlan(request: TripRequest): Promise<{ thread_id: stri
   }
 
   if (!body?.thread_id) {
-    throw new ApiError(body?.message || '后端没有返回 thread_id。', 'ASYNC_UNAVAILABLE')
+    throw new ApiError(body?.message || '提交结果尚未确认，后端未返回任务编号。', 'SUBMISSION_UNCERTAIN')
   }
 
   return { thread_id: body.thread_id }
@@ -310,7 +326,7 @@ export function streamPlan(thread_id: string, handlers: StreamHandlers): () => v
     try {
       response = await fetch(`${API_BASE_URL}/api/trip/plan/stream/${thread_id}`, {
         method: 'GET',
-        headers: { Accept: 'text/event-stream' },
+        headers: { ...authHeaders(), Accept: 'text/event-stream' },
         signal: controller.signal,
       })
     } catch (error) {
@@ -481,16 +497,7 @@ export async function getPlanResult(
     return null
   }
 
-  if (!data?.success || !data.data) return null
-  // 外层响应和 data 里都可能带缓存元信息，两处都认，外层优先
-  const wrapped = wrapPlan(data.data)
-  return {
-    ...wrapped,
-    thread_id: data.thread_id ?? thread_id,
-    cached: data.cached ?? wrapped.cached,
-    cache_hit_count: data.cache_hit_count ?? wrapped.cache_hit_count,
-    cache_saved_at: data.cache_saved_at ?? wrapped.cache_saved_at ?? null,
-  }
+  return completedResult({ ...data, thread_id: data.thread_id ?? thread_id })
 }
 
 /** 读断点日志：告诉我「已经做完哪些节点、能从哪个节点接着跑」 */
@@ -547,7 +554,7 @@ export async function resumePlan(thread_id: string): Promise<TripPlanResponse> {
   if (!plan) {
     throw new ApiError(data?.message || '续跑没有返回行程数据。', data?.error_code ?? undefined)
   }
-  return wrapPlan(plan)
+  return data
 }
 
 function toApiError(error: unknown): ApiError {

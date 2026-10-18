@@ -14,6 +14,7 @@ from fastapi.testclient import TestClient
 
 from app.agents import graph as graph_module
 from app.api.main import app
+from app.services import planning
 from app.api.routes import trip as trip_module
 from app.models.schemas import Location, WeatherInfo
 from app.services import store
@@ -40,7 +41,8 @@ class StubGraph:
 def _final_state(*, days=True, degraded=False, error_code=None):
     """构造一份"图跑完"的 state。"""
     plan = make_plan(
-        days=[make_day(0, "2026-10-10", [make_attraction("西湖", required=True)])] if days else [],
+        days=[make_day(i, f"2026-10-{10+i}", [make_attraction(name, required=i == 0)])
+              for i, name in enumerate(("西湖", "灵隐寺", "博物馆"))] if days else [],
         budget={"total": 1000} if days else None,
     )
     return {
@@ -126,7 +128,7 @@ class TestSuccessAndPartial:
         assert body["cached"] is False
         assert body["data"]["city"] == "杭州"
         assert body["data"]["end_date"] == "2026-10-12"
-        assert len(body["data"]["days"]) == 1
+        assert len(body["data"]["days"]) == 3
         assert body["data"]["hotel"]["name"] == "测试酒店"
 
     def test_degraded_source_marks_partial_result_but_still_200(self, client):
@@ -165,13 +167,13 @@ class TestCachePath:
         ))
 
         # 命中路径仍要重取天气：把高德与工具执行都顶掉（不是省事，是必须不联网）
-        monkeypatch.setattr(trip_module.amap, "geocode", lambda *a, **k: (HANGZHOU, "330100"))
+        monkeypatch.setattr(planning.amap, "geocode", lambda *a, **k: (HANGZHOU, "330100"))
 
         def fake_execute(role, name, args, ctx):
             ctx.weather = [WeatherInfo(date="2026-10-10", day_weather="晴")]
             return "ok"
 
-        monkeypatch.setattr(trip_module, "execute", fake_execute)
+        monkeypatch.setattr(planning, "execute", fake_execute)
 
         http = client(_final_state())  # 桩装着，但命中路径根本不该调用它
         body = http.post("/api/trip/plan", json=request.model_dump()).json()
@@ -185,8 +187,8 @@ class TestCachePath:
         request = make_request()
         fingerprint = store.fingerprint_of(request)
         store.save_itinerary(fingerprint, request, make_plan(days=[], hotel=make_hotel()))
-        monkeypatch.setattr(trip_module.amap, "geocode", lambda *a, **k: (HANGZHOU, "330100"))
-        monkeypatch.setattr(trip_module, "execute", lambda *a, **k: "ok")
+        monkeypatch.setattr(planning.amap, "geocode", lambda *a, **k: (HANGZHOU, "330100"))
+        monkeypatch.setattr(planning, "execute", lambda *a, **k: "ok")
 
         http = client(_final_state())
         http.post("/api/trip/plan", json=request.model_dump())
@@ -228,8 +230,8 @@ class TestAsyncAndStream:
         request = make_request()
         fingerprint = store.fingerprint_of(request)
         store.save_itinerary(fingerprint, request, make_plan(days=[], hotel=make_hotel()))
-        monkeypatch.setattr(trip_module.amap, "geocode", lambda *a, **k: (HANGZHOU, "330100"))
-        monkeypatch.setattr(trip_module, "execute", lambda *a, **k: "ok")
+        monkeypatch.setattr(planning.amap, "geocode", lambda *a, **k: (HANGZHOU, "330100"))
+        monkeypatch.setattr(planning, "execute", lambda *a, **k: "ok")
 
         http = client(_final_state())
         started = http.post("/api/trip/plan/async", json=request.model_dump()).json()

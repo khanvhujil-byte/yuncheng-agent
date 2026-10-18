@@ -19,13 +19,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from ..config import get_settings
 from ..services import store
 from ..services.store import init_db
-from .routes import ai, community, trip
+from .routes import ai, community, trip, dialog
 
 logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="多智能体旅行规划助手",
-    version="0.5.0",
+    version="0.8.0",
     description="四个助手分工协作：景点搜集 / 天气查询 / 预订住宿 / 行程编排；"
     "含独立复核、行程库复用、后台任务与断点续跑",
 )
@@ -38,6 +38,7 @@ app.include_router(trip.router, prefix="/api")
 app.include_router(ai.router, prefix="/api")
 # 社区联动接口：前端从这里发布行程 / 看热度，Python 再把请求转给 Java。
 app.include_router(community.router, prefix="/api")
+app.include_router(dialog.router, prefix="/api")
 
 app.add_middleware(
     CORSMiddleware,
@@ -56,6 +57,8 @@ app.add_middleware(
 # 建表（幂等）。放在模块级而不是 startup 事件里：SQLite 建表是同步且极快的，
 # 这样第一个请求进来时库一定已经就绪，少一个"启动钩子没跑到"的失败模式。
 init_db()
+from ..services.dialog_store import recover_interrupted  # noqa: E402
+recover_interrupted()
 
 # 启动时把"生产该开而没开"的开关喊出来。默认关是为了本地开发和 CI 方便，
 # 但绝不能默默放行 —— 这类"忘了开鉴权"的问题上线后没人会主动发现。
@@ -119,4 +122,8 @@ def metrics() -> Response:
             "# TYPE trip_avg_cached_ms gauge",
             f"trip_avg_cached_ms {stats['avg_ms_cached']:.0f}",
         ]
+    from ..services.monitoring import summary
+    quality = summary()
+    for key in ("sample_runs", "sample_tool_calls", "first_success_rate", "retry_rate", "final_success_rate", "tool_attempts", "empty_search_calls"):
+        lines.extend([f"# TYPE trip_quality_{key} gauge", f"trip_quality_{key} {quality[key]}"])
     return Response("\n".join(lines) + "\n", media_type="text/plain; version=0.0.4; charset=utf-8")

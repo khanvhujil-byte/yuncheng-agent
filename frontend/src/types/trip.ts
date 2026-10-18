@@ -62,7 +62,7 @@ export type CostStatus = 'known' | 'estimated' | 'unknown'
  * 费用的来源。和 DataSource 分开是因为语义不同：
  *   static_estimate 是我们自己的固定表（比如交通费按每人每天 40 元），既不是高德也不是模型。
  */
-export type CostSource = 'amap' | 'llm_estimated' | 'static_estimate' | 'unknown'
+export type CostSource = 'amap' | 'imported' | 'llm_estimated' | 'static_estimate' | 'unknown'
 
 /**
  * 预算结论（v0.7 新增）。只有五种值，各自的可信范围不同 —— 界面文案必须对应上：
@@ -75,7 +75,26 @@ export type CostSource = 'amap' | 'llm_estimated' | 'static_estimate' | 'unknown
 export type LimitStatus = 'none' | 'within' | 'known_exceeded' | 'estimated_exceeded' | 'unverified'
 
 /** 请求：一次规划需要填的全部参数 */
+export interface ModuleNeeds {
+  instructions?: string
+  unverified?: string[]
+}
+export interface PlaceNeeds extends ModuleNeeds {
+  keywords?: string[]
+  excluded_names?: string[]
+}
+export interface Requirements {
+  food?: PlaceNeeds & { priority?: 'nearby' | 'food_first'; travel_scope?: 'nearby' | 'citywide'; max_cost_per_meal?: number | null }
+  attractions?: PlaceNeeds & { max_per_day?: number }
+  hotel?: PlaceNeeds & { max_price_per_night?: number | null }
+  transport?: ModuleNeeds & { max_leg_minutes?: number | null; allow_estimated_routes?: boolean }
+  pace?: ModuleNeeds & { max_day_minutes?: number; max_activity_minutes?: number | null }
+  weather?: ModuleNeeds & { avoid_rain_outdoors?: boolean }
+  budget?: ModuleNeeds
+}
+
 export interface TripRequest {
+  requirements?: Requirements
   /** 目的地城市，如「杭州」 */
   city: string
   /** 开始日期 YYYY-MM-DD */
@@ -152,6 +171,8 @@ export interface Attraction {
   ticket_price?: number | null
   /** 门票价的置信度（v0.7）。status === 'unknown' 时 ticket_price 必为 null */
   ticket_price_status?: CostStatus
+  ticket_price_source?: CostSource
+  ticket_price_evidence_url?: string | null
   /** v0.2：是否来自用户的 must_visit（界面上给「必去」打标） */
   required?: boolean
 }
@@ -169,6 +190,9 @@ export interface Hotel {
   type?: string
   /** 预估费用（元/晚），模型估算 */
   estimated_cost?: number
+  cost_status?: CostStatus
+  cost_source?: CostSource
+  price_evidence_url?: string | null
   /** v0.2：住几晚。住宿费 = estimated_cost × nights */
   nights?: number
 }
@@ -181,7 +205,39 @@ export interface Meal {
   address?: string | null
   location?: Location | null
   description?: string | null
-  estimated_cost?: number
+  estimated_cost?: number | null
+  restaurant_id?: string | null
+  cost_status?: CostStatus
+  cost_source?: CostSource
+  cost_note?: string
+  source?: string
+  ranking_name?: string | null
+  ranking_rank?: number | null
+  ranking_url?: string | null
+  evidence_url?: string | null
+}
+
+export interface RouteLeg {
+  from_name: string
+  to_name: string
+  from_id?: string | null
+  to_id?: string | null
+  mode: string
+  duration_minutes: number
+  distance_meters?: number | null
+  status: CostStatus
+  source: string
+  note: string
+}
+export interface ScheduleItem {
+  kind: 'meal' | 'attraction' | 'travel' | 'rest'
+  meal_type?: 'breakfast' | 'lunch' | 'dinner' | null
+  name: string
+  start_time: string
+  end_time: string
+  duration_minutes: number
+  reference_id?: string | null
+  status: string
 }
 
 /** 某一天的天气 */
@@ -217,6 +273,13 @@ export interface DayPlan {
   meals: Meal[]
   /** 当日小计费用（元），由后端代码加总 */
   day_total_cost?: number
+  route_legs?: RouteLeg[]
+  schedule?: ScheduleItem[]
+  visit_minutes?: number
+  travel_minutes?: number
+  rest_minutes?: number
+  total_minutes?: number
+  comfort_warnings?: string[]
 }
 
 /**
@@ -291,6 +354,8 @@ export interface ConstraintReport {
 
 /** 最终的旅行计划 */
 export interface TripPlan {
+  city_characteristics?: string[]
+  hotel_reason?: string
   city: string
   start_date: string
   /** v0.2：由后端派生 = start_date + travel_days - 1 */

@@ -1,0 +1,59 @@
+{
+  "city": "杭州",
+  "ranking_name": "杭州市2025高德状元榜·美食",
+  "records": [
+    {
+      "name": "肉本家·炭烤肉(杭州浙大总店)",
+      "poi_id": "B0HUOZDVVM",
+      "rank": 1
+    },
+    {
+      "name": "老秦凉都黄牛肉馆(滨江总店)",
+      "poi_id": "B0JAS5555G",
+      "rank": 2
+    },
+    {
+      "name": "浩海火烧云傣家菜(湖滨银泰in77E区店)",
+      "poi_id": "B0KKSPRBCO",
+      "rank": 3
+    },
+    {
+      "name": "杭州酒家(延安路店)",
+      "poi_id": "B023B1994H",
+      "rank": 4
+    },
+    {
+      "name": "知味观(湖滨总店)",
+      "poi_id": "B0FFH154X7",
+      "rank": 5
+    },
+    {
+      "name": "东京烧肉Itimaru",
+      "poi_id": "B0I0NR6N5M",
+      "rank": 6
+    },
+    {
+      "name": "庆春朴门(灵隐店)",
+      "poi_id": "B0GKVZ1O4T",
+      "rank": 7
+    },
+    {
+      "name": "宫宴",
+      "poi_id": "B0K0XSUNW4",
+      "rank": 8
+    },
+    {
+      "name": "湘香蒸菜馆(湘湖路店)",
+      "poi_id": "B0FFF6V2KY",
+      "rank": 9
+    },
+    {
+      "name": "乔村二十八道(未来科技城店)",
+      "poi_id": "B0HGPRTULC",
+      "rank": 10
+    }
+  ],
+  "source_url": "https://www.amap.com/ranking/hangzhou/food",
+  "captured_at": "2026-10-17T15:52:03.248392+00:00",
+  "stored": 10
+}

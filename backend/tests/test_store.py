@@ -142,15 +142,15 @@ class TestJournal:
         records = store.load_journal("t-journal")
         assert [r["node"] for r in records] == ["validate_city", "compose_plan"]
 
-    def test_same_node_overwrites_instead_of_duplicating(self):
-        """重试时同一节点会再执行一次，journal 应该覆盖而不是堆垃圾。"""
+    def test_same_node_preserves_every_execution(self):
+        """重试历史必须保留，否则无法重建计量与执行位置。"""
         store.save_run("t-retry", make_request())
         store.journal_node("t-retry", "compose_plan", 1, {"retries": 1})
         store.journal_node("t-retry", "compose_plan", 2, {"retries": 2})
 
         records = store.load_journal("t-retry")
-        assert len(records) == 1
-        assert records[0]["update"]["retries"] == 2
+        assert len(records) == 2
+        assert [r["update"]["retries"] for r in records] == [1, 2]
 
     def test_load_run_returns_original_request(self):
         request = make_request(city="成都")

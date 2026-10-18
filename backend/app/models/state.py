@@ -14,9 +14,9 @@ v0.2 的图形状（方案 D：酒店后置 + 锚点分叉）：
       ├ 解析失败 → END 400 CITY_NOT_FOUND
       ├ 预检不通过 → END 400 CONSTRAINT_INFEASIBLE（**花钱之前就拦下**）
       └ 成功 → 两路并行
-             collect_attractions  ∥  collect_weather
-                         ↓ 两路全部完成
-             compose_plan            只排景点 + 餐饮，**不含酒店**
+             collect_attractions  ∥  collect_weather  ∥  collect_food
+                         ↓ 三路全部完成
+             compose_plan            编排景点顺序，三餐由真实餐厅候选回填，**不含酒店**
                          ↓ 两层校验
                 第 1 层 Pydantic 结构校验
                 第 2 层 约束满足性校验（must_visit 是否真的排进去了）
@@ -24,6 +24,8 @@ v0.2 的图形状（方案 D：酒店后置 + 锚点分叉）：
                     └ retries = 2 → 继续，但写进 ConstraintReport.unsatisfied
                          ↓
              resolve_hotel           分叉：用户已定 → 解析锚点；未定 → 加权选址
+                         ↓
+             enrich_experience       真实餐厅、地图路程、游玩/用餐/休息时间与天气复核
                          ↓
              patch_budget            住宿费 = 单价 × nights（不是 × 天数）
                          ↓
@@ -42,6 +44,7 @@ from .schemas import (
     DataSource,
     Hotel,
     Location,
+    Restaurant,
     TripPlan,
     TripRequest,
     WeatherInfo,
@@ -127,12 +130,17 @@ class TripState(TypedDict):
     must_visit_resolved: List[Attraction]  # 用户必去景点解析后的 POI，**要注入候选池**（偏好搜不到也要有）
     hotel_anchor: Optional[Hotel]  # 用户已定酒店的解析结果；None 表示由系统选址
     hotel_source: Optional[str]
+    hotel_reason: str
     # ↑ 住宿来源。取值：user（用户指定）/ llm_estimated（系统选址，价格是模型估的）/ degraded（没选出来）。
     #   不要写窄成 Literal["user","agent"] —— resolve_hotel 会写 llm_estimated，写窄了就对不上。
 
-    # ---- 两路并行采集的产出（彼此看不见对方）----
+    # ---- 三路并行采集的产出（彼此看不见对方）----
     attractions: List[Attraction]  # Agent 1：候选景点池（目标 >= travel_days*3，含 must_visit_resolved），不是排期结果
     weather: List[WeatherInfo]  # Agent 2：只覆盖预报窗口（最多 4 天），超出部分 beyond_window=True 且留空
+    restaurants: List[Restaurant]
+    experience_enabled: bool
+    route_cache: Dict[str, object]
+    route_query_count: int
 
     # ---- resolve_hotel 产出（v0.2：后置，因为要看到真实行程）----
     hotels: List[Hotel]  # 候选池：选址用，也可给前端当「备选」展示
@@ -140,7 +148,7 @@ class TripState(TypedDict):
 
     # ---- compose_plan 产出 ----
     plan: Optional[TripPlan]  # Agent 4：最终计划。也是 TripState 里唯一对外暴露的计划字段
-    retries: int  # 校验失败次数（结构校验 + 约束校验共用）：达到 2 次就走「部分结果」分支，防无限重试
+    retries: int  # 本轮编排的尝试次数（成功也计数），最多 2 次；进入预算重排时重置为 0
     constraint_report: Optional[ConstraintReport]  # v0.2：硬约束对账结果，会透传到 TripPlan
     validate_error: Optional[str]
     # ↑ 上一轮编排校验失败的具体原因。一个字段两用：
@@ -180,11 +188,8 @@ class TripState(TypedDict):
     #   ★ 同样必须声明 —— 未声明的键会被 LangGraph 静默丢弃。
 
     budget_retries: int
-    # ↑ 预算超限导致的**重排**次数（v0.7）。为什么要单独一个计数器、不复用 `retries`：
-    #   重排是"compose_plan 这一轮成功了、但算完钱发现超预算"，
-    #   而 `retries` 只在 compose_plan **自己校验失败**时才自增 ——
-    #   复用的话这个计数永远不动，条件边会一直在"重排 → 又不通过 → 再重排"之间死循环。
-    #   （写这段时的第一版就是复用的，正是靠这句才没让它进主干。）
+    # ↑ 已进入的预算重排轮数，初始为 0；只有 prepare_budget_retry 递增，最多 2 轮。
+    #   retries 管理每轮编排的校验尝试；usage 仍累计整个请求的调用量和 token。
 
     # ---- 可观测性与上下文计量 ----
     trace: Annotated[List[TraceEntry], operator.add]  # 每完成一个节点追加一条

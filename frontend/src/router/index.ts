@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import CommunityView from '../views/CommunityView.vue'
 import HomeView from '../views/HomeView.vue'
+import ChatView from '../views/ChatView.vue'
 
 /**
  * 路由表。
@@ -15,6 +16,7 @@ import HomeView from '../views/HomeView.vue'
 export default createRouter({
   history: createWebHistory(),
   routes: [
+    { path: '/chat', name: 'chat', component: ChatView },
     {
       path: '/',
       name: 'home',

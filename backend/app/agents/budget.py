@@ -95,7 +95,7 @@ def patch_budget(state: TripState) -> dict:
                     status = "estimated"
             item = _cost_item(
                 "attraction", str(spot.get("name") or "未命名景点"), price, status,
-                "amap" if status == "known" else ("llm_estimated" if status == "estimated" else "unknown"),
+                spot.get("ticket_price_source") if spot.get("ticket_price_source") not in (None,"unknown") else ("amap" if status == "known" else ("llm_estimated" if status == "estimated" else "unknown")),
                 day_index=index,
                 note="" if status != "unknown" else "门票价未获取（高德 biz_ext.cost 实测恒为空）",
             )
@@ -107,14 +107,19 @@ def patch_budget(state: TripState) -> dict:
 
         for meal in (day.get("meals") or []):
             raw = meal.get("estimated_cost")
-            if raw is None:
+            status = meal.get("cost_status", "estimated")
+            source = meal.get("cost_source", "llm_estimated")
+            if raw is None or status == "unknown":
                 item = _cost_item("meal", str(meal.get("name") or meal.get("type") or "餐饮"),
                                   None, "unknown", "unknown", day_index=index, note="未给出估算金额")
             else:
                 item = _cost_item("meal", str(meal.get("name") or meal.get("type") or "餐饮"),
-                                  int(raw), "estimated", "llm_estimated", day_index=index,
-                                  note="模型估算")
-                day_estimated += int(raw)
+                                  int(raw), status, source, day_index=index,
+                                  note=meal.get("cost_note") or "模型估算")
+                if status == "known":
+                    day_known += int(raw)
+                else:
+                    day_estimated += int(raw)
             items.append(item)
 
         day["day_total_cost"] = day_known + day_estimated
@@ -123,22 +128,31 @@ def patch_budget(state: TripState) -> dict:
     hotel = state.get("hotel")
     nights = int(state.get("nights") or 0)
     hotel_estimated = 0
-    if hotel is None:
+    if nights == 0:
+        items.append(_cost_item("hotel", "本次不住宿", 0, "known", "static_estimate"))
+    elif hotel is None:
         items.append(_cost_item("hotel", "住宿（未确定）", None, "unknown", "unknown",
                                 note="没有选出酒店，住宿费无从估算"))
     else:
         price = hotel.estimated_cost
         name = f"住宿：{hotel.name} × {nights} 晚"
-        if not price:
+        if not price and not (price == 0 and getattr(hotel,"cost_status","estimated") == "known"):
             items.append(_cost_item("hotel", name, None, "unknown", "unknown",
                                     note="酒店价格未能估算"))
         else:
             # 用户自己指定的酒店也不代表我们知道它的真实价格 —— 高德基本不提供住宿价格，
             # 所以这里统一按**估算**处理（诚实优先于好看）。
             amount = int(price) * nights
-            items.append(_cost_item("hotel", name, amount, "estimated", "llm_estimated",
-                                    note=f"每晚约 {price} 元 × {nights} 晚（估算）"))
-            hotel_estimated += amount
+            hotel_status=getattr(hotel,"cost_status","estimated")
+            hotel_source=getattr(hotel,"cost_source","llm_estimated")
+            if hotel_status=="unknown":
+                items.append(_cost_item("hotel",name,None,"unknown","unknown",note="酒店价格状态未知，不能按零元通过。"))
+                hotel_amount=0
+            else:
+                items.append(_cost_item("hotel", name, amount, hotel_status, hotel_source,
+                                        note=f"每晚参考 {price} 元 × {nights} 晚；以实际预订为准。"))
+                hotel_amount=amount
+            hotel_estimated += hotel_amount
 
     # ---- 交通：固定表估算 ----
     transport_amount = _transport_cost(getattr(request, "transportation", "") or "", state["travel_days"])
@@ -168,7 +182,7 @@ def patch_budget(state: TripState) -> dict:
             f"有 {len(unknown_attractions)} 个景点的门票价未获取（高德不提供该字段），"
             "未计入总价 —— 实际开销可能更高。"
         )
-    if hotel is None:
+    if nights > 0 and hotel is None:
         warnings.append("未确定酒店，住宿费未知（不是 0）—— 实际开销会更高。")
     if unknown_items:
         shown = "、".join(unknown_items[:3])

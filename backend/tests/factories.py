@@ -26,6 +26,7 @@ def make_request(**overrides) -> TripRequest:
 def make_attraction(
     name: str,
     *,
+    address: str = "测试路 1 号",
     lng: float = 120.12,
     lat: float = 30.22,
     typecode: str | None = "110202",
@@ -39,7 +40,7 @@ def make_attraction(
 ) -> Attraction:
     return Attraction(
         name=name,
-        address="测试路 1 号",
+        address=address,
         location=Location(longitude=lng, latitude=lat),
         typecode=typecode,
         required=required,

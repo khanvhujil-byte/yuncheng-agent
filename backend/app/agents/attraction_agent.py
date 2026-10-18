@@ -29,12 +29,15 @@ def _user_prompt(state: TripState) -> str:
     req = state["request"]
     labels = "、".join(req.preferences) or "（用户未勾选，请用「景点」作为关键词）"
     anchors = [a.name for a in (state.get("must_visit_resolved") or [])]
+    from ..services.requirements import context, policy
     return (
         f"城市：{req.city}\n"
         f"行程天数：{state['travel_days']}\n"
         f"偏好标签：{labels}\n"
         f"用户必去景点（已在候选池里，不用再搜）：{'、'.join(anchors) if anchors else '（无）'}\n"
         f"目标候选条数：{state['travel_days'] * TARGET_PER_DAY} 条"
+        + context(req, "attractions", "pace", "weather", "transport", "budget")
+        + "\n优先检索用户明确的关键词：" + "、".join(policy(req).attractions.keywords)
     )
 
 
@@ -48,6 +51,7 @@ def collect_attractions(state: TripState) -> dict:
         start_date=req.start_date,
         travel_days=state["travel_days"],
         nights=state["nights"],
+        requirements=req.requirements,
     )
     for anchor in anchors:
         ctx.attractions[anchor.poi_id or anchor.name] = anchor

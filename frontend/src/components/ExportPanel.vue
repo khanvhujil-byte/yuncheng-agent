@@ -394,8 +394,7 @@ function print(): void {
         导出
       </div>
       <p class="hint">
-        导出的是纯文本 Markdown，可离线阅读、可继续编辑，预算与数据来源一起带走，
-        不会只给一份看起来像真的、其实含估算值的行程。
+        下载一份可离线阅读、继续编辑的旅行手册，预算明细与数据来源也会一起保留。
       </p>
       <div class="actions">
         <button class="action-btn primary" type="button" @click="download">
@@ -425,8 +424,7 @@ function print(): void {
         发布到社区
       </div>
       <p class="hint">
-        把这份行程交给 Java 社区服务入库（它持有数据库），
-        发布时会调用模型生成一句简介。发布后别人可以点赞、看到它上榜。
+        把这段旅程分享给同样喜欢出发的人。发布后，社区用户可以浏览和点赞。
       </p>
       <div class="actions">
         <button

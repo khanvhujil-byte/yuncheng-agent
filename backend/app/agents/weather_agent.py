@@ -6,7 +6,7 @@
         ReAct 循环：LLM 决定调工具、看结果、汇报 —— 多花 1~2 次 LLM 调用
 
     weather_use_agent = False （.env 里加一行 WEATHER_USE_AGENT=false）
-        直接调一次工具 —— 0 token、1 次 HTTP
+        直接调用工具 —— 0 token，瞬时错误由工具运行时限次重试
 
 **这个开关本身就是实验变量**：同一批请求跑两遍，就能量化出
 「把一个确定性节点 Agent 化，代价是多少 token / 多少秒」，
@@ -31,10 +31,12 @@ MAX_STEPS = 3  # 天气任务很短：调一次 + 汇报
 
 def _user_prompt(state: TripState) -> str:
     req = state["request"]
+    from ..services.requirements import context
     return (
         f"城市：{req.city}\n"
         f"行程日期：{req.start_date} 起共 {state['travel_days']} 天\n"
         f"请查询天气并汇报覆盖情况。"
+        + context(req, "weather", "pace")
     )
 
 
@@ -74,16 +76,21 @@ def collect_weather(state: TripState) -> dict:
         ok = result.ok
         usage = result.usage
     else:
-        # 确定性路径：同一个工具，直接调一次（0 token）—— 这就是对照实验的另一臂
-        execute("weather", "get_weather", {}, ctx)
-        ok = not ctx.errors
+        # 历史失败保留在 errors；当前结果是否成功取决于最后一次尝试。
+        outcome = execute("weather", "get_weather", {}, ctx)
+        ok = outcome.status == "ok"
 
     weather = ctx.weather
     warnings = weather_warnings(weather)
     if use_agent and not ok:
         warnings.append("天气助手调用模型失败，本次行程不含天气信息。")
     if not weather and not warnings:
-        warnings.append("天气数据未获取：缺少城市编码，或出行日期无法解析。")
+        last_weather = next((call["outcome"] for call in reversed(ctx.calls)
+                             if call["tool"] == "get_weather"), None)
+        if last_weather and last_weather["status"] == "error":
+            warnings.append("天气数据未获取：" + last_weather["message"])
+        else:
+            warnings.append("天气数据未获取：缺少城市编码，或出行日期无法解析。")
 
     logger.info(
         "天气采集完成 | 模式=%s | 步数 %d | 工具调用 %d 次 | 天气 %d 天",

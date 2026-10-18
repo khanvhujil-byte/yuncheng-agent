@@ -138,10 +138,10 @@ class TestResumeDoesNotSkipAudit:
                      "compose_plan", "verify_plan"]
         assert runner.can_resume_from(completed, {"validate_error": "第二天排不下"}) == "compose_plan"
 
-    def test_compose_without_audit_does_not_resume(self):
+    def test_compose_without_audit_resumes_at_audit(self):
         """编排完成但独立复核没跑过：续跑会**绕过复核**，宁可不续。"""
         completed = ["validate_city", "collect_attractions", "collect_weather", "compose_plan"]
-        assert runner.can_resume_from(completed, {}) is None
+        assert runner.can_resume_from(completed, {}) == "verify_plan"
 
     def test_compose_with_clean_audit_resumes_at_hotel(self):
         completed = ["validate_city", "collect_attractions", "collect_weather",
@@ -283,9 +283,8 @@ class TestBudgetVerdict:
 class TestBudgetRetryIsBounded:
     """★ 防死循环：预算超限最多重排 BUDGET_RETRY_LIMIT 次。
 
-    写这条时的第一版**复用了 `retries`** —— 而重排场景下 compose_plan 是成功的，
-    `retries` 根本不会自增，条件边会无限重排。所以必须用独立的 budget_retries，
-    并且这个不变量要被测试钉住。
+    budget_retries 统计进入预算重排的轮数，retries 限制每轮编排的尝试次数。
+    复核只提供结论和反馈，不提前消耗重排次数。
     """
 
     def test_router_retries_then_stops(self):
@@ -302,11 +301,11 @@ class TestBudgetRetryIsBounded:
 
         assert route_after_budget({"budget_retries": 1, "budget_verdict": {"status": "within"}}) == "next"
 
-    def test_retry_signals_and_counts(self):
+    def test_retry_signals_without_consuming_round(self):
         from app.agents.verify_budget import verify_budget
 
         result = verify_budget(_budget_state(limit=100, known=500))
-        assert result["budget_retries"] == 1
+        assert "budget_retries" not in result
         assert str(result["validate_error"]).startswith("预算复核不通过")
 
     def test_exhausted_retries_stop_signalling(self):
@@ -353,11 +352,10 @@ class TestTwoLimitsHaveDifferentJobs:
         # 一个必去都没解析（拒绝要发生在花钱之前）
         assert result.get("must_visit_resolved") in (None, [])
 
-    def test_quota_limit_truncates_but_plans(self, geo):
-        """12 个必去、30 天（容量 90）→ 放行，但只排前 10 个并**如实告知**。"""
+    def test_quota_limit_rejects_without_dropping_hard_constraints(self, geo):
+        """配额不够时拒绝请求，不能静默删掉用户必须去的景点。"""
         names = [f"景点{i}" for i in range(MAX_MUST_VISIT + 2)]
         result = validate_city(self._state(travel_days=30, must_visit=names))
 
-        assert result["error_code"] is None
-        assert len(result["must_visit_resolved"]) == MAX_MUST_VISIT
-        assert any("本次只排前" in w for w in result["warnings"])
+        assert result["error_code"] == "CONSTRAINT_INFEASIBLE"
+        assert not result.get("must_visit_resolved")

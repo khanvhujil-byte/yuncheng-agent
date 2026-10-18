@@ -42,7 +42,7 @@ def client_key(request: Request) -> str:
     （deploy/nginx.conf 里用的是 $remote_addr，不是 $proxy_add_x_forwarded_for）。
     """
     forwarded = request.headers.get("x-forwarded-for")
-    if forwarded:
+    if forwarded and get_settings().trust_proxy_headers:
         return forwarded.split(",")[0].strip()
     return request.client.host if request.client else "unknown"
 

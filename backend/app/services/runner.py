@@ -18,11 +18,13 @@
 import logging
 import threading
 import time
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from typing import Any, Callable, Optional
 
 from ..models.schemas import TripRequest
 from . import store
+from .state_codec import StateRestoreError, restore_state_types
 
 logger = logging.getLogger(__name__)
 
@@ -31,11 +33,14 @@ NODE_LABELS: dict[str, str] = {
     "validate_city": "解析城市",
     "collect_attractions": "搜集景点",
     "collect_weather": "查询天气",
+    "collect_food": "搜集本地美食",
     "compose_plan": "编排行程",
     "verify_plan": "独立复核",
     "resolve_hotel": "选择住宿",
+    "enrich_experience": "计算路程和舒适度",
     "patch_budget": "计算预算",
     "verify_budget": "预算复核",
+    "prepare_budget_retry": "准备预算重排",
 }
 NODE_ORDER: list[str] = list(NODE_LABELS)
 
@@ -59,14 +64,45 @@ class Job:
 
 _jobs: dict[str, Job] = {}
 _lock = threading.Lock()
+_active_runs: set[str] = set()
+FINALIZE_ONLY = "__finalize__"
+
+
+class JobAlreadyRunning(RuntimeError):
+    """同一进程不能同时执行或续跑同一个任务。"""
+
+
+class LegacyJournalError(StateRestoreError):
+    """覆盖式历史日志无法证明完整执行历史。"""
+
+
+def _claim_execution(thread_id: str) -> None:
+    with _lock:
+        if thread_id in _active_runs:
+            raise JobAlreadyRunning(thread_id)
+        _active_runs.add(thread_id)
+
+
+def _release_execution(thread_id: str) -> None:
+    with _lock:
+        _active_runs.discard(thread_id)
+
+
+@contextmanager
+def execution_guard(thread_id: str):
+    """只保证本进程互斥；落库的 running 不能代替活线程的锁。"""
+    _claim_execution(thread_id)
+    try:
+        yield
+    finally:
+        _release_execution(thread_id)
 
 
 def _persist(job: Job) -> None:
     """把任务状态落库。
 
-    这是 12-Factor F12（agent 应该是无状态 reducer）的落点：
-    内存里的 `_jobs` 只是**缓存**，真正的状态在 SQLite 里 —— 所以多副本部署或进程重启后，
-    `/result` 与 `/stream` 依然能用。否则"用户在 A 副本提交、拉流打到 B 副本"就直接找不到任务。
+    SQLite 支持进程重启后的查询；内存缓存与执行锁只在本进程有效，
+    不保证多副本状态同步或跨进程互斥。
     落盘失败不能影响任务本身，所以这里吞掉异常、只记日志。
     """
     try:
@@ -127,13 +163,20 @@ def start_job(
     `initial_state` / `finalize` 由 HTTP 层传进来，而不是在这里 import ——
     否则 runner 要反向依赖 api 层，形成循环导入（真实踩过的坑）。
     """
+    _claim_execution(thread_id)
     job = Job(thread_id=thread_id, request=req)
-    with _lock:
-        _jobs[thread_id] = job
-    store.save_run(thread_id, req)
-    threading.Thread(
-        target=_run, args=(job, initial_state, finalize), name=f"trip-{thread_id[:8]}", daemon=True
-    ).start()
+    try:
+        store.save_run(thread_id, req)
+        with _lock:
+            _jobs[thread_id] = job
+        _persist(job)
+        threading.Thread(
+            target=_background_run, args=(job, initial_state, finalize),
+            name=f"trip-{thread_id[:8]}", daemon=True,
+        ).start()
+    except BaseException:
+        _release_execution(thread_id)
+        raise
     return job
 
 
@@ -151,14 +194,50 @@ def register_done_job(thread_id: str, req: TripRequest, result: dict[str, Any]) 
     return job
 
 
-def _run(job: Job, initial_state: dict[str, Any], finalize: Callable[[dict[str, Any]], Any]) -> None:
-    """在工作线程里跑图：逐节点推进度 + 写 journal，最后组装响应。"""
-    from ..agents.graph import app as trip_graph  # 延迟导入：避免与 api 层的导入顺序纠缠
+def _background_run(job: Job, initial_state: dict[str, Any], finalize: Callable[[dict[str, Any]], Any]) -> None:
+    try:
+        from ..agents.graph import app as trip_graph
+        _execute(job, initial_state, finalize, trip_graph)
+    finally:
+        _release_execution(job.thread_id)
+
+
+def continue_job(
+    thread_id: str, req: TripRequest, state: dict[str, Any],
+    finalize: Callable[[dict[str, Any]], Any], trip_graph: Any,
+) -> Job:
+    """调用方先持有 execution_guard；与首次运行共用日志与任务完成逻辑。"""
+    job = get_job(thread_id) or Job(thread_id=thread_id)
+    job.request = req
+    job.status = "running"
+    job.error = ""
+    job.result = None
+    job.finished_at = None
+    # 以持久日志重建事件，补齐“日志提交后、发事件前”中断的情况。
+    records = store.load_journal(thread_id)
+    job.events = [_node_event(r["node"], r["seq"], r["elapsed_ms"]) for r in records]
+    with _lock:
+        _jobs[thread_id] = job
+    _persist(job)
+    _execute(job, state, finalize, trip_graph, seq=max((r["seq"] for r in records), default=0))
+    return job
+
+
+def _node_event(node: str, seq: int, elapsed: int) -> dict[str, Any]:
+    return {"type": "node", "node": node, "seq": seq,
+            "label": NODE_LABELS.get(node, node), "status": "done", "elapsed_ms": elapsed}
+
+
+def _execute(
+    job: Job, initial_state: dict[str, Any], finalize: Callable[[dict[str, Any]], Any],
+    trip_graph: Any, seq: int = 0,
+) -> None:
+    """首次与续跑统一执行；None 表示最终节点已提交，只需组装响应。"""
 
     latest: dict[str, Any] = dict(initial_state)
-    seq = 0
     try:
-        for mode, chunk in trip_graph.stream(initial_state, stream_mode=["updates", "values"]):
+        stream = trip_graph.stream(initial_state, stream_mode=["updates", "values"]) if trip_graph is not None else ()
+        for mode, chunk in stream:
             if mode == "values":
                 latest = chunk  # 完整 state：最终组装用它，省掉自己合并 reducer
                 continue
@@ -167,14 +246,9 @@ def _run(job: Job, initial_state: dict[str, Any], finalize: Callable[[dict[str, 
             for node, update in (chunk or {}).items():
                 seq += 1
                 elapsed = job.elapsed_ms
-                _emit(job, {
-                    "type": "node", "node": node,
-                    "label": NODE_LABELS.get(node, node),
-                    "status": "done", "elapsed_ms": elapsed,
-                })
-                if isinstance(update, dict):
-                    # journal 会落盘 → 必须能 JSON 序列化；Pydantic 对象由 store 的 default 兜底
-                    store.journal_node(job.thread_id, node, seq, update, elapsed)
+                # 先提交结果，再通知“完成”。空产出节点也必须留下执行位置。
+                store.journal_node(job.thread_id, node, seq, update or {}, elapsed)
+                _emit(job, _node_event(node, seq, elapsed))
                 logger.info("后台任务节点完成 | %s | %s | %d ms", job.thread_id[:8], node, elapsed)
 
         response = finalize(latest)
@@ -218,50 +292,47 @@ def merge_update(state: dict[str, Any], update: dict[str, Any]) -> dict[str, Any
 
 
 def rebuild_state(initial_state: dict[str, Any], thread_id: str) -> tuple[dict[str, Any], list[str]]:
-    """用 journal 重建状态。返回 (状态, 已完成节点列表)。"""
+    """按 reducer 重建状态，再恢复领域对象。返回 (状态, 已完成节点列表)。"""
+    run = store.load_run(thread_id)
+    if run and run["journal_version"] != 2:
+        raise LegacyJournalError("旧版日志可能丢失重试记录，不能安全恢复")
     state = dict(initial_state)
     completed: list[str] = []
     for record in store.load_journal(thread_id):
         state = merge_update(state, record["update"])
         completed.append(record["node"])
-    return state, completed
+    return restore_state_types(state), completed
 
 
 def can_resume_from(completed: list[str], state: Optional[dict[str, Any]] = None) -> Optional[str]:
-    """能从哪里续跑。
+    """根据最后一次提交与当前状态，沿真实图路由恢复；采集未汇齐时不续。
 
-    V0 只在**两路采集都已完成**之后的线性段支持续跑：
-        采集都完成            → 从 compose_plan 续跑（省掉搜索与两次 Agent 的 LLM 调用）
-        编排完成 + 复核完成    → 从 resolve_hotel 续跑（省掉最贵的编排调用）
-        resolve_hotel 完成    → 从 patch_budget 续跑（省掉一次住宿 Agent）
-    再往前的断点（城市都没解析完）就老实从头跑 —— 假装能续跑比不能续跑更糟。
-
-    ★ 光看"节点出现过"是不够的（这是一个真 bug）：重试会让**同一个节点出现多次**，
-      于是"compose_plan 出现过"既可能是
-        ① 编排完成、独立复核也做过、等着选酒店
-        ② 复核判了不合格、正等着重排（retries 还没用完）
-        ③ 编排完成但复核还没跑（在 verify_plan 之前崩的）
-      旧实现一律返回 resolve_hotel，于是 ② 会丢掉那次重试、③ 会**整个绕过独立复核**。
-      判据必须结合状态：有未解决的 `validate_error` 就说明还等着重排。
-
-    @param state 重建后的状态（用来判断"有没有未解决的校验错误"）。
-                 不传时退回旧的保守行为：只要没法确认复核做过，就不续跑。
+    同名节点可以出现多次。旧复核不证明新行程已复核，旧预算也不证明新一轮已结束。
+    FINALIZE_ONLY 表示最后的预算复核已提交，但响应可能尚未持久化。
     """
-    if "patch_budget" in completed:
-        return None  # 全跑完了，没有可续的
-    if "resolve_hotel" in completed:
-        return "patch_budget"
+    from ..agents.graph import route_after_audit, route_after_budget
 
-    if "compose_plan" in completed:
-        has_unresolved_error = bool((state or {}).get("validate_error"))
-        if has_unresolved_error:
-            return "compose_plan"  # 复核要求重试，那次重排还没做 —— 不能跳过
-        if "verify_plan" in completed:
-            return "resolve_hotel"
-        # 编排完成但独立复核没跑过：从这里续会绕过复核，宁可不续
-        logger.info("不续跑：compose_plan 已完成但 verify_plan 没跑过，续跑会绕过独立复核")
+    if not completed:
         return None
-
-    if "collect_attractions" in completed and "collect_weather" in completed:
+    last = completed[-1]
+    if last == "compose_plan":
+        return "verify_plan"
+    if last == "verify_plan":
+        return "compose_plan" if route_after_audit(state or {}) == "retry" else "resolve_hotel"
+    if last == "resolve_hotel":
+        return "enrich_experience"
+    if last == "enrich_experience":
+        return "compose_plan" if route_after_audit(state or {}) == "retry" else "patch_budget"
+    if last == "patch_budget":
+        return "verify_budget"
+    if last == "verify_budget":
+        return "prepare_budget_retry" if route_after_budget(state or {}) == "retry" else FINALIZE_ONLY
+    if last == "prepare_budget_retry":
         return "compose_plan"
+    if last in ("collect_attractions", "collect_weather", "collect_food"):
+        collectors = {"collect_attractions", "collect_weather"}
+        if (state or {}).get("experience_enabled"):
+            collectors.add("collect_food")
+        if collectors.issubset(completed):
+            return "compose_plan"
     return None

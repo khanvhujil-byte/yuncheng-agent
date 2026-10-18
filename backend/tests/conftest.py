@@ -11,6 +11,9 @@
 """
 
 import sys
+import ipaddress
+import socket
+import tempfile
 from pathlib import Path
 
 import httpx
@@ -23,6 +26,11 @@ if str(BACKEND) not in sys.path:
 from app.config import get_settings  # noqa: E402
 from app.services import store  # noqa: E402
 
+# API module initialization also runs during test collection, before fixtures.
+# Redirect that initialization so even collection cannot touch the real DB.
+_collection_directory = tempfile.TemporaryDirectory(prefix='trip-pytest-collection-')
+store.DB_PATH = Path(_collection_directory.name) / 'collection.sqlite'
+
 
 @pytest.fixture(autouse=True)
 def no_network(monkeypatch):
@@ -33,6 +41,31 @@ def no_network(monkeypatch):
 
     monkeypatch.setattr(httpx, "get", _blocked)
     monkeypatch.setattr(httpx, "post", _blocked)
+    connect = socket.socket.connect
+    connect_ex = socket.socket.connect_ex
+    resolve = socket.getaddrinfo
+
+    def local(host):
+        try:
+            return host == 'localhost' or ipaddress.ip_address(host).is_loopback
+        except ValueError:
+            return False
+
+    def guarded(original):
+        def call(sock, address):
+            if isinstance(address, tuple) and local(address[0]):
+                return original(sock, address)
+            return _blocked()
+        return call
+
+    def resolve_local(host, *args, **kwargs):
+        if host is None or local(host):
+            return resolve(host, *args, **kwargs)
+        return _blocked()
+
+    monkeypatch.setattr(socket.socket, 'connect', guarded(connect))
+    monkeypatch.setattr(socket.socket, 'connect_ex', guarded(connect_ex))
+    monkeypatch.setattr(socket, 'getaddrinfo', resolve_local)
 
 
 @pytest.fixture(autouse=True)
@@ -48,3 +81,28 @@ def temp_db(tmp_path, monkeypatch):
 def settings():
     """拿到 Settings 单例。测试里改开关请用 monkeypatch，它会自动还原。"""
     return get_settings()
+
+
+@pytest.fixture(autouse=True)
+def isolated_request_gate(monkeypatch, settings):
+    """Avoid shared cooldown leaking between tests; rate-control tests opt in explicitly."""
+    from app.services import amap
+    from app.services.request_gate import RequestGate
+    monkeypatch.setattr(amap, "request_gate", RequestGate())
+    monkeypatch.setattr(settings, "amap_request_interval_seconds", 0.0)
+    monkeypatch.setattr(settings, "amap_rate_limit_cooldown_seconds", 0.0)
+
+
+@pytest.fixture(autouse=True)
+def isolated_security():
+    from app.api.security import _hits, _lock
+    with _lock:
+        _hits.clear()
+
+
+@pytest.fixture(autouse=True)
+def isolated_deployment_settings(monkeypatch, settings):
+    """Local .env authentication/transport choices must not change test semantics."""
+    monkeypatch.setattr(settings, 'api_key', '')
+    monkeypatch.setattr(settings, 'rate_limit_per_minute', 0)
+    monkeypatch.setattr(settings, 'map_backend', 'local')

@@ -1,19 +1,5 @@
 """配置加载与校验。
 
-Day 1 待实现：
-    - 用 pydantic-settings 定义 Settings，读取 backend/.env
-    - 配置项：LLM_API_KEY / LLM_BASE_URL / LLM_MODEL_ID /
-              AMAP_API_KEY / APP_HOST / APP_PORT / LOG_LEVEL
-    - validate_config() 三层校验（需求文档「坑 4」）：
-        1. 非空
-        2. 前缀/长度合理性（高德 Key 为 32 位十六进制）
-        3. 真实连通性探测（调高德地理编码查「北京」，检查 infocode == "10000"）
-    - 启动时若检测到系统环境里存在 OPENAI_API_KEY，打印明确警告
-      （不修改用户系统变量；需求文档「坑 2」）
-
-注意：本项目不依赖 hello-agents，因此不存在 provider 被劫持的问题。d"""
-"""配置加载与校验。
-
 约定：只有本文件直接读环境变量，其他模块一律通过 get_settings() 取配置。
 """
 
@@ -22,8 +8,10 @@ import os
 import re
 from functools import lru_cache
 from pathlib import Path
+from typing import Literal
 
 import httpx
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # ------------------------------------------------------------------ 基础
@@ -62,7 +50,7 @@ class Settings(BaseSettings):
     weather_use_agent: bool = True
     # ↑ 天气节点是否走 Agent（LLM 调工具）。
     #   True  = 天气也是 Agent（多智能体完整形态，多花 1~2 次 LLM 调用）
-    #   False = 天气退化成「直接调一次工具」（0 token、1 次 HTTP）
+    #   False = 直接调工具（0 token，瞬时故障由运行时限次重试）
     #   这个开关本身就是个实验变量：量化「把确定性节点 Agent 化的代价」。
     #   改 .env 加一行 WEATHER_USE_AGENT=false 即可切换。
 
@@ -77,6 +65,23 @@ class Settings(BaseSettings):
     # ---- 高德开放平台（Web 服务 Key，后端 REST 用）----
     amap_api_key: str = ""
     amap_timeout: float = 10.0
+    amap_request_interval_seconds: float = Field(default=0.2, ge=0.01, le=10, allow_inf_nan=False)
+    amap_rate_limit_cooldown_seconds: float = Field(default=1.0, ge=0.1, le=60, allow_inf_nan=False)
+    map_backend: Literal["local", "mcp"] = "local"
+    mcp_transport: Literal["stdio", "streamable_http"] = "stdio"
+    mcp_command: str = ""
+    mcp_args: list[str] = Field(default_factory=list)
+    mcp_env: dict[str, str] = Field(default_factory=dict)
+    mcp_url: str = ""
+    mcp_headers: dict[str, str] = Field(default_factory=dict)
+    mcp_timeout: float = Field(default=20.0, gt=0, le=60, allow_inf_nan=False)
+    session_ttl_seconds: int = Field(default=604800, ge=60, le=2592000)
+    trust_proxy_headers: bool = False
+
+    # Read-only tools only; counts include the initial attempt.
+    tool_max_attempts: int = Field(default=2, ge=1, le=3)
+    tool_retry_budget_seconds: float = Field(default=20.0, gt=0, le=60, allow_inf_nan=False)
+    tool_retry_base_delay: float = Field(default=0.25, ge=0, le=2, allow_inf_nan=False)
 
     # ---- 服务 ----
     app_host: str = "127.0.0.1"
@@ -176,7 +181,7 @@ def validate_config() -> Settings:
         name
         for name, value in (
             ("LLM_API_KEY", settings.llm_api_key),
-            ("AMAP_API_KEY", settings.amap_api_key),
+            ("AMAP_API_KEY", settings.amap_api_key if settings.map_backend == "local" else "remote"),
         )
         if not value.strip()
     ]
@@ -184,6 +189,17 @@ def validate_config() -> Settings:
         raise ConfigError(
             f"缺少必需的配置项：{'、'.join(missing)}；请检查 {ENV_FILE}"
         )
+
+    if settings.map_backend == "mcp":
+        from urllib.parse import urlparse
+        if settings.mcp_transport == "stdio" and not settings.mcp_command.strip():
+            raise ConfigError("MCP stdio 模式必须设置 MCP_COMMAND")
+        if settings.mcp_transport == "streamable_http":
+            endpoint = urlparse(settings.mcp_url)
+            if endpoint.scheme not in ("http", "https") or not endpoint.hostname:
+                raise ConfigError("MCP HTTP 模式必须设置合法的 MCP_URL")
+        logger.info("地图采用 MCP %s，跳过本地高德 Key 探测。", settings.mcp_transport)
+        return settings
 
     # ---- 第 2 层：格式。只警告，不拦截 ----
     if not re.fullmatch(r"[0-9a-fA-F]{32}", settings.amap_api_key):

@@ -165,7 +165,7 @@ class TestAnchorResolution:
         result = validate_city(_state(make_request(must_visit=["西湖"])))
         assert result["error_code"] == "AMAP_QUOTA_EXCEEDED"
 
-    def test_too_many_must_visit_is_truncated_with_warning(self, geocode_ok, search_returns):
+    def test_too_many_must_visit_is_rejected_without_silent_truncation(self, geocode_ok, search_returns):
         """配额保护：每个必去景点 = 1 次搜索调用，超上限就截断并如实告知。
 
         这里不指定 default，让假搜索按关键词造名字（`景点0` → `景点0景区`）——
@@ -175,5 +175,5 @@ class TestAnchorResolution:
         names = [f"景点{i}" for i in range(MAX_MUST_VISIT + 3)]
         result = validate_city(_state(make_request(travel_days=30, must_visit=names)))
 
-        assert len(result["must_visit_resolved"]) == MAX_MUST_VISIT
-        assert any("超过单次上限" in w for w in result["warnings"])
+        assert result["error_code"] == "CONSTRAINT_INFEASIBLE"
+        assert result.get("must_visit_resolved", []) == []

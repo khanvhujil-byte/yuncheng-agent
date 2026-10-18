@@ -23,6 +23,8 @@ from typing import Dict, List, Literal, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+from .requirements import Requirements
+
 # 字段级的数据来源标记。用 Literal 而不是 str：
 # 写错了（比如 llm_estiamted）在构造对象的瞬间就报错，不会一路跑到前端才发现标签没显示。
 # "user" 是 v0.2 新增：用户自己指定的锚点，既不是高德实查、也不是模型估算，
@@ -42,7 +44,7 @@ CostStatus = Literal["known", "estimated", "unknown"]
 
 # 费用的来源。和 DataSource 分开是因为语义不同：
 #   static_estimate 是我们自己的固定表（比如交通费按每人每天 40 元），既不是高德也不是模型
-CostSource = Literal["amap", "llm_estimated", "static_estimate", "unknown"]
+CostSource = Literal["amap", "imported", "llm_estimated", "static_estimate", "unknown"]
 
 
 # ================================================================ 输入
@@ -100,6 +102,7 @@ class TripRequest(BaseModel):
     accommodation: str  # 经济型酒店 / 舒适型酒店 / 豪华酒店 / 民宿；会被映射成搜索关键词
     preferences: List[str] = Field(default_factory=list)  # 可多选，空则用「景点」兜底；每个标签各搜一次再合并
     free_text_input: Optional[str] = Field(default="")  # 前端可能传 null 也可能不传这个字段，两种都要接住
+    requirements: Requirements = Field(default_factory=Requirements)
 
     # ---- 锚点（v0.2 新增，硬约束，优先级高于 preferences）----
     must_visit: List[str] = Field(default_factory=list)
@@ -150,6 +153,8 @@ class Attraction(BaseModel):
     #   现在：未知就是 None，并且逐项标明 known/estimated/unknown。
     ticket_price: Optional[int] = None
     ticket_price_status: CostStatus = "unknown"
+    ticket_price_source: CostSource = "unknown"
+    ticket_price_evidence_url: Optional[str] = None
     required: bool = False  # v0.2：是否来自用户的 must_visit（前端给「必去」打标，也用于满足性对账）
 
 
@@ -173,18 +178,74 @@ class Hotel(BaseModel):
     #   选址算法给出，用高德距离测量接口真实计算，不让模型猜。
     type: str = ""  # 酒店类型。名字与 TS 那边保持一致，不因为遮蔽内置 type 而改名
     estimated_cost: int = 0  # 预估每晚费用（元）。模型估算
+    cost_status: CostStatus = "estimated"
+    cost_source: CostSource = "llm_estimated"
+    price_evidence_url: Optional[str] = None
     nights: int = 0  # v0.2：住几晚。住宿费 = estimated_cost × nights，不是 × 天数
 
 
 class Meal(BaseModel):
-    """一餐。由 Agent 4 编排时生成。"""
+    """一餐：启用体验层时从真实餐厅候选确定，模型仅提供三餐占位。"""
 
     type: str  # breakfast / lunch / dinner / snack；前端按它显示中文标签
     name: str  # 必填。餐厅或菜品名，模型给
     address: Optional[str] = None  # 可选
     location: Optional[Location] = None  # 可选；有坐标才能在地图上显示
     description: Optional[str] = None  # 可选
-    estimated_cost: int = 0  # 预估费用（元）。既然是「估算」，就必然是 llm_estimated
+    estimated_cost: Optional[int] = Field(default=0, ge=0)
+    restaurant_id: Optional[str] = None
+    cost_status: CostStatus = "estimated"
+    cost_source: CostSource = "llm_estimated"
+    cost_note: str = ""
+    source: str = "llm_estimated"
+    ranking_name: Optional[str] = None
+    ranking_rank: Optional[int] = None
+    ranking_url: Optional[str] = None
+    evidence_url: Optional[str] = None
+
+
+class Restaurant(BaseModel):
+    """已核验餐饮 POI；榜单只有可追溯证据时才标注。人均不是实付价格。"""
+
+    name: str
+    address: str = ""
+    location: Location
+    poi_id: str
+    typecode: Optional[str] = None
+    rating: Optional[float] = None
+    avg_cost: Optional[int] = Field(default=None, ge=0)
+    avg_cost_status: CostStatus = "unknown"
+    cost_source: Literal["amap", "imported", "unknown"] = "unknown"
+    source: str = "amap"
+    ranking_name: Optional[str] = None
+    ranking_rank: Optional[int] = None
+    ranking_url: Optional[str] = None
+    cuisine: Optional[str] = None
+    evidence_url: Optional[str] = None
+
+
+class RouteLeg(BaseModel):
+    from_name: str
+    to_name: str
+    from_id: Optional[str] = None
+    to_id: Optional[str] = None
+    mode: str
+    duration_minutes: int = Field(ge=0)
+    distance_meters: Optional[int] = Field(default=None, ge=0)
+    status: CostStatus = "unknown"
+    source: str = "unknown"
+    note: str = ""
+
+
+class ScheduleItem(BaseModel):
+    kind: Literal["meal", "attraction", "travel", "rest"]
+    meal_type: Optional[Literal["breakfast", "lunch", "dinner"]] = None
+    name: str
+    start_time: str
+    end_time: str
+    duration_minutes: int = Field(ge=0)
+    reference_id: Optional[str] = None
+    status: str = "estimated"
 
 
 class WeatherInfo(BaseModel):
@@ -330,6 +391,13 @@ class DayPlan(BaseModel):
     #   同一个字段名在两个地方含义不同，这是最容易被绕晕的一处。
     meals: List[Meal] = Field(default_factory=list)  # 每天必须含早/中/晚三餐
     day_total_cost: int = 0  # 当日小计（元）。由 budget.py 加总，不是模型给的
+    route_legs: List[RouteLeg] = Field(default_factory=list)
+    schedule: List[ScheduleItem] = Field(default_factory=list)
+    visit_minutes: int = 0
+    travel_minutes: int = 0
+    rest_minutes: int = 0
+    total_minutes: int = 0
+    comfort_warnings: List[str] = Field(default_factory=list)
 
 
 class TripPlan(BaseModel):
@@ -346,6 +414,7 @@ class TripPlan(BaseModel):
     """
 
     city: str  # 从请求抄来，必填（绝不会缺）
+    city_characteristics: List[str] = Field(default_factory=list)
     start_date: str  # 从请求抄来，必填
     end_date: str  # v0.2：由代码派生 = start_date + travel_days - 1，不是用户直接给的
     days: List[DayPlan] = Field(default_factory=list)  # Agent 4 产出。全失败时为空列表，仍然返回
@@ -356,6 +425,7 @@ class TripPlan(BaseModel):
     # ---- 住宿（v0.2：行程级，一家住到底）----
     hotel: Optional[Hotel] = None  # 全程住的酒店。None = 没找到/未指定，此时 overall_suggestions 里要说明
     hotel_nights: int = 0  # 住几晚 = TripRequest.nights 或 travel_days - 1
+    hotel_reason: str = ""
     hotel_segments: List[Hotel] = Field(default_factory=list)
     # ↑ V1 预留：跨区域行程分段住宿（例：前 2 晚市区、第 3 晚千岛湖）。
     #   V0 恒为空列表 —— 留字段不留逻辑，等真有跨城需求再实现。

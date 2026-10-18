@@ -70,12 +70,12 @@ class TestCanResumeFrom:
                      "compose_plan", "verify_plan"]
         assert runner.can_resume_from(completed) == "resolve_hotel"
 
-    def test_after_hotel_resumes_at_budget(self):
+    def test_after_hotel_resumes_at_experience(self):
         completed = ["compose_plan", "resolve_hotel"]
-        assert runner.can_resume_from(completed) == "patch_budget"
+        assert runner.can_resume_from(completed) == "enrich_experience"
 
-    def test_fully_done_has_nothing_to_resume(self):
-        assert runner.can_resume_from(["resolve_hotel", "patch_budget"]) is None
+    def test_budget_patch_still_needs_verification(self):
+        assert runner.can_resume_from(["resolve_hotel", "patch_budget"]) == "verify_budget"
 
 
 class TestRebuildState:
@@ -126,6 +126,8 @@ class TestJobRegistry:
         assert runner.NODE_LABELS["verify_budget"] == "预算复核"
         assert set(runner.NODE_LABELS) == {
             "validate_city", "collect_attractions", "collect_weather",
+            "collect_food", "enrich_experience",
             "compose_plan", "verify_plan", "resolve_hotel", "patch_budget",
             "verify_budget",
+            "prepare_budget_retry",
         }

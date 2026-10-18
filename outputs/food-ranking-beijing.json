@@ -1,0 +1,59 @@
+{
+  "city": "北京",
+  "ranking_name": "北京市2025高德状元榜·美食",
+  "records": [
+    {
+      "name": "胡大饭馆24h(簋街总店)",
+      "poi_id": "B0FFF9XSVV",
+      "rank": 1
+    },
+    {
+      "name": "南门涮肉(天坛店)",
+      "poi_id": "B000A80WKG",
+      "rank": 2
+    },
+    {
+      "name": "四季民福烤鸭店(故宫店)",
+      "poi_id": "B0FFG9V1R9",
+      "rank": 3
+    },
+    {
+      "name": "牛街清真满恒記(平安里西大街店)",
+      "poi_id": "B000A9ONPA",
+      "rank": 4
+    },
+    {
+      "name": "聚宝源(牛街创始店)",
+      "poi_id": "B000A67FB7",
+      "rank": 5
+    },
+    {
+      "name": "重庆文记勇盛牛肉面(红庙店)",
+      "poi_id": "B0FFF9USY5",
+      "rank": 6
+    },
+    {
+      "name": "浩海火烧云傣家菜(东安市场店)",
+      "poi_id": "B0KKP1XJCP",
+      "rank": 7
+    },
+    {
+      "name": "九十九顶毡房",
+      "poi_id": "B000A849KF",
+      "rank": 8
+    },
+    {
+      "name": "庭院江南菜(上地店)",
+      "poi_id": "B0KRUR4XHO",
+      "rank": 9
+    },
+    {
+      "name": "安诚居干锅鸭头(八角店)",
+      "poi_id": "B000A15405",
+      "rank": 10
+    }
+  ],
+  "source_url": "https://www.amap.com/ranking/beijing/food",
+  "captured_at": "2026-10-17T15:49:17.791984+00:00",
+  "stored": 10
+}

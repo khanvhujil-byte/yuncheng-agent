@@ -38,6 +38,7 @@ from ..models.schemas import Attraction, ConstraintReport, DayPlan, WeatherInfo
 from ..models.state import TripState
 from ..services.java_bridge import format_hot_hint
 from ..services.llm import LlmError, LlmUnreachable, chat_json
+from ..services.itinerary_experience import city_characteristics
 from .prompts import PLANNER_AGENT_PROMPT
 
 logger = logging.getLogger(__name__)
@@ -58,6 +59,7 @@ def _format_attractions(spots: list[Attraction]) -> str:
             f"{index}. {spot.name} | poi_id={spot.poi_id or '-'} | "
             f"坐标={location.longitude},{location.latitude} | "
             f"分类={spot.category or '-'} | 建议时长={spot.visit_duration}分钟 | "
+            f"门票={spot.ticket_price if spot.ticket_price is not None else '未知'}元（{spot.ticket_price_status}） | "
             f"地址={spot.address or '-'}"
             + (" | 【用户必去】" if spot.required else "")
         )
@@ -124,6 +126,7 @@ def _build_user_prompt(state: TripState) -> str:
     )
 
     hot_hint = format_hot_hint(state.get("community_hot"))
+    from ..services.requirements import context
 
     return (
         f"【行程要求】\n"
@@ -136,7 +139,15 @@ def _build_user_prompt(state: TripState) -> str:
         f"住宿偏好：{req.accommodation}\n"
         f"偏好标签：{'、'.join(req.preferences) or '（未指定）'}\n"
         f"额外要求：{req.free_text_input or '（无）'}\n"
+        + context(req, "food", "attractions", "hotel", "transport", "pace", "weather", "budget")
+        + "\n美食优先时先从真实候选选择三餐restaurant_id，以用餐点作为动线锚点安排景点；"
+          "citywide取消就近偏好，但仍需满足实际通勤和每日时间限制。\n"
         f"用户必去景点 must_visit：{'、'.join(must_visit) if must_visit else '（无）'}\n"
+        f"总预算上限：{req.budget_limit if req.budget_limit is not None else '未限制'} 元（按一位出行者口径，包含门票、三餐、住宿晚数与市内交通）\n"
+        f"\n【城市特点（静态编辑指南，非实时事实）】\n{' '.join(city_characteristics(req.city))}\n"
+        f"\n【真实餐饮候选；只可选择这些 POI，不可编造餐厅】\n"
+        + "\n".join(f"{r.name} | restaurant_id={r.poi_id} | 人均参考={r.avg_cost if r.avg_cost is not None else '未知'} | 榜单={r.ranking_name or '无已核验榜单'} | 坐标={r.location.longitude},{r.location.latitude}" for r in list(state.get('restaurants') or [])[:30])
+        + "\n"
         f"\n【候选景点清单】（{pool_note}；每天只能从这里面挑）\n"
         f"{_format_attractions(selected)}\n"
         f"\n【天气预报】\n"
@@ -211,7 +222,7 @@ def _validate_constraints(
         a.name
         for day in days
         for a in day.attractions
-        if (a.poi_id not in allowed_ids) and (a.name not in allowed_names)
+        if (a.poi_id not in allowed_ids if a.poi_id else a.name not in allowed_names)
     ]
 
     report = ConstraintReport(
@@ -280,6 +291,10 @@ def _enrich(days: list[DayPlan], candidates: list[Attraction]) -> int:
             #   不覆盖的话，模型那句 0 会被当成"免费"，正好把"未知"洗成"不要钱"。
             item.ticket_price = source.ticket_price
             item.ticket_price_status = source.ticket_price_status
+            item.ticket_price_source = source.ticket_price_source
+            item.ticket_price_evidence_url = source.ticket_price_evidence_url
+            # 建议时长是数据源/规则事实，不能靠缩短模型时长绕过舒适性复核。
+            item.visit_duration = max(30, source.visit_duration)
             item.image_url = item.image_url or source.image_url
             item.photos = item.photos or list(source.photos)
             item.required = item.required or source.required
@@ -378,6 +393,8 @@ def compose_plan(state: TripState) -> dict:
         payload: dict[str, Any] = json.loads(text)
     except json.JSONDecodeError as exc:
         return {**_retry(attempts, f"输出不是合法 JSON：{exc}", []), "usage": usage}
+    if not isinstance(payload, dict) or not isinstance(payload.get("days"), list):
+        return {**_retry(attempts, "输出必须是含 days 数组的 JSON 对象。", []), "usage": usage}
 
     # ---- 第 1 层：结构校验 ----
     try:
@@ -388,6 +405,13 @@ def compose_plan(state: TripState) -> dict:
     structure_error = _validate_structure(days, req.start_date, state["travel_days"])
     if structure_error:
         return {**_retry(attempts, structure_error, []), "usage": usage}
+
+    if req.requirements.food.priority == "food_first" and state.get("experience_enabled"):
+        identifiers = {r.poi_id for r in state.get("restaurants", [])}
+        for day in days:
+            if sorted(m.type for m in day.meals) != ["breakfast", "dinner", "lunch"] or any(
+                    not m.restaurant_id or m.restaurant_id not in identifiers for m in day.meals):
+                return {**_retry(attempts, "美食优先时，必须先从真实餐饮候选指定早中晚三餐restaurant_id，再围绕它们安排景点。", []), "usage": usage}
 
     # ---- 第 2 层：约束校验 ----
     report, constraint_error = _validate_constraints(days, anchors, candidates)
@@ -424,7 +448,8 @@ def compose_plan(state: TripState) -> dict:
         "plan": plan,
         "constraint_report": report,
         "retries": attempts,
-        "validate_error": None,
+        # 重试耗尽只停止再生成，不能清除仍然成立的约束错误。
+        "validate_error": constraint_error,
         "warnings": warnings,
         "usage": usage,
     }

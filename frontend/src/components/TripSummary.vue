@@ -44,6 +44,7 @@ const props = defineProps<{
    * 而偏好是**请求**的信息。发布到社区时 Java 要靠它累积"常见偏好"热度。
    */
   preferences?: string[]
+  hideActions?: boolean
 }>()
 
 /** 只有显式 cached === true 才显示徽标：undefined / false 都当没命中 */
@@ -72,7 +73,7 @@ const budget = computed(() => props.plan.budget ?? null)
 const hotel = computed(() => props.plan.hotel ?? null)
 const hotelNights = computed(() => props.plan.hotel_nights ?? 0)
 const hotelIsUser = computed(() => props.plan.sources?.hotel === 'user')
-const hotelEstimated = computed(() => isEstimated(props.plan.sources, 'hotel.estimated_cost'))
+const hotelEstimated = computed(() => hotel.value?.cost_status ? hotel.value.cost_status === 'estimated' : isEstimated(props.plan.sources, 'hotel.estimated_cost'))
 
 /** v0.2：硬约束对账（必去景点满足情况） */
 const report = computed(() => props.plan.constraint_report ?? null)
@@ -260,6 +261,10 @@ function tempText(value: number | string | undefined): string {
     </div>
 
     <!-- 降级 / 估算提示。有就必须显示，不能让用户以为是真实数据 -->
+    <div v-if="plan.city_characteristics?.length" class="card">
+      <div class="card-title"><Info :size="16" />这座城市的旅行特点</div>
+      <ul class="alert-list"><li v-for="item in plan.city_characteristics" :key="item">{{ item }}</li></ul>
+    </div>
     <div v-if="warnings.length" class="card alert-card">
       <div class="alert-title">
         <TriangleAlert :size="16" />
@@ -294,17 +299,20 @@ function tempText(value: number | string | undefined): string {
         </div>
         <div class="muted" style="margin-top: 4px; font-size: 13px">
           共 {{ hotelNights }} 晚
-          <span v-if="hotel.estimated_cost">
-            · 约 ¥{{ hotel.estimated_cost }}/晚 · 合计 ¥{{ hotel.estimated_cost * hotelNights }}
+          <span v-if="hotel.cost_status !== 'unknown' && (hotel.estimated_cost || hotel.cost_status === 'known')">
+            · {{ hotelEstimated ? '参考' : '' }} ¥{{ hotel.estimated_cost }}/晚 · 合计 ¥{{ (hotel.estimated_cost ?? 0) * hotelNights }}
           </span>
+          <span v-else> · 房价待查</span>
         </div>
+        <a v-if="hotel.price_evidence_url && /^https:\/\//.test(hotel.price_evidence_url)" :href="hotel.price_evidence_url" target="_blank" rel="noopener noreferrer">房价资料出处</a>
         <p v-if="hotel.distance" class="muted" style="margin: 6px 0 0; font-size: 12px">
           {{ hotel.distance }}
         </p>
         <p v-if="hotelIsUser" class="footnote">
-          这家酒店是你自己指定的，系统没有另做选址；价格仍是估算值。
+          这家酒店由你指定；房价是否已核验请以金额标签和资料出处为准。
         </p>
       </template>
+      <div v-else-if="hotelNights === 0" class="empty-hint">本次行程无需住宿。</div>
       <div v-else class="empty-hint">
         没有住宿信息。可能是候选酒店为空，或该路数据获取失败。
       </div>
@@ -440,6 +448,11 @@ function tempText(value: number | string | undefined): string {
           </p>
         </div>
 
+        <details v-if="budget.items?.length" class="cost-details">
+          <summary>查看具体门票、餐饮、住宿和交通明细</summary>
+          <p class="muted">餐饮与门票按一人计，住宿按一间房计；餐厅人均与酒店参考价以出行时价格为准。</p>
+          <div class="cost-table"><table><thead><tr><th>项目</th><th>日期</th><th>金额</th><th>依据</th></tr></thead><tbody><tr v-for="(item, index) in budget.items" :key="index"><td>{{ item.name }}</td><td>{{ item.day_index == null ? '全程' : `第 ${item.day_index + 1} 天` }}</td><td>{{ item.status === 'unknown' || item.amount == null ? '待查' : `¥${item.amount}` }}{{ item.status === 'estimated' ? '（参考）' : '' }}</td><td>{{ item.note }}</td></tr></tbody></table></div>
+        </details>
         <!-- 依据：结论必须能被追问（「你凭什么说没超」），所以把后端的口径原文摆出来 -->
         <p v-if="limitBasis" class="basis-text">结论依据：{{ limitBasis }}</p>
       </template>
@@ -462,11 +475,12 @@ function tempText(value: number | string | undefined): string {
 
     <!-- 导出面板放最底部：它是「整份行程看完了，要带走」的收尾动作，
          放顶部会打断阅读，放底部符合流程顺序（先看，再导出） -->
-    <ExportPanel :plan="plan" :preferences="preferences" />
+    <ExportPanel v-if="!hideActions" :plan="plan" :preferences="preferences" />
   </section>
 </template>
 
 <style scoped>
+.cost-details{margin-top:16px;font-size:13px}.cost-details summary{cursor:pointer;color:#3566c9}.cost-table{overflow:auto}.cost-table table{border-collapse:collapse;width:100%;margin-top:10px}.cost-table th,.cost-table td{padding:9px;text-align:left;border-bottom:1px solid #e8edf2;min-width:75px}.cost-table th{background:#f7f9fc;font-weight:500}.cost-table td:last-child{color:#64748b}
 .summary {
   display: flex;
   flex-direction: column;
