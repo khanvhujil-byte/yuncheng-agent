@@ -1,17 +1,21 @@
-"""Fact-bound meals, bounded route queries and deterministic comfort scheduling.
+"""Fact-bound enrichment and deterministic audit of a joint model decision.
 
-The model chooses attractions; this module owns restaurant identity, money and
-the clock. Geometric fallbacks are labelled estimates, never AMap route results.
+For joint plans, restaurant/hotel identities are preserved. Code retrieves
+ticket evidence, calculates routes and schedules, and reports failures for
+bounded replanning. The former selector remains for old plans/local edits.
 """
 import copy
+from collections import Counter
 import math
+from time import monotonic
 
 from ..config import get_settings
 from ..models.schemas import Hotel, Location, Restaurant
-from . import map_gateway as amap
+from . import map_gateway as amap  # noqa: F401 -- compatibility for existing adapter integrations
 from .tools import haversine_km
-from .tool_result import ToolResult
-from .tool_retry import RetryPolicy, run
+from .schedule_repair import (build_sequence, can_reduce, can_trim, estimated_minutes,
+                              nearest_order, remove_one_optional,
+                              simulate, visit_minutes)
 
 MAX_ROUTE_QUERIES = 48
 MAX_COMFORT_MINUTES = 660
@@ -74,108 +78,78 @@ def meal_from_restaurant(restaurant, meal_type):
     }
 
 
-def _select_meals(day, restaurants, hotel, used, preserve=False, budget_limit=None, needs=None):
+def _select_meals(day, restaurants, hotel, used, preserve=False, budget_limit=None, needs=None,
+                  replace_invalid=False):
     from ..models.requirements import FoodNeeds
     from .requirements import restaurant_allowed
     needs = needs or FoodNeeds()
+    legacy_used = used if isinstance(used, set) else None
+    if legacy_used is not None:
+        used = Counter(used)
     restaurants = [r for r in restaurants if restaurant_allowed(r, needs)]
     pool = {r.poi_id: r for r in restaurants}
     existing = {m.get("type"): m for m in day.get("meals", [])}
-    spots = day.get("attractions") or []
     meals = []
-    for kind, index in (("breakfast", 0), ("lunch", max(0, (len(spots)-1)//2)), ("dinner", -1)):
+    from .food_recommendation import choose_restaurant, distances, meal_contexts, nearby_pool
+    today = set()
+    for kind, anchor, following in meal_contexts(day, hotel):
         old = existing.get(kind) or {}
         if preserve and old.get("restaurant_id") and old["restaurant_id"] not in pool:
             # A local edit must not silently replace another saved meal to make
             # a new/expired constraint pass. Audit it and retain the old plan.
             meals.append(copy.deepcopy(old))
+            used[old["restaurant_id"]] += 1
+            today.add(old["restaurant_id"])
             continue
         chosen = pool.get(old.get("restaurant_id")) if preserve or needs.priority == "food_first" else None
-        target = (_loc(hotel) if kind == "breakfast" and hotel else None) or (_loc(spots[index]) if spots else None)
+        if chosen is not None and replace_invalid:
+            # Unified planning preserves the model's meal identities, but a
+            # preserved choice that violates the same deterministic rules the
+            # audit uses would otherwise force a full model replan (or be
+            # delivered as a partial failure). Replace only when a feasible
+            # alternative exists; shortages stay visible to the audit.
+            feasible = nearby_pool(restaurants, anchor, following, kind,
+                                   citywide=needs.travel_scope == "citywide")
+            if feasible:
+                feasible_ids = {r.poi_id for r in feasible}
+                used_ids = {key for key, count in used.items() if count}
+                duplicate_with_alternative = (chosen.poi_id in used_ids
+                                              and bool(feasible_ids - today - used_ids))
+                too_far = (needs.travel_scope != "citywide"
+                           and distances(chosen, anchor, following)[0] > 4
+                           and any(distances(r, anchor, following)[0] <= 4 for r in feasible))
+                if chosen.poi_id not in feasible_ids or duplicate_with_alternative or too_far:
+                    chosen = None
         if chosen is None and restaurants:
-            def score(r):
-                distance = haversine_km(target, r.location) if target else 0
-                # Verified ranking is a preference within a sensible neighbourhood.
-                if needs.travel_scope == "citywide":
-                    return (r.poi_id in used, r.ranking_rank is None, r.ranking_rank or 9999,
-                            -(r.rating or 0), distance, r.poi_id)
-                return (distance > 3, r.poi_id in used, distance + (0 if r.ranking_name else 1.5)
-                        + ((r.avg_cost or MEAL_ESTIMATES[kind])/100 if budget_limit else 0),
-                        -(r.rating or 0), r.poi_id)
-            chosen = min(restaurants, key=score)
+            chosen = choose_restaurant(restaurants, kind, anchor, following, used, today, needs, budget_limit)
         if chosen:
-            used.add(chosen.poi_id)
+            used[chosen.poi_id] += 1
+            today.add(chosen.poi_id)
             meals.append(copy.deepcopy(old) if preserve and old.get("restaurant_id") == chosen.poi_id else meal_from_restaurant(chosen, kind))
         else:
             meals.append({"type": kind, "name": {"breakfast":"早餐", "lunch":"午餐", "dinner":"晚餐"}[kind] + "（尚无已核验餐厅）",
                           "estimated_cost": None, "cost_status":"unknown", "cost_source":"unknown",
                           "source":"degraded", "cost_note":"未获取真实餐饮候选，餐厅与费用待确认。"})
+    if legacy_used is not None:
+        legacy_used.update(used)
     return meals
 
 
-def _ordered(day):
-    spots = day.get("attractions") or []
-    meals = {m["type"]:m for m in day.get("meals", [])}
-    result = []
-    if meals.get("breakfast"):
-        result.append(("meal", meals["breakfast"], 30))
-    split = max(1, math.ceil(len(spots)/2))
-    for i, spot in enumerate(spots):
-        result.append(("attraction", spot, max(30, int(spot.get("visit_duration") or 120))))
-        if i+1 == split and meals.get("lunch"):
-            result.append(("meal", meals["lunch"],45))
-    if meals.get("dinner"):
-        result.append(("meal",meals["dinner"],60))
-    return result
+def _ordered(day, hotel=None, mode="公共交通", minutes=None, comfort_limit=660):
+    return build_sequence(day, hotel, mode, minutes, comfort_limit)
 
 
 def _route(origin, destination, mode, city, cache, quota, calls):
-    a, b = _loc(origin), _loc(destination)
-    key = f"{a.longitude},{a.latitude}>{b.longitude},{b.latitude}|{mode}|{city}"
-    note = ""
-    if key in cache:
-        raw = cache[key]
-    elif quota[0] < MAX_ROUTE_QUERIES:
-        raw={}
-        def attempt():
-            nonlocal raw
-            if quota[0]>=MAX_ROUTE_QUERIES:
-                return ToolResult.failure("已达到本次路线查询上限","ROUTE_QUERY_LIMIT")
-            quota[0]+=1
-            try:
-                raw=amap.travel_route(a,b,mode=mode,city=city)
-                if isinstance(raw,dict) and raw.get("status")=="known" and raw.get("duration_minutes") is not None:
-                    return ToolResult.success("已取得真实路线时间",returned_count=1)
-                return ToolResult.success("未找到可用路线",returned_count=0)
-            except (amap.AmapError,amap.AmapUnreachable,ValueError,TypeError) as exc:
-                code=getattr(exc,"code","INVALID_ROUTE_RESULT")
-                if code in ("AMAP_KEY_INVALID","AMAP_QUOTA_EXCEEDED"):
-                    quota[0]=MAX_ROUTE_QUERIES
-                return ToolResult.failure("路线接口查询失败",code,retryable=bool(getattr(exc,"retryable",False)),
-                                          retry_after_seconds=getattr(exc,"retry_after_seconds",None))
-        settings=get_settings()
-        report=run(attempt,safe=True,policy=RetryPolicy(settings.tool_max_attempts,settings.tool_retry_budget_seconds,settings.tool_retry_base_delay))
-        calls.append({"role":"experience","tool":"travel_route","args":{"origin":a.model_dump(),"destination":b.model_dump(),"mode":mode,"city":city},
-                      "result":report.result.message,"outcome":report.result.to_dict(),"attempts":report.attempts,"attempt_count":len(report.attempts),
-                      "stop_reason":report.stop_reason,"next_action":report.next_action})
-        if report.result.status=="error":
-            note=f"路线接口未取得结果（{report.result.error_code}）。"
-    else:
-        raw = {}
-        note = "已达到本次路线查询上限。"
-    raw = raw if isinstance(raw, dict) else {}
-    if raw.get("status") == "known" and isinstance(raw.get("duration_minutes"), (int,float)) and math.isfinite(raw["duration_minutes"]) and raw["duration_minutes"] >= 0:
-        result = {"duration_minutes":math.ceil(raw["duration_minutes"]), "distance_meters":raw.get("distance_meters"),
-                  "status":"known", "source":"amap", "note":"高德路线接口结果，出发时路况仍可能变化。"}
-    else:
-        distance = haversine_km(a,b)
-        walking = mode in ("步行","walking")
-        speed = 4 if walking else (12 if mode in ("公共交通","transit") else 22)
-        result = {"duration_minutes":max(5, math.ceil(distance*1.5/speed*60)+(0 if walking else 10)),
-                  "distance_meters":None,"status":"estimated","source":"static_estimate",
-                  "note":note+"按直线距离×1.5与交通速度估算；未获取实际道路路线。"}
-    cache[key] = result
-    return result
+    from .route_batch import prefetch_routes, route_key
+    key = route_key(origin, destination, mode, city)
+    if key not in cache:
+        batch = prefetch_routes([(origin, destination)], mode=mode, city=city, cache=cache,
+                                query_count=quota[0], max_queries=MAX_ROUTE_QUERIES, budget_seconds=0)
+        quota[0] = batch.query_count
+        calls.extend(batch.calls)
+    # Batch preparation owns cache validation. Do not normalize estimates as
+    # if they were fresh provider results, and keep cache timestamps internal.
+    return {name: value for name, value in cache[key].items() if not name.startswith("_")}
 
 
 def _clock(minutes):
@@ -201,6 +175,28 @@ def _weather_problems(day, weather):
     if rainy and outdoor:
         return [], [f"本日预报{text}，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。"]
     return [], []
+
+
+def _clock_minutes(value):
+    try:
+        hours, minutes = str(value).split(":")
+        return int(hours) * 60 + int(minutes)
+    except (ValueError, AttributeError):
+        return None
+
+
+def _day_over_limit(day, max_minutes):
+    """Comfort check against the audited clock (same limits as validate_experience)."""
+    if int(day.get("total_minutes") or 0) > max_minutes:
+        return True
+    for entry in day.get("schedule") or []:
+        if entry.get("kind") != "meal":
+            continue
+        start = _clock_minutes(entry.get("start_time"))
+        limit = {"lunch": 14 * 60, "dinner": 20 * 60 + 30}.get(entry.get("meal_type"))
+        if start is not None and limit is not None and start > limit:
+            return True
+    return False
 
 
 def validate_experience(plan, state=None):
@@ -268,78 +264,236 @@ def validate_experience(plan, state=None):
     return reasons
 
 
+def _schedule_day(day, sequence, hotel, request, cache, quota, calls):
+    """Build the auditable clock from actual cached routes, never from scores."""
+    schedule=[]
+    legs=[]
+    cursor=8*60+30
+    previous=hotel if hotel and _loc(hotel) else None
+    active=0
+    rest=0
+    for position,(kind,item,duration) in enumerate(sequence + ([("return",hotel,0)] if hotel and _loc(hotel) else [])):
+        if previous and _loc(previous) and _loc(item):
+            route=_route(previous,item,request.transportation,request.city,cache,quota,calls)
+            leg={"from_name":previous["name"],"to_name":item["name"],"from_id":previous.get("poi_id") or previous.get("restaurant_id"),
+                 "to_id":item.get("poi_id") or item.get("restaurant_id"),"mode":request.transportation,**route}
+            legs.append(leg)
+            minutes=route["duration_minutes"]
+            schedule.append({"kind":"travel","name":f"{previous['name']} → {item['name']}","start_time":_clock(cursor),"end_time":_clock(cursor+minutes),"duration_minutes":minutes,"status":route["status"]})
+            cursor+=minutes
+            buffer=max(5,math.ceil(minutes*.2))
+            schedule.append({"kind":"rest","name":"交通缓冲","start_time":_clock(cursor),"end_time":_clock(cursor+buffer),"duration_minutes":buffer})
+            cursor+=buffer
+            rest+=buffer
+        if kind=="return":
+            break
+        minimum = item.get("_earliest_start", {"lunch": 12*60, "dinner": 18*60}.get(item.get("type"), cursor)) if kind == "meal" else cursor
+        if cursor < minimum:
+            spare = minimum-cursor
+            schedule.append({"kind":"rest","name":"自由活动与用餐前弹性时间","start_time":_clock(cursor),"end_time":_clock(minimum),"duration_minutes":spare})
+            rest+=spare
+            cursor=minimum
+        schedule.append({"kind":kind,"name":item["name"],"start_time":_clock(cursor),"end_time":_clock(cursor+duration),"duration_minutes":duration,
+                         "reference_id":item.get("poi_id") or item.get("restaurant_id"),"status":"estimated",
+                         **({"meal_type":item["type"]} if kind=="meal" else {})})
+        cursor+=duration
+        active+=duration if kind=="attraction" else 0
+        if active>=120 and position<len(sequence)-1:
+            schedule.append({"kind":"rest","name":"休息与弹性时间","start_time":_clock(cursor),"end_time":_clock(cursor+15),"duration_minutes":15})
+            cursor+=15
+            rest+=15
+            active=0
+        if _loc(item):
+            previous=item
+    day.update(route_legs=legs,schedule=schedule,visit_minutes=sum(d for k,_,d in sequence if k=="attraction"),
+               travel_minutes=sum(l["duration_minutes"] for l in legs),rest_minutes=rest,total_minutes=cursor-(8*60+30))
+
+
 def enrich_experience(plan, state, day_indices=None):
     result=copy.deepcopy(plan)
     if not state.get("experience_enabled"):
         return result, [], []
     request=state["request"]
+    from .ticket_pricing import refresh_plan_tickets
+    result = refresh_plan_tickets(result, request, day_indices, lookup_state=state)
+    extra_calls, extra_warnings = [], []
+    if not state.get("preserve_meals"):
+        from .food import ensure_food_coverage
+        extra_calls, extra_warnings = ensure_food_coverage(result, state)
     restaurants=[r for raw in state.get("restaurants",[]) if (r:=_restaurant(raw)) is not None]
     hotel=_dump(state.get("hotel") or result.get("hotel"))
     if hotel is not None:
         hotel=_dump(Hotel.model_validate(hotel))
     cache=state.setdefault("route_cache",{})
     quota=[int(state.get("route_query_count") or 0)]
-    warnings=[]
-    calls=[]
-    used=set()
+    warnings=list(extra_warnings)
+    calls=list(extra_calls)
+    calls.extend(state.pop('_ticket_search_calls', []))
+    used=Counter()
     selected=set(day_indices) if day_indices is not None else None
     if selected is not None:
-        used={m.get("restaurant_id") for d in result.get("days",[]) if d.get("day_index") not in selected for m in d.get("meals",[])}
+        used=Counter(m.get("restaurant_id") for d in result.get("days",[]) if d.get("day_index") not in selected for m in d.get("meals",[]))
+    from .route_batch import cached_route, prefetch_routes, route_key
+    settings=get_settings()
+    route_deadline=monotonic()+settings.route_batch_budget_seconds
+    blocked_code=state.get("route_blocked_code")
+
+    def duration(origin, destination):
+        cached = cached_route(cache.get(route_key(origin, destination, request.transportation, request.city)))
+        return (cached["duration_minutes"] if cached is not None
+                else estimated_minutes(origin, destination, request.transportation))
+
+    prepared=[]
+    automatic=can_reduce(state, day_indices)
+    # Unified planning owns the meal identities, but a preserved choice that
+    # violates the same deterministic rules the audit uses would force a full
+    # model replan. Allow a nearby eligible replacement only when one exists.
+    replace_invalid_meals = (bool(state.get('unified_planning'))
+                             and not bool(state.get('preserve_meals'))
+                             and request.requirements.food.priority != 'food_first')
+    meal_days=set()
+
+    def select_day_meals(day):
+        identity=day.get('day_index')
+        if identity in meal_days:
+            for meal in day.get('meals',[]):
+                identifier=meal.get('restaurant_id')
+                if identifier:
+                    used[identifier]=max(0,used[identifier]-1)
+        day['meals']=_select_meals(day,restaurants,hotel,used,state.get('preserve_meals',False) or state.get('unified_planning',False),
+                                   getattr(request,'budget_limit',None),request.requirements.food,
+                                   replace_invalid=replace_invalid_meals)
+        meal_days.add(identity)
+
     for day in result.get("days",[]):
         if selected is not None and day.get("day_index") not in selected:
             continue
-        day["meals"]=_select_meals(day,restaurants,hotel,used,state.get("preserve_meals",False),getattr(request,"budget_limit",None),request.requirements.food)
-        sequence=_ordered(day)
-        schedule=[]
-        legs=[]
-        cursor=8*60+30
-        previous=hotel if hotel and _loc(hotel) else None
-        active=0
-        rest=0
-        for position,(kind,item,duration) in enumerate(sequence + ([("return",hotel,0)] if hotel and _loc(hotel) else [])):
-            if previous and _loc(previous) and _loc(item):
-                route=_route(previous,item,request.transportation,request.city,cache,quota,calls)
-                leg={"from_name":previous["name"],"to_name":item["name"],"from_id":previous.get("poi_id") or previous.get("restaurant_id"),
-                     "to_id":item.get("poi_id") or item.get("restaurant_id"),"mode":request.transportation,**route}
-                legs.append(leg)
-                minutes=route["duration_minutes"]
-                schedule.append({"kind":"travel","name":f"{previous['name']} → {item['name']}","start_time":_clock(cursor),"end_time":_clock(cursor+minutes),"duration_minutes":minutes,"status":route["status"]})
-                cursor+=minutes
-                buffer=max(5,math.ceil(minutes*.2))
-                schedule.append({"kind":"rest","name":"交通缓冲","start_time":_clock(cursor),"end_time":_clock(cursor+buffer),"duration_minutes":buffer})
-                cursor+=buffer
-                rest+=buffer
-            if kind=="return":
+        if automatic:
+            day["attractions"]=nearest_order(day.get("attractions",[]),hotel,request.transportation)
+        select_day_meals(day)
+        sequence=_ordered(day,hotel,request.transportation,duration,
+                          request.requirements.pace.max_day_minutes)
+        if automatic:
+            # Solve obvious overload before any paid route calls. This uses
+            # explicitly estimated geometry, then the independent audit below
+            # still checks the actual route clock.
+            while simulate(sequence,hotel,duration)["total_minutes"] > request.requirements.pace.max_day_minutes:
+                note=remove_one_optional(day,state,hotel)
+                if note is None:
+                    break
+                warnings.append(note)
+                select_day_meals(day)
+                sequence=_ordered(day,hotel,request.transportation,duration,
+                          request.requirements.pace.max_day_minutes)
+        prepared.append((day,sequence))
+
+    def prefetch(items):
+        nonlocal blocked_code
+        pairs=[]
+        for _,sequence in items:
+            previous=hotel if hotel and _loc(hotel) else None
+            for _,item,_ in sequence + ([("return",hotel,0)] if hotel and _loc(hotel) else []):
+                if previous and _loc(previous) and _loc(item):
+                    pairs.append((previous,item))
+                if _loc(item):
+                    previous=item
+        batch=prefetch_routes(pairs,mode=request.transportation,city=request.city,cache=cache,
+                              query_count=quota[0],max_queries=MAX_ROUTE_QUERIES,
+                              max_workers=settings.route_max_workers,
+                              budget_seconds=max(0,route_deadline-monotonic()),blocked_code=blocked_code)
+        quota[0]=batch.query_count
+        blocked_code=batch.blocked_code
+        calls.extend(batch.calls)
+
+    prefetch(prepared)
+    for day,sequence in prepared:
+        _schedule_day(day,sequence,hotel,request,cache,quota,calls)
+
+    # At most one local repair pass after actual route times. Bridges created
+    # by removing optional stops are fetched together; existing OD facts stay.
+    repaired=[]
+    if automatic:
+        for day,sequence in prepared:
+            timing=simulate(sequence,hotel,duration)
+            changed=False
+            while (timing["total_minutes"] > request.requirements.pace.max_day_minutes
+                   or timing["late_meal_minutes"]):
+                note=remove_one_optional(day,state,hotel)
+                if note is None:
+                    break
+                warnings.append(note)
+                changed=True
+                select_day_meals(day)
+                sequence=_ordered(day,hotel,request.transportation,duration,
+                                  request.requirements.pace.max_day_minutes)
+                timing=simulate(sequence,hotel,duration)
+            if changed:
+                repaired.append((day,sequence))
+        if repaired:
+            prefetch(repaired)
+            for day,sequence in repaired:
+                _schedule_day(day,sequence,hotel,request,cache,quota,calls)
+
+    # Deterministic comfort fallback for unified planning. The model owns the
+    # choice of stops and its retry budget is bounded, so when the audited clock
+    # still overflows (or a meal would start too late) drop optional stops
+    # locally instead of returning a partial result that cannot be executed.
+    # Required anchors are protected by ``_protected``; user-edited meals are
+    # protected by ``preserve_meals`` (can_trim is False then).
+    if not automatic and can_trim(state):
+        max_minutes = request.requirements.pace.max_day_minutes
+
+        def estimate_clock(day, comfort):
+            seq = _ordered(day, hotel, request.transportation, comfort_limit=comfort)
+            timing = simulate(seq, hotel, duration)
+            return timing["total_minutes"], timing["late_meal_minutes"]
+
+        for round_index in range(3):
+            over = [(day, sequence) for day, sequence in prepared if _day_over_limit(day, max_minutes)]
+            if not over:
                 break
-            minimum = {"lunch": 12*60, "dinner": 18*60}.get(item.get("type"), cursor) if kind == "meal" else cursor
-            if cursor < minimum:
-                spare = minimum-cursor
-                schedule.append({"kind":"rest","name":"自由活动与用餐前弹性时间","start_time":_clock(cursor),"end_time":_clock(minimum),"duration_minutes":spare})
-                rest+=spare
-                cursor=minimum
-            schedule.append({"kind":kind,"name":item["name"],"start_time":_clock(cursor),"end_time":_clock(cursor+duration),"duration_minutes":duration,
-                             "reference_id":item.get("poi_id") or item.get("restaurant_id"),"status":"estimated",
-                             **({"meal_type":item["type"]} if kind=="meal" else {})})
-            cursor+=duration
-            active+=duration if kind=="attraction" else 0
-            if active>=120 and position<len(sequence)-1:
-                schedule.append({"kind":"rest","name":"休息与弹性时间","start_time":_clock(cursor),"end_time":_clock(cursor+15),"duration_minutes":15})
-                cursor+=15
-                rest+=15
-                active=0
-            if _loc(item):
-                previous=item
+            tightened = []
+            for day, sequence in over:
+                comfort = max(120, max_minutes - 20 * round_index)
+                # Removing a stop changes the clock. Re-evaluate with the
+                # simulated schedule after each removal; keeping the stale
+                # audited schedule as the loop condition would delete stops
+                # until the day has only one left (a real over-deletion defect).
+                est_total, late = estimate_clock(day, comfort)
+                removed = 0
+                while (est_total > max_minutes or late) and removed < 6:
+                    note = remove_one_optional(day, state, hotel)
+                    if note is None:
+                        break
+                    warnings.append(note)
+                    removed += 1
+                    select_day_meals(day)
+                    est_total, late = estimate_clock(day, comfort)
+                sequence = _ordered(day, hotel, request.transportation, comfort_limit=comfort)
+                tightened.append((day, sequence))
+            prefetch(tightened)
+            for day, sequence in tightened:
+                _schedule_day(day, sequence, hotel, request, cache, quota, calls)
+
+    for day,_ in prepared:
         severe,hints=_weather_problems(day,state.get("weather",[]))
-        if any(r["status"]!="known" for r in legs):
+        identities=[m.get("restaurant_id") for m in day.get("meals",[]) if m.get("restaurant_id")]
+        if len(identities) != len(set(identities)):
+            hints.append("本日重复安排同一餐厅：可能为保留已选餐次，或附近符合餐次与预算要求的候选不足；未为凑不同店增加远距离绕行。")
+        if any(r["status"]!="known" for r in day["route_legs"]):
             hints.append("部分路程时间为规则估算，已计入交通缓冲；请出发前查看实时路线。")
-        day.update(route_legs=legs,schedule=schedule,visit_minutes=sum(d for k,_,d in sequence if k=="attraction"),
-                   travel_minutes=sum(l["duration_minutes"] for l in legs),rest_minutes=rest,total_minutes=cursor-(8*60+30),comfort_warnings=hints+severe)
+        day["comfort_warnings"]=hints+severe
         warnings.extend(f"{day['date']}：{h}" for h in hints)
     result["city_characteristics"]=city_characteristics(request.city)
     state["_experience_tool_calls"]=calls
     state["route_query_count"]=quota[0]
+    state["route_blocked_code"]=blocked_code
     from .requirements import audit_requirements
     errors = validate_experience(result, state)
+    if state.get('unified_planning') and day_indices is None:
+        from .unified_planning import audit_choices
+        errors.extend(audit_choices(result, state, Hotel.model_validate(hotel) if hotel else None,
+                                    warnings_out=warnings))
     errors.extend(audit_requirements({**result, "hotel": hotel,
                                      "weather_info": [_dump(w) for w in state.get("weather", [])]}, request))
     return result, list(dict.fromkeys(errors)), warnings
@@ -349,8 +503,57 @@ def enrich_node(state):
     if not state.get("experience_enabled") or not (state.get("plan") or {}).get("days"):
         return {}
     plan, errors, warnings=enrich_experience(state["plan"],state)
-    return {"plan":plan,"warnings":warnings,"route_cache":state.get("route_cache",{}),
+    # Re-run the independent audit on the *repaired* plan. A previous round's
+    # validate_error may already have been solved by the deterministic repair
+    # above; keeping it would mark a valid delivery as a partial result forever.
+    # Any problem that still exists is reported again and stays visible.
+    from ..agents.verify_plan import verify_plan as independent_audit
+    audit = independent_audit({"plan": plan, "retries": state.get("retries", 0), "validate_error": None})
+    audit_error = audit.get("validate_error")
+    if audit.get("warnings"):
+        warnings = [*warnings, *[str(item) for item in audit["warnings"]]]
+    feedback = [str(audit_error)] if audit_error else []
+    feedback.extend(errors)
+    if feedback and state.get('unified_planning'):
+        from .unified_planning import correction_context
+        try:
+            feedback.append(correction_context(plan, state, state.get('hotel')))
+        except (ValueError, KeyError, TypeError):
+            pass
+    # Let a budget/comfort replan see prices actually obtained in this round.
+    priced = {a.get('poi_id'): a for d in plan.get('days', []) for a in d.get('attractions', []) if a.get('poi_id')}
+    candidates = []
+    for candidate in state.get('attractions', []):
+        evidence = priced.get(candidate.poi_id)
+        fields = {k: v for k, v in (evidence or {}).items() if k.startswith('ticket_price') or k == 'admission_policy'}
+        candidates.append(candidate.model_copy(update=fields))
+    update={"plan":plan,"warnings":list(dict.fromkeys(warnings)),"route_cache":state.get("route_cache",{}),
+            "attractions": candidates,
+            "sources":({"food":state["sources"]["food"]} if state.get("sources",{}).get("food") else {}),
+            "restaurants":state.get("restaurants",[]),
+            "food_coverage_queries":state.get("food_coverage_queries",[]),
+            "food_coverage_elapsed_seconds":state.get("food_coverage_elapsed_seconds",0),
+            "food_coverage_blocked_code":state.get("food_coverage_blocked_code"),
+            "ticket_lookup_queries":state.get("ticket_lookup_queries",[]),
+            "ticket_lookup_results":state.get("ticket_lookup_results",{}),
+            "ticket_estimates":state.get("ticket_estimates",{}),
+            "ticket_estimate_attempted":state.get("ticket_estimate_attempted",False),
+            "usage":state.pop('_ticket_usage', {}),
+            "ticket_lookup_elapsed_seconds":state.get("ticket_lookup_elapsed_seconds",0),
             "route_query_count":state.get("route_query_count",0),
+            "route_blocked_code":state.get("route_blocked_code"),
             "tool_calls":state.get("_experience_tool_calls",[]),
-            "validate_error":state.get("validate_error") or (errors[0] if errors else None),
+            "validate_error":"\n".join(dict.fromkeys(feedback)) if feedback else None,
             "errors":[f"experience: {e}" for e in errors]}
+    # Optional-stop repair can change the distance explanation after selection.
+    # Keep the chosen hotel and refresh the statement from the final stops.
+    hotel=state.get("hotel")
+    if hotel is not None:
+        hotel=Hotel.model_validate(hotel).model_copy(deep=True)
+        spots=[spot for day in plan.get("days",[]) for spot in day.get("attractions",[]) if _loc(spot)]
+        if hotel.location and spots:
+            weight=sum(max(1,visit_minutes(spot)) for spot in spots)
+            distance=sum(haversine_km(hotel.location,_loc(spot))*max(1,visit_minutes(spot)) for spot in spots)/weight
+            hotel.distance=f"距最终行程景点加权平均 {distance:.1f} km（直线估计）"
+            update["hotel"]=hotel
+    return update

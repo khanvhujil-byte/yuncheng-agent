@@ -1,38 +1,10 @@
-"""LangGraph 图状态 TripState。  —— v0.2（2026-10-07 契约冻结）
+"""LangGraph 状态契约，包含候选事实、联合选择、审计与恢复信息。
 
-位置：models/ 层，与 schemas.py 并列；只被 agents/ 和 api/ 读，自己只 import schemas。
-作用：定义「在图上流转的那份数据」。
-
-与 TripPlan 的区别（最容易混的一处）：
-    TripPlan   给外部看，只含用户要的信息。
-    TripState  给内部用，含过程数据（adcode、retries、trace、usage）。
-    两者的交集有两个字段：TripState.plan 和 TripState.hotel。
-
-v0.2 的图形状（方案 D：酒店后置 + 锚点分叉）：
-
-    validate_city                       无 LLM：城市 → adcode + 坐标；顺手做可行性预检
-      ├ 解析失败 → END 400 CITY_NOT_FOUND
-      ├ 预检不通过 → END 400 CONSTRAINT_INFEASIBLE（**花钱之前就拦下**）
-      └ 成功 → 两路并行
-             collect_attractions  ∥  collect_weather  ∥  collect_food
-                         ↓ 三路全部完成
-             compose_plan            编排景点顺序，三餐由真实餐厅候选回填，**不含酒店**
-                         ↓ 两层校验
-                第 1 层 Pydantic 结构校验
-                第 2 层 约束满足性校验（must_visit 是否真的排进去了）
-                    ├ 不通过且 retries < 2 → 回 compose_plan（把具体缺失项回喂）
-                    └ retries = 2 → 继续，但写进 ConstraintReport.unsatisfied
-                         ↓
-             resolve_hotel           分叉：用户已定 → 解析锚点；未定 → 加权选址
-                         ↓
-             enrich_experience       真实餐厅、地图路程、游玩/用餐/休息时间与天气复核
-                         ↓
-             patch_budget            住宿费 = 单价 × nights（不是 × 天数）
-                         ↓
-                      END
-
-为什么酒店必须**后置**：选址要基于「实际会去哪些景点」。景点候选池有 travel_days×3 个，
-其中一半不会去；用候选池选址等于把不去的地方也算进距离里。
+attractions 保存候选景点，plan.days 保存已编排行程；restaurants/hotels
+保存餐厅和酒店候选。统一编排节点同时产出 plan 和最终 hotel。
+天气、坐标、建议时长、价格证据和总额由工具/代码提供。
+列表、sources 和 usage 的 reducer 支持四路并行采集并累计整个运行的成本。
+planning_contract_version 区分新运行和旧恢复日志；失败原因与查询上限跨重排保留。
 """
 
 import operator
@@ -138,12 +110,28 @@ class TripState(TypedDict):
     attractions: List[Attraction]  # Agent 1：候选景点池（目标 >= travel_days*3，含 must_visit_resolved），不是排期结果
     weather: List[WeatherInfo]  # Agent 2：只覆盖预报窗口（最多 4 天），超出部分 beyond_window=True 且留空
     restaurants: List[Restaurant]
+    food_coverage_queries: List[str]  # 当前图运行内跨重排共享的片区补充检索上限
+    food_coverage_elapsed_seconds: float
+    food_coverage_blocked_code: Optional[str]
+    planning_contract_version: int
+    unified_planning: bool  # planner owns attractions, meals and hotel IDs
+    ticket_lookup_queries: List[str]
+    ticket_lookup_elapsed_seconds: float
+    ticket_lookup_results: Dict[str, object]
+    ticket_estimates: Dict[str, object]
+    ticket_estimate_attempted: bool
+    planning_started_at: float
+    planning_calls: int
+    composition_valid: bool
+    feasibility: Dict[str, object]
     experience_enabled: bool
     route_cache: Dict[str, object]
     route_query_count: int
+    route_blocked_code: Optional[str]  # 仅当前运行：无效Key/配额耗尽后停止后续补边请求
 
     # ---- resolve_hotel 产出（v0.2：后置，因为要看到真实行程）----
     hotels: List[Hotel]  # 候选池：选址用，也可给前端当「备选」展示
+    hotel_candidate_key: str  # 城市/日期/住宿需求签名；复用候选后仍按新景点重排
     hotel: Optional[Hotel]  # 最终住宿：**行程级一家**（不是每天一个）
 
     # ---- compose_plan 产出 ----
@@ -190,6 +178,9 @@ class TripState(TypedDict):
     budget_retries: int
     # ↑ 已进入的预算重排轮数，初始为 0；只有 prepare_budget_retry 递增，最多 2 轮。
     #   retries 管理每轮编排的校验尝试；usage 仍累计整个请求的调用量和 token。
+    repair_rounds: int
+    # ↑ 已进入的体验/选择修复轮数（与 budget_retries 分开计数）。
+    #   共用一个计数器会让"舒适度修复"吃光预算重排的名额，导致预算超限一次都排不了。
 
     # ---- 可观测性与上下文计量 ----
     trace: Annotated[List[TraceEntry], operator.add]  # 每完成一个节点追加一条

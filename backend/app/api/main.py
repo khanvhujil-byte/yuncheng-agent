@@ -12,6 +12,7 @@ CORS 必须放行前端端口，否则浏览器直接拦掉请求 —— 而且*
 """
 
 import logging
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -23,7 +24,25 @@ from .routes import ai, community, trip, dialog
 
 logger = logging.getLogger(__name__)
 
+
+@asynccontextmanager
+async def lifespan(_app):
+    # 上一次进程崩溃/重启留下的 running 任务不可能再完成；不回收会让结果
+    # 端点永远返回"仍在生成中"、SSE 永不结束。
+    store.mark_stale_jobs()
+    from ..services.catalog_refresh import RefreshWorker
+    worker = RefreshWorker()
+    worker.start()
+    try:
+        yield
+    finally:
+        worker.stop()
+        from ..services.mcp_pool import close
+        close()
+
+
 app = FastAPI(
+    lifespan=lifespan,
     title="多智能体旅行规划助手",
     version="0.8.0",
     description="四个助手分工协作：景点搜集 / 天气查询 / 预订住宿 / 行程编排；"
@@ -63,6 +82,11 @@ recover_interrupted()
 # 启动时把"生产该开而没开"的开关喊出来。默认关是为了本地开发和 CI 方便，
 # 但绝不能默默放行 —— 这类"忘了开鉴权"的问题上线后没人会主动发现。
 _settings = get_settings()
+if _settings.deployment_mode == 'production':
+    if not _settings.llm_api_key or (_settings.map_backend == 'local' and not _settings.amap_api_key):
+        raise RuntimeError('生产模式必须配置模型与地图凭据。')
+    if _settings.rate_limit_per_minute <= 0:
+        raise RuntimeError('生产模式必须开启请求限流。')
 if not (_settings.api_key or "").strip():
     logger.warning("API_KEY 未设置：鉴权已关闭，仅适合本地开发；生产请在 .env 里设置。")
 if int(_settings.rate_limit_per_minute or 0) <= 0:
@@ -124,6 +148,6 @@ def metrics() -> Response:
         ]
     from ..services.monitoring import summary
     quality = summary()
-    for key in ("sample_runs", "sample_tool_calls", "first_success_rate", "retry_rate", "final_success_rate", "tool_attempts", "empty_search_calls"):
+    for key in ("sample_runs", "sample_tool_calls", "first_success_rate", "retry_rate", "final_success_rate", "tool_attempts", "empty_search_calls", "logical_tool_calls", "local_retrieval_hits", "weather_cache_hits"):
         lines.extend([f"# TYPE trip_quality_{key} gauge", f"trip_quality_{key} {quality[key]}"])
     return Response("\n".join(lines) + "\n", media_type="text/plain; version=0.0.4; charset=utf-8")

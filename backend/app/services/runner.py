@@ -11,8 +11,8 @@
     两种一起用，既不用自己实现 reducer 合并（LangGraph 帮我们合好了），
     也不用为了拿进度去改图的结构。这是"不改图就能拿到节点级进度"的关键。
 
-线程安全：`_jobs` 是本进程内存里的字典（单机单用户够用），
-跨进程/多副本要靠 Redis 之类 —— 这一点在注释里写明，不要假装它是分布式的。
+内存保存本进程事件；共享本地 SQLite 的进程通过可续租租约和写事务 token 校验互斥。
+这不支持跨主机 SQLite 部署，生产模板仍采用单 worker。
 """
 
 import logging
@@ -34,13 +34,16 @@ NODE_LABELS: dict[str, str] = {
     "collect_attractions": "搜集景点",
     "collect_weather": "查询天气",
     "collect_food": "搜集本地美食",
-    "compose_plan": "编排行程",
+    "collect_hotels": "搜集住宿候选",
+    "prepare_planning_context": "准备联合编排数据",
+    "compose_plan": "统一编排景点、餐饮和住宿",
     "verify_plan": "独立复核",
     "resolve_hotel": "选择住宿",
     "enrich_experience": "计算路程和舒适度",
     "patch_budget": "计算预算",
     "verify_budget": "预算复核",
     "prepare_budget_retry": "准备预算重排",
+    "prepare_repair": "准备体验修复",
 }
 NODE_ORDER: list[str] = list(NODE_LABELS)
 
@@ -65,11 +68,12 @@ class Job:
 _jobs: dict[str, Job] = {}
 _lock = threading.Lock()
 _active_runs: set[str] = set()
+_leases: dict = {}
 FINALIZE_ONLY = "__finalize__"
 
 
 class JobAlreadyRunning(RuntimeError):
-    """同一进程不能同时执行或续跑同一个任务。"""
+    """同一数据库上的其他执行者已持有任务租约。"""
 
 
 class LegacyJournalError(StateRestoreError):
@@ -80,29 +84,39 @@ def _claim_execution(thread_id: str) -> None:
     with _lock:
         if thread_id in _active_runs:
             raise JobAlreadyRunning(thread_id)
+        from .execution_lease import Lease, Busy
+        try:
+            _leases[thread_id] = Lease('run:' + thread_id).acquire()
+        except Busy as exc:
+            raise JobAlreadyRunning(thread_id) from exc
         _active_runs.add(thread_id)
 
 
 def _release_execution(thread_id: str) -> None:
     with _lock:
         _active_runs.discard(thread_id)
+        lease = _leases.pop(thread_id, None)
+    if lease:
+        lease.release()
 
 
 @contextmanager
 def execution_guard(thread_id: str):
-    """只保证本进程互斥；落库的 running 不能代替活线程的锁。"""
+    """持有共享数据库租约，并将其 token 传递到关键写事务。"""
     _claim_execution(thread_id)
+    from .execution_lease import current_lease
+    token = current_lease.set(_leases[thread_id])
     try:
         yield
     finally:
+        current_lease.reset(token)
         _release_execution(thread_id)
 
 
 def _persist(job: Job) -> None:
     """把任务状态落库。
 
-    SQLite 支持进程重启后的查询；内存缓存与执行锁只在本进程有效，
-    不保证多副本状态同步或跨进程互斥。
+    SQLite 支持进程重启后的查询；旧租约持有者不能覆盖新执行者结果。
     落盘失败不能影响任务本身，所以这里吞掉异常、只记日志。
     """
     try:
@@ -125,7 +139,7 @@ def get_job(thread_id: str) -> Optional[Job]:
     """先查内存（快），再查库（跨进程 / 重启后的兜底）。"""
     with _lock:
         job = _jobs.get(thread_id)
-    if job is not None:
+    if job is not None and thread_id in _active_runs:
         return job
 
     stored = store.load_job(thread_id)
@@ -223,9 +237,12 @@ def continue_job(
     return job
 
 
-def _node_event(node: str, seq: int, elapsed: int) -> dict[str, Any]:
-    return {"type": "node", "node": node, "seq": seq,
-            "label": NODE_LABELS.get(node, node), "status": "done", "elapsed_ms": elapsed}
+def _node_event(node: str, seq: int, elapsed: int, duration_ms: int | None = None) -> dict[str, Any]:
+    event = {"type": "node", "node": node, "seq": seq,
+             "label": NODE_LABELS.get(node, node), "status": "done", "elapsed_ms": elapsed}
+    if duration_ms is not None:
+        event["duration_ms"] = duration_ms
+    return event
 
 
 def _execute(
@@ -235,6 +252,8 @@ def _execute(
     """首次与续跑统一执行；None 表示最终节点已提交，只需组装响应。"""
 
     latest: dict[str, Any] = dict(initial_state)
+    from .execution_lease import current_lease
+    token = current_lease.set(_leases.get(job.thread_id) or current_lease.get())
     try:
         stream = trip_graph.stream(initial_state, stream_mode=["updates", "values"]) if trip_graph is not None else ()
         for mode, chunk in stream:
@@ -244,13 +263,20 @@ def _execute(
 
             # mode == "updates"：chunk = {节点名: 该节点写回的部分}
             for node, update in (chunk or {}).items():
+                if job.thread_id in _leases:
+                    _leases[job.thread_id].check()
                 seq += 1
                 elapsed = job.elapsed_ms
                 # 先提交结果，再通知“完成”。空产出节点也必须留下执行位置。
                 store.journal_node(job.thread_id, node, seq, update or {}, elapsed)
-                _emit(job, _node_event(node, seq, elapsed))
-                logger.info("后台任务节点完成 | %s | %s | %d ms", job.thread_id[:8], node, elapsed)
+                timing = next((t for t in reversed((update or {}).get("trace") or []) if t.get("node") == node), {})
+                duration = timing.get("elapsed_ms")
+                _emit(job, _node_event(node, seq, elapsed, duration))
+                logger.info("后台任务节点完成 | %s | %s | 单节点 %s ms | 全程 %d ms",
+                            job.thread_id[:8], node, duration if duration is not None else "unknown", elapsed)
 
+        if job.thread_id in _leases:
+            _leases[job.thread_id].check()
         response = finalize(latest)
         job.result = response.model_dump() if hasattr(response, "model_dump") else response
         job.status = "done"
@@ -262,6 +288,7 @@ def _execute(
     finally:
         job.finished_at = time.perf_counter()
         _persist(job)
+        current_lease.reset(token)
 
 
 # ================================================================ 断点续跑
@@ -310,7 +337,7 @@ def can_resume_from(completed: list[str], state: Optional[dict[str, Any]] = None
     同名节点可以出现多次。旧复核不证明新行程已复核，旧预算也不证明新一轮已结束。
     FINALIZE_ONLY 表示最后的预算复核已提交，但响应可能尚未持久化。
     """
-    from ..agents.graph import route_after_audit, route_after_budget
+    from ..agents.graph import route_after_plan, route_after_experience, route_after_budget
 
     if not completed:
         return None
@@ -318,21 +345,25 @@ def can_resume_from(completed: list[str], state: Optional[dict[str, Any]] = None
     if last == "compose_plan":
         return "verify_plan"
     if last == "verify_plan":
-        return "compose_plan" if route_after_audit(state or {}) == "retry" else "resolve_hotel"
+        return {'retry':'compose_plan','next':'enrich_experience','legacy_hotel':'resolve_hotel'}[route_after_plan(state or {})]
     if last == "resolve_hotel":
         return "enrich_experience"
     if last == "enrich_experience":
-        return "compose_plan" if route_after_audit(state or {}) == "retry" else "patch_budget"
+        return "compose_plan" if route_after_experience(state or {}) == "retry" else "patch_budget"
     if last == "patch_budget":
         return "verify_budget"
     if last == "verify_budget":
-        return "prepare_budget_retry" if route_after_budget(state or {}) == "retry" else FINALIZE_ONLY
-    if last == "prepare_budget_retry":
+        return {'retry':'prepare_budget_retry','repair':'prepare_repair','next':FINALIZE_ONLY}[route_after_budget(state or {})]
+    if last in ("prepare_budget_retry", "prepare_repair"):
         return "compose_plan"
-    if last in ("collect_attractions", "collect_weather", "collect_food"):
+    if last == "prepare_planning_context":
+        return "compose_plan"
+    if last in ("collect_attractions", "collect_weather", "collect_food", "collect_hotels"):
         collectors = {"collect_attractions", "collect_weather"}
         if (state or {}).get("experience_enabled"):
             collectors.add("collect_food")
+        if (state or {}).get('planning_contract_version', 0) >= 9 or "collect_hotels" in completed:
+            collectors.add("collect_hotels")
         if collectors.issubset(completed):
-            return "compose_plan"
+            return "prepare_planning_context" if "collect_hotels" in collectors else "compose_plan"
     return None

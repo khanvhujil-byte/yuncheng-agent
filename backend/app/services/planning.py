@@ -1,5 +1,6 @@
 """Planning application boundary shared by form, conversation and background runs."""
 import copy
+from . import delivery_logging
 import logging
 import time
 from datetime import date, timedelta
@@ -23,6 +24,7 @@ _PREFLIGHT_MESSAGES: dict[str, str] = {
     "DATE_RANGE_MISMATCH": "日期区间和天数对不上，请改到一致。",
     "INVALID_REQUEST": "请求字段不合法，请检查必填内容、住宿晚数与指定酒店是否一致。",
     "CONSTRAINT_INFEASIBLE": "必去景点的数量超过了行程容量，请减少景点或增加天数。",
+    "CLARIFICATION_REQUIRED": "有几项硬性要求还缺少可核验的依据，请补充资料或明确放宽后再生成。",
     "ATTRACTION_NOT_FOUND": "必去景点里有一个搜不到，请检查名字。",
     "ATTRACTION_AMBIGUOUS": "必去景点有多个同名结果，请写得更具体。",
     "HOTEL_NOT_FOUND": "你指定的酒店没搜到，建议补上地址。",
@@ -79,6 +81,7 @@ def _initial_state(req: TripRequest) -> dict:
         "plan": None,
         "retries": 0,
         "budget_retries": 0,
+        "repair_rounds": 0,
         "constraint_report": None,
         "validate_error": None,
         "tool_calls": [],
@@ -139,7 +142,7 @@ def _to_trip_plan(final: dict, req: TripRequest) -> dict:
 def _degraded_sources(payload: dict) -> list[str]:
     """哪些数据源降级了。`success` 的判据之一是它，而不是「warnings 是否为空」。"""
     return [key for key, value in (payload.get("sources") or {}).items()
-            if value == "degraded" and key != "community_hot"]
+            if value in {"degraded", "catalog_partial"} and key != "community_hot"]
 
 
 def _budget_reasons(verdict: dict | None) -> list[str]:
@@ -211,6 +214,11 @@ def _partial_message(degraded: list[str], unresolved: list[str], has_days: bool)
     return "已返回部分结果：" + "，".join(parts) + "，请见上方提示。"
 
 
+def _record_delivery(run_id, final, success, elapsed_ms, warnings):
+    """Optional telemetry must not destroy an already computed delivery."""
+    delivery_logging.record(run_id, final, success, elapsed_ms, warnings, writer=record)
+
+
 def _finalize(
     final: dict,
     req: TripRequest,
@@ -238,12 +246,22 @@ def _finalize(
     # CONSTRAINT_INFEASIBLE / HOTEL_NOT_FOUND / CITY_MISMATCH 都会被报成 CITY_NOT_FOUND。
     if not final.get("adcode"):
         code = final.get("error_code") or "CITY_NOT_FOUND"
-        record(thread_id, final, False, elapsed_ms)
-        store.log_run(thread_id=thread_id, fingerprint=fingerprint, cached=cached,
+        _record_delivery(thread_id, final, False, elapsed_ms, warnings)
+        delivery_logging.log_run(thread_id=thread_id, fingerprint=fingerprint, cached=cached,
                       success=False, error_code=code, elapsed_ms=elapsed_ms)
+        message = _PREFLIGHT_MESSAGES.get(code, "请求未通过可行性预检，请检查表单后重试。")
+        # 把 state.errors 里的具体原因附在用户可见的 message 上：
+        # 「必去景点有多个同名结果」不说是哪一个，用户根本无从修改。
+        detail = next(
+            (str(item).split(":", 1)[1].strip()
+             for item in (final.get("errors") or []) if ":" in str(item)),
+            "",
+        )
+        if detail and detail not in message:
+            message = f"{message}（{detail}）"
         return TripPlanResponse(
             success=False,
-            message=_PREFLIGHT_MESSAGES.get(code, "请求未通过可行性预检，请检查表单后重试。"),
+            message=message,
             error_code=code,
             warnings=warnings,
             thread_id=thread_id,
@@ -254,8 +272,8 @@ def _finalize(
     data, delivery_errors = delivery_audit(data, req, final)
     if data is None:
         final = {**final, "validate_error": delivery_errors[0]}
-        record(thread_id, final, False, elapsed_ms)
-        store.log_run(thread_id=thread_id, fingerprint=fingerprint, cached=cached, success=False,
+        _record_delivery(thread_id, final, False, elapsed_ms, warnings)
+        delivery_logging.log_run(thread_id=thread_id, fingerprint=fingerprint, cached=cached, success=False,
                       error_code="INVALID_GENERATION", elapsed_ms=elapsed_ms)
         return TripPlanResponse(success=False, message=delivery_errors[0], error_code="INVALID_GENERATION", thread_id=thread_id)
     days = data.get("days") or []
@@ -266,7 +284,7 @@ def _finalize(
     unresolved = _unresolved_reasons(final, data) + _budget_reasons(final.get("budget_verdict")) + delivery_errors
     final = {**final, "delivery_errors": unresolved}
     ok = bool(days) and not degraded and not unresolved
-    record(thread_id, final, ok, elapsed_ms)
+    _record_delivery(thread_id, final, ok, elapsed_ms, warnings)
     message = "" if ok else _partial_message(degraded, unresolved, bool(days))
 
     # 只有「完整、无降级、通过校验、且预算状态可确认」的行程才入库。
@@ -274,8 +292,14 @@ def _finalize(
     # 不合格的入库 = 把一份"系统自己知道排不下"的计划变成之后所有人的默认答案；
     # 预算未验证的入库 = 把一次不确定性固化成默认答案。
     if ok and not cached and _cacheable_budget_status(final.get("budget_verdict")):
-        store.save_itinerary(fingerprint, req, data)
-        logger.info("行程已入库 | fingerprint=%s days=%d", fingerprint[:8], len(days))
+        try:
+            store.save_itinerary(fingerprint, req, data)
+            logger.info("行程已入库 | fingerprint=%s days=%d", fingerprint[:8], len(days))
+        except Exception:  # noqa: BLE001 —— 入库失败不能把已经算好的结果变成 500
+            logger.exception("行程入库失败 | fingerprint=%s", fingerprint[:8])
+            note = "行程已通过校验，但本次未能写入行程缓存；不影响本次结果，下次请求会重新生成。"
+            warnings.append(note)
+            data["warnings"] = [*data.get("warnings", []), note]
     elif not ok or not _cacheable_budget_status(final.get("budget_verdict")):
         logger.info(
             "行程**不入库** | fingerprint=%s degraded=%s unresolved=%s budget=%s",
@@ -297,7 +321,7 @@ def _finalize(
             data["warnings"] = [*data.get("warnings", []), note]
 
     usage = final.get("usage") or {}
-    store.log_run(
+    delivery_logging.log_run(
         thread_id=thread_id, fingerprint=fingerprint, cached=cached, success=ok,
         elapsed_ms=elapsed_ms,
         llm_calls=usage.get("llm_calls", 0),
@@ -348,6 +372,7 @@ def _cached_response(
     started = time.perf_counter()
     data = _reuse_with_new_dates(hit["plan"], req)
     refreshed_tools = data.pop("_refresh_tool_calls", [])
+    refreshed_usage = data.pop('_refresh_usage', {})
     comfort_errors = data.pop("_comfort_errors", [])
     elapsed_ms += int((time.perf_counter() - started) * 1000)
     parsed, delivery_errors = delivery_audit(data, req)
@@ -369,18 +394,31 @@ def _cached_response(
     unresolved.extend(_budget_reasons(budget_verdict))
 
     ok = bool(days) and not degraded and not unresolved
-    record(thread_id, {"request": req, "cached": True, "delivery_errors": unresolved, "tool_calls": refreshed_tools,
-                       "budget_verdict": budget_verdict}, ok, elapsed_ms)
     warnings = list(data.get("warnings") or [])
+    # A cache entry that is *intrinsically* invalid (bad plan content, stale
+    # constraint/budget verdict) must not keep being served. Transient
+    # degradation (weather/price source down right now) is different: the
+    # historical snapshot is still the best available and may be reused later,
+    # so it is kept. Empty/legacy entries are left to the TTL instead of
+    # being deleted on every hit.
+    if not ok and days and not degraded and unresolved:
+        try:
+            store.delete_itinerary(fingerprint)
+        except Exception:  # noqa: BLE001 —— 删缓存失败也不该破坏本次响应
+            logger.exception("删除复核不通过的缓存失败 | %s", fingerprint[:12])
+    _record_delivery(thread_id, {"request": req, "cached": True, "delivery_errors": unresolved, "tool_calls": refreshed_tools,
+                       "usage": refreshed_usage, "budget_verdict": budget_verdict}, ok, elapsed_ms, warnings)
     warnings.extend(audit.get("warnings") or [])
 
-    store.log_run(
+    delivery_logging.log_run(
         thread_id=thread_id, fingerprint=fingerprint, cached=True, success=ok,
+        llm_calls=refreshed_usage.get('llm_calls',0), prompt_tokens=refreshed_usage.get('prompt_tokens',0),
+        completion_tokens=refreshed_usage.get('completion_tokens',0),
         elapsed_ms=elapsed_ms, plan_days=len(days),
         budget_total=int((data.get("budget") or {}).get("total") or 0),
     )
     logger.info(
-        "行程命中复用 | %s | %d ms（未花 LLM）| 复核%s",
+        "行程命中复用 | %s | %d ms（价格补充调用另行计量）| 复核%s",
         fingerprint[:12], elapsed_ms, "通过" if ok else f"发现问题：{unresolved[:1] or degraded}",
     )
     if ok:
@@ -407,7 +445,7 @@ def _reuse_with_new_dates(plan: dict, req: TripRequest) -> dict:
         就是编造 —— 正是实验 B 里测的那种错误。
         所以命中路径也必须重取天气（0 token、2 次 HTTP），只是不再跑 LLM。
 
-    可以复用地点与游览顺序；天气和有日期限制的价格必须重新核验。
+    可以复用地点与游览顺序；天气、餐饮人均和榜单、日期价格必须重新核验。
     """
     data = copy.deepcopy(plan)
     try:
@@ -458,9 +496,26 @@ def _reuse_with_new_dates(plan: dict, req: TripRequest) -> dict:
         a.get("ticket_price_source") == "imported" for d in days for a in d.get("attractions",[])) or any(
         m.get("cost_source") == "imported" for d in days for m in d.get("meals",[]))
     from .price_catalog import apply_prices
-    from .itinerary_experience import meal_from_restaurant
+    from . import catalog
     from ..agents.budget import patch_budget
     prices_changed = False
+    selected_ids = {meal.get("restaurant_id") for day in days for meal in day.get("meals", [])
+                    if meal.get("restaurant_id")}
+    fresh_food, current_rankings = {}, {}
+    if selected_ids:
+        try:
+            fresh_food = catalog.get_places_by_ids(req.city, "restaurant", selected_ids)
+        except Exception:
+            logger.exception("复用行程时餐饮资料读取失败")
+            data["sources"]["food"] = "catalog_partial"
+            data["warnings"].append("餐饮资料库暂不可用，未核实的历史人均参考价不再沿用；仅有效导入价格可补充。")
+        try:
+            current_rankings = {row["poi_id"]: row for row in catalog.rankings(req.city, limit=100)}
+        except Exception:
+            logger.exception("复用行程时餐饮榜单读取失败")
+            data["sources"]["food"] = "catalog_partial"
+            data["warnings"].append("餐饮榜单资料暂不可用，已移除旧榜单标签。")
+    unknown_food, expired_rankings = False, False
     # Query current observations even when this cache entry predates the first
     # import. Otherwise newly collected quotes would never reach cached plans.
     for day in days:
@@ -469,32 +524,71 @@ def _reuse_with_new_dates(plan: dict, req: TripRequest) -> dict:
         prices_changed |= refreshed_spots != spots
         day["attractions"] = [a.model_dump() for a in refreshed_spots]
         for index, meal in enumerate(day.get("meals", [])):
-            if not meal.get("restaurant_id") or not meal.get("location"):
+            identifier = meal.get("restaurant_id")
+            ranking = current_rankings.get(identifier)
+            rank_fields = {"ranking_name": ranking["ranking_name"] if ranking else None,
+                           "ranking_rank": ranking["ranking_rank"] if ranking else None,
+                           "ranking_url": ranking["source_url"] if ranking else None}
+            expired_rankings |= bool(meal.get("ranking_name") and not ranking)
+            # Refresh evidence only; changing identity or coordinates here would
+            # invalidate the cached routes and schedule.
+            updated_meal = {**meal, **rank_fields}
+            if not identifier or not meal.get("location"):
+                if meal.get("cost_source") in {"amap", "imported"}:
+                    updated_meal.update(estimated_cost=None, cost_status="unknown", cost_source="unknown",
+                                        evidence_url=None, cost_note="缺少餐饮身份或坐标，历史人均价格无法重新核验。")
+                    unknown_food = True
+                    prices_changed = True
+                day["meals"][index] = updated_meal
                 continue
-            source = meal.get("cost_source")
+            raw = fresh_food.get(identifier) or {}
+            source = raw.get("cost_source")
+            amount = raw.get("avg_cost") if source in {"amap", "imported"} and raw.get("avg_cost_status") != "unknown" else None
             place = Restaurant(name=meal["name"], poi_id=meal["restaurant_id"], address=meal.get("address") or "",
-                               location=meal["location"], avg_cost=meal.get("estimated_cost") if source in ("amap", "imported") else None,
-                               avg_cost_status="estimated" if source in ("amap", "imported") else "unknown",
-                               cost_source=source if source in ("amap", "imported") else "unknown",
-                               source=meal.get("source", "amap"), ranking_name=meal.get("ranking_name"),
-                               ranking_rank=meal.get("ranking_rank"), ranking_url=meal.get("ranking_url"),
-                               evidence_url=meal.get("evidence_url"))
+                               location=meal["location"], avg_cost=amount,
+                               avg_cost_status="estimated" if amount is not None else "unknown",
+                               cost_source=source if amount is not None else "unknown",
+                               evidence_url=raw.get("evidence_url") if amount is not None else None)
             refreshed = apply_prices(req.city, "restaurant", [place], service_date=day["date"])[0]
-            if refreshed != place:
-                prices_changed = True
-                day["meals"][index] = {**meal, **meal_from_restaurant(refreshed, meal["type"])}
+            known_amount = refreshed.avg_cost is not None and refreshed.avg_cost_status != "unknown"
+            updated_meal.update(estimated_cost=refreshed.avg_cost if known_amount else None,
+                                cost_status="estimated" if known_amount else "unknown",
+                                cost_source=refreshed.cost_source if known_amount else "unknown",
+                                evidence_url=refreshed.evidence_url if known_amount else None,
+                                cost_note=("已重新核验当前人均参考价，实际以点单为准。" if known_amount else
+                                           "当前没有有效人均价格证据，费用未知，未沿用历史参考价。"))
+            unknown_food |= not known_amount
+            prices_changed |= any(updated_meal.get(key) != meal.get(key)
+                                  for key in ("estimated_cost", "cost_status", "cost_source", "evidence_url"))
+            day["meals"][index] = updated_meal
+    if unknown_food:
+        data["warnings"].append("部分餐饮人均价格缺少当前有效证据，已标记为未知，未按零元宣称满足预算。")
+    if expired_rankings:
+        data["warnings"].append("历史餐饮榜单标签已过期或暂无有效证据，已移除，不影响保留原餐厅与路线。")
     hotel = Hotel.model_validate(data["hotel"]) if data.get("hotel") else None
+    from .ticket_pricing import refresh_plan_tickets
+    ticket_runtime = {}
+    refreshed_data = refresh_plan_tickets(data, req, lookup_state=ticket_runtime)
+    prices_changed |= refreshed_data != data
+    data = refreshed_data
+    data['_refresh_usage'] = ticket_runtime.get('_ticket_usage', {})
+    data['_refresh_tool_calls'] = [*data.get('_refresh_tool_calls', []), *ticket_runtime.get('_ticket_search_calls', [])]
+    from ..config import get_settings
+    reserve_needed = get_settings().ticket_budget_reserve_enabled and any(
+        a.get("ticket_price") is None or a.get("ticket_price_status") == "unknown"
+        or a.get("ticket_price_source") == "static_estimate"
+        for d in data.get("days", []) for a in d.get("attractions", []))
     nights = req.nights if req.nights is not None else req.travel_days - 1
     if hotel is not None:
         refreshed_hotel = apply_prices(req.city, "hotel", [hotel], service_date=req.start_date, nights=nights)[0]
         prices_changed |= refreshed_hotel != hotel
         hotel = refreshed_hotel
         data["hotel"] = hotel.model_dump()
-    if imported_prices or prices_changed:
+    if imported_prices or prices_changed or reserve_needed:
         updated = patch_budget({"plan":data,"request":req,"travel_days":req.travel_days,"nights":nights,"hotel":hotel})
         data = updated["plan"]
         data["warnings"] = list(dict.fromkeys([*data.get("warnings",[]),*updated.get("warnings",[]),
-                              "已按本次出行日期重新核验导入价格；失效或不适用的报价不会继续沿用。 "]))
+                              "已按本次出行日期重新核验门票、住宿和餐饮价格证据；失效或不适用的报价不会继续沿用。 "]))
     if any(day.get("schedule") for day in data.get("days", [])):
         from .itinerary_experience import validate_experience
         comfort_errors = validate_experience(data, {"experience_enabled": True, "weather": ctx.weather})
@@ -534,6 +628,6 @@ def plan(req: TripRequest, *, graph=None, run_id: str | None = None, seed: dict 
                 else:
                     state[key] = value
         from ..agents.graph import build_graph
-        graph = build_graph(start_at="compose_plan")
+        graph = build_graph(start_at="prepare_planning_context")
     final = graph.invoke(state, config={"recursion_limit": 80})
     return _finalize(final, req, run_id, fingerprint, elapsed())

@@ -1,23 +1,33 @@
 
-"""LangGraph 状态图装配：景点、天气、美食三路并行，酒店后置，确定性体验复核。
+"""LangGraph 联合编排接线（契约 v9）。
 
-本文件只有接线，没有业务逻辑。
-编译在模块级做一次（app = build_graph()），不要每次请求都编译。
+城市预检 -> 景点/天气/餐饮/酒店四路采集 -> 上下文准备 -> 统一编排
+-> 独立复核 -> 路线/门票/舒适度 -> 预算计算与复核。
+格式修正每轮最多2次；联合体验与预算复核共享全任务调用/耗时/token上限。
+超预算最多进入2轮重排，舒适度修复也受总调用上限约束。
+resolve_hotel 仅为旧日志断点恢复保留，新生成不经过该节点。
 """
 
 from langgraph.graph import END, START, StateGraph
+
+import logging
 
 from ..models.state import TripState
 from .attraction_agent import collect_attractions
 from .budget import patch_budget
 from .city import validate_city
 from .hotel_agent import resolve_hotel
+from .hotel_candidates import collect_hotels
+from ..services.unified_planning import prepare_planning_context
 from .planner_agent import compose_plan
 from .verify_budget import BUDGET_RETRY_LIMIT, prepare_budget_retry, verify_budget
 from .verify_plan import verify_plan
 from .weather_agent import collect_weather
 from .food import collect_food
 from ..services.itinerary_experience import enrich_node
+from ..services.node_timing import measured
+
+logger = logging.getLogger(__name__)
 
 
 def route_after_city(state: TripState) -> str:
@@ -45,6 +55,22 @@ def route_after_city_food(state: TripState) -> str:
     return route_after_city(state)
 
 
+def route_after_city_hotels(state: TripState) -> str:
+    return route_after_city(state)
+
+
+def validate_planning_city(state):
+    return {**validate_city(state), 'planning_contract_version': 10}
+
+
+def route_after_plan(state):
+    if state.get('unified_planning') and state.get('experience_enabled') and state.get('composition_valid'):
+        return 'next'
+    if route_after_audit(state) == 'retry':
+        return 'retry'
+    return 'next' if state.get('unified_planning') else 'legacy_hotel'
+
+
 def route_after_audit(state: TripState) -> str:
     """独立复核之后：还能重试就回 compose_plan，否则继续往下走。
 
@@ -54,6 +80,9 @@ def route_after_audit(state: TripState) -> str:
     两者写同一个字段，所以条件边只需要一条逻辑，而不用两个分支。
     封顶 2 次尝试（配合 compose_plan 里的 MAX_ATTEMPTS）。
     """
+    from ..services.planning_limits import available
+    if not available(state):
+        return 'next'
     if state.get("validate_error") and state.get("retries", 0) < 2:
         return "retry"
     return "next"
@@ -62,10 +91,21 @@ def route_after_audit(state: TripState) -> str:
 def route_after_budget(state: TripState) -> str:
     """预算复核之后：还能重排就回 compose_plan，否则结束。
 
-    判据刻意**只看计数器 + 结论**，不看 `validate_error` 有没有被清掉：
-    重排场景里 compose_plan 是成功的（`validate_error` 可能被它清成 None、也可能没清），
-    依赖那个字段会让路由时灵时不灵。计数器只在 prepare_budget_retry 入口递增。
+    判据刻意**只看计数器 + 结论**，不看 `validate_error` 有没有被清掉。
+    体验/选择修复与预算重排**各用各的计数器**（repair_rounds / budget_retries）：
+    共用一个会让体验修复吃光预算重排的名额。两者都封顶 2 轮。
     """
+    from ..services.planning_limits import available
+    if state.get('unified_planning') and not available(state):
+        return 'next'
+    if state.get('unified_planning') and state.get('experience_enabled') and not state.get('composition_valid', True):
+        return 'next'
+    if state.get('unified_planning') and state.get('experience_enabled') and state.get('validate_error') and not str(state['validate_error']).startswith('预算复核不通过'):
+        # 体验/选择修复是重排，必须走有界入口并单独计数；否则既不重置
+        # compose 的 MAX_ATTEMPTS，也会和预算重排共用名额。
+        if int(state.get("repair_rounds") or 0) < BUDGET_RETRY_LIMIT:
+            return 'repair'
+        return 'next'
     if int(state.get("budget_retries") or 0) < BUDGET_RETRY_LIMIT:
         status = (state.get("budget_verdict") or {}).get("status")
         if status in ("known_exceeded", "estimated_exceeded"):
@@ -73,21 +113,31 @@ def route_after_budget(state: TripState) -> str:
     return "next"
 
 
+def prepare_repair(state: TripState) -> dict:
+    """进入体验/选择修复：单独计数并重置本轮编排尝试次数。"""
+    used = int(state.get("repair_rounds") or 0) + 1
+    logger.info("进入体验修复 | 第 %d/%d 次", used, BUDGET_RETRY_LIMIT)
+    return {"repair_rounds": used, "retries": 0}
+
+
+def route_after_experience(state):
+    return 'next' if state.get('unified_planning') and state.get('experience_enabled') else route_after_audit(state)
+
+
 def build_graph(start_at: str | None = None):
     g = StateGraph(TripState)
 
     # ---- 登记节点（名字 = 日志和图上显示的名字）----
-    g.add_node("validate_city", validate_city)
-    g.add_node("collect_attractions", collect_attractions)
-    g.add_node("collect_weather", collect_weather)
-    g.add_node("collect_food", collect_food)
-    g.add_node("compose_plan", compose_plan)
-    g.add_node("verify_plan", verify_plan)
-    g.add_node("resolve_hotel", resolve_hotel)
-    g.add_node("enrich_experience", enrich_node)
-    g.add_node("patch_budget", patch_budget)
-    g.add_node("verify_budget", verify_budget)
-    g.add_node("prepare_budget_retry", prepare_budget_retry)
+    for name, function in (
+        ("validate_city", validate_planning_city), ("collect_attractions", collect_attractions),
+        ("collect_weather", collect_weather), ("collect_food", collect_food),
+        ("collect_hotels", collect_hotels), ("prepare_planning_context", prepare_planning_context),
+        ("compose_plan", compose_plan), ("verify_plan", verify_plan),
+        ("resolve_hotel", resolve_hotel), ("enrich_experience", enrich_node),
+        ("patch_budget", patch_budget), ("verify_budget", verify_budget),
+        ("prepare_budget_retry", prepare_budget_retry), ("prepare_repair", prepare_repair),
+    ):
+        g.add_node(name, measured(name, function))
 
     # ---- 入口 ----
     # start_at：**断点续跑**用。默认从 validate_city 开始；
@@ -95,7 +145,7 @@ def build_graph(start_at: str | None = None):
     # （省掉的是 search 调用与整段 LLM 编排）。图的结构本身一行都不用改。
     g.add_edge(START, start_at or "validate_city")
 
-    # ---- 预检分叉：ok 才走三路采集，fail 直接 END ----
+    # ---- 预检分叉：ok 才走四路采集，fail 直接 END ----
     #
     # ★ 两条边**都必须走条件路由**（这是真 bug 的修法，不是风格问题）：
     #   原先景点那条是条件边、天气那条是**普通边** `g.add_edge("validate_city", "collect_weather")`。
@@ -118,10 +168,10 @@ def build_graph(start_at: str | None = None):
     )
     g.add_conditional_edges("validate_city", route_after_city_food, {"ok":"collect_food", "fail":END})
 
-    # ---- 三路处于同一 superstep，全部完成后才执行 compose_plan ----
-    g.add_edge("collect_attractions", "compose_plan")
-    g.add_edge("collect_weather", "compose_plan")
-    g.add_edge("collect_food", "compose_plan")
+    # Four-way barrier: don't compose until every factual pool is ready.
+    g.add_conditional_edges("validate_city", route_after_city_hotels, {"ok": "collect_hotels", "fail": END})
+    g.add_edge(["collect_attractions", "collect_weather", "collect_food", "collect_hotels"], "prepare_planning_context")
+    g.add_edge("prepare_planning_context", "compose_plan")
 
     # ---- 两层校验 + 独立复核的重试环 ----
     # compose_plan 自己校验通过之后，还要过一遍**独立评估者**（verify_plan，纯代码）：
@@ -130,13 +180,13 @@ def build_graph(start_at: str | None = None):
     g.add_edge("compose_plan", "verify_plan")
     g.add_conditional_edges(
         "verify_plan",
-        route_after_audit,
-        {"retry": "compose_plan", "next": "resolve_hotel"},
+        route_after_plan,
+        {"retry": "compose_plan", "next": "enrich_experience", "legacy_hotel": "resolve_hotel"},
     )
 
-    # ---- 酒店后置，实查路线/计算舒适时间表，再算钱与复核预算 ----
+    # Legacy journal recovery may still need the former hotel node.
     g.add_edge("resolve_hotel", "enrich_experience")
-    g.add_conditional_edges("enrich_experience", route_after_audit, {"retry":"compose_plan", "next":"patch_budget"})
+    g.add_conditional_edges("enrich_experience", route_after_experience, {"retry":"compose_plan", "next":"patch_budget"})
     # ★ 复核必须在汇总**之后**。原先的费用检查写在 verify_plan 里，而图顺序是
     #   verify_plan → resolve_hotel → patch_budget —— 检查发生时预算还没算出来，
     #   那条"单日占比"检查因此从来没触发过：它看起来在工作，实际永远不执行。
@@ -147,9 +197,10 @@ def build_graph(start_at: str | None = None):
     g.add_conditional_edges(
         "verify_budget",
         route_after_budget,
-        {"retry": "prepare_budget_retry", "next": END},
+        {"retry": "prepare_budget_retry", "repair": "prepare_repair", "next": END},
     )
     g.add_edge("prepare_budget_retry", "compose_plan")
+    g.add_edge("prepare_repair", "compose_plan")
 
     # Two compose attempts × three budget rounds remain bounded, but the graph
     # now includes the food/time audit nodes and exceeds LangGraph's default25.

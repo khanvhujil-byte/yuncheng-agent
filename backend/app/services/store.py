@@ -21,6 +21,9 @@
 
     3. **每次运行都记一行 run_log**。它让"缓存命中率 / 平均耗时 / token 成本"这些数字
        可以直接 SQL 查出来，不用回头翻日志。
+
+完整行程最多复用一小时，过期后保留历史记录、重新生成。复用不会延长
+创建时间；日期平移仍然需要重新核验天气和价格，不能把缓存有效当作事实有效。
 """
 
 import hashlib
@@ -38,6 +41,10 @@ logger = logging.getLogger(__name__)
 # 数据库放在 backend/data/ 下。用 SQLite 而不是 Postgres 的理由：
 # 这是单机单用户的简历项目，SQLite 零运维、零依赖、可直接拷走当证据。
 DB_PATH = Path(__file__).resolve().parents[2] / "data" / "trip_planner.db"
+# v5 introduces local-first retrieval with independently checked POI/price facts.
+# Prior complete-plan caches must not bypass the new collection contract.
+FINGERPRINT_CONTRACT_VERSION = 10
+ITINERARY_CACHE_TTL_SECONDS = 3600
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS itinerary (
@@ -178,7 +185,7 @@ def fingerprint_of(req: TripRequest) -> str:
         "must_visit": sorted(m.strip() for m in (req.must_visit or []) if m.strip()),
         "fixed_hotel": (req.fixed_hotel or "").strip(),
         "fixed_hotel_address": (req.fixed_hotel_address or "").strip(),
-        "contract_version": 4,
+        "contract_version": FINGERPRINT_CONTRACT_VERSION,
         "requirements": req.requirements.model_dump(),
         "free_text_input": (req.free_text_input or "").strip(),
         # ★ 预算上限必须进指纹：它是**约束**，不是展示字段。
@@ -193,6 +200,8 @@ def fingerprint_of(req: TripRequest) -> str:
 def save_itinerary(fingerprint: str, req: TripRequest, plan: dict[str, Any]) -> None:
     """写入/覆盖一条行程。已存在就刷新内容，但**保留 hit_count**（它是历史复用次数）。"""
     with _connect() as conn:
+        from .execution_lease import fence
+        fence(conn)
         conn.execute(
             """
             INSERT INTO itinerary (fingerprint, city, travel_days, request_json, plan_json, created_at, hit_count)
@@ -214,23 +223,56 @@ def save_itinerary(fingerprint: str, req: TripRequest, plan: dict[str, Any]) -> 
     logger.info("行程已入库 | fingerprint=%s | %s %d 天", fingerprint[:12], req.city, req.travel_days)
 
 
+def _cache_now() -> datetime:
+    return datetime.now(timezone.utc)
+
+
 def find_itinerary(fingerprint: str) -> Optional[dict[str, Any]]:
-    """按指纹找行程。命中就顺手 +1（复用次数是缓存价值最直接的证据）。"""
-    with _connect() as conn:
-        row = conn.execute(
-            "SELECT plan_json, created_at, hit_count FROM itinerary WHERE fingerprint = ?",
-            (fingerprint,),
-        ).fetchone()
-        if row is None:
-            return None
-        conn.execute(
-            "UPDATE itinerary SET hit_count = hit_count + 1, last_hit_at = ? WHERE fingerprint = ?",
-            (_now(), fingerprint),
-        )
-    plan = json.loads(row["plan_json"])
+    """Return only recent complete-plan caches, retaining expired history.
+
+    TTL is elapsed time since generation, independent of the requested travel
+    dates. Read hits update counters, never created_at or the expiry boundary.
+    Invalid/future timestamps are misses rather than trusted fresh evidence.
+    """
+    try:
+        with _connect() as conn:
+            row = conn.execute(
+                "SELECT plan_json, created_at, hit_count FROM itinerary WHERE fingerprint = ?",
+                (fingerprint,),
+            ).fetchone()
+            if row is None:
+                return None
+            try:
+                created = datetime.fromisoformat(row["created_at"])
+                if created.tzinfo is None:
+                    return None
+                age = (_cache_now() - created).total_seconds()
+                if age < 0 or age >= ITINERARY_CACHE_TTL_SECONDS:
+                    return None
+                plan = json.loads(row["plan_json"])
+                if not isinstance(plan, dict):
+                    return None
+            except (ValueError, TypeError):
+                return None
+            conn.execute(
+                "UPDATE itinerary SET hit_count = hit_count + 1, last_hit_at = ? WHERE fingerprint = ?",
+                (_now(), fingerprint),
+            )
+    except (OSError, sqlite3.Error) as exc:
+        # A busy/locked cache must not turn "serve the request" into a 500:
+        # a cache read miss is always semantically safe.
+        logger.warning("行程库读取失败，按未命中处理 | %s", type(exc).__name__)
+        return None
     logger.info("行程命中缓存 | fingerprint=%s | 建于 %s | 第 %d 次复用",
                 fingerprint[:12], row["created_at"], row["hit_count"] + 1)
     return {"plan": plan, "created_at": row["created_at"], "hit_count": row["hit_count"] + 1}
+
+
+def delete_itinerary(fingerprint: str) -> None:
+    """删除一条已缓存的行程（复核不通过时使用，避免坏结果被永久复用）。"""
+    with _connect() as conn:
+        conn.execute("DELETE FROM itinerary WHERE fingerprint = ?", (fingerprint,))
+    logger.warning("已删除复核不通过的行程缓存 | fingerprint=%s", fingerprint[:12])
 
 
 def log_run(
@@ -296,6 +338,8 @@ def journal_node(thread_id: str, node: str, seq: int, update: dict[str, Any], el
     任何"为了好看"的转换都会在拼回去时变成 bug。
     """
     with _connect() as conn:
+        from .execution_lease import fence
+        fence(conn)
         run = conn.execute("SELECT journal_version FROM graph_run WHERE thread_id = ?", (thread_id,)).fetchone()
         if run is None or run["journal_version"] != 2:
             raise ValueError("只有新版已登记任务可以追加执行日志")
@@ -347,6 +391,8 @@ def save_job(
     所以事件必须落盘，不能只活在内存里。写放大是每请求个位数次，SQLite 完全扛得住。
     """
     with _connect() as conn:
+        from .execution_lease import fence
+        fence(conn)
         conn.execute(
             """
             INSERT INTO job_state (thread_id, status, events_json, result_json, error,
@@ -392,6 +438,24 @@ def load_job(thread_id: str) -> Optional[dict[str, Any]]:
         "finished_at": row["finished_at"],
         "updated_at": row["updated_at"],
     }
+
+
+def mark_stale_jobs(reason: str = "服务重启或执行进程已退出，任务已中断；请重新提交。") -> int:
+    """把启动前遗留的 running 任务标记为中断。
+
+    单 worker 部署下，进程启动时不可能还有本进程内的 running 任务；遗留的
+    running 行只可能来自上一次进程（崩溃 / 重启）。不回收的话
+    /plan/result 会永远返回"仍在生成中"，SSE 生成器也永远不会结束。
+    """
+    with _connect() as conn:
+        cursor = conn.execute(
+            "UPDATE job_state SET status = 'error', error = ?, updated_at = ? WHERE status = 'running'",
+            (reason, _now()),
+        )
+        count = cursor.rowcount
+    if count:
+        logger.warning("回收遗留的 running 任务 %d 个（进程重启）", count)
+    return int(count or 0)
 
 
 def stats() -> dict[str, Any]:

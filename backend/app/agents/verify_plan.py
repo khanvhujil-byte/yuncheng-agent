@@ -7,14 +7,17 @@ an independent evaluator reviews each proposed stop"*。
 不让模型自评 —— 让生成者评价自己的产物，等于没评价：
 
     ① 一天的地理跨度   同一天景点两两最大距离 > 25 km  → 提示（不要跨半座城）
-    ② 一天的可行性     Σ游览时长 + 通勤 > 10 小时       → **严重**（回喂重试）
-    ③ 同一景点排两天   同一 poi_id/名字出现在多天        → **严重**（回喂重试）
+    ② 一天的可行性     Σ游览时长 + 通勤 > 10 小时       → **严重**（有界修复）
+    ③ 同一景点排两天   同一 poi_id/名字出现在多天        → **严重**（有界修复）
     ④ 单日费用畸高     某天费用 > 总预算 60%（天数 > 1）  → 提示
 
 为什么分成「提示」与「严重」两档：
-    提示写进 warnings（透明、不影响结果）；严重写进 validate_error，
-    借 compose_plan 已有的回喂重试机制再试一次（封顶 2 次，由条件边控制）。
-    两档都由**同一套判据**决定，不是拍脑袋 —— 严重项都是"这份行程明显是错的"。
+    提示写进 warnings（透明、不影响结果）；严重写进 validate_error。
+    unified 默认链路里，严重项先交给 enrich_experience 的**确定性修复**
+    （删可选景点 / 去重 / 提前晚餐）处理；修复后 enrich_node 会重跑本节点，
+    已解决的错误被清掉。仍未解决的才进入 verify_budget 之后的**有界 repair**
+    （repair_rounds 单独计数，最多 2 轮）。既保留"评估者独立"，
+    也避免为可确定性修复的问题多烧一轮模型调用。
 
 为什么它要"独立"：
     compose_plan 里的两层校验审的是「用户要求满足了没」；
@@ -115,8 +118,8 @@ def verify_plan(state: TripState) -> dict:
     if hints:
         result["warnings"] = hints
     if severe:
-        # 借 compose_plan 的回喂重试机制：把**具体哪一天排不下**告诉它，再试一次。
-        # 不在这里动 retries —— 计数由 compose_plan 每次尝试自增，条件边据此封顶。
+        # 严重项写 validate_error：enrich 的确定性修复 + 复审会尝试清掉它；
+        # 仍失败时由 verify_budget 之后的有界 repair 再让模型重排。
         result["validate_error"] = severe[0]
         result["errors"] = [f"verify_plan: {item}" for item in severe]
     return result

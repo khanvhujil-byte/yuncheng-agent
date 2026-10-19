@@ -43,9 +43,9 @@ BUDGET_RETRY_LIMIT = 2
 
 
 def prepare_budget_retry(state: TripState) -> dict:
-    """进入预算重排时才计数；新一轮编排重新获得有界的校验修正机会。"""
+    """进入重排（预算超限或体验/选择校验未过）时才计数；新一轮重新获得有界校验机会。"""
     used = int(state.get("budget_retries") or 0) + 1
-    logger.info("进入预算重排 | 第 %d/%d 次", used, BUDGET_RETRY_LIMIT)
+    logger.info("进入重排 | 第 %d/%d 次", used, BUDGET_RETRY_LIMIT)
     return {"budget_retries": used, "retries": 0}
 
 
@@ -170,7 +170,7 @@ def verify_budget(state: TripState) -> dict:
         if used < BUDGET_RETRY_LIMIT:
             result["validate_error"] = (
                 f"预算复核不通过（{status}）：{basis} "
-                f"请在保持必去景点与已定酒店的前提下，改选更省的景点组合。"
+                f"请保留必去景点和用户固定酒店，联合调整景点、餐饮与可选酒店以降低总费用；不能编造价格。"
             )
             result["errors"] = [f"verify_budget: {basis}"]
             logger.info("预算超限，等待路由决定重排 | 已重排 %d/%d 次", used, BUDGET_RETRY_LIMIT)

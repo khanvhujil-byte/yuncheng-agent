@@ -47,7 +47,10 @@ class Settings(BaseSettings):
     llm_timeout: float = 60.0
 
     # ---- 功能开关（对照实验用）----
-    weather_use_agent: bool = True
+    weather_use_agent: bool = False
+    hotel_use_agent: bool = False
+    attraction_use_agent: bool = False
+    # 显式实验开关；生产默认直接执行确定性工具，避免无决策价值的模型往返。
     # ↑ 天气节点是否走 Agent（LLM 调工具）。
     #   True  = 天气也是 Agent（多智能体完整形态，多花 1~2 次 LLM 调用）
     #   False = 直接调工具（0 token，瞬时故障由运行时限次重试）
@@ -61,12 +64,43 @@ class Settings(BaseSettings):
     prompt_max_candidates: int = 24
     # ↑ 提示词里候选景点的上限。必去锚点永远在内，其余按高德评分排序取到上限。
     #   为什么是 24：编排每天用 2~3 个，天数上限 30 时 24 仍然够用（候选池本来就是超集）。
+    planner_format_retry_enabled: bool = True
+    # ↑ 编排输出不是合法 JSON 时，在同一节点内先做一次"格式修复"重试（不消耗语义重试名额）。
+    #   长行程的主要失败模式是 JSON 被截断/漏逗号；关掉它可复现旧行为（供测试/对照）。
 
     # ---- 高德开放平台（Web 服务 Key，后端 REST 用）----
     amap_api_key: str = ""
     amap_timeout: float = 10.0
     amap_request_interval_seconds: float = Field(default=0.2, ge=0.01, le=10, allow_inf_nan=False)
     amap_rate_limit_cooldown_seconds: float = Field(default=1.0, ge=0.1, le=60, allow_inf_nan=False)
+    route_max_workers: int = Field(default=4, ge=1, le=8)
+    route_batch_budget_seconds: float = Field(default=12.0, gt=0, le=30, allow_inf_nan=False)
+    route_cache_ttl_seconds: int = Field(default=900, ge=0, le=3600)
+    food_coverage_enabled: bool = True
+    food_coverage_query_limit: int = Field(default=3, ge=0, le=5)
+    food_coverage_budget_seconds: float = Field(default=6, gt=0, le=15, allow_inf_nan=False)
+    # Local POI observations are independent of dated room/ticket prices.
+    catalog_local_first: bool = True
+    official_ticket_lookup_enabled: bool = True
+    ticket_web_search_enabled: bool = True
+    ticket_web_query_limit: int = Field(default=12, ge=1, le=20)
+    ticket_web_budget_seconds: float = Field(default=10, gt=0, le=30, allow_inf_nan=False)
+    ticket_official_hosts: list[str] = Field(default_factory=list)
+    ticket_budget_reserve_enabled: bool = True
+    ticket_model_estimate_enabled: bool = True
+    ticket_model_timeout_seconds: float = Field(default=15, gt=0, le=30)
+    planning_max_calls: int = Field(default=6, ge=2, le=8)
+    planning_max_seconds: float = Field(default=180, ge=30, le=600)
+    planning_max_tokens: int = Field(default=60000, ge=1000, le=200000)
+    ticket_budget_reserve_amount: int = Field(default=100, ge=1, le=10000)
+    catalog_refresh_enabled: bool = True
+    catalog_prewarm_cities: list[str] = Field(default_factory=lambda: ["北京", "杭州", "上海", "成都", "西安"])
+    catalog_refresh_tick_seconds: int = Field(default=60, ge=10, le=3600)
+    catalog_refresh_cities_per_tick: int = Field(default=2, ge=1, le=10)
+    catalog_poi_refresh_seconds: int = Field(default=86400, ge=3600, le=604800)
+    catalog_refresh_failure_seconds: int = Field(default=900, ge=30, le=3600)
+    weather_cache_ttl_seconds: int = Field(default=3600, ge=0, le=21600)
+    weather_cache_failure_cooldown_seconds: int = Field(default=2, ge=0, le=300)
     map_backend: Literal["local", "mcp"] = "local"
     mcp_transport: Literal["stdio", "streamable_http"] = "stdio"
     mcp_command: str = ""
@@ -75,6 +109,7 @@ class Settings(BaseSettings):
     mcp_url: str = ""
     mcp_headers: dict[str, str] = Field(default_factory=dict)
     mcp_timeout: float = Field(default=20.0, gt=0, le=60, allow_inf_nan=False)
+    mcp_reuse_session: bool = True
     session_ttl_seconds: int = Field(default=604800, ge=60, le=2592000)
     trust_proxy_headers: bool = False
 
@@ -94,15 +129,18 @@ class Settings(BaseSettings):
     #   留这个开关的价值：**跨服务联调时能一键隔离**，排查"到底是哪一侧的问题"。
     community_base_url: str = "http://127.0.0.1:8080/community"
     community_timeout: float = 2.0
+    community_hot_timeout: float = Field(default=0.35, gt=0, le=2, allow_inf_nan=False)
     # ↑ 读热度的超时（秒）。刻意给得很短：热度只是锦上添花，不值得为它等。
     #   发布行程那条路会单独放宽到 30 秒（因为 Java 要回调本服务生成摘要）。
 
     # ---- 上线必备：访问控制与限流（默认关，生产必须显式打开）----
     api_key: str = ""
+    deployment_mode: Literal['development', 'production'] = 'development'
     # ↑ 为空表示**不校验**（本地开发与 CI 友好）。生产设一个随机串：
     #   python -c "import secrets;print(secrets.token_urlsafe(32))"
     #   之后请求带 `X-API-Key: <key>` 或 `Authorization: Bearer <key>`。
     rate_limit_per_minute: int = 0
+    read_rate_limit_per_minute: int = Field(default=120, ge=1, le=10000)
     # ↑ 每客户端每分钟请求数上限。<=0 表示关闭（默认）。
     #   一次规划要花几十秒与一万多 token，生产建议 5~10 —— 限流保护的是上游配额和钱包。
     #   V0 是进程内滑动窗口；多副本要换 Redis 计数器。

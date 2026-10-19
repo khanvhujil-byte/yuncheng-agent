@@ -33,7 +33,7 @@ from .requirements import Requirements
 #          ★ 加它的过程本身就是这条 Literal 的价值证明：我原先在 city.py 里随手写了 "java"，
 #            TripPlanResponse 构造时直接报 literal_error —— 而如果没有这个约束，
 #            一个前端不认识的来源值会一路流到页面上，只是标签不显示而已（最难查的那种 bug）。
-DataSource = Literal["amap", "llm_estimated", "degraded", "user", "java"]
+DataSource = Literal["amap", "llm_estimated", "degraded", "user", "java", "catalog", "catalog+amap", "catalog_partial"]
 
 # 费用项的**置信度**（v0.7 新增）。三态是"每一项费用自己的属性"，不是一个全局开关：
 #   known      有确切来源的真实金额（高德门票、免费景点、用户已定酒店）
@@ -44,7 +44,7 @@ CostStatus = Literal["known", "estimated", "unknown"]
 
 # 费用的来源。和 DataSource 分开是因为语义不同：
 #   static_estimate 是我们自己的固定表（比如交通费按每人每天 40 元），既不是高德也不是模型
-CostSource = Literal["amap", "imported", "llm_estimated", "static_estimate", "unknown"]
+CostSource = Literal["amap", "imported", "llm_estimated", "static_estimate", "venue_policy", "unknown"]
 
 
 # ================================================================ 输入
@@ -84,10 +84,12 @@ class TripRequest(BaseModel):
     )
 
     # ---- 行程骨架（天数在这里定，它是所有约束的分母）----
-    city: str  # 必填。解析不出坐标就返回 400 CITY_NOT_FOUND，不进后续节点
-    start_date: str  # 必填。YYYY-MM-DD 格式
+    city: str = Field(max_length=100)
+    # ↑ 只限上限、不设下限：空城市由 validate_request 拦成 INVALID_REQUEST（200 + error_code），
+    #   保持既有的错误码口径；超长输入直接 422，避免把 1MB 字符串送进 prompt / 指纹 / 数据库。
+    start_date: str = Field(max_length=20)  # 必填。YYYY-MM-DD 格式
     travel_days: int = Field(ge=1, le=30)  # 用 Field 声明约束，比手写 validator 好：约束会进 OpenAPI schema
-    end_date: Optional[str] = None  # v0.2：可选。提供则须与 travel_days 一致，否则 422
+    end_date: Optional[str] = Field(default=None, max_length=20)  # v0.2：可选。提供则须与 travel_days 一致，否则 422
     nights: Optional[int] = None  # v0.2：可选。默认 travel_days - 1；住宿费按它算
 
     # ---- 预算约束（v0.7 新增：预算从"事后估算"变成"规划约束"）----
@@ -98,22 +100,25 @@ class TripRequest(BaseModel):
     #   以前只有"事后报个估算总价"，用户无法知道这份行程到底在不在他的预算内。
 
     # ---- 偏好（软约束，填不满可以让位）----
-    transportation: str  # 公共交通 / 自驾 / 步行 / 混合；用于估算交通费
-    accommodation: str  # 经济型酒店 / 舒适型酒店 / 豪华酒店 / 民宿；会被映射成搜索关键词
-    preferences: List[str] = Field(default_factory=list)  # 可多选，空则用「景点」兜底；每个标签各搜一次再合并
-    free_text_input: Optional[str] = Field(default="")  # 前端可能传 null 也可能不传这个字段，两种都要接住
+    transportation: str = Field(max_length=20)  # 公共交通 / 自驾 / 步行 / 混合；用于估算交通费
+    accommodation: str = Field(max_length=20)  # 经济型酒店 / 舒适型酒店 / 豪华酒店 / 民宿；会被映射成搜索关键词
+    preferences: List[str] = Field(default_factory=list, max_length=20)
+    # ↑ 每个标签各搜一次再合并：标签数量直接等于外部检索次数（20 个 = 20 次），必须有上限。
+    free_text_input: Optional[str] = Field(default="", max_length=20000)
+    # ↑ 会原样进 prompt：上限防上下文/成本放大；正常用户需求远小于 2 万字。
     requirements: Requirements = Field(default_factory=Requirements)
 
     # ---- 锚点（v0.2 新增，硬约束，优先级高于 preferences）----
-    must_visit: List[str] = Field(default_factory=list)
+    must_visit: List[str] = Field(default_factory=list, max_length=20)
     # ↑ 用户必须去的景点（在城市范围内按名字解析）。硬约束的含义有两层：
     #   ① 必须注入景点候选池（偏好标签搜不到它也要强制解析进来）；
     #   ② 必须真的出现在 days[].attractions 里，由 ConstraintReport 对账。
     #   原理：约束越结构化越可靠，靠 prompt 表达的约束遵守率会掉，所以硬约束必须配校验代码。
-    fixed_hotel: Optional[str] = None
+    #   数量上限 20 只是防滥用；业务容量（天数 × 每天上限、最多 10 个）仍由 request_validation 判。
+    fixed_hotel: Optional[str] = Field(default=None, max_length=200)
     # ↑ 用户已订好的酒店名。解析必须和 city 一起用 —— 只给「如家酒店」全国有几千家。
     #   解析不到 → HOTEL_NOT_FOUND；命中多个无法确定 → HOTEL_AMBIGUOUS。
-    fixed_hotel_address: Optional[str] = None
+    fixed_hotel_address: Optional[str] = Field(default=None, max_length=300)
     # ↑ 可选，用于消除重名歧义。
 
 
@@ -155,6 +160,8 @@ class Attraction(BaseModel):
     ticket_price_status: CostStatus = "unknown"
     ticket_price_source: CostSource = "unknown"
     ticket_price_evidence_url: Optional[str] = None
+    ticket_price_note: str = ""
+    admission_policy: Literal['unknown', 'ordinary_access', 'consumption'] = 'unknown'
     required: bool = False  # v0.2：是否来自用户的 must_visit（前端给「必去」打标，也用于满足性对账）
 
 
@@ -323,6 +330,7 @@ class Budget(BaseModel):
         （图顺序是 verify_plan → resolve_hotel → patch_budget），所以那条检查从来没触发过。
     """
 
+    ticket_reserve_amount: Optional[int] = None
     total_attractions: int = 0  # 各天 Attraction.ticket_price 求和
     total_hotels: int = 0
     # ↑ v0.2 修正：= 每晚预估单价 × nights，**不是**「各天 Hotel.estimated_cost 求和」。
