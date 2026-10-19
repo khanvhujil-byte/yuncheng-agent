@@ -30,12 +30,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ItineraryController {
 
+    private final com.trip.community.service.SessionIdentity identity;
+
     private final ItineraryService itineraryService;
 
     @PostMapping
     public Map<String, Object> publish(
             @RequestBody PublishRequest request,
-            @RequestHeader(value = "X-User-Id", defaultValue = "1") long userId) {
+            @RequestHeader(value = "X-Session-Token", required = false) String token) {
+        long userId = identity.resolve(token, true);
 
         long id = itineraryService.publish(
                 userId, request.title(), request.city(),
@@ -51,7 +54,8 @@ public class ItineraryController {
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> detail(
             @PathVariable long id,
-            @RequestHeader(value = "X-User-Id", defaultValue = "1") long userId) {
+            @RequestHeader(value = "X-Session-Token", required = false) String token) {
+        long userId = identity.resolve(token, false);
         Map<String, Object> detail = itineraryService.detail(id, userId);
         return detail == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(detail);
     }

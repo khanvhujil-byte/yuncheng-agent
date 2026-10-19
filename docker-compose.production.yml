@@ -1,0 +1,73 @@
+# docker compose --env-file .env.production -f docker-compose.production.yml up -d --build
+# Expose only the local reverse-proxy port; terminate HTTPS at the host gateway.
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set a strong root password}
+      MYSQL_DATABASE: trip_community
+      MYSQL_USER: trip_app
+      MYSQL_PASSWORD: ${MYSQL_APP_PASSWORD:?Set a separate app password}
+      TZ: Asia/Shanghai
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: [CMD-SHELL, 'MYSQL_PWD=$$MYSQL_ROOT_PASSWORD mysqladmin ping -h 127.0.0.1 -uroot --silent']
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+  redis:
+    image: redis:7-alpine
+    command: [redis-server, --appendonly, 'yes', --appendfsync, always, --maxmemory-policy, noeviction]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 5s
+      retries: 10
+    restart: unless-stopped
+  backend:
+    build: ./backend
+    env_file: ./backend/.env
+    environment:
+      DEPLOYMENT_MODE: production
+      RATE_LIMIT_PER_MINUTE: '30'
+      TRUST_PROXY_HEADERS: 'true'
+      COMMUNITY_ENABLED: 'true'
+      COMMUNITY_BASE_URL: http://community:8080/community
+      TICKET_MODEL_ESTIMATE_ENABLED: 'true'
+    volumes:
+      - trip_data:/app/data
+    restart: unless-stopped
+  community:
+    build: ./java-community
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/trip_community?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true
+      SPRING_DATASOURCE_USERNAME: trip_app
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_APP_PASSWORD:?Set a separate app password}
+      SPRING_DATA_REDIS_HOST: redis
+      AI_BASE_URL: http://backend:8000
+      AI_ENABLED: 'true'
+      TZ: Asia/Shanghai
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - '127.0.0.1:8080:80'
+    depends_on:
+      - backend
+      - community
+    restart: unless-stopped
+volumes:
+  mysql_data:
+  redis_data:
+  # Includes accounts, sessions, conversations, journals and prices. MUST back up.
+  trip_data:

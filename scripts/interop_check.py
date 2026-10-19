@@ -19,9 +19,9 @@ import argparse
 import asyncio
 import json
 import statistics
-import sys
 import time
 from datetime import date, timedelta
+from pathlib import Path
 
 import httpx
 
@@ -62,20 +62,20 @@ def check(label: str, ok: bool, detail: str = "") -> bool:
     return ok
 
 
-async def fire_likes(client: httpx.AsyncClient, itinerary_id: int, user_ids: list[int],
+async def fire_likes(client: httpx.AsyncClient, itinerary_id: int, user_ids: list[str],
                      concurrency: int = 64) -> tuple[list[float], dict[str, int]]:
     """并发点赞：N 个不同用户同时点同一条行程。"""
     semaphore = asyncio.Semaphore(concurrency)
     latencies: list[float] = []
     codes: dict[str, int] = {}
 
-    async def one(user_id: int):
+    async def one(user_id: str):
         async with semaphore:
             t0 = time.perf_counter()
             try:
                 resp = await client.post(
                     f"{JAVA}/itineraries/{itinerary_id}/like",
-                    headers={"X-User-Id": str(user_id)}, timeout=30)
+                    headers={"X-Session-Token": user_id}, timeout=30)
                 latency = (time.perf_counter() - t0) * 1000
                 latencies.append(latency)
                 body = resp.json()
@@ -94,7 +94,11 @@ async def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--users", type=int, default=300, help="并发点赞的不同用户数")
     parser.add_argument("--concurrency", type=int, default=64, help="同时在飞的请求数")
+    parser.add_argument('--tokens-file', type=Path, required=True, help='JSON array: valid session tokens for users+2 distinct test accounts; never use production accounts')
     args = parser.parse_args()
+    tokens=json.loads(args.tokens_file.read_text(encoding='utf-8'))
+    if not isinstance(tokens,list) or len(tokens)<args.users+2 or not all(isinstance(t,str) and t for t in tokens):
+        parser.error('tokens-file must contain at least users+2 valid sessions')
 
     failures: list[str] = []
 
@@ -103,6 +107,13 @@ async def main() -> int:
             failures.append(label)
 
     async with httpx.AsyncClient() as client:
+        identities=[]
+        for token in tokens[:args.users+2]:
+            response=await client.get(f'{PYTHON}/api/auth/community',headers={'X-Session-Token':token})
+            response.raise_for_status()
+            identities.append(response.json()['userId'])
+        if len(set(identities))!=len(identities):
+            parser.error('Each test token must represent a distinct account')
         # ---------------------------------------------------------- 0. 两个服务都活着
         print("=== 0) 服务健康 ===", flush=True)
         java_health = (await client.get(f"{JAVA}/health", timeout=10)).json()
@@ -127,7 +138,7 @@ async def main() -> int:
             f"{JAVA}/itineraries",
             json={"title": "杭州两日自然风光", "city": "杭州", "travelDays": 2,
                   "startDate": date.today().isoformat(), "plan": _plan("杭州", 2)},
-            headers={"X-User-Id": "1"}, timeout=90)
+            headers={"X-Session-Token": tokens[0]}, timeout=90)
         require("发布成功", publish.status_code == 200, f"HTTP {publish.status_code}")
         published = publish.json()
         itinerary_id = published.get("itineraryId")
@@ -147,11 +158,11 @@ async def main() -> int:
         # ---------------------------------------------------------- 3. 幂等与限频
         print("\n=== 3) 幂等与防刷 ===", flush=True)
         first = (await client.post(f"{JAVA}/itineraries/{itinerary_id}/like",
-                                   headers={"X-User-Id": "10001"}, timeout=20)).json()
+                                   headers={"X-Session-Token": tokens[0]}, timeout=20)).json()
         require("首次点赞成功", first.get("liked") is True and first.get("likeCount") == 1,
                 f"count={first.get('likeCount')}")
         again = (await client.post(f"{JAVA}/itineraries/{itinerary_id}/like",
-                                   headers={"X-User-Id": "10001"}, timeout=20)).json()
+                                   headers={"X-Session-Token": tokens[0]}, timeout=20)).json()
         require("重复点赞不重复计数（一人一赞）",
                 again.get("success") is True and again.get("likeCount") == 1,
                 f"count={again.get('likeCount')}")
@@ -160,7 +171,7 @@ async def main() -> int:
         limited = 0
         for _ in range(15):
             body = (await client.post(f"{JAVA}/itineraries/{itinerary_id}/like",
-                                      headers={"X-User-Id": "10002"}, timeout=20)).json()
+                                      headers={"X-Session-Token": tokens[1]}, timeout=20)).json()
             if body.get("errorCode") == "RATE_LIMITED":
                 limited += 1
         require("单用户超频被拦", limited > 0, f"被拦 {limited} 次 / 共 15 次")
@@ -169,7 +180,7 @@ async def main() -> int:
         print(f"\n=== 4) 高并发点赞：{args.users} 个用户，并发 {args.concurrency} ===", flush=True)
         base_count = (await client.get(f"{JAVA}/itineraries/{itinerary_id}/like",
                                        timeout=20)).json().get("likeCount", 0)
-        user_ids = list(range(20001, 20001 + args.users))
+        user_ids = tokens[2:2+args.users]
 
         t0 = time.perf_counter()
         latencies, codes = await fire_likes(client, itinerary_id, user_ids, args.concurrency)

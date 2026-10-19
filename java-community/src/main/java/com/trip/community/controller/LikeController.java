@@ -28,6 +28,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LikeController {
 
+    private final com.trip.community.service.SessionIdentity identity;
+
     private final LikeService likeService;
     private final LeaderboardService leaderboardService;
 
@@ -35,13 +37,17 @@ public class LikeController {
     @PostMapping("/itineraries/{id}/like")
     public Map<String, Object> like(
             @PathVariable long id,
-            @RequestHeader(value = "X-User-Id", defaultValue = "1") long userId) {
+            @RequestHeader(value = "X-Session-Token", required = false) String token) {
+        long userId = identity.resolve(token, true);
 
         int code = likeService.like(id, userId);
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("itineraryId", id);
         result.put("likeCount", likeService.likeCount(id));
         switch (code) {
+            case -3 -> {
+                throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE, "点赞持久化积压，请稍后重试");
+            }
             case 1 -> {
                 result.put("success", true);
                 result.put("liked", true);
@@ -72,7 +78,8 @@ public class LikeController {
     @GetMapping("/itineraries/{id}/like")
     public Map<String, Object> status(
             @PathVariable long id,
-            @RequestHeader(value = "X-User-Id", defaultValue = "1") long userId) {
+            @RequestHeader(value = "X-Session-Token", required = false) String token) {
+        long userId = identity.resolve(token, false);
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("itineraryId", id);
         result.put("likeCount", likeService.likeCount(id));

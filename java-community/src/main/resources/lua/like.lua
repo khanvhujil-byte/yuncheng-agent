@@ -16,6 +16,20 @@
 -- 返回：1 = 首次点赞成功；0 = 已经点过（幂等）；-2 = 触发限频
 
 -- 1) 先限频（放在最前面：被限的请求一个字节都不会写进去）
+-- Redis script errors do not roll back previous writes. Validate types first.
+local expected = {'set', 'zset', 'string', 'string'}
+for i = 1,4 do
+    local kind = redis.call('TYPE', KEYS[i]).ok
+    if kind ~= 'none' and kind ~= expected[i] then return -3 end
+end
+local pendingType = redis.call('TYPE', 'like:pending').ok
+if pendingType ~= 'none' and pendingType ~= 'list' then return -3 end
+for _, index in ipairs({3,4}) do
+    local value = redis.call('GET', KEYS[index])
+    if value and (not string.match(value, '^%d+$') or not tonumber(value) or tonumber(value) >= 1000000000000) then return -3 end
+end
+local already = redis.call('SISMEMBER', KEYS[1], ARGV[1])
+if already == 0 and redis.call('LLEN', 'like:pending') >= 100000 then return -3 end
 local hits = redis.call('INCR', KEYS[4])
 if hits == 1 then
     redis.call('EXPIRE', KEYS[4], 60)
@@ -33,6 +47,6 @@ end
 local count = redis.call('INCR', KEYS[3])
 redis.call('ZADD', KEYS[2], count, ARGV[2])
 
--- 4) 顺手记录"谁在什么时候点的"，供异步落库查询（不落库也不影响正确性）
+-- 4) 持久化待落库事件；消费者成功写库后才 ACK，不能提前弹出。
 redis.call('LPUSH', 'like:pending', ARGV[2] .. ':' .. ARGV[1])
 return 1

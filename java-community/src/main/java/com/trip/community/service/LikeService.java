@@ -3,9 +3,6 @@ package com.trip.community.service;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.LongAdder;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -61,11 +58,8 @@ public class LikeService {
     private final ItineraryMapper itineraryMapper;
     private final LikeRecordMapper likeRecordMapper;
 
-    /** 待落库的点赞记录。有界队列：宁可拒掉也不要把内存撑爆。 */
-    private final BlockingQueue<LikeRecord> pending = new LinkedBlockingQueue<>(100_000);
-
-    /** 被拒的次数（队列满）。暴露成指标，说明"削峰"到极限了。 */
-    private final LongAdder dropped = new LongAdder();
+    // Durable outbox written inside the same Lua execution as the like.
+    private static final String PENDING_KEY = "like:pending";
 
     /**
      * 点个赞。
@@ -87,13 +81,6 @@ public class LikeService {
                 String.valueOf(itineraryId),
                 String.valueOf(MAX_LIKES_PER_MINUTE));
         int code = result == null ? -1 : result.intValue();
-        if (code == 1) {
-            // 立刻返回给用户，落库交给后台批量线程
-            if (!pending.offer(new LikeRecord(null, itineraryId, userId, null))) {
-                dropped.increment();
-                log.warn("点赞落库队列已满，丢弃一条 | itineraryId={} userId={}", itineraryId, userId);
-            }
-        }
         return code;
     }
 
@@ -177,32 +164,40 @@ public class LikeService {
      */
     @Scheduled(fixedDelay = 1000)
     public void flushToDatabase() {
-        if (pending.isEmpty()) {
-            return;
-        }
-        List<LikeRecord> batch = new ArrayList<>(500);
-        pending.drainTo(batch, 500);
-        if (batch.isEmpty()) {
-            return;
+        // Read without removing. A crash before ACK replays this exact batch.
+        List<String> entries = redis.opsForList().range(PENDING_KEY, -500, -1);
+        if (entries == null || entries.isEmpty()) return;
+        List<LikeRecord> batch = new ArrayList<>();
+        for (String entry : entries) {
+            String[] parts = entry.split(":", -1);
+            if (parts.length != 2) {
+                log.error("Invalid durable like event; retained for operator repair");
+                return;
+            }
+            try {
+                batch.add(new LikeRecord(null, Long.parseLong(parts[0]), Long.parseLong(parts[1]), null));
+            } catch (NumberFormatException e) {
+                log.error("Invalid durable like identifiers; retained for operator repair");
+                return;
+            }
         }
         try {
             likeRecordMapper.batchInsertIgnore(batch);
-            batch.stream().map(LikeRecord::getItineraryId).distinct()
-                    .forEach(itineraryMapper::recalcLikeCount);
-            log.debug("点赞落库 {} 条，覆盖 {} 个行程", batch.size(),
-                    batch.stream().map(LikeRecord::getItineraryId).distinct().count());
+            batch.stream().map(LikeRecord::getItineraryId).distinct().forEach(itineraryMapper::recalcLikeCount);
+            // ACK only after both durable records and derived counts succeed.
+            // INSERT IGNORE + unique(itinerary_id,user_id) makes replay safe.
+            for (String entry : entries) redis.opsForList().remove(PENDING_KEY, 1, entry);
         } catch (DataAccessException e) {
-            // 落库失败就把记录放回队列，下一轮重试 —— 重算是幂等的，重放安全
-            log.error("点赞批量落库失败，放回队列重试 | size={}", batch.size(), e);
-            batch.forEach(pending::offer);
+            log.error("Like persistence failed; durable outbox retained for retry", e);
         }
     }
 
     public long droppedCount() {
-        return dropped.sum();
+        return 0; // Events are never silently discarded.
     }
 
     public int pendingCount() {
-        return pending.size();
+        Long size = redis.opsForList().size(PENDING_KEY);
+        return size == null ? 0 : (int) Math.min(Integer.MAX_VALUE, size);
     }
 }
