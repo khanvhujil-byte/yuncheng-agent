@@ -1,10 +1,12 @@
 # 多智能体旅行规划 + 社区（Java + Python 双服务）
 
-[![CI](https://github.com/OWNER/REPO/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/ci.yml)
+当前上线准备版本（2026-10-19）：统一编排、日常门票参考与模型估算兜底、失败草稿修复、会话鉴权、持久点赞队列、执行租约、MCP 复用及三端 CI。
+
+生产部署与验收以 [上线准备与验收](docs/上线准备与验收-20261019.md) 为准。使用 `docker-compose.production.yml`；默认 `docker-compose.yml` 仅用于开发。Python SQLite 数据卷现在包含账号与会话，必须备份。
 
 **一个由两个服务组成的系统**：
 
-- **Python（FastAPI + LangGraph）** 负责 AI 能力：4 个专职 Agent 分工协作（景点搜集 / 天气 / 住宿 / 行程编排），
+- **Python（FastAPI + LangGraph）** 负责 AI 能力：景点、天气、餐饮、酒店并行采集，编排 Agent 统一选择，
   产出带硬约束对账的逐日行程，支持 SSE 逐节点进度、行程库复用、断点续跑。
 - **Java（Spring Boot + MySQL + Redis）** 负责业务与高并发：行程发布、**点赞排行榜**、
   唯一持有业务库连接，并承接"一人一赞 + 异步批量落库"的并发压力。
@@ -13,12 +15,14 @@
 Java 统计出的社区热度又被 Python 读回去，作为下一次生成的参考 —— 形成
 `用户行为 → 热度 → AI 生成 → 新行程发布` 的闭环。
 
-> 版本 **v0.6**　·　Python `GET /health`、Java `GET /community/health`（后者会真检查 MySQL 与 Redis）
+> 当前 API 版本 **v0.8**；以下旧实验来自 **v0.3–v0.6**　·　Python `GET /health`、Java `GET /community/health`（后者会真检查 MySQL 与 Redis）
 > 需求与设计：[`docs/需求文档.md`](docs/需求文档.md)（§13/§14 是契约冻结点）
 > 排期与实验：[`docs/开发计划.md`](docs/开发计划.md)（§11 是实验设计）
 > 面试准备：[`docs/面试问答库.md`](docs/面试问答库.md)
 
-## 实测数字（不是估的）
+## 历史实测（旧版本，不能代表当前性能）
+
+下表未在本次统一编排、会话鉴权与持久队列版本重新压测；169 个测试也不是当前数量。当前结果见上线验收文档。
 
 | 指标 | 实测值 | 来源 |
 |---|---|---|
@@ -32,22 +36,26 @@ Java 统计出的社区热度又被 Python 读回去，作为下一次生成的�
 | **点赞并发（300 用户 / 并发 64）** | 0.54 秒，**QPS 552**，p50 93.7ms / p95 172.3ms / **p99 237.3ms**，0 失败 | `scripts/interop_check.py` |
 | **点赞并发（500 用户 / 并发 128）** | 1.10 秒，**QPS 456**，p95 315.2ms / **p99 333.8ms**，0 失败 | 同上 |
 | **一致性** | 500 个并发赞**零丢失**，异步落库 3 秒后 **MySQL == Redis**，队列 0 积压 | 同上 |
-| 测试 | Python **169 个单元测试**（零 token，自带禁止联网护栏） | `make test` |
+| 测试 | Python **901 个单元测试**（零 token，自带禁止联网护栏） | `make test` |
 
 ## 架构（两条链路）
 
-**一、行程生成（Python，4 Agent + 3 代码节点 + 6 工具）**
+**一、当前行程生成**
 
+```mermaid
+flowchart TD
+    A[城市与输入预检] --> B[景点/天气/餐饮/酒店并行采集]
+    B --> C[地理与时长初筛/统一上下文]
+    C --> D[编排 Agent 统一选择景点/三餐/酒店]
+    D --> E[身份与结构/独立复核]
+    E --> F[路线/日常门票/舒适度]
+    F --> G[预算计算与复核]
+    G -->|未通过且剩余调用预算| D
+    G -->|通过| H[正式行程与缓存]
+    G -->|仍未通过| I[可修复草稿与具体原因]
 ```
-START → validate_city（代码：预检 + 锚点解析 + 读社区热度，0 次 LLM）
-      → collect_attractions（Agent 1，工具 search_attractions）
-        ∥ collect_weather（Agent 2，工具 get_weather，可用开关关掉）
-      → compose_plan（Agent 3，无工具：生成 + 两层校验 + 回喂重试）
-      → verify_plan（代码：独立复核 —— 时间可行性 / 重复排期 / 地理跨度）
-      → resolve_hotel（Agent 4，工具 search_hotels / rank_hotels / measure_distance / choose_hotel）
-      → patch_budget（代码：加法）
-      → END
-```
+
+有来源的价格优先；模型只补充未核实的日常门票估算，来源标签贯穿预算和导出。注册、登录由 Python 管理，Java 通过真实会话核验身份，客户端不能指定用户 ID。生产默认单 Python worker；任务/会话写入带数据库租约与 token 校验。
 
 **二、社区联动（Java 持库，Redis 扛并发）**
 
@@ -68,7 +76,7 @@ Agent 只负责决策（搜什么关键词、选哪家酒店）。这样既有�
 另外四条贯穿全项目的约定：
 - **外部数据不让模型复述**（天气在边界拼装、景点字段从候选池回填）——不烧 token，也不可能被编造。
 - **降级必须可见**：`sources` 标出哪一路降级（含跨服务的 `community_hot`）；
-  `success` 的判据是"有没有 degraded"，不是"warnings 是否为空"。
+  `success` 同时检查数据降级、结构约束、路线舒适度和预算结论。
 - **生成者不能给自己打分**：`verify_plan` 与 `compose_plan` 的校验逻辑完全独立。
 - **跨服务调用必须有超时且绝不抛异常**：Java 挂了，行程生成照常（只是没有热度反哺）。
 
@@ -92,7 +100,7 @@ npm run dev                     # http://127.0.0.1:5173
 ## 测试 / 实验 / 评测
 
 ```powershell
-make test        # Python 单元测试：169 个用例，不联网、0 成本
+make test        # Python 单元测试：901 个用例，不联网、0 成本
 make lint        # 静态检查（只拦真错误：未定义名 / 未用导入 / 语法）
 make cov         # 覆盖率
 
@@ -104,10 +112,20 @@ cd backend
 .\.venv\Scripts\python.exe -u scripts\eval_gate.py --mode fast   # 只跑预检类，不花 LLM，可当 PR 门禁
 .\.venv\Scripts\python.exe -u scripts\eval_gate.py --mode full   # 含生成类，发版前跑
 
+# 50 条规划场景评测（隔离数据库 + 可计算不变量；--mode fast 零 LLM，--mode full 花真实 token）
+.\.venv\Scripts\python.exe -u scripts\eval_scenarios_30.py --mode fast
+.\.venv\Scripts\python.exe -u scripts\eval_scenarios_30.py --mode full
+
+# HTTP 契约 / SSE / 缓存语义（需要服务在 127.0.0.1:8000 运行）
+.\.venv\Scripts\python.exe -u scripts\eval_http_contract.py
+
 # ★ 跨服务联调 + 高并发压测（18 项断言：双向调用 / 一人一赞 / 限频 / 零丢失 / 最终一致 / 反哺闭环）
 cd ..
 .\backend\.venv\Scripts\python.exe -u scripts\interop_check.py --users 500 --concurrency 128
 ```
+
+> 评测结果与修复清单见 [`docs/规划Agent评测与修复报告-20261019.md`](docs/规划Agent评测与修复报告-20261019.md)（基线 31/50 → 修复后 41/50，HTTP 44/44，901 项单测全绿）。
+> 若本机系统代理不可用（高德/DeepSeek 直连正常），运行评测或服务前设置 `$env:NO_PROXY='*'`。
 
 > `interop_check.py` 需要五个进程都在跑（前端可不起）：Python 8000 / Java 8080 / MySQL 3307 / Redis 6379。
 
@@ -238,7 +256,8 @@ trip-planner-agent/
   可被伪造 —— 真正的做法是 JWT（Java 签发、Python 用同一 secret 校验），属于微服务范畴，还没做。
 - **`docs/` 文档还没覆盖 Java 服务**：需求文档/开发计划目前只写到 v0.5（Python 侧），
   v0.6 的跨服务契约只在 README 与代码注释里。
-- **评测集偏小**：`eval_gate.py` 目前 7 个用例，覆盖"该拦的"和"编造率"，还没覆盖行程质量的主观维度。
+- **评测集**：`eval_gate.py` 7 个用例 + 新增 50 条规划场景（`eval_scenarios_30.py`）与 44 项 HTTP 契约（`eval_http_contract.py`）；
+  生成类仍是单次观测（模型温度 0 但非逐位可复现），长行程 JSON 截断与部分城市餐饮覆盖仍是已知缺口。
 - **无人工介入**：改某一天、确认酒店这类 human-in-the-loop 还没做（12-Factor F7）。
 - **无 OTel 追踪**：有 `tool_calls` / `usage` / journal，但没有跨服务的分布式追踪（traceId 未贯通）。
 - **镜像未在本机构建验证**：Docker Desktop 守护进程没启动，只做了 `docker compose config` 客户端校验。

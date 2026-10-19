@@ -2,6 +2,29 @@
 
 本项目的版本节奏是"契约冻结点 + 一次架构演进"，每版都有明确的主题与实测证据。
 
+## 2026-10-19 · 规划 Agent 评测与修复（评测驱动的一轮质量加固）
+
+**评测**
+- 新增 50 条规划场景评测集 `backend/scripts/eval_scenarios_30.py`（14 预检 + 36 真实生成，隔离数据库、逐例超时看门狗、可计算不变量）。
+- 新增 44 项 HTTP 契约/生命周期/缓存语义评测 `backend/scripts/eval_http_contract.py`。
+- 参考 9 个公开基准（TravelPlanner / ChinaTravel / TravelBench / TREK / TripTide / TRIP-Bench / AgentBench / tau-bench / ITBench）与 67 条场景草案：`docs/评测集调研与场景草案.md`。
+- 报告：`docs/规划Agent评测与修复报告-20261019.md`；静态审计：`docs/审计发现-核心链路-20261019.md`、`docs/审计发现-服务层-20261019.md`。
+
+**结果**
+- 基线 31/50（62%）→ 修复后整体 41/50（82%）；HTTP 契约 44/44；后端 901 项测试全绿。
+- 基线 4 条"3 天 660 分钟"失败全部修复；固定酒店/必去锚点歧义通过补全名称或地址可正常工作。
+
+**主要修复**
+- 统一编排的确定性完成修复：删可选景点（必去锚点/用户编辑餐次受保护）、跨天去重、提前晚餐压低固定餐窗地板；修复删点循环读旧时间表导致的过度删点。
+- 编排输出的 JSON 健壮性：按天数自适应输出 token 预算 + 同节点格式修复重试（可开关对照）。
+- 重排预算拆分：`repair_rounds` 与 `budget_retries` 独立计数，新增 `prepare_repair` 节点；修正 verify_plan 的契约说明。
+- 缓存与任务：复核不通过的缓存删除、重启遗留 running 任务回收、缓存读取/写入异常隔离。
+- 契约与可观测性：请求字段长度上限、预检失败原因透传、`CLARIFICATION_REQUIRED` 文案、监控不再把预检拒绝算成规划失败、异步缓存命中 success 与复核结论一致。
+- 修复 `audit_choices` 在餐饮候选缺失时的 KeyError；餐饮距离规则对"附近无候选"降级为可见 warning。
+
+**新增测试**
+- `tests/test_completion_repair.py`（9 项）、`tests/test_hardening_20261019.py`（8 项）。
+
 ## v0.5 · 上下文压缩 / 后台任务与 SSE / journal 续跑 / 独立评估者（2026-10-10）
 
 **能力**
