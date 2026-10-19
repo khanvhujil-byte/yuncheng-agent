@@ -10,6 +10,9 @@ import type { DataSource, SourceMap } from '@/types/trip'
 /** 来源 → 中文标签 */
 const SOURCE_LABELS: Record<DataSource, string> = {
   amap: '高德实查',
+  catalog: '本地已核验资料',
+  'catalog+amap': '本地资料与高德补查',
+  catalog_partial: '本地部分资料，补查失败',
   llm_estimated: '模型估算',
   degraded: '获取失败',
   // v0.2 新增：用户自己指定的锚点（规格化酒店）。它既不是查到的、也不是估算的，

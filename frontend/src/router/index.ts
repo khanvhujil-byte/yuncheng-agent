@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import CommunityView from '../views/CommunityView.vue'
-import HomeView from '../views/HomeView.vue'
-import ChatView from '../views/ChatView.vue'
+const CommunityView = () => import('../views/CommunityView.vue')
+const HomeView = () => import('../views/HomeView.vue')
+const ChatView = () => import('../views/ChatView.vue')
 
 /**
  * 路由表。

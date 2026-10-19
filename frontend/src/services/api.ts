@@ -614,24 +614,12 @@ const communityHttp = axios.create({
  * 同一个浏览器 = 同一个用户，换浏览器 = 换个人。它足够验证"一人一赞"这条逻辑，
  * 也不假装自己是安全方案（这个 ID 完全可以被伪造）。
  */
-const USER_ID_KEY = 'trip_community_user_id'
-
 export function getCommunityUserId(): string {
-  try {
-    const existing = window.localStorage.getItem(USER_ID_KEY)
-    if (existing) return existing
-    // 取 1~99999 的随机数，够用且一眼能看出是"游客"
-    const generated = String(Math.floor(Math.random() * 99_999) + 1)
-    window.localStorage.setItem(USER_ID_KEY, generated)
-    return generated
-  } catch {
-    // 隐私模式下 localStorage 可能不可用 —— 退化成固定值，功能不崩
-    return '1'
-  }
+  return sessionStorage.getItem('trip-session') ? '已登录' : '未登录'
 }
 
 function communityHeaders() {
-  return { 'X-User-Id': getCommunityUserId() }
+  return { 'X-Session-Token': sessionStorage.getItem('trip-session') || '' }
 }
 
 /** 读排行榜。type=hot 按热度（带时间衰减），type=new 按发布顺序。 */

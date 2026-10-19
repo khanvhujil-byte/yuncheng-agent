@@ -16,6 +16,7 @@
  */
 import { Download, Printer, Send, TrendingUp } from 'lucide-vue-next'
 import { computed, ref } from 'vue'
+import { ticketText, ticketReason } from '@/utils/tickets'
 
 import { ApiError, publishToCommunity } from '@/services/api'
 import type { DataSource, DayPlan, LimitStatus, Meal, TripPlan } from '@/types/trip'
@@ -33,6 +34,9 @@ const props = defineProps<{
 /** 数据来源 → 中文说明。和后端 DataSource 联合类型逐字对应 */
 const SOURCE_LABELS: Record<DataSource, string> = {
   amap: '高德实查',
+  catalog: '本地已核验资料',
+  'catalog+amap': '本地资料与高德补查',
+  catalog_partial: '本地部分资料，补查失败',
   llm_estimated: '模型估算',
   degraded: '获取失败（已降级）',
   user: '用户指定',
@@ -177,17 +181,13 @@ const markdown = computed(() => {
         // v0.7：门票三态在纸面上必须分开写。把「未知」和「免费」合并成一句
         // （原来的写法就是「门票 免费或未提供」），等于在导出物里宣称这张票不要钱 ——
         // 而这份文件是带出门用的，读错了当场没人纠正你
-        if (spot.ticket_price === null || spot.ticket_price === undefined) {
-          tags.push('门票 待查')
-        } else if (spot.ticket_price === 0) {
-          tags.push('门票 免费')
-        } else {
-          tags.push(`门票 ${money(spot.ticket_price)}`)
-        }
+        tags.push(ticketText(spot))
         lines.push(`${index + 1}. **${spot.name}**（${tags.join(' / ')}）`)
         lines.push(`   - 地址：${oneLine(spot.address) || '未提供'}`)
         lines.push(`   - 建议时长：${spot.visit_duration} 分钟`)
         if (spot.description) lines.push(`   - 简介：${oneLine(spot.description)}`)
+        lines.push(`   - 票价依据：${oneLine(ticketReason(spot))}`)
+        if (/^https:\/\//.test(spot.ticket_price_evidence_url || '')) lines.push(`   - 门票资料：${spot.ticket_price_evidence_url}`)
       })
     } else {
       lines.push('（当日无景点安排）')

@@ -32,7 +32,7 @@
  *                  ★ 后端 schemas.py 的 DataSource 是 Literal，没登记的值会直接 500，
  *                    所以这里必须同步加上 —— 两份文件是同一份契约的两种语言表达。
  */
-export type DataSource = 'amap' | 'llm_estimated' | 'degraded' | 'user' | 'java'
+export type DataSource = 'amap' | 'llm_estimated' | 'degraded' | 'user' | 'java' | 'catalog' | 'catalog+amap' | 'catalog_partial'
 
 /**
  * sources 字段的 key 约定（后端按这些 key 填，前端按这些 key 查）。
@@ -62,7 +62,7 @@ export type CostStatus = 'known' | 'estimated' | 'unknown'
  * 费用的来源。和 DataSource 分开是因为语义不同：
  *   static_estimate 是我们自己的固定表（比如交通费按每人每天 40 元），既不是高德也不是模型。
  */
-export type CostSource = 'amap' | 'imported' | 'llm_estimated' | 'static_estimate' | 'unknown'
+export type CostSource = 'amap' | 'imported' | 'llm_estimated' | 'static_estimate' | 'venue_policy' | 'unknown'
 
 /**
  * 预算结论（v0.7 新增）。只有五种值，各自的可信范围不同 —— 界面文案必须对应上：
@@ -173,12 +173,15 @@ export interface Attraction {
   ticket_price_status?: CostStatus
   ticket_price_source?: CostSource
   ticket_price_evidence_url?: string | null
+  ticket_price_note?: string
+  admission_policy?: 'unknown' | 'ordinary_access' | 'consumption'
   /** v0.2：是否来自用户的 must_visit（界面上给「必去」打标） */
   required?: boolean
 }
 
 /** 酒店（v0.2：行程级一家，不是每天一个） */
 export interface Hotel {
+  poi_id?: string | null
   name: string
   address?: string
   location?: Location | null
@@ -305,6 +308,7 @@ export interface CostItem {
 
 /** 预算汇总 */
 export interface Budget {
+  ticket_reserve_amount?: number | null
   total_attractions?: number
   /** v0.2：= 每晚预估单价 × nights，不是按天求和 */
   total_hotels?: number

@@ -30,7 +30,8 @@ import dayjs from 'dayjs'
 import { Hotel as HotelIcon, ImageOff, Map as MapIcon, TriangleAlert } from 'lucide-vue-next'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
-import type { Attraction, DayPlan, Hotel } from '@/types/trip'
+import type { DayPlan, Hotel } from '@/types/trip'
+import { dayStops } from '@/utils/itinerary'
 
 const props = defineProps<{
   days: DayPlan[]
@@ -42,6 +43,7 @@ const props = defineProps<{
    * 没有这个入口就没法在自动化测试里稳定地复现「Key 失效 → 降级 SVG」这条路。
    */
   keyOverride?: string
+  embedded?: boolean
 }>()
 
 /** 高德静态地图接口。size 上限 1024*1024，这里取题目给的 700*420 */
@@ -90,6 +92,7 @@ type LocatedPoint = {
   latitude: number
   /** true = 酒店（起点/落脚点），画法要和景点区分开 */
   isHotel: boolean
+  isMeal?: boolean
 }
 
 /** 坐标是否可用。后端字段可为空，NaN 一旦进了 URL 会让高德直接回 20003 */
@@ -112,10 +115,9 @@ function hasLocation(location: { longitude: number; latitude: number } | null | 
  */
 function pointsOfDay(day: DayPlan): LocatedPoint[] {
   const points: LocatedPoint[] = []
-  const isFirstDay = day.day_index === 0 || props.days[0]?.date === day.date
   const hotel = props.hotel
 
-  if (isFirstDay && hasLocation(hotel?.location)) {
+  if (hasLocation(hotel?.location)) {
     points.push({
       label: 'S',
       name: hotel?.name ?? '住宿',
@@ -125,8 +127,9 @@ function pointsOfDay(day: DayPlan): LocatedPoint[] {
     })
   }
 
-  day.attractions.forEach((spot: Attraction, index) => {
-    if (!hasLocation(spot.location)) return
+  dayStops(day, hotel).forEach((stop, index) => {
+    const spot = stop.place
+    if (!spot.location || !hasLocation(spot.location)) return
     // 一天最多 9 个景点，超过就用字母续上（高德 marker 的 label 只接受很短的串）
     const label = index < 9 ? String(index + 1) : String.fromCharCode(65 + index - 9)
     points.push({
@@ -135,6 +138,7 @@ function pointsOfDay(day: DayPlan): LocatedPoint[] {
       longitude: spot.location.longitude,
       latitude: spot.location.latitude,
       isHotel: false,
+      isMeal: stop.kind === 'meal',
     })
   })
 
@@ -332,9 +336,9 @@ function hasAnyPoint(index: number): boolean {
 </script>
 
 <template>
-  <section class="trip-map">
+  <section class="trip-map" :class="{ embedded }">
     <div v-for="(day, index) in days" :key="day.date" class="card day-map-card">
-      <div class="card-title">
+      <div v-if="!embedded" class="card-title">
         <MapIcon :size="16" />
         第 {{ day.day_index + 1 }} 天
         <span class="muted">{{ formatDay(day.date) }}</span>
@@ -388,7 +392,7 @@ function hasAnyPoint(index: number): boolean {
             <!-- marker 的 id 必须每天都不一样：同页多张 SVG 用同一个 id 时，
                  浏览器只认第一个定义，后面几张图的箭头会指向错误的定义 -->
             <marker
-              :id="`trip-map-arrow-${index}`"
+              :id="`trip-map-arrow-${day.date}-${day.day_index}`"
               markerWidth="9"
               markerHeight="9"
               refX="7"
@@ -404,7 +408,7 @@ function hasAnyPoint(index: number): boolean {
             fill="none"
             stroke="#8fa8d6"
             stroke-width="2"
-            :marker-mid="`url(#trip-map-arrow-${index})`"
+            :marker-mid="`url(#trip-map-arrow-${day.date}-${day.day_index})`"
           />
 
           <g v-for="point in svgDays[index] ?? []" :key="`${point.label}-${point.name}`">
@@ -413,7 +417,7 @@ function hasAnyPoint(index: number): boolean {
               :cx="point.x"
               :cy="point.y"
               r="12"
-              :fill="point.isHotel ? '#d79b00' : '#3566c9'"
+              :fill="point.isHotel ? '#aa8b57' : point.isMeal ? '#c39a64' : '#789364'"
             />
             <text
               :x="point.x"
@@ -433,7 +437,7 @@ function hasAnyPoint(index: number): boolean {
 
         <!-- 图例：把「数字 = 游览顺序」「S = 住宿」讲清楚，否则用户不知道圆点里的字是什么意思 -->
         <div class="legend">
-          <span class="legend-item"><span class="dot spot-dot" /> 数字 = 当天第几个景点（按游览顺序）</span>
+          <span class="legend-item"><span class="dot spot-dot" /> 编号对应下方景点与餐饮，同址点合并</span>
           <span v-if="(dayPoints[index] ?? []).some((item) => item.isHotel)" class="legend-item">
             <span class="dot hotel-dot" /> S = 住宿
           </span>
@@ -442,7 +446,8 @@ function hasAnyPoint(index: number): boolean {
     </div>
 
     <!-- Key 缺失或失效时的说明。必须说清「为什么没有地图」和「怎么修」，不能静默空白 -->
-    <div v-if="staticMapDisabled" class="card alert-card">
+    <p v-if="embedded" class="map-caption">{{ staticMapDisabled ? '地点与动线示意，连线不代表实际道路；路程耗时见下方卡片。' : '今日地点一览，路程耗时见下方卡片。' }}</p>
+    <div v-if="staticMapDisabled && !embedded" class="card alert-card">
       <div class="alert-title">
         <TriangleAlert :size="16" />
         静态地图不可用，已切换为自绘示意图
@@ -463,20 +468,21 @@ function hasAnyPoint(index: number): boolean {
     <div v-if="!days.length" class="empty-hint">没有行程数据，无法出图。</div>
 
     <!-- 把 Key 暴露在 URL 里的固有代价，写在界面上让使用者知道，而不是只写在代码注释里 -->
-    <p v-if="!staticMapDisabled" class="footnote">
+    <p v-if="!staticMapDisabled && !embedded" class="footnote">
       <ImageOff :size="12" />
       地图图片由高德静态地图接口直接提供，因此你的高德 Key 会出现在图片地址里。
       这是静态地图 API 的固有做法；生产环境应由后端代理图片请求，把 Key 留在服务端。
     </p>
 
-    <p v-if="hotel" class="footnote">
+    <p v-if="hotel && !embedded" class="footnote">
       <HotelIcon :size="12" />
-      住宿「{{ hotel.name }}」只画在第一天的图上：v0.2 起住宿是整趟行程一家，天天都是同一个落脚点。
+      每天从住宿「{{ hotel.name }}」出发，S 标记为住宿。
     </p>
   </section>
 </template>
 
 <style scoped>
+.trip-map.embedded{padding:0;background:transparent}.embedded .day-map-card{padding:0;border:0;background:transparent;box-shadow:none;border-radius:10px;overflow:hidden}.embedded .map-image{max-height:300px;object-fit:contain;background:#f5f7ed}.embedded .legend{font-size:10px;margin-top:8px;gap:12px}.map-caption{font-size:10px;line-height:1.6;color:#9ba38e;margin:6px 0 0}
 .trip-map {
   display: flex;
   flex-direction: column;

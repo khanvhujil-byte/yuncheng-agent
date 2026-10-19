@@ -7,6 +7,7 @@ import TripSummary from '@/components/TripSummary.vue'
 import DayTimeline from '@/components/DayTimeline.vue'
 import PlanModuleEditor from '@/components/PlanModuleEditor.vue'
 import RequirementPanel from '@/components/RequirementPanel.vue'
+import { preparePlanForDisplay } from '@/utils/itinerary'
 import { DialogError, hasSession, login, request } from '@/services/dialog'
 import type { ClarificationAnswer, Citation, Conversation, Document, ModuleEdit, Preference, Quality, Slots, Turn, TurnResult } from '@/services/dialog'
 import type { Requirements, TripPlanResponse } from '@/types/trip'
@@ -29,7 +30,10 @@ const editor = reactive({ city: '', start_date: '', travel_days: 3, transportati
   budget_limit: '', nights: '', preferences: '', must_visit: '', fixed_hotel: '', fixed_hotel_address: '', free_text_input: '' })
 const pref = reactive({ key: 'transportation', value: '公共交通' })
 const doc = reactive({ title: '', source: '', content: '', valid_until: '' })
-const shown = computed(() => candidate.value?.data ? candidate.value : current.value?.edit_preview?.data ? current.value.edit_preview : current.value?.result)
+const shown = computed(() => {
+  const result = candidate.value?.data ? candidate.value : current.value?.edit_preview?.data ? current.value.edit_preview : current.value?.result
+  return result?.data ? { ...result, data: preparePlanForDisplay(result.data) } : result
+})
 const ready = computed(() => !!current.value?.slots.city && !!current.value?.slots.start_date && !!current.value?.slots.travel_days && !current.value?.clarifications?.length)
 const moduleRequirements = computed(() => (current.value?.slots.requirements ?? {}) as Requirements)
 const authMode = ref<'login' | 'register'>('login')
@@ -228,10 +232,10 @@ onMounted(() => { if (signedIn.value) void task(async () => { await refresh(); c
                 <div class="canvas-heading"><span><span class="live-dot"></span> {{ current?.pending_edit ? '修改预览' : '我的旅行手册' }}</span><span>{{ shown.data.days.length }} DAYS · {{ shown.data.city }}</span></div>
                 <p v-if="current?.pending_edit" class="notice">这是一份修改预览，确认后才会替换已保存的行程。</p>
                 <TripSummary :plan="shown.data" :preferences="[]" hide-actions />
-                <p v-if="shown.data.hotel_reason" class="hotel-reason"><ShieldCheck :size="15" />{{ shown.data.hotel_reason }}</p>
                 <div class="day-navigation" aria-label="选择行程日期"><button :class="{ selected: selectedDay === null }" :aria-pressed="selectedDay === null" @click="selectedDay = null">完整行程</button><button v-for="(day, index) in shown.data.days" :key="day.date" :class="{ selected: selectedDay === index }" :aria-pressed="selectedDay === index" @click="selectedDay = index">DAY {{ index + 1 }}</button></div>
-                <DayTimeline :days="visibleDays" :sources="shown.data.sources" />
-                <PlanModuleEditor v-if="current?.result?.success && current.result.data" :conversation-id="current.conversation_id" :plan="current.result.data" :disabled="busy || !!pending || !!current.pending_edit || !!current.clarifications?.length" @edit="edit => send('edit', undefined, edit)" />
+                <DayTimeline :days="visibleDays" :sources="shown.data.sources" :hotel="shown.data.hotel" />
+                <p v-if="current?.result?.data && !current.result.success" class="notice">这份草稿尚未通过校验。可修改具体模块，全部校验通过后才会保存为正式行程。</p>
+                <PlanModuleEditor v-if="current?.result?.data" :conversation-id="current.conversation_id" :plan="current.result.data" :disabled="busy || !!pending || !!current.pending_edit || !!current.clarifications?.length" @edit="edit => send('edit', undefined, edit)" />
                 <details class="version-history export-options"><summary><BookOpen :size="15" /> 把旅行手册带走或分享 <ChevronDown :size="14" /></summary><ExportPanel :plan="shown.data" :preferences="Array.isArray(current?.slots.preferences) ? current.slots.preferences : []" /></details>
                 <details v-if="versions.length" class="version-history"><summary><BookOpen :size="15" /> 旅行手册的 {{ versions.length }} 个版本 <ChevronDown :size="14" /></summary><article v-for="(v, index) in versions" :key="v.run_id"><span>版本 {{ index + 1 }}<small>{{ dateLabel(v.created_at) }} · {{ v.result.success ? '通过校验' : '尚未完成' }}</small></span><button class="text-button" @click="candidate = v.result; selectedDay = null">查看版本 <ArrowRight :size="13" /></button></article></details>
               </template>

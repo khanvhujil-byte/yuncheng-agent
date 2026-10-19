@@ -28,6 +28,7 @@ import DayTimeline from '@/components/DayTimeline.vue'
 import JourneyArtwork from '@/components/JourneyArtwork.vue'
 import ExportPanel from '@/components/ExportPanel.vue'
 import TripSummary from '@/components/TripSummary.vue'
+import { preparePlanForDisplay } from '@/utils/itinerary'
 import { finishPlanning } from '@/services/planningFlow'
 import { hasSession, request as dialogRequest } from '@/services/dialog'
 import type { Conversation } from '@/services/dialog'
@@ -304,7 +305,7 @@ function applyResponse(response: TripPlanResponse): void {
   threadId.value = response.thread_id ? response.thread_id : threadId.value
   errorCode.value = response.error_code ?? undefined
   if (threadId.value) sessionStorage.setItem('trip-form-run', threadId.value)
-  plan.value = response.data ?? null
+  plan.value = response.data ? preparePlanForDisplay(response.data) : null
   backendOnline.value = true
   cacheInfo.value = {
     cached: response.cached === true,
@@ -771,7 +772,7 @@ function reset(): void {
               实际耗时 {{ elapsedText }} 秒
               <span v-if="threadId" class="thread">会话 {{ threadId.slice(0, 8) }}</span>
             </span>
-            <a-button v-if="completeResult" :loading="transferring" @click="editSavedPlan">保存并局部修改</a-button>
+            <a-button v-if="plan?.days?.length" :loading="transferring" @click="editSavedPlan">{{ completeResult ? '保存并局部修改' : '修复这份草稿' }}</a-button>
             <a-button type="text" size="small" @click="reset">
               <template #icon><RotateCcw :size="14" /></template>
               重新规划
@@ -787,7 +788,7 @@ function reset(): void {
             :cache-saved-at="cacheInfo.savedAt"
             :preferences="submittedPreferences"
           />
-          <DayTimeline v-if="plan" :days="plan.days" :sources="plan.sources" />
+          <DayTimeline v-if="plan" :days="plan.days" :sources="plan.sources" :hotel="plan.hotel" />
           <details v-if="plan" class="export-options"><summary>把旅行手册带走或分享</summary><ExportPanel :plan="plan" :preferences="submittedPreferences" /></details>
         </template>
       </main>

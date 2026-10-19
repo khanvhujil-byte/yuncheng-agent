@@ -175,7 +175,7 @@ onMounted(async () => {
         两个服务通过 HTTP 双向联动。
       </p>
       <div class="ids">
-        <span class="chip">当前身份：游客 #{{ userId }}</span>
+        <span class="chip">账号状态：{{ userId }}</span>
         <span class="chip hint-chip">一人一赞按浏览器计（本地身份，尚未接登录）</span>
       </div>
     </header>
