@@ -17,6 +17,7 @@ import copy
 import logging
 
 from ..models.state import TripState
+from ..config import get_settings
 
 logger = logging.getLogger(__name__)
 
@@ -72,6 +73,9 @@ def patch_budget(state: TripState) -> dict:
 
     warnings: list[str] = []
     items: list[dict] = []
+    settings = get_settings()
+    reserved_tickets = []
+    from ..services.admission_policy import apply_admission_policy
 
     for day in days:
         index = day.get("day_index")
@@ -79,7 +83,17 @@ def patch_budget(state: TripState) -> dict:
         day_estimated = 0
 
         for spot in (day.get("attractions") or []):
+            spot.update(apply_admission_policy(spot))
             price = spot.get("ticket_price")
+            if (settings.ticket_budget_reserve_enabled and spot.get('admission_policy') != 'consumption'
+                    and (price is None or spot.get("ticket_price_status") == "unknown" or spot.get("ticket_price_source") == "static_estimate")):
+                price = settings.ticket_budget_reserve_amount
+                reason = spot.get('ticket_price_note') or '暂无适用于该地点和日期的可靠门票来源。'
+                if '门票预算预留，' in reason:
+                    reason = reason.split('门票预算预留，', 1)[0].strip()
+                spot.update(ticket_price=price, ticket_price_status="estimated", ticket_price_source="static_estimate",
+                            ticket_price_evidence_url=None, ticket_price_note=reason + " 门票预算预留，尚未核实实际票价；不是景点报价。")
+                reserved_tickets.append(spot.get("name") or "未命名景点")
             # 三态推导规则（顺序很重要）：
             #   价格是 None          → unknown（未知就是未知）
             #   有价格 + 有明确 status → 用它（正常链路里 amap 给 unknown、估算给 estimated）
@@ -97,7 +111,7 @@ def patch_budget(state: TripState) -> dict:
                 "attraction", str(spot.get("name") or "未命名景点"), price, status,
                 spot.get("ticket_price_source") if spot.get("ticket_price_source") not in (None,"unknown") else ("amap" if status == "known" else ("llm_estimated" if status == "estimated" else "unknown")),
                 day_index=index,
-                note="" if status != "unknown" else "门票价未获取（高德 biz_ext.cost 实测恒为空）",
+                note=spot.get("ticket_price_note") or ("" if status != "unknown" else "门票价尚未核实"),
             )
             items.append(item)
             if status == "known":
@@ -150,7 +164,9 @@ def patch_budget(state: TripState) -> dict:
                 hotel_amount=0
             else:
                 items.append(_cost_item("hotel", name, amount, hotel_status, hotel_source,
-                                        note=f"每晚参考 {price} 元 × {nights} 晚；以实际预订为准。"))
+                                        note=(f"每晚预算预留 {price} 元 × {nights} 晚；尚未取得酒店报价，以实际预订为准。"
+                                              if hotel_source == "static_estimate" else
+                                              f"每晚参考 {price} 元 × {nights} 晚；以实际预订为准。")))
                 hotel_amount=amount
             hotel_estimated += hotel_amount
 
@@ -175,11 +191,13 @@ def patch_budget(state: TripState) -> dict:
 
     unknown_attractions = [i["name"] for i in items
                            if i["category"] == "attraction" and i["status"] == "unknown"]
+    if reserved_tickets:
+        warnings.append(f"{len(reserved_tickets)} 项门票尚未核实，暂按每处 {settings.ticket_budget_reserve_amount} 元预留并计入参考预算；非景点报价，以官网和实际预约为准。")
     if unknown_attractions:
         # 单独给景点门票一条更具体的说明：它是**最常见**的未知项（高德不提供），
         # 混在"共 N 项未知"里用户看不出该怎么补信息。
         warnings.append(
-            f"有 {len(unknown_attractions)} 个景点的门票价未获取（高德不提供该字段），"
+            f"有 {len(unknown_attractions)} 处门票价未获取或到店消费未核实（逐项原因见费用明细），"
             "未计入总价 —— 实际开销可能更高。"
         )
     if nights > 0 and hotel is None:
@@ -201,6 +219,7 @@ def patch_budget(state: TripState) -> dict:
         day["day_total_cost"] = int(day["day_total_cost"]) + per_day + (remainder if index == len(days) - 1 else 0)
 
     budget = {
+        "ticket_reserve_amount": settings.ticket_budget_reserve_amount if settings.ticket_budget_reserve_enabled else None,
         "total_attractions": total_attractions,
         "total_hotels": total_hotels,
         "total_meals": total_meals,

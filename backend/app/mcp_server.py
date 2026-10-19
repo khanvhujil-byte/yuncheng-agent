@@ -51,6 +51,13 @@ def search_restaurants(keywords: str, city: str, limit: int = 12) -> dict:
 
 
 @server.tool()
+def search_restaurants_nearby(keywords: str, city: str, center: Location, radius: int = 4000, limit: int = 20) -> dict:
+    if not 100 <= radius <= 4000 or not 1 <= limit <= 20:
+        return {'status':'error', 'error_code':'INVALID_REQUEST', 'retryable':False}
+    return _run(amap.search_restaurants_nearby, keywords, city, center, radius, limit)
+
+
+@server.tool()
 def travel_route(origin: Location, destination: Location, mode: str = "driving", city: str | None = None) -> dict:
     return _run(amap.travel_route, origin, destination, mode, city)
 

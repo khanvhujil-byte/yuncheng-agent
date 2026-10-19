@@ -174,14 +174,16 @@ def _get(url: str, params: dict) -> dict:
             request_gate.defer(retry_after)
         elif retry_after is not None:
             request_gate.defer(retry_after)
-        raise AmapUnreachable(f"{type(exc).__name__}: {exc}", retryable=retryable,
+        # HTTPX error strings include the request URL and its API key. This
+        # message is persisted in tool traces/cache; retain status, not the URL.
+        raise AmapUnreachable(f"高德服务返回 HTTP {exc.response.status_code}", retryable=retryable,
                               code="UPSTREAM_RATE_LIMITED" if exc.response.status_code == 429 else "UPSTREAM_HTTP_ERROR",
                               retry_after_seconds=retry_after) from exc
     except httpx.HTTPError as exc:
         code = "UPSTREAM_TIMEOUT" if isinstance(exc, httpx.TimeoutException) else "UPSTREAM_UNAVAILABLE"
-        raise AmapUnreachable(f"{type(exc).__name__}: {exc}", code=code) from exc
+        raise AmapUnreachable(f"地图服务网络调用失败（{type(exc).__name__}）", code=code) from exc
     except ValueError as exc:
-        raise AmapUnreachable(f"{type(exc).__name__}: {exc}", retryable=False,
+        raise AmapUnreachable("地图服务返回了无法解析的数据", retryable=False,
                               code="UPSTREAM_INVALID_RESPONSE") from exc
 
     # 高德的坑：Key 无效时 HTTP 状态码也是 200，只有 infocode 不对。
@@ -336,6 +338,26 @@ def search_restaurants(keywords: str, city: str, limit: int = 12) -> list[Restau
     payload = _get(POI_URL, {"keywords": keywords, "city": city, "citylimit": "true",
                              "types": "050000", "offset": min(max(limit, 1), 20),
                              "page": 1, "extensions": "all"})
+    return _parse_restaurants(payload)
+
+
+def search_restaurants_nearby(keywords: str, city: str, center: Location,
+                              radius: int = 4000, limit: int = 20) -> list[Restaurant]:
+    """Coordinate-bound recall; never substitute a distant city-wide result."""
+    if (not 100 <= radius <= 4000 or not 1 <= limit <= 20
+            or not math.isfinite(center.longitude) or not math.isfinite(center.latitude)
+            or not -180 <= center.longitude <= 180 or not -90 <= center.latitude <= 90):
+        raise AmapError('INVALID_REQUEST', '餐饮周边查询参数不合法')
+    payload = _get(f'{BASE_URL}/place/around', {
+        'keywords':keywords, 'city':city, 'citylimit':'true', 'types':'050000',
+        'location':f'{center.longitude},{center.latitude}', 'radius':radius,
+        'sortrule':'distance', 'offset':limit, 'page':1, 'extensions':'all'})
+    # Also enforce the boundary locally instead of trusting provider ranking.
+    from .tools import haversine_km
+    return [r for r in _parse_restaurants(payload) if haversine_km(center, r.location) <= radius / 1000]
+
+
+def _parse_restaurants(payload) -> list[Restaurant]:
     result = []
     for poi in payload.get("pois") or []:
         location = _loc(poi.get("location"))

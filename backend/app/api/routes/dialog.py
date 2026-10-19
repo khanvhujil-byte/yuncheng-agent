@@ -83,8 +83,8 @@ def from_run(body: RunImport, user_id: str = Depends(identity.current_user)):
             req = TripRequest.model_validate(saved["request"])
         except (ValidationError, TypeError, ValueError) as exc:
             raise HTTPException(409, "保存的行程格式不兼容，原任务仍保留；请重新规划后再进入局部修改。") from exc
-        if not response.success or response.data is None or response.thread_id != body.thread_id:
-            raise HTTPException(422, "当前结果不是完整有效行程，暂不能进入局部修改。")
+        if response.data is None or not response.data.days or response.thread_id != body.thread_id:
+            raise HTTPException(422, "当前结果没有可修复的行程草稿。")
         current = dialog_store.import_run(user_id, body.thread_id, req.model_dump(), response.model_dump(mode="json"))
     return {key: value for key, value in current.items() if key not in ("committed", "_pending_edit", "_clarifications")}
 
@@ -191,3 +191,18 @@ def report(thread_id: str):
     if not row:
         raise HTTPException(404, "运行记录不存在")
     return json.loads(row[0])
+
+
+@router.get('/auth/community')
+def community_identity(user_id: str = Depends(identity.current_user)):
+    with store._connect() as db:
+        db.execute('CREATE TABLE IF NOT EXISTS community_identity (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id TEXT NOT NULL UNIQUE)')
+        db.execute('INSERT OR IGNORE INTO community_identity(user_id) VALUES(?)', (user_id,))
+        value = db.execute('SELECT id FROM community_identity WHERE user_id=?', (user_id,)).fetchone()[0]
+    return {'userId': value}
+
+
+@router.get('/observability/tickets')
+def ticket_coverage(user_id: str = Depends(identity.current_user)):
+    from ...services.ticket_sources import coverage
+    return coverage()

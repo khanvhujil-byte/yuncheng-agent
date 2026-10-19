@@ -14,7 +14,7 @@ from . import amap
 from .request_gate import AdmissionTimeout
 from .tool_retry import remaining_seconds
 
-ALLOWED = {"geocode", "search_poi", "get_weather", "measure_distance", "search_restaurants", "travel_route"}
+ALLOWED = {"geocode", "search_poi", "get_weather", "measure_distance", "search_restaurants", "search_restaurants_nearby", "travel_route"}
 
 
 @asynccontextmanager
@@ -55,36 +55,39 @@ async def _call(name: str, args: dict, timeout: float):
                     cursor = page.nextCursor
                     if not cursor:
                         break
-                if name not in discovered:
-                    raise AmapUnreachable("MCP 服务没有所需工具", retryable=False, code="MCP_TOOL_NOT_FOUND")
-                try:
-                    Draft202012Validator({**discovered[name].inputSchema, "additionalProperties": False}).validate(args)
-                except ValidationError as exc:
-                    raise AmapUnreachable("MCP 工具参数与服务契约不符", retryable=False, code="INVALID_ARGUMENT") from exc
-                result = await session.call_tool(name, args)
-                if result.isError:
-                    raise AmapUnreachable("MCP 工具返回执行错误", retryable=False, code="MCP_TOOL_ERROR")
-                payload = result.structuredContent
-                if payload is None:
-                    blocks = [part.text for part in result.content if getattr(part, "type", None) == "text"]
-                    if len(blocks) != 1:
-                        raise ValueError("expected one JSON text result")
-                    payload = json.loads(blocks[0])
-                if len(json.dumps(payload, ensure_ascii=False).encode("utf-8")) > 1_000_000:
-                    raise ValueError("MCP result too large")
-                if not isinstance(payload, dict) or payload.get("status") not in ("ok", "error"):
-                    raise ValueError("MCP result envelope invalid")
-                if payload["status"] == "error":
-                    code = payload.get("error_code")
-                    if code in {"AMAP_KEY_INVALID", "AMAP_QUOTA_EXCEEDED", "INVALID_REQUEST"}:
-                        raise AmapError(code, "MCP 地图服务返回配置或请求错误")
-                    delay = payload.get("retry_after_seconds")
-                    if delay is not None and (isinstance(delay, bool) or not isinstance(delay, (int, float)) or delay < 0 or not math.isfinite(delay)):
-                        raise ValueError("invalid retry delay")
-                    raise AmapUnreachable("MCP 地图服务查询失败", code=code if code in {
-                        "UPSTREAM_TIMEOUT", "UPSTREAM_UNAVAILABLE", "UPSTREAM_RATE_LIMITED"} else "MCP_TOOL_ERROR",
-                        retryable=payload.get("retryable") is True, retry_after_seconds=delay)
-                return payload["data"]
+                return await _invoke(session, discovered, name, args)
+
+async def _invoke(session, discovered, name, args):
+    if name not in discovered:
+        raise AmapUnreachable("MCP 服务没有所需工具", retryable=False, code="MCP_TOOL_NOT_FOUND")
+    try:
+        Draft202012Validator({**discovered[name].inputSchema, "additionalProperties": False}).validate(args)
+    except ValidationError as exc:
+        raise AmapUnreachable("MCP 工具参数与服务契约不符", retryable=False, code="INVALID_ARGUMENT") from exc
+    result = await session.call_tool(name, args)
+    if result.isError:
+        raise AmapUnreachable("MCP 工具返回执行错误", retryable=False, code="MCP_TOOL_ERROR")
+    payload = result.structuredContent
+    if payload is None:
+        blocks = [part.text for part in result.content if getattr(part, "type", None) == "text"]
+        if len(blocks) != 1:
+            raise ValueError("expected one JSON text result")
+        payload = json.loads(blocks[0])
+    if len(json.dumps(payload, ensure_ascii=False).encode("utf-8")) > 1_000_000:
+        raise ValueError("MCP result too large")
+    if not isinstance(payload, dict) or payload.get("status") not in ("ok", "error"):
+        raise ValueError("MCP result envelope invalid")
+    if payload["status"] == "error":
+        code = payload.get("error_code")
+        if code in {"AMAP_KEY_INVALID", "AMAP_QUOTA_EXCEEDED", "INVALID_REQUEST"}:
+            raise AmapError(code, "MCP 地图服务返回配置或请求错误")
+        delay = payload.get("retry_after_seconds")
+        if delay is not None and (isinstance(delay, bool) or not isinstance(delay, (int, float)) or delay < 0 or not math.isfinite(delay)):
+            raise ValueError("invalid retry delay")
+        raise AmapUnreachable("MCP 地图服务查询失败", code=code if code in {
+            "UPSTREAM_TIMEOUT", "UPSTREAM_UNAVAILABLE", "UPSTREAM_RATE_LIMITED"} else "MCP_TOOL_ERROR",
+            retryable=payload.get("retryable") is True, retry_after_seconds=delay)
+    return payload["data"]
 
 
 def _find_exception(exc, classes):
@@ -111,6 +114,9 @@ def call(name: str, args: dict):
         timeout -= monotonic() - started
         if timeout <= 0:
             raise TimeoutError("MCP time budget exhausted")
+        if settings.mcp_reuse_session:
+            from .mcp_pool import invoke
+            return invoke(name, args, timeout)
         return asyncio.run(_call(name, args, timeout))
     except AdmissionTimeout as exc:
         raise AmapUnreachable("MCP 限流等待超出时间预算", code="UPSTREAM_RATE_LIMITED",

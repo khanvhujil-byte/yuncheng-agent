@@ -19,7 +19,7 @@ from ..agents.verify_budget import verify_budget
 from ..agents.verify_plan import verify_plan
 from ..models.dialog import ModuleEdit
 from ..models.schemas import Attraction, Hotel, Restaurant, TripPlan, TripPlanResponse, TripRequest
-from . import llm, monitoring, store
+from . import llm, store, delivery_logging
 from .delivery import audit
 from .state_codec import restore_state_types
 
@@ -42,7 +42,7 @@ def _id(value):
 
 def _context(current):
     previous = current.get("result") or {}
-    if not previous.get("success") or not previous.get("data") or not current.get("committed"):
+    if not previous.get("data") or not current.get("committed"):
         raise HTTPException(422, "请先生成并确认一份有效行程，再修改具体模块。")
     if current["slots"] != current["committed"]:
         raise HTTPException(409, "还有尚未确认的整体要求修改，请先取消或完成该修改，再编辑具体模块。")
@@ -163,8 +163,9 @@ def _select(edit, pool, plan, req=None):
             raise HTTPException(422, "当前没有已核验候选，无法安全替换；请先补充真实数据。")
         choices = [{"candidate_id": _id(item), **_dict(item)} for item in pool]
         from .requirements import context
+        from ..agents.prompts import PARTIAL_EDIT_AGENT_PROMPT
         text, usage = llm.chat_json(
-            "你只为局部修改挑选已有候选，不生成地点、坐标、价格或整份行程。"
+            PARTIAL_EDIT_AGENT_PROMPT + "你只为局部修改挑选已有候选，不生成地点、坐标、价格或整份行程。"
             "返回 JSON {\"candidate_ids\":[\"候选ID\"]}，ID 必须来自候选清单。"
             "hotel/meals/attractions 只返回一个 ID；day 返回 1 至 3 个不同景点 ID。",
             json.dumps({"edit": edit.model_dump(), "current_day": plan["days"][edit.day_index] if edit.day_index is not None else None,
@@ -288,7 +289,7 @@ def prepare(current, edit: ModuleEdit):
     if error or constraint_error:
         raise HTTPException(422, error or constraint_error)
     independent = verify_plan({"plan": plan, "validate_error": None})
-    if independent.get("validate_error"):
+    if independent.get("validate_error") and current['result'].get('success'):
         raise HTTPException(422, independent["validate_error"])
     # Copy the prior report's hotel provenance while updating attraction checks.
     old_report = plan.get("constraint_report") or {}
@@ -358,8 +359,10 @@ def apply(current, pending, run_id):
             output_warnings.append("本次行程已完成，但地点资料入库失败；可保留行程，稍后重试保存。")
             state["plan"]["warnings"] = output_warnings
     elapsed_ms = int((time.perf_counter() - started) * 1000)
-    monitoring.record(run_id, state, success, elapsed_ms)
-    store.log_run(thread_id=run_id, fingerprint="partial-edit:" + run_id, cached=False, success=success,
+    state['usage'] = state.pop('_ticket_usage', {})
+    delivery_logging.record(run_id, state, success, elapsed_ms, output_warnings)
+    delivery_logging.log_run(thread_id=run_id, fingerprint="partial-edit:" + run_id, cached=False, success=success,
+                  llm_calls=state['usage'].get('llm_calls',0), prompt_tokens=state['usage'].get('prompt_tokens',0), completion_tokens=state['usage'].get('completion_tokens',0),
                   elapsed_ms=elapsed_ms, tool_calls=len(state.get("tool_calls") or []), plan_days=len(plan["days"]),
                   budget_total=int((state["plan"].get("budget") or {}).get("total") or 0))
     return TripPlanResponse(success=success, data=state["plan"] if checked is not None else None, thread_id=run_id,

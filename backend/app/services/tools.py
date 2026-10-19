@@ -38,8 +38,8 @@ RELEVANCE_THRESHOLD = 0.6  # 逐字重叠率阈值；高德对中文会分词，
 MAX_PAGE_SIZE = 20  # 高德单次返回上限
 
 # ---- 选址（配额保护）----
-RANK_MAX_ATTRACTIONS = 8  # 参与排序的景点上限（行程实际每天 2~3 个）
-RANK_MAX_HOTELS = 5  # 参与排序的酒店候选上限
+# Ranking uses only local geometry; truncating these lists saved no API quota
+# and could silently exclude the nearest hotel or later days' attractions.
 
 # 住宿偏好 → 搜索关键词（高德对"经济型酒店"这种说法不一定有对应 POI）
 HOTEL_KEYWORDS = {
@@ -75,6 +75,8 @@ class ToolContext:
     chosen_hotel: Optional[Hotel] = None
     chosen_reason: str = ""
     ranked: list[str] = field(default_factory=list)  # rank_hotels 给出的排序（名字，从优到劣）
+    ranked_ids: list[str] = field(default_factory=list)
+    hotel_price_source: str = "llm_estimated"  # deterministic selection uses an explicit budget reserve
 
     # ---- 可观测性与缓存 ----
     calls: list[dict[str, Any]] = field(default_factory=list)  # 每次工具调用一条记录（trace/实验用）
@@ -202,18 +204,31 @@ def _search_attractions(args: dict, ctx: ToolContext) -> ToolResult:
     keyword = str(args.get("keyword") or "").strip()
     if not keyword:
         return ToolResult.failure("错误：keyword 不能为空。请给出搜索关键词（建议用用户的偏好标签）。", "INVALID_ARGUMENT")
-    limit = min(int(args.get("limit") or MAX_PAGE_SIZE), MAX_PAGE_SIZE)
+    limit = max(1, min(int(args.get("limit") or MAX_PAGE_SIZE), MAX_PAGE_SIZE))
 
-    try:
-        hits = amap.search_poi(keyword, ctx.city, offset=limit, page=1)
-    except amap.AmapError as exc:
-        return _upstream_failure(ctx, f"搜索「{keyword}」", exc)
-    except amap.AmapUnreachable as exc:
-        return _upstream_failure(ctx, f"搜索「{keyword}」", exc)
+    from .candidate_search import decision, local_candidates, minimum_candidates, save_fresh, with_stats
+    local, retrieval = local_candidates(ctx.city, "attraction", keyword, ctx.requirements.attractions,
+                                         start_date=ctx.start_date, days=ctx.travel_days, limit=limit)
+    retrieval = decision(retrieval, len(local) >= min(limit, minimum_candidates("attraction", ctx.travel_days)))
+    fresh, failure = [], None
+    if not retrieval["cache_hit"]:
+        retrieval["upstream_calls"] = 1
+        try:
+            fresh = amap.search_poi(keyword, ctx.city, offset=limit, page=1)
+            retrieval["upstream_count"] = len(fresh)
+        except (amap.AmapError, amap.AmapUnreachable) as exc:
+            failure = _upstream_failure(ctx, f"搜索「{keyword}」", exc)
+            retrieval["retrieval_decision"] = "local_partial_upstream_error" if local else "upstream_error"
+    # Preserve required anchors already in context; fresher observations replace
+    # local payloads before insertion, not user-specified context anchors.
+    hits = list({p.poi_id or p.name: p for p in [*local, *fresh]}.values())
 
     added = dropped = duplicates = 0
     from .price_catalog import apply_prices
     hits = apply_prices(ctx.city, "attraction", hits, service_date=ctx.start_date, travel_days=ctx.travel_days)
+    fresh_ids = {p.poi_id or p.name for p in fresh}
+    save_fresh(ctx.city, "attraction", [p for p in hits if (p.poi_id or p.name) in fresh_ids
+               and _is_attraction(p)], retrieval)
     for poi in hits:
         # 这里**不做相关性判定**：关键词是偏好标签（自然风光/博物馆）而不是地名，
         # 按字面比对会误杀正确结果（见 is_relevant 的说明）。类目过滤到此为止。
@@ -229,24 +244,35 @@ def _search_attractions(args: dict, ctx: ToolContext) -> ToolResult:
         added += 1
 
     sample = "、".join(poi.name for poi in hits[:3]) or "无"
-    return ToolResult.success(
+    if failure is not None:
+        return with_stats(failure, {**retrieval, "candidate_count": len(ctx.attractions), "added_count": added})
+    if not retrieval["cache_hit"] and len(hits) - dropped < min(limit, minimum_candidates("attraction", ctx.travel_days)):
+        retrieval["retrieval_decision"] = "partial"
+        retrieval["retrieval_reasons"].append("insufficient_after_upstream_fill")
+    return with_stats(ToolResult.success(
         f"关键词「{keyword}」：返回 {len(hits)} 条，采纳 {added} 条，"
         f"过滤 {dropped} 条（餐饮/住宿类目）。"
         f"累计候选 {len(ctx.attractions)} 条。返回的前几条：{sample}。",
         returned_count=len(hits), filtered_count=dropped, duplicate_count=duplicates,
         added_count=added, candidate_count=len(ctx.attractions),
-    )
+    ), retrieval)
 
 
 def _get_weather(args: dict, ctx: ToolContext) -> ToolResult:
     if not ctx.adcode:
         return ToolResult.failure("错误：缺少城市编码（adcode），无法查询天气。", "MISSING_ADCODE")
+    from . import catalog_refresh, weather_cache
+    from .candidate_search import with_stats
     try:
-        forecast = amap.get_weather(ctx.adcode)
+        catalog_refresh.touch_city(ctx.city, ctx.adcode)
+    except Exception:
+        logger.warning("城市访问记录暂不可用，继续查询天气")
+    try:
+        forecast, cache_stats = weather_cache.get_forecast(ctx.adcode, loader=amap.get_weather)
     except amap.AmapError as exc:
-        return _upstream_failure(ctx, "天气查询", exc)
+        return with_stats(_upstream_failure(ctx, "天气查询", exc), getattr(exc, "weather_cache", {"upstream_calls": 1}))
     except amap.AmapUnreachable as exc:
-        return _upstream_failure(ctx, "天气查询", exc)
+        return with_stats(_upstream_failure(ctx, "天气查询", exc), getattr(exc, "weather_cache", {"upstream_calls": 1}))
 
     days = _trip_dates(ctx.start_date, ctx.travel_days)
     by_date = {item.date: item for item in forecast}
@@ -264,46 +290,71 @@ def _get_weather(args: dict, ctx: ToolContext) -> ToolResult:
     if missing:
         text += f"。以下日期**没有预报**，必须留空、不许编造：{'、'.join(missing)}"
     return ToolResult.success(text, returned_count=len(forecast), covered_count=covered,
-                              requested_days=len(days))
+                              requested_days=len(days), **cache_stats)
 
 
 def _search_hotels(args: dict, ctx: ToolContext) -> ToolResult:
     keyword = str(args.get("keyword") or "").strip() or "酒店"
     keyword = HOTEL_KEYWORDS.get(keyword, keyword)
 
-    try:
-        hits = amap.search_poi(keyword, ctx.city, offset=MAX_PAGE_SIZE, page=1)
-    except amap.AmapError as exc:
-        return _upstream_failure(ctx, "搜索酒店", exc)
-    except amap.AmapUnreachable as exc:
-        return _upstream_failure(ctx, "搜索酒店", exc)
+    from .candidate_search import decision, local_candidates, minimum_candidates, save_fresh, with_stats
+    from .price_catalog import apply_prices
+    local, retrieval = local_candidates(ctx.city, "hotel", keyword, ctx.requirements.hotel,
+                                         start_date=ctx.start_date, days=ctx.travel_days, nights=ctx.nights,
+                                         limit=MAX_PAGE_SIZE)
+    retrieval = decision(retrieval, len(local) >= minimum_candidates("hotel"))
+    fresh, failure = [], None
+    if not retrieval["cache_hit"]:
+        retrieval["upstream_calls"] = 1
+        try:
+            fresh = amap.search_poi(keyword, ctx.city, offset=MAX_PAGE_SIZE, page=1)
+            retrieval["upstream_count"] = len(fresh)
+        except (amap.AmapError, amap.AmapUnreachable) as exc:
+            failure = _upstream_failure(ctx, "搜索酒店", exc)
+            retrieval["retrieval_decision"] = "local_partial_upstream_error" if local else "upstream_error"
 
     added = dropped = duplicates = 0
-    for poi in hits:
+    hotels = {p.poi_id or p.name: p for p in local}
+    fresh_hotels = []
+    for poi in fresh:
         from .requirements import excluded
         if not _is_hotel(poi) or poi.location is None or excluded(poi.name, ctx.requirements.hotel):
             dropped += 1
             continue
+        hotel = apply_prices(ctx.city, "hotel", [_hotel_of(poi, ctx.nights)],
+                             service_date=ctx.start_date, nights=ctx.nights)[0]
+        fresh_hotels.append(hotel)
+        from .requirements import hotel_allowed
+        if hotel_allowed(hotel, ctx.requirements.hotel):
+            hotels[poi.poi_id or poi.name] = hotel
+        else:
+            dropped += 1
+    save_fresh(ctx.city, "hotel", fresh_hotels, retrieval)
+    for poi in hotels.values():
         key = poi.poi_id or poi.name
         if key in ctx.hotels:
             duplicates += 1
             continue
-        from .price_catalog import apply_prices
-        ctx.hotels[key] = apply_prices(ctx.city, "hotel", [_hotel_of(poi, ctx.nights)],
-                                       service_date=ctx.start_date, nights=ctx.nights)[0]
+        ctx.hotels[key] = poi
         added += 1
 
     sample = "、".join(h.name for h in list(ctx.hotels.values())[:3]) or "无"
     if added:
         # Candidate changes invalidate the previous ordering used by fallback.
         ctx.ranked = []
+        ctx.ranked_ids = []
         ctx.distance_cache.pop("__rank_best__", None)
-    return ToolResult.success(
-        f"关键词「{keyword}」：返回 {len(hits)} 条，采纳住宿类 {added} 条，"
+    if failure is not None:
+        return with_stats(failure, {**retrieval, "candidate_count": len(ctx.hotels), "added_count": added})
+    if not retrieval["cache_hit"] and len(hotels) < minimum_candidates("hotel"):
+        retrieval["retrieval_decision"] = "partial"
+        retrieval["retrieval_reasons"].append("insufficient_after_upstream_fill")
+    return with_stats(ToolResult.success(
+        f"关键词「{keyword}」：返回 {len(local) + len(fresh)} 条，采纳住宿类 {added} 条，"
         f"累计候选 {len(ctx.hotels)} 家。前几家：{sample}。",
-        returned_count=len(hits), filtered_count=dropped, duplicate_count=duplicates,
+        returned_count=len(local) + len(fresh), filtered_count=dropped, duplicate_count=duplicates,
         added_count=added, candidate_count=len(ctx.hotels),
-    )
+    ), retrieval)
 
 
 def _measure_distance(args: dict, ctx: ToolContext) -> ToolResult:
@@ -343,14 +394,14 @@ def _rank_hotels(args: dict, ctx: ToolContext) -> ToolResult:
     if not ctx.attractions:
         return ToolResult.failure("错误：还没有景点候选，先调 search_attractions。", "NO_ATTRACTION_CANDIDATES")
 
-    attractions = list(ctx.attractions.values())[:RANK_MAX_ATTRACTIONS]
+    attractions = list(ctx.attractions.values())
     weighted = [a for a in attractions if a.location is not None]
     if not weighted:
         return ToolResult.failure("错误：候选景点都缺坐标，无法排序。", "MISSING_LOCATION")
     total_weight = sum(max(a.visit_duration, 1) for a in weighted)
 
     ranking: list[tuple[float, str, Hotel]] = []
-    for hotel in list(ctx.hotels.values())[:RANK_MAX_HOTELS]:
+    for hotel in ctx.hotels.values():
         if hotel.location is None:
             continue
         cost = sum(
@@ -366,6 +417,7 @@ def _rank_hotels(args: dict, ctx: ToolContext) -> ToolResult:
     lines = [f"{index}. {name}（加权平均距离 {cost:.1f} km）" for index, (cost, name, _) in enumerate(ranking[:top_n], 1)]
     # 排序结果留在收集箱：Agent 若没给出最终选择，节点可以拿第一名兜底
     ctx.ranked = [name for _, name, _ in ranking]
+    ctx.ranked_ids = [hotel.poi_id or hotel.name for _, _, hotel in ranking]
     ctx.distance_cache["__rank_best__"] = ranking[0][0]
     logger.info("酒店排序完成 | 候选 %d 家 / 景点 %d 个 | 最优 %s", len(ranking), len(weighted), ranking[0][1])
     return ToolResult.success("加权距离排序（越小越好，已按建议游览时长加权）：" + "；".join(lines) + "。可用 measure_distance 对心仪的酒店实测驾车距离。")
@@ -398,12 +450,13 @@ def _choose_hotel(args: dict, ctx: ToolContext) -> ToolResult:
     hotel.estimated_cost = price
     if not sourced:
         hotel.cost_status = "estimated"
-        hotel.cost_source = "llm_estimated"
+        hotel.cost_source = "static_estimate" if ctx.hotel_price_source == "static_estimate" else "llm_estimated"
     ctx.chosen_hotel = hotel
     ctx.chosen_reason = str(args.get("reason") or "")
     return ToolResult.success(
         f"已选定：{hotel.name}，{price} 元/晚 × {ctx.nights} 晚 = {price * ctx.nights} 元。"
-        + ("价格来自有日期和出处的资料，已保留原值。" if sourced else "价格为模型估算。")
+        + ("价格来自有日期和出处的资料，已保留原值。" if sourced else
+           ("金额是住宿预算预留，不是酒店报价。" if ctx.hotel_price_source == "static_estimate" else "价格为模型估算。"))
         + "请结束本轮，不要再调用工具。"
     )
 

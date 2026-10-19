@@ -27,7 +27,8 @@ def defaults(user_id):
 
 
 def extract(message, current):
-    prompt = ("返回 JSON，只做旅行意图分类和用户明确说出的槽位增量，不生成行程、不猜测缺失字段。"
+    from ..agents.prompts import INTENT_AGENT_PROMPT
+    prompt = (INTENT_AGENT_PROMPT + "返回 JSON，只做旅行意图分类和用户明确说出的槽位增量，不生成行程、不猜测缺失字段。"
               "intent 只能为 new_plan/modify_plan/edit_module/explain_plan/knowledge/clarify。"
               "new_plan 表示明确换一个新行程；补充当前请求用 modify_plan。"
               "已生成行程中只换酒店、某天某餐/景点或调整某一天，必须选 edit_module，不能重做全程。"
@@ -140,6 +141,15 @@ def _question_reply(questions):
 
 
 def turn(identifier: str, user_id: str, command: TurnInput):
+    from .execution_lease import hold, Busy
+    try:
+        with hold('conversation:' + identifier) as lease:
+            return _turn(identifier, user_id, command, lease)
+    except Busy as exc:
+        raise HTTPException(409, '会话正在处理，请使用原 request_id 重试。') from exc
+
+
+def _turn(identifier: str, user_id: str, command: TurnInput, lease):
     db.load_conversation(identifier, user_id)
     digest = hashlib.sha256(command.model_dump_json(exclude={"expected_revision"}).encode()).hexdigest()
     cached = db.claim(identifier, user_id, command.expected_revision, command.request_id, digest)
@@ -194,6 +204,7 @@ def turn(identifier: str, user_id: str, command: TurnInput):
                         conn.execute("INSERT OR IGNORE INTO owned_run VALUES(?,?,?)", (run_id, user_id, identifier))
                     candidate = partial_edit.apply(current, pending, run_id) if pending else planning.plan(
                         req, run_id=run_id, seed=reusable_seed(result, req), cache_scope=user_id)
+                    lease.check()
                     db.save_candidate(identifier, command.request_id, run_id, req.model_dump(), candidate.model_dump(mode="json"))
                 payload = candidate.model_dump(mode="json")
                 if candidate.success:
@@ -203,6 +214,11 @@ def turn(identifier: str, user_id: str, command: TurnInput):
                     pending = None
                 else:
                     reply = candidate.message or "本次规划未完成，已保留原行程。"
+                    if (not result or not result.get('success')) and candidate.data and candidate.data.days:
+                        result, committed = payload, req.model_dump()
+                        slots = dict(committed)
+                        pending = None
+                        reply += ' 已保留可修复草稿，可选择具体模块修改。'
         elif command.action == "edit":
             if questions:
                 raise HTTPException(409, "请先回答待确认的问题，原行程仍保留。")
@@ -274,6 +290,7 @@ def turn(identifier: str, user_id: str, command: TurnInput):
                     "clarifications": db.public_questions(questions),
                     "pending_edit": db.public_edit(pending), "edit_preview": pending["preview"] if pending else None,
                     "citations": citations}
+        lease.check()
         db.finish(identifier, current["revision"], command.request_id, command.message, slots, committed, result, response, digest,
                   pending_edit=pending, clarifications=questions)
         finished = True

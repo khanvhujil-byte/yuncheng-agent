@@ -48,7 +48,7 @@ class LlmUnreachable(RuntimeError):
     """网络问题 / 超时 / 响应不是 JSON —— 该降级。"""
 
 
-def _post(body: dict[str, Any]) -> dict[str, Any]:
+def _post(body: dict[str, Any], *, timeout: float | None = None) -> dict[str, Any]:
     """唯一发请求的地方：拼鉴权、超时、状态码分类、JSON 解析。"""
     settings = get_settings()
     try:
@@ -59,7 +59,7 @@ def _post(body: dict[str, Any]) -> dict[str, Any]:
                 "Content-Type": "application/json",
             },
             json=body,
-            timeout=settings.llm_timeout,
+            timeout=timeout if timeout is not None else settings.llm_timeout,
         )
     except httpx.HTTPError as exc:
         raise LlmUnreachable(f"{type(exc).__name__}: {exc}") from exc
@@ -85,7 +85,7 @@ def _usage_of(payload: dict[str, Any]) -> dict[str, int]:
     }
 
 
-def chat_json(system_prompt: str, user_prompt: str, *, extra_user: str = "") -> tuple[str, dict[str, int]]:
+def chat_json(system_prompt: str, user_prompt: str, *, extra_user: str = "", timeout: float | None = None, max_tokens: int | None = None) -> tuple[str, dict[str, int]]:
     """要一个 JSON 对象。返回 (文本, usage)。不做解析 —— 校验是调用方的事。"""
     messages = [
         {"role": "system", "content": system_prompt},
@@ -94,14 +94,15 @@ def chat_json(system_prompt: str, user_prompt: str, *, extra_user: str = "") -> 
     if extra_user:
         messages.append({"role": "user", "content": extra_user})
 
-    payload = _post(
-        {
+    body = {
             "model": get_settings().llm_model_id,
             "messages": messages,
             "response_format": {"type": "json_object"},
             "temperature": 0,
         }
-    )
+    if max_tokens is not None:
+        body['max_tokens'] = max_tokens
+    payload = _post(body, timeout=timeout) if timeout is not None else _post(body)
     choices = payload.get("choices") or [{}]
     text = (choices[0].get("message") or {}).get("content") or ""
     usage = _usage_of(payload)

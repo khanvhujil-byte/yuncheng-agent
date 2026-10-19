@@ -59,6 +59,19 @@ def search_restaurants(keywords, city, limit=12):
     return _validate(list[Restaurant], _call("search_restaurants", {"keywords": keywords, "city": city, "limit": limit}))
 
 
+def search_restaurants_nearby(keywords, city, center, radius=4000, limit=20):
+    if (not 100 <= radius <= 4000 or not 1 <= limit <= 20
+            or not math.isfinite(center.longitude) or not math.isfinite(center.latitude)
+            or not -180 <= center.longitude <= 180 or not -90 <= center.latitude <= 90):
+        raise AmapError('INVALID_REQUEST', '餐饮周边查询参数不合法')
+    if get_settings().map_backend == 'local':
+        return amap.search_restaurants_nearby(keywords, city, center, radius, limit)
+    result = _validate(list[Restaurant], _call('search_restaurants_nearby', {
+        'keywords':keywords, 'city':city, 'center':center.model_dump(), 'radius':radius, 'limit':limit}))
+    from .tools import haversine_km
+    return [r for r in result if haversine_km(center, r.location) <= radius / 1000]
+
+
 def travel_route(origin, destination, mode="driving", city=None):
     if get_settings().map_backend == "local":
         return amap.travel_route(origin, destination, mode, city)

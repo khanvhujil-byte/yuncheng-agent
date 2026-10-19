@@ -136,8 +136,12 @@ def claim(identifier: str, user_id: str, revision: int, request_id: str, input_h
 def recover_interrupted():
     """Run once during single-worker application startup, never per request."""
     with store._connect() as db:
-        db.execute("UPDATE conversation_operation SET status='interrupted' WHERE status='running'")
-        db.execute("UPDATE conversation SET busy=0")
+        import time
+        from .execution_lease import SCHEMA
+        db.execute(SCHEMA)
+        inactive = "NOT EXISTS (SELECT 1 FROM execution_lease l WHERE l.key='conversation:' || conversation_id AND l.expires>?)"
+        db.execute("UPDATE conversation_operation SET status='interrupted' WHERE status='running' AND " + inactive, (time.time(),))
+        db.execute("UPDATE conversation SET busy=0 WHERE " + inactive, (time.time(),))
 
 
 def operation(identifier, request_id, digest):
@@ -157,6 +161,8 @@ def operation(identifier, request_id, digest):
 def save_candidate(identifier, request_id, run_id, req, result):
     with store._connect() as db:
         db.execute("BEGIN IMMEDIATE")
+        from .execution_lease import fence
+        fence(db)
         db.execute("UPDATE conversation_operation SET status='complete',result_json=? WHERE conversation_id=? AND request_id=?",
                    (encode(result), identifier, request_id))
         db.execute("INSERT OR IGNORE INTO conversation_version VALUES(?,?,?,?,?)",
@@ -178,6 +184,8 @@ def finish(identifier, revision, request_id, message, slots, committed, result, 
            clarifications=None):
     with store._connect() as db:
         db.execute("BEGIN IMMEDIATE")
+        from .execution_lease import fence
+        fence(db)
         updated = db.execute("UPDATE conversation SET slots_json=?,committed_json=?,result_json=?,revision=revision+1,busy=0,updated_at=? WHERE conversation_id=? AND revision=? AND busy=1",
                              (encode(slots), encode(committed), encode(result) if result else None, store._now(), identifier, revision))
         if updated.rowcount != 1:
@@ -198,6 +206,8 @@ def finish(identifier, revision, request_id, message, slots, committed, result, 
 
 def release(identifier, revision):
     with store._connect() as db:
+        from .execution_lease import fence
+        fence(db)
         db.execute("UPDATE conversation SET busy=0 WHERE conversation_id=? AND revision=?", (identifier, revision))
 
 

@@ -1,7 +1,7 @@
 """Uniform result contract for every tool outcome; domain data stays in ToolContext."""
 import json
 from dataclasses import asdict, dataclass, field
-from typing import Literal
+from typing import Any, Literal
 
 
 @dataclass(frozen=True)
@@ -10,11 +10,11 @@ class ToolResult:
     message: str
     error_code: str | None = None
     retryable: bool = False
-    stats: dict[str, int] = field(default_factory=dict)
+    stats: dict[str, Any] = field(default_factory=dict)
     retry_after_seconds: float | None = None
 
     @classmethod
-    def success(cls, message: str, **stats: int) -> "ToolResult":
+    def success(cls, message: str, **stats: Any) -> "ToolResult":
         return cls(status="ok", message=message, stats=stats)
 
     @classmethod

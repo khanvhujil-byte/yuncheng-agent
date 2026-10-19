@@ -57,6 +57,16 @@ async def require_api_key(
 
     settings = get_settings()
     expected = (settings.api_key or "").strip()
+    if settings.deployment_mode == 'production':
+        if request.url.path in ('/api/auth/login', '/api/auth/register'):
+            return
+        from ..services.identity import current_user
+        current_user(request.headers.get('x-session-token'))
+        return
+    if request.url.path == '/api/auth/community':
+        from ..services.identity import current_user
+        current_user(request.headers.get('x-session-token'))
+        return
     if not expected:
         if not _warned_no_key:
             logger.warning(
@@ -88,6 +98,13 @@ async def rate_limit(request: Request) -> None:
 
     now = time.time()
     key = client_key(request)
+    if settings.deployment_mode == 'production' and request.url.path not in ('/api/auth/login', '/api/auth/register'):
+        from ..services.identity import current_user
+        user = current_user(request.headers.get('x-session-token'))
+        read_only = request.method in ('GET', 'HEAD')
+        key = 'account:' + user + (':read' if read_only else ':write')
+        if read_only:
+            limit = settings.read_rate_limit_per_minute
     with _lock:
         window = _hits[key]
         while window and now - window[0] > 60:

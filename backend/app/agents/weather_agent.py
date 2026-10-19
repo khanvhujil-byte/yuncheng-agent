@@ -2,10 +2,10 @@
 
 两条路径，同一个工具（`get_weather`）：
 
-    weather_use_agent = True  （默认）
+    weather_use_agent = True  （显式对照实验）
         ReAct 循环：LLM 决定调工具、看结果、汇报 —— 多花 1~2 次 LLM 调用
 
-    weather_use_agent = False （.env 里加一行 WEATHER_USE_AGENT=false）
+    weather_use_agent = False （默认）
         直接调用工具 —— 0 token，瞬时错误由工具运行时限次重试
 
 **这个开关本身就是实验变量**：同一批请求跑两遍，就能量化出

@@ -15,6 +15,9 @@
 """
 
 import logging
+from copy import deepcopy
+from threading import Lock
+from time import monotonic
 from typing import Any, Optional
 
 import httpx
@@ -22,6 +25,8 @@ import httpx
 from ..config import get_settings
 
 logger = logging.getLogger(__name__)
+_hot_cache: dict[tuple[str, int], tuple[float, object]] = {}
+_hot_lock = Lock()
 
 
 def _base_url() -> str:
@@ -40,11 +45,22 @@ def fetch_hot(limit: int = 5) -> Optional[dict[str, list[dict[str, Any]]]]:
     """
     if not _enabled():
         return None
+    key = (_base_url(), limit)
+    with _hot_lock:
+        cached = _hot_cache.get(key)
+        if cached and cached[0] > monotonic():
+            return deepcopy(cached[1])
+        result = _fetch_hot(limit)
+        _hot_cache[key] = (monotonic() + (300 if result else 30), deepcopy(result))
+        return result
+
+
+def _fetch_hot(limit):
     try:
         response = httpx.get(
             f"{_base_url()}/hot",
             params={"limit": limit},
-            timeout=get_settings().community_timeout,
+            timeout=min(get_settings().community_timeout, get_settings().community_hot_timeout),
         )
         response.raise_for_status()
         stats = (response.json() or {}).get("stats") or {}
@@ -66,6 +82,7 @@ def publish_itinerary(
     plan: dict[str, Any],
     preferences: Optional[list[str]] = None,
     user_id: int = 1,
+    session_token: str = "",
 ) -> Optional[int]:
     """把行程发布到 Java 社区。
 
@@ -86,7 +103,7 @@ def publish_itinerary(
                 "preferences": preferences or [],
                 "plan": plan,  # 原样透传 TripPlan，Java 不解析内部结构
             },
-            headers={"X-User-Id": str(user_id)},
+            headers={"X-Session-Token": session_token},
             # 发布要等 Java 回调 Python 生成摘要，给足时间
             timeout=max(get_settings().community_timeout, 30.0),
         )

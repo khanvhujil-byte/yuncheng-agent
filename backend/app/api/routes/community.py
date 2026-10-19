@@ -9,11 +9,11 @@ Python 依然**不碰 MySQL**：它只负责把契约传过去（"数据库连�
 import logging
 from typing import Any, Optional
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Header
 from pydantic import BaseModel, Field
 
 from ...config import get_settings
-from ...services import java_bridge
+from ...services import java_bridge, identity
 from ..security import rate_limit, require_api_key
 
 logger = logging.getLogger(__name__)
@@ -37,7 +37,7 @@ class PublishPayload(BaseModel):
 
 
 @router.post("/publish", summary="把行程发布到 Java 社区")
-def publish(payload: PublishPayload) -> dict:
+def publish(payload: PublishPayload, user_id: str = Depends(identity.current_user), x_session_token: str = Header()) -> dict:
     """发布行程。
 
     返回 `{success, itinerary_id, message}`。
@@ -61,6 +61,7 @@ def publish(payload: PublishPayload) -> dict:
         start_date=start_date,
         plan=plan,
         preferences=payload.preferences,
+        session_token=x_session_token,
     )
     if itinerary_id is None:
         return {"success": False, "itinerary_id": None,

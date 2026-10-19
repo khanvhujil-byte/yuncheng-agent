@@ -58,7 +58,8 @@ SCHEMA = """CREATE TABLE IF NOT EXISTS price_observation (
  city TEXT NOT NULL,kind TEXT NOT NULL,poi_id TEXT NOT NULL,
  unit TEXT NOT NULL,source_url TEXT NOT NULL,payload_json TEXT NOT NULL,
  observed_at TEXT NOT NULL,expires_at TEXT NOT NULL,
- PRIMARY KEY(city,kind,poi_id,unit,source_url)
+ service_from TEXT NOT NULL DEFAULT '',service_to TEXT NOT NULL DEFAULT '',
+ PRIMARY KEY(city,kind,poi_id,unit,source_url,service_from,service_to)
 )"""
 
 
@@ -71,14 +72,25 @@ def import_prices(records):
         observed = datetime.fromisoformat(record.observed_at).astimezone(timezone.utc).isoformat()
         expires = datetime.fromisoformat(record.expires_at).astimezone(timezone.utc).isoformat()
         rows.append((record.city.removesuffix("市"), record.kind, record.poi_id, record.unit, record.source_url,
-                     record.model_dump_json(), observed, expires))
+                     record.model_dump_json(), observed, expires, record.service_from or '', record.service_to or ''))
     store.DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     db = sqlite3.connect(store.DB_PATH, timeout=10)
     try:
         with db:
+            db.execute('BEGIN IMMEDIATE')
             db.execute(SCHEMA)
-            db.executemany("""INSERT INTO price_observation VALUES(?,?,?,?,?,?,?,?)
-                ON CONFLICT(city,kind,poi_id,unit,source_url) DO UPDATE SET
+            if 'service_from' not in {row[1] for row in db.execute('PRAGMA table_info(price_observation)')}:
+                # Preserve previous evidence while making different travel dates
+                # independent observations. All DDL and copying is one transaction.
+                db.execute('ALTER TABLE price_observation RENAME TO price_observation_legacy_dates')
+                db.execute(SCHEMA)
+                db.execute("""INSERT INTO price_observation SELECT *,
+                    COALESCE(json_extract(payload_json,'$.service_from'),''),
+                    COALESCE(json_extract(payload_json,'$.service_to'),'')
+                    FROM price_observation_legacy_dates""")
+                db.execute('DROP TABLE price_observation_legacy_dates')
+            db.executemany("""INSERT INTO price_observation VALUES(?,?,?,?,?,?,?,?,?,?)
+                ON CONFLICT(city,kind,poi_id,unit,source_url,service_from,service_to) DO UPDATE SET
                 payload_json=excluded.payload_json,observed_at=excluded.observed_at,
                 expires_at=excluded.expires_at""", rows)
     finally:
@@ -136,7 +148,8 @@ def apply_prices(city, kind, places, *, service_date=None, nights=0, travel_days
             continue
         if kind == "attraction":
             fields = {"ticket_price": record["amount"], "ticket_price_status": record["status"],
-                      "ticket_price_source": "imported", "ticket_price_evidence_url": record["source_url"]}
+                      "ticket_price_source": "imported", "ticket_price_evidence_url": record["source_url"],
+                      "ticket_price_note": record.get("note", "")}
         elif kind == "hotel":
             fields = {"estimated_cost": record["amount"], "cost_status": record["status"],
                       "cost_source": "imported", "price_evidence_url": record["source_url"]}
