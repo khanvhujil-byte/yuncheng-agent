@@ -13,6 +13,7 @@ from app.agents import planner_agent, react_loop
 from app.models.dialog import IntentDecision, SlotPatch
 from app.models.schemas import Restaurant
 from app.services import amap, conversation, java_bridge, monitoring, store
+from tests.joint_fixtures import joint_payload
 from tests.factories import make_attraction, make_day, make_request, make_weather
 
 
@@ -67,7 +68,10 @@ def external_io(monkeypatch, settings):
         if scenario['name'] == 'json_array':
             return '[]', {'llm_calls': 1}
         selected = spots if scenario['name'] != 'hallucinated' else [make_attraction('模型编造景点'), *spots[1:]]
-        return json.dumps({'days': [make_day(i, f'2026-10-{10+i}', [spot]) for i, spot in enumerate(selected)]}), {'prompt_tokens': 20, 'completion_tokens': 10, 'llm_calls': 1}
+        food = restaurants
+        if '\"max_cost_per_meal\":40' in args[1] or '\"max_cost_per_meal\": 40' in args[1]:
+            food = restaurants[:1]
+        return json.dumps(joint_payload([make_day(i, f'2026-10-{10+i}', [spot]) for i, spot in enumerate(selected)], food, hotel.poi_id)), {'prompt_tokens': 20, 'completion_tokens': 10, 'llm_calls': 1}
     monkeypatch.setattr(react_loop, 'chat_with_tools', model_tools)
     monkeypatch.setattr(planner_agent, 'chat_json', compose)
     return scenario
@@ -126,15 +130,16 @@ def test_multi_turn_confirm_modify_reuse_reject_with_real_pipeline(external_io, 
     ({'food': {'max_cost_per_meal': 40}}, True),
     ({'hotel': {'max_price_per_night': 100}}, False),
     ({'attractions': {'max_per_day': 1}}, True),
-    ({'food': {'priority': 'food_first'}}, False),
+    ({'food': {'priority': 'food_first'}}, True),
 ])
 def test_module_requirements_hold_across_real_graph_and_bounded_retries(external_io, requirements, success):
     req = make_request(must_visit=[], requirements=requirements)
     body = TestClient(app).post('/api/trip/plan', json=req.model_dump()).json()
     assert body['success'] is success, body
-    assert external_io['compositions'] <= 2
+    from app.config import get_settings
+    assert external_io['compositions'] <= get_settings().planning_max_calls
     if not success:
         assert body['message']
         assert store.find_itinerary(store.fingerprint_of(req)) is None
-    elif 'food' in requirements:
+    elif requirements.get('food', {}).get('max_cost_per_meal'):
         assert all(meal['restaurant_id'] == 'R0' for day in body['data']['days'] for meal in day['meals'])

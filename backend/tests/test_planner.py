@@ -121,6 +121,7 @@ class TestEnrichment:
         candidate = make_attraction(
             "杭州西湖风景名胜区", required=True, rating=4.9, poi_id="B023B13L9M",
             typecode="110202", image_url="https://example.com/x.jpg",
+            ticket_price_note="成人首道门票；另收费展馆不包含。",
         )
         days = _days(count=1, spots_per_day=1)
         # 模型输出里只有名字与坐标，其余字段是空的
@@ -137,6 +138,7 @@ class TestEnrichment:
         assert spot.image_url == "https://example.com/x.jpg"
         assert spot.rating == 4.9
         assert spot.required is True
+        assert spot.ticket_price_note == candidate.ticket_price_note
 
     def test_matches_by_poi_id_even_when_name_differs(self):
         candidate = make_attraction("正式名", poi_id="POI-SAME", image_url="https://a/b.jpg")

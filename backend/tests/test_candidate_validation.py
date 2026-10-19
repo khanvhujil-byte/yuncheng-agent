@@ -1,6 +1,7 @@
 """Exercise real planning retries and the success/cache boundary without APIs."""
 
 import json
+from tests.joint_fixtures import restaurants_at, hotel_pool, joint_payload
 
 import pytest
 
@@ -46,6 +47,8 @@ def test_candidate_validation_controls_success_and_cache(
             "sources": {"hotel": "llm_estimated"},
         }
 
+    restaurants = restaurants_at(anchor.location)
+    monkeypatch.setattr(graph_module, "collect_food", lambda s: {"restaurants": restaurants})
     responses = iter(model_outputs)
     calls = []
 
@@ -58,12 +61,12 @@ def test_candidate_validation_controls_success_and_cache(
                 make_day(1, "2026-10-11", [other if choice == "valid" else invented]),
             ],
         }
-        return json.dumps(payload, ensure_ascii=False), {"llm_calls": 1}
+        return json.dumps(joint_payload(payload["days"], restaurants, "JHOTEL"), ensure_ascii=False), {"llm_calls": 1}
 
     monkeypatch.setattr(graph_module, "validate_city", validate)
     monkeypatch.setattr(graph_module, "collect_attractions", collect_attractions)
     monkeypatch.setattr(graph_module, "collect_weather", collect_weather)
-    monkeypatch.setattr(graph_module, "resolve_hotel", resolve_hotel)
+    monkeypatch.setattr(graph_module, "collect_hotels", lambda s: hotel_pool(s, make_hotel(nights=1)))
     monkeypatch.setattr(planner_agent, "chat_json", fake_model)
 
     final = graph_module.build_graph().invoke({**_initial_state(request), "experience_enabled":False})

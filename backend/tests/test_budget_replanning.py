@@ -1,5 +1,6 @@
 """Exercise budget retry counts through the real graph and completion boundary."""
 import json
+from tests.joint_fixtures import restaurants_at, hotel_pool, joint_payload
 
 import pytest
 
@@ -28,6 +29,8 @@ def test_budget_replanning_is_counted_when_entered(
     expensive = make_attraction("收费景点", ticket_price=900, ticket_price_status="known")
     cheap = make_attraction("免费景点", ticket_price=0, ticket_price_status="known")
     pool = {"expensive": expensive, "cheap": cheap}
+    restaurants = restaurants_at(cheap.location)
+    monkeypatch.setattr(graph_module, "collect_food", lambda s: {"restaurants": restaurants})
     responses = iter(outputs)
     entries = []
     notes = []
@@ -39,10 +42,7 @@ def test_budget_replanning_is_counted_when_entered(
     monkeypatch.setattr(graph_module, "collect_weather", lambda _s: {
         "weather": [make_weather("2026-10-10")], "sources": {"weather": "amap"},
     })
-    monkeypatch.setattr(graph_module, "resolve_hotel", lambda _s: {
-        "hotel": make_hotel(price=100, nights=1), "hotel_source": "llm_estimated",
-        "sources": {"hotel": "llm_estimated"},
-    })
+    monkeypatch.setattr(graph_module, "collect_hotels", lambda s: hotel_pool(s, make_hotel(price=100, nights=1)))
 
     def recorded_compose(state):
         entries.append((state.get("budget_retries", 0), state.get("retries", 0)))
@@ -53,7 +53,7 @@ def test_budget_replanning_is_counted_when_entered(
         choice = next(responses)
         if choice == "bad-json":
             return "invalid json", {"llm_calls": 1, "prompt_tokens": 10}
-        return json.dumps({"days": [make_day(0, "2026-10-10", [pool[choice]])]},
+        return json.dumps(joint_payload([make_day(0, "2026-10-10", [pool[choice]])], restaurants, "JHOTEL"),
                           ensure_ascii=False), {"llm_calls": 1, "prompt_tokens": 10}
 
     monkeypatch.setattr(graph_module, "compose_plan", recorded_compose)

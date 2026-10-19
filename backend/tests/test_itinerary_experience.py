@@ -1,5 +1,6 @@
 import copy
 import json
+from tests.joint_fixtures import joint_payload
 
 import pytest
 
@@ -117,12 +118,12 @@ def test_active_graph_food_fanin_delivery_and_monitoring(monkeypatch):
     monkeypatch.setattr(graph_module,"resolve_hotel",lambda s:{"hotel":None})
     monkeypatch.setattr(experience.amap,"travel_route",lambda *a,**kw:{"duration_minutes":10,"distance_meters":900,"status":"known"})
     def compose(system,prompt,**kwargs):
-        assert "真实餐厅0" in prompt and "城市特点" in prompt
+        assert "真实餐厅0" in prompt and "city_characteristics" in prompt
         # Food/weather must both have completed before the model sees context.
-        assert "晴" in prompt and "门票=50" in prompt
+        assert "晴" in prompt and '"ticket_price": 50' in prompt
         day=copy.deepcopy(plan["days"][0])
         day["meals"]=[{"type":k,"name":"模型编造餐厅"} for k in ("breakfast","lunch","dinner")]
-        return json.dumps({"days":[day]},ensure_ascii=False),{"llm_calls":1}
+        return json.dumps(joint_payload([day],state["restaurants"]),ensure_ascii=False),{"llm_calls":1}
     monkeypatch.setattr(planner_agent,"chat_json",compose)
     final=graph_module.build_graph().invoke(_initial_state(req),config={"recursion_limit":80})
     response=_finalize(final,req,"experience-graph","experience-fingerprint",10)
@@ -190,13 +191,16 @@ def test_price_evidence_sources_and_free_hotel_survive_budget():
 
 
 def test_cache_date_shift_rechecks_imported_ticket_hotel_prices(monkeypatch):
-    from app.services import planning
+    from app.services import catalog, planning
     from app.models.schemas import WeatherInfo
     plan,state=setup_trip()
     req=state["request"].model_copy(update={"start_date":"2026-11-10","nights":1,"budget_limit":1000})
     old=plan["days"][0]
     old["attractions"][0].update(ticket_price=80,ticket_price_status="known",ticket_price_source="imported")
     old["meals"]=[experience.meal_from_restaurant(r,k) for r,k in zip(state["restaurants"],("breakfast","lunch","dinner"))]
+    # Keep current meal evidence valid so this case isolates dated ticket/room
+    # expiry; stale meal evidence is covered by test_cached_food_freshness.
+    catalog.upsert_places(req.city, "restaurant", state["restaurants"])
     plan.update(hotel=Hotel(name="旧报价酒店",poi_id="H123",estimated_cost=200,cost_status="known",cost_source="imported").model_dump(),
                 hotel_nights=1,sources={"weather":"amap"})
     monkeypatch.setattr(planning.amap,"geocode",lambda *a,**kw:(Location(longitude=120,latitude=30),"330100"))
@@ -219,14 +223,17 @@ def test_same_restaurant_for_three_meals_cannot_hide_late_lunch(monkeypatch,lega
     enriched,errors,_=experience.enrich_experience(plan,state)
     day=enriched["days"][0]
     meals=[s for s in day["schedule"] if s["kind"]=="meal"]
-    assert day["total_minutes"]==630<experience.MAX_COMFORT_MINUTES
+    # The duration-aware scheduler now moves this indivisible long visit after
+    # lunch. Independently corrupt the saved clock to test the audit itself.
+    assert day["total_minutes"]<=experience.MAX_COMFORT_MINUTES
     assert [m["meal_type"] for m in meals]==["breakfast","lunch","dinner"]
-    assert meals[1]["start_time"]=="14:45"
+    assert meals[1]["start_time"]<="14:00" and not errors
+    _delay_lunch(day)
     assert len({m["restaurant_id"] for m in day["meals"]})==1
     if legacy_schedule:
         for entry in meals:
             entry.pop("meal_type")
-        errors=experience.validate_experience(enriched,state)
+    errors=experience.validate_experience(enriched,state)
     assert any("lunch" in error and "14:45" in error for error in errors)
 
 
@@ -238,9 +245,29 @@ def test_relabelling_same_restaurant_lunch_as_breakfast_does_not_bypass_late_che
     enriched,_,_=experience.enrich_experience(plan,state)
     meals=[s for s in enriched["days"][0]["schedule"] if s["kind"]=="meal"]
     meals[1]["meal_type"]="breakfast"
+    _delay_lunch(enriched["days"][0])
     errors=experience.validate_experience(enriched,state)
     assert any("餐次标识" in error for error in errors)
     assert any("lunch" in error and "14:45" in error for error in errors)
+
+
+def _delay_lunch(day):
+    """Keep the clock contiguous while corrupting lunch to a clearly late time."""
+    schedule=day["schedule"]
+    lunch=next(index for index, entry in enumerate(schedule) if entry.get("meal_type")=="lunch") if any(
+        entry.get("meal_type")=="lunch" for entry in schedule) else [index for index, entry in enumerate(schedule) if entry["kind"]=="meal"][1]
+    def minutes(value):
+        hour,minute=value.split(":")
+        return int(hour)*60+int(minute)
+    delta=14*60+45-minutes(schedule[lunch]["start_time"])
+    schedule[lunch-1]["duration_minutes"]+=delta
+    schedule[lunch-1]["end_time"]="14:45"
+    for entry in schedule[lunch:]:
+        for key in ("start_time","end_time"):
+            value=minutes(entry[key])+delta
+            entry[key]=f"{value//60:02d}:{value%60:02d}"
+    day["total_minutes"]+=delta
+    day["rest_minutes"]+=delta
 
 
 def test_legacy_same_restaurant_three_on_time_meals_remain_valid(monkeypatch):

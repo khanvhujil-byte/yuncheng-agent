@@ -101,6 +101,47 @@ def test_reject_edit_restores_previous_and_does_not_generate(saved):
     assert current(saved)["_pending_edit"] is None
 
 
+def test_incomplete_draft_can_be_repaired_without_replanning(saved):
+    original=copy.deepcopy(saved[2])
+    original['success']=False
+    original['message']='餐饮待修复'
+    with store._connect() as db:
+        db.execute('UPDATE conversation SET result_json=? WHERE conversation_id=?', (dialog_store.encode(original),saved[1]))
+    preview=turn(saved,0,'edit',edit={'module':'meals','day_index':0,'item_index':1,'candidate_id':'food-7'})
+    assert preview['result']['success'] is False
+    assert preview['edit_preview']['success'] is False
+    result=turn(saved,1,'confirm')
+    assert result['result']['success'] is True
+    assert result['result']['data']['hotel']==original['data']['hotel']
+
+
+def test_monitoring_failure_does_not_destroy_partial_edit(saved,monkeypatch):
+    from app.services import monitoring
+    turn(saved,0,'edit',edit={'module':'meals','day_index':0,'item_index':1,'candidate_id':'food-7'})
+    monkeypatch.setattr(monitoring,'record',lambda *a:(_ for _ in ()).throw(OSError('full')))
+    result=turn(saved,1,'confirm')
+    assert result['result']['success'] is True
+    assert any('监控记录失败' in w for w in result['result']['warnings'])
+
+
+def test_failed_draft_repairs_can_accumulate_without_becoming_formal(saved):
+    draft=copy.deepcopy(saved[2])
+    draft['success']=False
+    request=current(saved)['committed']
+    request['budget_limit']=1
+    with store._connect() as db:
+        db.execute('UPDATE conversation SET result_json=?,slots_json=?,committed_json=? WHERE conversation_id=?',
+                   (dialog_store.encode(draft),dialog_store.encode(request),dialog_store.encode(request),saved[1]))
+    turn(saved,0,'edit',edit={'module':'meals','day_index':0,'item_index':1,'candidate_id':'food-7'})
+    first=turn(saved,1,'confirm')
+    assert first['result']['success'] is False
+    assert first['pending_edit'] is None
+    assert first['result']['data']['days'][0]['meals'][1]['restaurant_id']=='food-7'
+    second=turn(saved,2,'edit',edit={'module':'meals','day_index':0,'item_index':2,'candidate_id':'food-6'})
+    assert second['edit_preview']['data']['days'][0]['meals'][1]['restaurant_id']=='food-7'
+    assert second['result']['success'] is False
+
+
 @pytest.mark.parametrize("edit", [
     {"module": "meals", "day_index": 2, "item_index": 0, "candidate_id": "food-7"},
     {"module": "meals", "day_index": 0, "item_index": 7, "candidate_id": "food-7"},

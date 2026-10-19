@@ -14,6 +14,7 @@ import sys
 import ipaddress
 import socket
 import tempfile
+from datetime import datetime, timezone
 from pathlib import Path
 
 import httpx
@@ -106,3 +107,30 @@ def isolated_deployment_settings(monkeypatch, settings):
     monkeypatch.setattr(settings, 'api_key', '')
     monkeypatch.setattr(settings, 'rate_limit_per_minute', 0)
     monkeypatch.setattr(settings, 'map_backend', 'local')
+    monkeypatch.setattr(settings, 'mcp_reuse_session', False)
+    monkeypatch.setattr(settings, 'catalog_refresh_enabled', False)
+    # Web-search behavior has explicit mocked integration tests. Existing
+    # fixtures never accidentally access a new external provider.
+    monkeypatch.setattr(settings, 'ticket_web_search_enabled', False)
+    monkeypatch.setattr(settings, 'ticket_model_estimate_enabled', False)
+    # Legacy call-sequence tests script one model response per compose attempt;
+    # the in-node format-repair retry is covered by the evaluation suite.
+    monkeypatch.setattr(settings, 'planner_format_retry_enabled', False)
+    # Legacy tests exercise the historical hotel ReAct path. Fast-path tests
+    # explicitly select the production default and verify zero model calls.
+    monkeypatch.setattr(settings, 'hotel_use_agent', True)
+    from app.services import java_bridge
+    with java_bridge._hot_lock:
+        java_bridge._hot_cache.clear()
+    # Legacy fixtures cover the unknown-price contract; ticket feature tests
+    # enable the new reserve/official-lookup policy explicitly.
+    monkeypatch.setattr(settings, 'official_ticket_lookup_enabled', False)
+    monkeypatch.setattr(settings, 'ticket_budget_reserve_enabled', False)
+    # Coverage-specific tests explicitly enable bounded external fill.
+    monkeypatch.setattr(settings, 'food_coverage_enabled', False)
+    # Existing forecast fixtures use fixed travel dates. A fixed observation
+    # clock keeps validity tests independent of the machine's calendar date.
+    # Cache-specific tests provide their own advancing clock/cooldown.
+    from app.services import weather_cache
+    monkeypatch.setattr(weather_cache, '_utcnow', lambda: datetime(2026, 10, 10, tzinfo=timezone.utc))
+    monkeypatch.setattr(settings, 'weather_cache_failure_cooldown_seconds', 0)

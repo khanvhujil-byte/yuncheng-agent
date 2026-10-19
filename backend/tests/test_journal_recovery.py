@@ -1,5 +1,6 @@
 """Fault injection through real graph nodes, SQLite journal, and resume HTTP API."""
 import json
+from tests.joint_fixtures import restaurants_at, hotel_pool, joint_payload
 import sqlite3
 import threading
 
@@ -29,11 +30,12 @@ def install_scenario(monkeypatch, choices=(0, 1, 1, 2)):
     ]
     calls = []
     audits = []
+    restaurants = restaurants_at(spots[0].location)
 
     def model(_system, _user, *, extra_user=""):
         spot = spots[choices[len(calls)]]
         calls.append(spot.name)
-        return json.dumps({"days": [make_day(0, req.start_date, [spot])]}, ensure_ascii=False), {
+        return json.dumps(joint_payload([make_day(0, req.start_date, [spot])], restaurants, "JHOTEL"), ensure_ascii=False), {
             "llm_calls": 1, "prompt_tokens": 40,
         }
 
@@ -54,11 +56,9 @@ def install_scenario(monkeypatch, choices=(0, 1, 1, 2)):
     })
     # This scenario isolates retry/journal invariants; food/comfort has its own
     # active graph coverage with real restaurant and route fixtures.
-    monkeypatch.setattr(graph_module, "collect_food", lambda _s: {"experience_enabled": False})
-    monkeypatch.setattr(graph_module, "resolve_hotel", lambda _s: {
-        "hotel": make_hotel(price=100, nights=1), "sources": {"hotel": "llm_estimated"},
-        "usage": {"llm_calls": 1, "prompt_tokens": 5},
-    })
+    monkeypatch.setattr(graph_module, "collect_food", lambda _s: {"experience_enabled": False, "restaurants": restaurants})
+    monkeypatch.setattr(graph_module, "collect_hotels", lambda s: {
+        **hotel_pool(s, make_hotel(price=100, nights=1)), "usage": {"llm_calls": 1, "prompt_tokens": 5}})
     monkeypatch.setattr(graph_module, "verify_plan", audit)
     monkeypatch.setattr(planner_agent, "chat_json", model)
     return req, calls, audits
@@ -92,14 +92,14 @@ def execute(thread_id, req, graph):
 # Sequence: city, two collectors, two compose/audit attempts, hotel, budget patch,
 # budget audit, prepare, compose/audit, hotel, patch, budget audit, prepare,
 # compose/audit, hotel, patch, budget audit. Every supported interruption is covered.
-@pytest.mark.parametrize("cut", range(4, 27))
+@pytest.mark.parametrize("cut", range(5, 26))
 def test_each_committed_checkpoint_matches_uninterrupted_execution(monkeypatch, cut):
     req, calls, audits = install_scenario(monkeypatch)
     baseline = execute("baseline", req, graph_module.build_graph())
     assert baseline.status == "done" and baseline.result["success"]
     expected, _ = runner.rebuild_state(trip._initial_state(req), "baseline")
     baseline_records = store.load_journal("baseline")
-    assert len(baseline_records) == 26
+    assert len(baseline_records) == 25
     calls.clear()
     audits.clear()
 
@@ -107,7 +107,7 @@ def test_each_committed_checkpoint_matches_uninterrupted_execution(monkeypatch, 
     failed = execute(thread_id, req, InterruptAfter(graph_module.build_graph(), cut))
     assert failed.status == "error"
     assert len(store.load_journal(thread_id)) == cut
-    if cut == 7:
+    if cut == 9:
         # Old failed audit exists, but this new plan still needs its own audit.
         assert audits == ["排不下"]
         assert trip.get_journal(thread_id)["can_resume_from"] == "verify_plan"
@@ -116,20 +116,30 @@ def test_each_committed_checkpoint_matches_uninterrupted_execution(monkeypatch, 
     assert response.status_code == 200
     assert response.json()["success"] is True
     actual, completed = runner.rebuild_state(trip._initial_state(req), thread_id)
-    assert actual == expected
+    # Independently executed baseline/recovery have different measured wall
+    # times. Their node identities, order and all business state must match.
+    for state in (actual, expected):
+        assert all(t["elapsed_ms"] >= 0 for t in state.get("trace", []))
+    def business_state(state):
+        # Parallel collectors share a step and may commit in either order.
+        trace = [{k: v for k, v in entry.items() if k != "elapsed_ms"}
+                 for entry in state.get("trace", [])]
+        business = {k:v for k,v in state.items() if k != 'planning_started_at'}
+        return {**business, "trace": sorted(trace, key=lambda entry: (entry["step"], entry["node"]))}
+    assert business_state(actual) == business_state(expected)
     assert calls == ["排不下", "昂贵", "昂贵", "免费"]
     assert audits == calls
     records = store.load_journal(thread_id)
-    assert [r["seq"] for r in records] == list(range(1, 27))
+    assert [r["seq"] for r in records] == list(range(1, 26))
     # The parallel collectors may finish in either order; later nodes are sequential.
-    assert set(completed[:4]) == {r["node"] for r in baseline_records[:4]}
-    assert completed[4:] == [r["node"] for r in baseline_records[4:]]
-    assert actual["usage"] == {"llm_calls": 9, "prompt_tokens": 205}
+    assert set(completed[:5]) == {r["node"] for r in baseline_records[:5]}
+    assert completed[5:] == [r["node"] for r in baseline_records[5:]]
+    assert actual["usage"] == {"llm_calls": 7, "prompt_tokens": 195}
     assert actual["budget_retries"] == 2
     stored = store.load_job(thread_id)
     assert stored["status"] == "done" and stored["error"] == ""
     assert stored["result"] == response.json()
-    assert [e["seq"] for e in stored["events"]] == list(range(1, 27))
+    assert [e["seq"] for e in stored["events"]] == list(range(1, 26))
     assert trip.get_journal(thread_id)["can_resume_from"] is None
     runner._jobs.clear()
     assert TestClient(app).get(f"/api/trip/plan/result/{thread_id}").json() == response.json()
@@ -137,31 +147,31 @@ def test_each_committed_checkpoint_matches_uninterrupted_execution(monkeypatch, 
     assert TestClient(app).post(f"/api/trip/plan/resume/{thread_id}").json() == response.json()
     with store._connect() as conn:
         runs = conn.execute("SELECT * FROM run_log WHERE thread_id=?", (thread_id,)).fetchall()
-    assert len(runs) == 1 and runs[0]["llm_calls"] == 9
+    assert len(runs) == 1 and runs[0]["llm_calls"] == 7
 
 
 def test_second_interruption_during_resume_can_be_resumed_again(monkeypatch):
     req, calls, audits = install_scenario(monkeypatch)
-    execute("twice", req, InterruptAfter(graph_module.build_graph(), 7))
+    execute("twice", req, InterruptAfter(graph_module.build_graph(), 9))
     build = trip.build_graph
     monkeypatch.setattr(trip, "build_graph", lambda **kw: InterruptAfter(build(**kw), 1))
     client = TestClient(app)
     first = client.post("/api/trip/plan/resume/twice").json()
     assert first["error_code"] == "RESUME_FAILED"
     assert store.load_job("twice")["status"] == "error"
-    assert trip.get_journal("twice")["can_resume_from"] == "resolve_hotel"
+    assert trip.get_journal("twice")["can_resume_from"] == "enrich_experience"
     monkeypatch.setattr(trip, "build_graph", build)
     runner._jobs.clear()
     second = client.post("/api/trip/plan/resume/twice").json()
     assert second["success"]
     assert calls == audits == ["排不下", "昂贵", "昂贵", "免费"]
-    assert len(store.load_journal("twice")) == 26
+    assert len(store.load_journal("twice")) == 25
 
 
 @pytest.mark.parametrize(("choices", "cut", "expected_rounds"), [
-    pytest.param((0, 0), 8, 0, id="second-audit-failed-at-limit"),
+    pytest.param((0, 0), 10, 0, id="second-audit-failed-at-limit"),
     pytest.param((1, 1, 1), 18, 2, id="last-budget-replan-needed"),
-    pytest.param((1, 1, 1), 24, 2, id="final-budget-failure-before-finalize"),
+    pytest.param((1, 1, 1), 23, 2, id="final-budget-failure-before-finalize"),
 ])
 def test_exhausted_failures_stay_failed_after_resume(monkeypatch, choices, cut, expected_rounds):
     req, calls, audits = install_scenario(monkeypatch, choices=choices)
@@ -238,7 +248,7 @@ def test_resume_reconstructs_event_missing_after_journal_commit(monkeypatch):
     monkeypatch.setattr(runner, "_emit", emit)
     response = TestClient(app).post("/api/trip/plan/resume/missing-event").json()
     assert response["success"]
-    assert [e["seq"] for e in store.load_job("missing-event")["events"]] == list(range(1, 27))
+    assert [e["seq"] for e in store.load_job("missing-event")["events"]] == list(range(1, 26))
 
 
 def test_concurrent_resume_runs_one_execution(monkeypatch):
@@ -268,7 +278,7 @@ def test_concurrent_resume_runs_one_execution(monkeypatch):
         thread.join(timeout=10)
     assert not thread.is_alive()
     assert len(responses) == 1 and responses[0]["success"]
-    assert len(store.load_journal("concurrent")) == 26
+    assert len(store.load_journal("concurrent")) == 25
 
 
 def test_background_execution_claim_blocks_resume_and_releases_on_finish(monkeypatch):

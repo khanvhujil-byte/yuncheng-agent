@@ -126,8 +126,8 @@ class TestJobRegistry:
         assert runner.NODE_LABELS["verify_budget"] == "预算复核"
         assert set(runner.NODE_LABELS) == {
             "validate_city", "collect_attractions", "collect_weather",
-            "collect_food", "enrich_experience",
+            "collect_food", "collect_hotels", "prepare_planning_context", "enrich_experience",
             "compose_plan", "verify_plan", "resolve_hotel", "patch_budget",
             "verify_budget",
-            "prepare_budget_retry",
+            "prepare_budget_retry", "prepare_repair",
         }

@@ -178,7 +178,7 @@ class TestGraphWiring:
             return node
 
         monkeypatch.setattr(graph_module, "validate_city", stub_validate)
-        for name in ("collect_attractions", "collect_weather", "compose_plan",
+        for name in ("collect_attractions", "collect_weather", "collect_food", "collect_hotels", "prepare_planning_context", "compose_plan",
                      "verify_plan", "resolve_hotel", "patch_budget"):
             monkeypatch.setattr(graph_module, name, recorder(name))
 
@@ -194,7 +194,7 @@ class TestGraphWiring:
         assert "collect_attractions" in calls, f"景点那一路没跑：{calls}"
         assert "collect_weather" in calls, f"天气那一路没跑：{calls}"
         # 汇聚之后整条链都要走完
-        for node in ("compose_plan", "verify_plan", "resolve_hotel", "patch_budget"):
+        for node in ("compose_plan", "verify_plan", "collect_hotels", "prepare_planning_context", "patch_budget"):
             assert node in calls, f"{node} 没跑：{calls}"
 
     def test_fail_path_runs_nothing_but_preflight(self, wiring):

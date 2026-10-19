@@ -7,6 +7,7 @@ from app.agents.react_loop import ReactResult
 from app.models.schemas import Attraction, Location, Restaurant, TripPlan, WeatherInfo
 from app.services import catalog, map_gateway, planning, price_catalog, tools
 from tests.factories import make_request
+from tests.joint_fixtures import joint_payload
 
 
 def observation(kind, identifier, amount, *, service_to="2026-10-21"):
@@ -96,7 +97,7 @@ def test_actual_planning_graph_persists_selected_verified_places(monkeypatch, se
         days = [{"date": f"2026-10-{20+i}", "day_index": i,
                  "attractions": [spot.model_dump()],
                  "meals": [{"type": "lunch", "name": "模型幻觉餐厅"}]} for i, spot in enumerate(spots)]
-        return json.dumps({"days": days}, ensure_ascii=False), {"llm_calls": 1}
+        return json.dumps(joint_payload(days, restaurants, "HT1"), ensure_ascii=False), {"llm_calls": 1}
 
     monkeypatch.setattr(planner_agent, "chat_json", compose)
     result = planning.plan(req, graph=graph.build_graph(), run_id="catalog-real-graph")

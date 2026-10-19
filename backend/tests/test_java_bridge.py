@@ -89,7 +89,7 @@ class TestPublish:
         itinerary_id = java_bridge.publish_itinerary(
             title="杭州两日", city="杭州", travel_days=2,
             start_date="2026-10-20", plan={"city": "杭州", "days": []},
-            preferences=["自然风光", "博物馆"], user_id=7)
+            preferences=["自然风光", "博物馆"], session_token="verified-session")
 
         assert itinerary_id == 42
         assert captured["url"].endswith("/itineraries")
@@ -97,7 +97,8 @@ class TestPublish:
         assert captured["json"]["plan"]["city"] == "杭州"    # 行程原样透传，不做翻译
         # ★ 偏好必须显式传：plan 里没有它，而 Java 要靠它累积"常见偏好"热度
         assert captured["json"]["preferences"] == ["自然风光", "博物馆"]
-        assert captured["headers"]["X-User-Id"] == "7"
+        assert captured["headers"]["X-Session-Token"] == "verified-session"
+        assert "X-User-Id" not in captured["headers"]
 
     def test_publish_failure_returns_none(self):
         """Java 不可用时返回 None（调用方据此给用户"稍后重试"，而不是抛 500）。"""
@@ -162,7 +163,6 @@ class TestGenerationSurvivesJavaDown:
 
 class TestPublishRoute:
     def test_publish_endpoint_forwards_to_java(self, monkeypatch):
-        from fastapi.testclient import TestClient
 
         from app.api.main import app
 
@@ -173,7 +173,7 @@ class TestPublishRoute:
             return FakeResponse({"success": True, "itineraryId": 99})
 
         monkeypatch.setattr(java_bridge.httpx, "post", fake_post)
-        client = TestClient(app)
+        client = _authenticated_client(app)
         body = {"plan": {"city": "杭州", "start_date": "2026-10-20",
                          "days": [{"date": "2026-10-20", "day_index": 0}]},
                 "preferences": ["自然风光", "美食"]}
@@ -187,7 +187,6 @@ class TestPublishRoute:
 
     def test_publish_without_preferences_still_works(self, monkeypatch):
         """偏好是可选的：老客户端不传也不能失败，只是不累积偏好热度。"""
-        from fastapi.testclient import TestClient
 
         from app.api.main import app
 
@@ -198,7 +197,7 @@ class TestPublishRoute:
             return FakeResponse({"itineraryId": 5})
 
         monkeypatch.setattr(java_bridge.httpx, "post", fake_post)
-        client = TestClient(app)
+        client = _authenticated_client(app)
         response = client.post("/api/community/publish", json={
             "plan": {"city": "杭州", "days": [{"date": "2026-10-20", "day_index": 0}]}})
 
@@ -207,11 +206,10 @@ class TestPublishRoute:
 
     def test_publish_endpoint_degrades_when_java_is_down(self):
         """Java 挂了返回 200 + success=False（不是 500）—— 与项目既有的口径一致。"""
-        from fastapi.testclient import TestClient
 
         from app.api.main import app
 
-        client = TestClient(app)
+        client = _authenticated_client(app)
         body = {"plan": {"city": "杭州", "days": [{"date": "2026-10-20", "day_index": 0}]}}
         response = client.post("/api/community/publish", json=body)
 
@@ -220,21 +218,27 @@ class TestPublishRoute:
         assert "稍后重试" in response.json()["message"]
 
     def test_publish_rejects_incomplete_plan(self):
-        from fastapi.testclient import TestClient
 
         from app.api.main import app
 
-        client = TestClient(app)
+        client = _authenticated_client(app)
         response = client.post("/api/community/publish", json={"plan": {"days": []}})
         assert response.json()["success"] is False
         assert "无法发布" in response.json()["message"]
 
     def test_hot_endpoint_reports_unavailable_honestly(self):
-        from fastapi.testclient import TestClient
 
         from app.api.main import app
 
-        client = TestClient(app)
+        client = _authenticated_client(app)
         payload = client.get("/api/community/hot").json()
         assert payload["available"] is False
         assert "暂时不可用" in payload["message"]  # 不编数据，如实说
+
+
+def _authenticated_client(app):
+    from fastapi.testclient import TestClient
+    from app.services import identity
+    identity.register('bridge-user','valid-password-123')
+    token=identity.login('bridge-user','valid-password-123')['token']
+    return TestClient(app,headers={'X-Session-Token':token})

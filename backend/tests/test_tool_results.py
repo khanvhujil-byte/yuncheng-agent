@@ -143,9 +143,11 @@ def test_search_counts_distinguish_zero_results_filtering_and_duplicates(monkeyp
     result = tools.execute(role, name, {"keyword": "测试"}, ctx)
     check_contract(result)
     assert result.status == "ok" and result.retryable is False
-    assert result.stats == {"returned_count": len(hits), "filtered_count": int(kind == "filtered"),
-                            "duplicate_count": int(kind == "duplicate"), "added_count": 0,
-                            "candidate_count": 1}
+    expected = {"returned_count": len(hits), "filtered_count": int(kind == "filtered"),
+                "duplicate_count": int(kind == "duplicate"), "added_count": 0,
+                "candidate_count": 1}
+    assert {key: result.stats[key] for key in expected} == expected
+    assert result.stats["local_count"] == 0 and result.stats["upstream_calls"] == 1
     action = "review_query_if_needed" if kind == "empty" else "check_candidate_coverage"
     assert next_action(result) == action
 
