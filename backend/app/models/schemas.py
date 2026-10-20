@@ -33,7 +33,7 @@ from .requirements import Requirements
 #          ★ 加它的过程本身就是这条 Literal 的价值证明：我原先在 city.py 里随手写了 "java"，
 #            TripPlanResponse 构造时直接报 literal_error —— 而如果没有这个约束，
 #            一个前端不认识的来源值会一路流到页面上，只是标签不显示而已（最难查的那种 bug）。
-DataSource = Literal["amap", "llm_estimated", "degraded", "user", "java", "catalog", "catalog+amap", "catalog_partial"]
+DataSource = Literal["amap", "llm_estimated", "degraded", "user", "java", "catalog", "catalog+amap", "catalog_partial", "flyai"]
 
 # 费用项的**置信度**（v0.7 新增）。三态是"每一项费用自己的属性"，不是一个全局开关：
 #   known      有确切来源的真实金额（高德门票、免费景点、用户已定酒店）
@@ -50,6 +50,15 @@ CostSource = Literal["amap", "imported", "llm_estimated", "static_estimate", "ve
 # ================================================================ 输入
 
 
+class StayLock(BaseModel):
+    """One booked night; names are resolved server-side, never trust supplied facts."""
+    model_config = ConfigDict(extra="forbid")
+    check_in: str = Field(max_length=10)
+    hotel_name: str = Field(min_length=1, max_length=200)
+    address: str = Field(default="", max_length=300)
+    city: str = Field(default="", max_length=100)
+
+
 class TripRequest(BaseModel):
     """一次规划请求的入参。
 
@@ -64,6 +73,12 @@ class TripRequest(BaseModel):
                    住几晚才决定住宿费：3 天行程通常住 2 晚（最后一晚返程），
                    但「红眼航班到、红眼航班走」确实住 3 晚，所以允许覆盖。
     """
+
+    origin_city: str = Field(default='', max_length=60)
+    intercity_mode: Literal['none', 'train', 'flight', 'auto'] = 'none'
+    return_trip: bool = True
+    adult_count: int = Field(default=1, ge=1, le=8, strict=True)
+    room_count: int = Field(default=1, ge=1, le=4, strict=True)
 
     model_config = ConfigDict(
         # 只影响 FastAPI 的 /docs 页面：给这个接口一个可点击的示例 JSON，
@@ -118,6 +133,11 @@ class TripRequest(BaseModel):
     fixed_hotel: Optional[str] = Field(default=None, max_length=200)
     # ↑ 用户已订好的酒店名。解析必须和 city 一起用 —— 只给「如家酒店」全国有几千家。
     #   解析不到 → HOTEL_NOT_FOUND；命中多个无法确定 → HOTEL_AMBIGUOUS。
+    stay_locks: List[StayLock] = Field(default_factory=list, max_length=30)
+    arrival_address: Optional[str] = Field(default=None, max_length=300)
+    departure_address: Optional[str] = Field(default=None, max_length=300)
+    arrival_time: Optional[str] = Field(default=None, pattern=r"^(?:[01]\d|2[0-3]):[0-5]\d$")
+    departure_time: Optional[str] = Field(default=None, pattern=r"^(?:[01]\d|2[0-3]):[0-5]\d$")
     fixed_hotel_address: Optional[str] = Field(default=None, max_length=300)
     # ↑ 可选，用于消除重名歧义。
 
@@ -150,6 +170,7 @@ class Attraction(BaseModel):
     rating: Optional[float] = None  # 来自高德 biz_ext.rating；覆盖不稳定，经常是 None
     photos: List[str] = Field(default_factory=list)  # 高德 pois[].photos[].url 自带图片，所以本项目不需要 Unsplash
     poi_id: Optional[str] = None  # 高德 POI ID。去重要按它做，不能按 name（「西湖」和「西湖风景区」是两条）
+    retrieval_scope: Literal['city', 'surrounding'] = 'city'
     image_url: Optional[str] = None  # 主图，通常取 photos[0]
     # ★ v0.7：门票价改成**可空 + 带三态**。原先 `int = 0` 的注释自己就承认
     #   "0 有两种含义：真免费 / 高德没给" —— 那就是把"未知"混进了数字里。
@@ -166,10 +187,7 @@ class Attraction(BaseModel):
 
 
 class Hotel(BaseModel):
-    """酒店。由 resolve_hotel 节点产出（v0.2：不再是「每天一个」，而是行程级一家）。
-
-    价格类字段高德不提供，全部是模型估算，最终会被标成 llm_estimated。
-    """
+    """核验酒店 POI。联合编排按入住日期选择，报价/参考预留均保留来源。"""
 
     name: str  # 必填。来自高德 pois[].name
     poi_id: Optional[str] = None
@@ -188,7 +206,42 @@ class Hotel(BaseModel):
     cost_status: CostStatus = "estimated"
     cost_source: CostSource = "llm_estimated"
     price_evidence_url: Optional[str] = None
+    provider_id: Optional[str] = None
+    provider_url: Optional[str] = None
+    platform_quotes: List[dict] = Field(default_factory=list)
+    price_note: str = ''
     nights: int = 0  # v0.2：住几晚。住宿费 = estimated_cost × nights，不是 × 天数
+    check_in_after: Optional[str] = None
+    check_in_before: Optional[str] = None
+    check_out_before: Optional[str] = None
+    operations_evidence_url: Optional[str] = None
+
+    @field_validator('check_in_after', 'check_in_before', 'check_out_before')
+    @classmethod
+    def valid_operating_time(cls, value):
+        if value is not None:
+            import re
+            if not re.fullmatch(r'(?:[01]\d|2[0-3]):[0-5]\d', value):
+                raise ValueError('酒店时间必须为有效HH:MM。')
+        return value
+
+
+class OvernightStay(BaseModel):
+    check_in: str
+    check_out: str
+    hotel: Hotel
+    locked: bool = False
+    reason: str = ""
+
+
+class RoutePoint(BaseModel):
+    name: str
+    location: Optional[Location] = None
+    poi_id: Optional[str] = None
+    check_in_after: Optional[str] = None
+    check_in_before: Optional[str] = None
+    check_out_before: Optional[str] = None
+    operations_evidence_url: Optional[str] = None
 
 
 class Meal(BaseModel):
@@ -397,8 +450,17 @@ class DayPlan(BaseModel):
     attractions: List[Attraction] = Field(default_factory=list)
     # ↑ 注意这是「排期结果」（2~3 个），不是 Agent 1 搜到的候选池（候选池在 TripState.attractions）。
     #   同一个字段名在两个地方含义不同，这是最容易被绕晕的一处。
-    meals: List[Meal] = Field(default_factory=list)  # 每天必须含早/中/晚三餐
+    meals: List[Meal] = Field(default_factory=list)  # v11首末日按显式到离时间派生餐次
+    meal_types: Optional[List[Literal['breakfast', 'lunch', 'dinner']]] = None
     day_total_cost: int = 0  # 当日小计（元）。由 budget.py 加总，不是模型给的
+    start_minutes: int = Field(default=510, ge=0, le=1439)
+    dated_boundaries: bool = False
+    route_start: Optional[RoutePoint] = None
+    route_end: Optional[RoutePoint] = None
+    hotel_change: bool = False
+    stay_check_in: Optional[str] = None
+    transfer_minutes: int = Field(default=0, ge=0)
+    route_boundary_note: str = ""
     route_legs: List[RouteLeg] = Field(default_factory=list)
     schedule: List[ScheduleItem] = Field(default_factory=list)
     visit_minutes: int = 0
@@ -421,6 +483,11 @@ class TripPlan(BaseModel):
     正因为来源这么分散，它必须有大量默认值：任一路降级时，这个对象仍要能构造出来。
     """
 
+    origin_city: str = ''
+    adult_count: int = 1
+    room_count: int = 1
+    intercity_legs: List[dict] = Field(default_factory=list)
+    transport_warnings: List[str] = Field(default_factory=list)
     city: str  # 从请求抄来，必填（绝不会缺）
     city_characteristics: List[str] = Field(default_factory=list)
     start_date: str  # 从请求抄来，必填
@@ -434,6 +501,10 @@ class TripPlan(BaseModel):
     hotel: Optional[Hotel] = None  # 全程住的酒店。None = 没找到/未指定，此时 overall_suggestions 里要说明
     hotel_nights: int = 0  # 住几晚 = TripRequest.nights 或 travel_days - 1
     hotel_reason: str = ""
+    accommodation_version: int = 0
+    stays: List[OvernightStay] = Field(default_factory=list)
+    regional_weather: List[dict] = Field(default_factory=list)
+    stay_comparison: dict = Field(default_factory=dict)
     hotel_segments: List[Hotel] = Field(default_factory=list)
     # ↑ V1 预留：跨区域行程分段住宿（例：前 2 晚市区、第 3 晚千岛湖）。
     #   V0 恒为空列表 —— 留字段不留逻辑，等真有跨城需求再实现。

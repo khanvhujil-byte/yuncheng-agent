@@ -112,6 +112,7 @@ def isolated_deployment_settings(monkeypatch, settings):
     # Web-search behavior has explicit mocked integration tests. Existing
     # fixtures never accidentally access a new external provider.
     monkeypatch.setattr(settings, 'ticket_web_search_enabled', False)
+    monkeypatch.setattr(settings, 'flyai_enabled', False)
     monkeypatch.setattr(settings, 'ticket_model_estimate_enabled', False)
     # Legacy call-sequence tests script one model response per compose attempt;
     # the in-node format-repair retry is covered by the evaluation suite.

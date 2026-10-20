@@ -33,12 +33,22 @@ def extract(message, current):
               "new_plan 表示明确换一个新行程；补充当前请求用 modify_plan。"
               "已生成行程中只换酒店、某天某餐/景点或调整某一天，必须选 edit_module，不能重做全程。"
               "edit.module 为 hotel/meals/attractions/day；day_index/item_index 都从0计数。"
+              "酒店修改stay_scope为night/segment/all；单晚或连续住宿段必须明确day_index表示入住日。"
+              "用户已订某晚写stay_locks，不得当作全程fixed_hotel；只偏好酒店不能写成预订锁。"
+              "住宿策略requirements.hotel.stay_policy为auto/prefer_same/must_same，明确必须不换才是must_same。"
+              "到达/离开地点写arrival_address/departure_address，明确时间写arrival_time/departure_time（HH:MM）。"
               "只填用户能明确定位的日期和条目；不确定不要猜，instruction保留具体要求。"
               "修改城市、出行日期、天数、总预算等整体约束仍选 modify_plan。"
               "slot_updates 必须符合给定 JSON Schema，未提及的键不要输出，不用 null 表示未提及。"
               "‘不自驾’应写 transportation=公共交通；‘这次’是本次约束，不是长期记忆。"
+              "出发城市origin_city与目的地city分开；安排高铁选intercity_mode=train，飞机选flight，比较两者选auto，交通自行解决选none。"
+              "单程return_trip=false；明确的成人数写adult_count，房间数写room_count，预算为同行人的总预算。"
+              "更换出发城市、交通班次偏好、人数或房间数属于modify_plan，须重新核算全程时间和预算，不是局部换餐厅。"
               "用户每个环节的要求均应保留：requirements 下 food/attractions/hotel/transport/pace/weather/budget。"
               "模块instructions保存该模块的原话，明确可执行的数值和选项同时写结构字段；不要把原话只留在总结。"
+              "‘有两天想去周边雪山’要写requirements.attractions.day_goals=[{theme:'雪山',days:2,scope:'surrounding'}]，"
+              "同时保存原话，不可降成普通自然风光偏好。用户给了具体第几天时day_indices从0计数。"
+              "跨多天的主题分配影响整体路线，选modify_plan，不可把它当成只改某个单一条目的edit_module。"
               "food.priority=food_first表示围绕美食安排，travel_scope=citywide表示取消就近优先；仅说自驾不能推断不限距离。"
               "只填写明确给出的增量，不能用模块默认值覆盖之前偏好。"
               "以下情况必须clarify并给clarifications，禁止自行选：指代对象不清、要求冲突、关键取舍不清、"
@@ -56,7 +66,8 @@ def extract(message, current):
               + json.dumps(IntentDecision.model_json_schema(), ensure_ascii=False))
     history = [{"message": h["message"][:500], "reply": h["reply"][:500]} for h in current["history"][-6:]]
     data = ((current.get("result") or {}).get("data") or {})
-    summary = {"hotel": (data.get("hotel") or {}).get("name"),
+    summary = {"stays": data.get("stays", []), "hotel": (data.get("hotel") or {}).get("name"),
+               "intercity_legs": data.get('intercity_legs', []), 'adult_count': data.get('adult_count', 1), 'room_count': data.get('room_count', 1),
                "days": [{"day_index": day["day_index"], "date": day["date"],
                          "attractions": [a["name"] for a in day.get("attractions", [])],
                          "meals": [{"type": m["type"], "name": m["name"]} for m in day.get("meals", [])]}
@@ -110,14 +121,14 @@ def reusable_seed(previous, req):
         return None
     state = restore_state_types(json.loads(row["state_json"]))
     old = state["request"].model_dump()
-    identity = ("city", "start_date", "travel_days", "preferences", "must_visit", "fixed_hotel", "fixed_hotel_address", "requirements", "free_text_input")
+    identity = ("city", "start_date", "travel_days", "origin_city", "intercity_mode", "return_trip", "adult_count", "room_count", "preferences", "must_visit", "fixed_hotel", "fixed_hotel_address", "stay_locks", "arrival_address", "departure_address", "arrival_time", "departure_time", "requirements", "free_text_input")
     if any(old.get(k) != req.model_dump().get(k) for k in identity):
         return None
     if not state.get("adcode") or not state.get("attractions") or not state.get("weather"):
         return None
     if any(v == "degraded" for k, v in state.get("sources", {}).items() if k in ("attractions", "weather")):
         return None
-    return {**{key: state[key] for key in ("adcode", "city_center", "must_visit_resolved", "hotel_anchor", "attractions", "weather", "community_hot", "restaurants", "route_cache") if state.get(key) is not None},
+    return {**{key: state[key] for key in ("adcode", "city_center", "must_visit_resolved", "hotel_anchor", "stay_locks", "trip_endpoints", "attractions", "weather", "community_hot", "restaurants", "route_cache") if state.get(key) is not None},
             "sources": {k: v for k, v in state.get("sources", {}).items() if k != "hotel"}}
 
 

@@ -140,9 +140,40 @@ def patch_budget(state: TripState) -> dict:
 
     # ---- 住宿：行程级一家，按晚数计（v0.2 的单一真相源是 state["nights"]）----
     hotel = state.get("hotel")
+    if hotel is not None and (hotel.platform_quotes or hotel.price_note.startswith('飞猪')):
+        from ..services.platform_hotels import quoted
+        hotel = quoted(hotel, request.start_date)
+        if plan.get('hotel'):
+            plan['hotel'] = hotel.model_dump(mode='json')
     nights = int(state.get("nights") or 0)
     hotel_estimated = 0
-    if nights == 0:
+    dated = plan.get('accommodation_version', 0) >= 11
+    if dated and nights:
+        from ..services.stays import plan_stays
+        stays = plan_stays(plan)
+        for stay in stays:
+            if stay['hotel'].get('platform_quotes') or stay['hotel'].get('price_note', '').startswith('飞猪'):
+                from ..services.platform_hotels import quoted
+                stay['hotel'] = quoted(stay['hotel'], stay['check_in']).model_dump(mode='json')
+            h, d = stay['hotel'], stay['check_in']
+            price, status = h.get('estimated_cost'), h.get('cost_status', 'unknown')
+            if price is None or status == 'unknown' or (not price and status != 'known'):
+                amount, status = None, 'unknown'
+            else:
+                amount = int(price)
+                hotel_estimated += amount
+            items.append(_cost_item('hotel', f"{d} 住宿：{h['name']}", amount, status,
+                                    h.get('cost_source', 'unknown'),
+                                    day_index=next((x.get('day_index') for x in days if x.get('date') == d), None),
+                                    note='一间房一晚；预算预留非报价' if h.get('cost_source') == 'static_estimate' else '一间房一晚；以实际预订为准'))
+            if amount is not None:
+                target = next((x for x in days if x.get('date') == d), None)
+                if target is not None:
+                    target['day_total_cost'] += amount
+        if len(stays) != nights:
+            items.append(_cost_item('hotel', '住宿日期缺失', None, 'unknown', 'unknown'))
+        plan['stays'] = stays
+    elif nights == 0:
         items.append(_cost_item("hotel", "本次不住宿", 0, "known", "static_estimate"))
     elif hotel is None:
         items.append(_cost_item("hotel", "住宿（未确定）", None, "unknown", "unknown",
@@ -174,8 +205,46 @@ def patch_budget(state: TripState) -> dict:
     transport_amount = _transport_cost(getattr(request, "transportation", "") or "", state["travel_days"])
     items.append(_cost_item("transportation", f"市内交通（{getattr(request, 'transportation', '')}）",
                             transport_amount, "estimated", "static_estimate",
-                            note=f"按每人每天 {TRANSPORT_PER_DAY.get(getattr(request, 'transportation', ''), DEFAULT_TRANSPORT_PER_DAY)} 元的固定表估算"))
+                            note=f"按{'一车' if getattr(request, 'transportation', '') == '自驾' else '每人'}每天 {TRANSPORT_PER_DAY.get(getattr(request, 'transportation', ''), DEFAULT_TRANSPORT_PER_DAY)} 元的固定表估算"
+                                + ('；仅一车日常用车预留，不包含租车、长途和景区附加费。' if getattr(request, 'transportation', '') == '自驾' else '')))
 
+    if dated and any(a.get('retrieval_scope') == 'surrounding' for d in days for a in d.get('attractions', [])):
+        items.append(_cost_item('transportation', '周边长途/景区接驳附加交通费', None, 'unknown', 'unknown',
+                                note='市内固定交通预留不覆盖长途、山区接驳、停车和过路费；需取得报价。'))
+
+    # Platform fares are per adult. Do not silently omit a missing direction.
+    if request and request.intercity_mode != 'none':
+        import math
+        legs = plan.get('intercity_legs') or []
+        expected_directions = ['outbound', *(['return'] if request.return_trip else [])]
+        for direction in expected_directions:
+            leg = next((l for l in legs if l.get('direction') == direction), None)
+            price = leg.get('amount_per_adult') if leg else None
+            if leg:
+                from ..services.intercity import _dt, TZ
+                from datetime import datetime
+                if _dt(leg['expires_at']) <= datetime.now(TZ):
+                    leg.update(amount_per_adult=None, price_status='unknown', price_note='交通参考价已失效；重新核价前金额未知。')
+                    price = None
+            label = '去程' if direction == 'outbound' else '返程'
+            items.append(_cost_item('transportation', label+'城际交通'+(' · '+leg['transport_no'] if leg else ' · 尚无班次'),
+                math.ceil(price) if price is not None else None, 'estimated' if price is not None else 'unknown',
+                'imported' if price is not None else 'unknown', day_index=0 if direction == 'outbound' else len(days)-1,
+                note=(leg.get('price_note', '') if leg else '未找到真实班次与报价，不能按零元通过预算。')))
+            if leg and leg.get('mode') == 'flight':
+                items.append(_cost_item('transportation', label+'机票税费及可能的行李附加费', None, 'unknown', 'unknown',
+                    day_index=0 if direction == 'outbound' else len(days)-1,
+                    note='搜索接口未确认含税总额和行李额度，不能据票面参考价承诺完整交通预算。'))
+    adults = getattr(request, 'adult_count', 1)
+    rooms = getattr(request, 'room_count', 1)
+    for item in items:
+        quantity = rooms if item['category'] == 'hotel' else adults
+        if request and request.transportation == '自驾' and item['name'].startswith('市内交通（'):
+            quantity = 1  # One shared vehicle reference; do not charge it per passenger.
+        if item['amount'] is not None:
+            item['amount'] *= quantity
+        if quantity > 1:
+            item['note'] += f' 按{quantity}{"间房" if item["category"] == "hotel" else "位成人"}汇总。'
     known_total = sum(int(i["amount"]) for i in items if i["status"] == "known")
     estimated_total = sum(int(i["amount"]) for i in items if i["status"] == "estimated")
     unknown_items = [i["name"] for i in items if i["status"] == "unknown"]
@@ -184,10 +253,10 @@ def patch_budget(state: TripState) -> dict:
     # 分类小计：保留旧字段（前端仍在用），但**只统计已知与估算**，未知不在其中。
     total_attractions = sum(int(i["amount"]) for i in items
                             if i["category"] == "attraction" and i["amount"] is not None)
-    total_hotels = hotel_estimated
+    total_hotels = sum(int(i['amount']) for i in items if i['category'] == 'hotel' and i['amount'] is not None)
     total_meals = sum(int(i["amount"]) for i in items
                       if i["category"] == "meal" and i["amount"] is not None)
-    total_transportation = transport_amount
+    total_transportation = sum(int(i['amount']) for i in items if i['category'] == 'transportation' and i['amount'] is not None)
 
     unknown_attractions = [i["name"] for i in items
                            if i["category"] == "attraction" and i["status"] == "unknown"]
@@ -200,7 +269,7 @@ def patch_budget(state: TripState) -> dict:
             f"有 {len(unknown_attractions)} 处门票价未获取或到店消费未核实（逐项原因见费用明细），"
             "未计入总价 —— 实际开销可能更高。"
         )
-    if nights > 0 and hotel is None:
+    if nights > 0 and hotel is None and not dated:
         warnings.append("未确定酒店，住宿费未知（不是 0）—— 实际开销会更高。")
     if unknown_items:
         shown = "、".join(unknown_items[:3])
@@ -213,10 +282,10 @@ def patch_budget(state: TripState) -> dict:
     # 住宿与交通是行程级开销，摊到每一天，让每天的 day_total_cost 加起来**正好**等于 total。
     # 用整除 + 把余数补给最后一天：直接用 round() 会几元几元地对不上（实测差 1 元），
     # 而「每日小计之和 ≠ 总计」在预算卡上是很扎眼的问题。
-    extras = hotel_estimated + transport_amount
+    extras = sum(int(i['amount']) for i in items if i.get('day_index') is None and i['amount'] is not None)
     per_day, remainder = divmod(extras, len(days))
     for index, day in enumerate(days):
-        day["day_total_cost"] = int(day["day_total_cost"]) + per_day + (remainder if index == len(days) - 1 else 0)
+        day["day_total_cost"] = sum(int(i['amount']) for i in items if i.get('day_index') == day['day_index'] and i['amount'] is not None) + per_day + (remainder if index == len(days) - 1 else 0)
 
     budget = {
         "ticket_reserve_amount": settings.ticket_budget_reserve_amount if settings.ticket_budget_reserve_enabled else None,
@@ -239,4 +308,4 @@ def patch_budget(state: TripState) -> dict:
         known_total, estimated_total, total, len(unknown_items), limit,
         total_attractions, total_hotels, nights, total_meals, total_transportation,
     )
-    return {"plan": {**plan, "days": days, "budget": budget}, "warnings": warnings}
+    return {"plan": {**plan, 'adult_count': adults, 'room_count': rooms, 'origin_city': getattr(request, 'origin_city', ''), "days": days, "budget": budget}, "warnings": warnings}

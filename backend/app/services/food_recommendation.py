@@ -23,6 +23,9 @@ def location(item):
 
 
 def meal_contexts(day, hotel):
+    start, end = hotel, hotel
+    if day.get('dated_boundaries'):
+        start, end = day.get('route_start'), day.get('route_end')
     spots = day.get('attractions') or []
     count, minutes = 0, 0
     for spot in spots:
@@ -32,9 +35,11 @@ def meal_contexts(day, hotel):
         minutes += visit_minutes(spot)
     contexts = []
     for kind, index in (('breakfast', 0), ('lunch', max(0, count - 1)), ('dinner', -1)):
-        anchor = hotel if kind == 'breakfast' and location(hotel) else spots[index] if spots else hotel
+        if day.get('meal_types') is not None and kind not in day['meal_types']:
+            continue
+        anchor = start if kind == 'breakfast' and location(start) else spots[index] if spots else start
         following = (spots[count] if kind == 'lunch' and count < len(spots)
-                     else hotel if kind == 'dinner' else spots[0] if kind == 'breakfast' and spots else None)
+                     else end if kind == 'dinner' else spots[0] if kind == 'breakfast' and spots else None)
         contexts.append((kind, anchor, following))
     return contexts
 
@@ -51,11 +56,15 @@ def suitability(restaurant, kind):
     return 1 if any(w in text for w in ('早餐', '早饭', '豆浆', '包子', '包点')) else 0
 
 
-def distances(restaurant, anchor, following):
+def distances(restaurant, anchor, following, kind=None):
     start, end = location(anchor), location(following)
     distance = haversine_km(start, restaurant.location) if start else 0
     detour = (max(0, distance + haversine_km(restaurant.location, end) - haversine_km(start, end))
               if start and end else distance)
+    # Dinner can follow the return journey. Requiring it beside the final
+    # scenic area forces a late long-distance trip back to the hotel.
+    if kind == 'dinner' and end:
+        distance = min(distance, haversine_km(restaurant.location, end)) if start else haversine_km(restaurant.location, end)
     return distance, detour
 
 
@@ -65,7 +74,7 @@ def nearby_pool(restaurants, anchor, following, kind, *, citywide=False):
     if citywide:
         candidates = list(restaurants)
     else:
-        metrics = {r.poi_id: distances(r, anchor, following) for r in restaurants}
+        metrics = {r.poi_id: distances(r, anchor, following, kind) for r in restaurants}
         best = min(value[1] for value in metrics.values())
         candidates = [r for r in restaurants if metrics[r.poi_id][0] <= NEARBY_KM
                       and metrics[r.poi_id][1] <= min(3.0, best + DETOUR_SLACK_KM)]
@@ -96,7 +105,7 @@ def choose_restaurant(restaurants, kind, anchor, following, used, today, needs, 
     previous = [r for r in restaurants if used.get(r.poi_id, 0)]
 
     def score(restaurant):
-        distance, detour = distances(restaurant, anchor, following)
+        distance, detour = distances(restaurant, anchor, following, kind)
         rating = restaurant.rating if restaurant.rating is not None else 3.0
         rank_bonus = 1 / max(1, restaurant.ranking_rank or 1) if restaurant.ranking_name else 0
         cuisine = _cuisine(restaurant)
@@ -125,7 +134,8 @@ def coverage_gaps(plan, hotel, restaurants, needs):
         for kind, anchor, following in meal_contexts(day, hotel):
             candidates = nearby_pool(restaurants, anchor, following, kind, citywide=needs.travel_scope == 'citywide')
             genuinely_near = [r for r in candidates if needs.travel_scope == 'citywide'
-                              or distances(r, anchor, following)[0] <= NEARBY_KM]
+                              or distances(r, anchor, following, kind)[0] <= NEARBY_KM]
             if len(genuinely_near) < min(3, total_meals) or (kind == 'breakfast' and not any(breakfast_hint(r) for r in genuinely_near)):
-                gaps.append((kind, anchor, following))
-    return gaps
+                critical = not genuinely_near or (kind == 'breakfast' and not any(breakfast_hint(r) for r in genuinely_near))
+                gaps.append((0 if critical else 1, (kind, anchor, following)))
+    return [item for _, item in sorted(gaps, key=lambda gap:gap[0])]

@@ -115,7 +115,7 @@ function hasLocation(location: { longitude: number; latitude: number } | null | 
  */
 function pointsOfDay(day: DayPlan): LocatedPoint[] {
   const points: LocatedPoint[] = []
-  const hotel = props.hotel
+  const hotel = day.dated_boundaries ? day.route_start : props.hotel
 
   if (hasLocation(hotel?.location)) {
     points.push({
@@ -142,6 +142,11 @@ function pointsOfDay(day: DayPlan): LocatedPoint[] {
     })
   })
 
+  const end = day.dated_boundaries ? day.route_end : null
+  if (hasLocation(end?.location) && (end?.poi_id !== hotel?.poi_id || end?.name !== hotel?.name)) {
+    points.push({ label: 'E', name: end!.name, longitude: end!.location!.longitude,
+      latitude: end!.location!.latitude, isHotel: true })
+  }
   return points
 }
 
@@ -435,7 +440,7 @@ function hasAnyPoint(index: number): boolean {
           </g>
         </svg>
 
-        <!-- 图例：把「数字 = 游览顺序」「S = 住宿」讲清楚，否则用户不知道圆点里的字是什么意思 -->
+        <!-- 图例：把「数字 = 游览顺序」「S = 出发 · E = 当日终点」讲清楚，否则用户不知道圆点里的字是什么意思 -->
         <div class="legend">
           <span class="legend-item"><span class="dot spot-dot" /> 编号对应下方景点与餐饮，同址点合并</span>
           <span v-if="(dayPoints[index] ?? []).some((item) => item.isHotel)" class="legend-item">
@@ -476,13 +481,13 @@ function hasAnyPoint(index: number): boolean {
 
     <p v-if="hotel && !embedded" class="footnote">
       <HotelIcon :size="12" />
-      每天从住宿「{{ hotel.name }}」出发，S 标记为住宿。
+      地图展示当日出发点与终点；S 为出发，E 为不同的终点。
     </p>
   </section>
 </template>
 
 <style scoped>
-.trip-map.embedded{padding:0;background:transparent}.embedded .day-map-card{padding:0;border:0;background:transparent;box-shadow:none;border-radius:10px;overflow:hidden}.embedded .map-image{max-height:300px;object-fit:contain;background:#f5f7ed}.embedded .legend{font-size:10px;margin-top:8px;gap:12px}.map-caption{font-size:10px;line-height:1.6;color:#9ba38e;margin:6px 0 0}
+.trip-map.embedded{padding:0;background:transparent}.embedded .day-map-card{padding:0;border:0;background:transparent;box-shadow:none;border-radius:10px;overflow:hidden}.embedded .map-image{max-height:300px;object-fit:contain;background:var(--yc-page)}.embedded .legend{font-size:10px;margin-top:8px;gap:12px}.map-caption{font-size:10px;line-height:1.6;color:var(--yc-muted);margin:6px 0 0}
 .trip-map {
   display: flex;
   flex-direction: column;
@@ -491,7 +496,7 @@ function hasAnyPoint(index: number): boolean {
 
 .card {
   background: #fff;
-  border: 1px solid #eceef2;
+  border: 1px solid var(--yc-border);
   border-radius: 12px;
   padding: 18px 20px;
 }
@@ -502,12 +507,12 @@ function hasAnyPoint(index: number): boolean {
   gap: 6px;
   font-size: 14px;
   font-weight: 600;
-  color: #1b1f27;
+  color: var(--yc-ink);
   margin-bottom: 14px;
 }
 
 .muted {
-  color: #8c94a3;
+  color: var(--yc-muted);
   font-weight: 400;
 }
 
@@ -523,7 +528,7 @@ function hasAnyPoint(index: number): boolean {
   max-width: 100%;
   height: auto;
   border-radius: 10px;
-  background: #f7f9fc;
+  background: var(--yc-page);
   border: 1px solid #f0f2f6;
 }
 
@@ -538,7 +543,7 @@ function hasAnyPoint(index: number): boolean {
   gap: 14px;
   margin-top: 10px;
   font-size: 12px;
-  color: #8c94a3;
+  color: var(--yc-muted);
 }
 
 .legend-item {
@@ -555,15 +560,15 @@ function hasAnyPoint(index: number): boolean {
 }
 
 .spot-dot {
-  background: #3566c9;
+  background: var(--yc-primary);
 }
 
 .hotel-dot {
-  background: #d79b00;
+  background: var(--yc-text);
 }
 
 .alert-card {
-  background: #fffbf0;
+  background: var(--yc-page);
   border-color: #ffe3a3;
 }
 
@@ -587,9 +592,9 @@ function hasAnyPoint(index: number): boolean {
 
 .empty-hint {
   padding: 14px 16px;
-  background: #f7f9fc;
+  background: var(--yc-page);
   border-radius: 10px;
-  color: #8c94a3;
+  color: var(--yc-muted);
   font-size: 13px;
   line-height: 1.8;
 }
@@ -601,7 +606,7 @@ function hasAnyPoint(index: number): boolean {
   margin: 0;
   padding: 0 4px;
   font-size: 12px;
-  color: #8c94a3;
+  color: var(--yc-muted);
   line-height: 1.8;
 }
 

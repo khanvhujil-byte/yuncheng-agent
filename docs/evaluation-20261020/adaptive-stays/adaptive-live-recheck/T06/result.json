@@ -1,0 +1,948 @@
+{
+  "case_id": "T06",
+  "name": "成都4天两天周边雪山自驾分段评估",
+  "kind": "generate",
+  "passed": false,
+  "violations": [
+    "2026-10-22 总时长 831 超过舒适上限 660 分钟",
+    "success 期望 True，实际 False"
+  ],
+  "duration_s": 72.67,
+  "error_code": "PLAN_VALIDATION_FAILED",
+  "success": false,
+  "days": 4,
+  "response_summary": {
+    "success": false,
+    "error_code": "PLAN_VALIDATION_FAILED",
+    "message": "已返回部分结果：未通过校验：2026-10-22 的lunch开始时间17:07过晚，请减少前序游玩或通勤；2026-10-22 游玩、餐饮、交通与休息合计 831 分钟，超过舒适上限 660 分钟；请减少景点或按片区重排，请见上方提示。",
+    "cached": false,
+    "warnings": [
+      "周边主题检索覆盖市中心直线300公里内候选；实际通勤、预算仍需复核。",
+      "雪山景区不代表出行当天必有积雪；市区天气不能代表山区天气，山区天气及开放状态需另行确认。",
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "西岭雪山：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "四姑娘山景区-观景台：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "四姑娘山漂流：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "达古冰川.四姑娘山.黄龙.九寨沟风景区管理局：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0MGMG8VJ5",
+      "2026-10-20 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-20 lunch 餐厅不符合就近/餐次条件，可选ID：B0MGMG8VJ5",
+      "2026-10-20 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-20 dinner 餐厅不符合就近/餐次条件，可选ID：B0MA3X19IP",
+      "2026-10-20 dinner 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-21 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-21 lunch 餐厅不符合就近/餐次条件，可选ID：B0MGMG8VJ5",
+      "2026-10-21 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0MA3X19IP",
+      "2026-10-22 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-23 breakfast 餐厅不符合就近/餐次条件，可选ID：B0LGRC9UMI,B0LDLNLOAD,B0FFJSIY96,B0FFJ1GTQO",
+      "2026-10-23 dinner 餐厅不符合就近/餐次条件，可选ID：B0HR25VQ9G",
+      "2026-10-23 dinner 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「西岭雪山景区-观景台」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「西岭雪山大飞水景区」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-21：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：换住含60分钟整理、退房及入住预留；不默认酒店提供寄存，行李须可随行。",
+      "2026-10-22：未自动预订或取消酒店；入住、退房及行李处理条件需确认。",
+      "2026-10-23：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "共 1 项费用金额未知（周边长途/景区接驳附加交通费），未计入总价 —— 所以下面的总计只是已知与估算部分之和，不代表实际开销。",
+      "2026-10-21 lunch 餐厅不符合就近/餐次条件，可选ID：B0MA3X19IP",
+      "2026-10-21 dinner 餐厅不符合就近/餐次条件，可选ID：B0MA3X19IP",
+      "2026-10-21 dinner 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22 的lunch开始时间17:07过晚，请减少前序游玩或通勤。",
+      "2026-10-22 游玩、餐饮、交通与休息合计 831 分钟，超过舒适上限 660 分钟；请减少景点或按片区重排。"
+    ],
+    "budget": {
+      "ticket_reserve_amount": 100,
+      "total_attractions": 90,
+      "total_hotels": 780,
+      "total_meals": 538,
+      "total_transportation": 480,
+      "total": 1888,
+      "items": [
+        {
+          "category": "attraction",
+          "name": "西岭雪山-前山",
+          "day_index": 0,
+          "amount": 30,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：西岭雪山前山即大飞水景区，日常成人门票约30元"
+        },
+        {
+          "category": "meal",
+          "name": "半山小菜饭",
+          "day_index": 0,
+          "amount": 25,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "餐厅未提供人均价格，按每人每餐固定规则预留；不是餐厅报价。"
+        },
+        {
+          "category": "meal",
+          "name": "雪山饭店",
+          "day_index": 0,
+          "amount": 60,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "餐厅未提供人均价格，按每人每餐固定规则预留；不是餐厅报价。"
+        },
+        {
+          "category": "meal",
+          "name": "重庆小面",
+          "day_index": 0,
+          "amount": 16,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "西岭雪山景区-步行道",
+          "day_index": 1,
+          "amount": 60,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：西岭雪山景区日常成人门票挂牌价约60元，步行道包含在景区门票内，不含索道等交通项目"
+        },
+        {
+          "category": "meal",
+          "name": "百姓食堂",
+          "day_index": 1,
+          "amount": 25,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "餐厅未提供人均价格，按每人每餐固定规则预留；不是餐厅报价。"
+        },
+        {
+          "category": "meal",
+          "name": "百姓食堂",
+          "day_index": 1,
+          "amount": 60,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "餐厅未提供人均价格，按每人每餐固定规则预留；不是餐厅报价。"
+        },
+        {
+          "category": "meal",
+          "name": "百姓食堂",
+          "day_index": 1,
+          "amount": 80,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "餐厅未提供人均价格，按每人每餐固定规则预留；不是餐厅报价。"
+        },
+        {
+          "category": "attraction",
+          "name": "东湖公园",
+          "day_index": 2,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：东湖公园为免费开放的城市公园，日常无门票"
+        },
+        {
+          "category": "meal",
+          "name": "百姓食堂",
+          "day_index": 2,
+          "amount": 25,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "餐厅未提供人均价格，按每人每餐固定规则预留；不是餐厅报价。"
+        },
+        {
+          "category": "meal",
+          "name": "老面馆(致民东路店)",
+          "day_index": 2,
+          "amount": 28,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "江边码头老妈蹄花(南河苑店)",
+          "day_index": 2,
+          "amount": 54,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "铁像寺水街",
+          "day_index": 3,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：铁像寺水街为开放式特色街区，日常免费进入，独立收费展馆不适用此估算"
+        },
+        {
+          "category": "attraction",
+          "name": "交子公园",
+          "day_index": 3,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：交子公园为免费开放的城市公园，日常无门票"
+        },
+        {
+          "category": "meal",
+          "name": "闫记早餐店(龙江路店)",
+          "day_index": 3,
+          "amount": 25,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "餐厅未提供人均价格，按每人每餐固定规则预留；不是餐厅报价。"
+        },
+        {
+          "category": "meal",
+          "name": "自贡盐帮菜",
+          "day_index": 3,
+          "amount": 60,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "餐厅未提供人均价格，按每人每餐固定规则预留；不是餐厅报价。"
+        },
+        {
+          "category": "meal",
+          "name": "叙府",
+          "day_index": 3,
+          "amount": 80,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "餐厅未提供人均价格，按每人每餐固定规则预留；不是餐厅报价。"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-20 住宿：西岭雪山西舍临峰",
+          "day_index": 0,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-21 住宿：西岭雪山西舍临峰",
+          "day_index": 1,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-22 住宿：青季酒店MINI(成都九眼桥川音川大店)",
+          "day_index": 2,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "transportation",
+          "name": "市内交通（自驾）",
+          "day_index": null,
+          "amount": 480,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "按每人每天 120 元的固定表估算"
+        },
+        {
+          "category": "transportation",
+          "name": "周边长途/景区接驳附加交通费",
+          "day_index": null,
+          "amount": null,
+          "status": "unknown",
+          "source": "unknown",
+          "note": "市内固定交通预留不覆盖长途、山区接驳、停车和过路费；需取得报价。"
+        }
+      ],
+      "known_total": 0,
+      "estimated_total": 1888,
+      "unknown_items": [
+        "周边长途/景区接驳附加交通费"
+      ],
+      "limit": null,
+      "limit_status": "none",
+      "limit_basis": "未设置预算上限。当前口径：已知 0 元 + 估算 1888 元 = 1888 元，另有 1 项金额未知。"
+    },
+    "hotel": null,
+    "hotel_nights": 3,
+    "accommodation_version": 11,
+    "stays": [
+      {
+        "check_in": "2026-10-20",
+        "check_out": "2026-10-21",
+        "hotel": {
+          "name": "西岭雪山西舍临峰",
+          "poi_id": "B0M1NZSVXN",
+          "address": "四川省成都市大邑县西岭雪山滑雪场日月坪",
+          "location": {
+            "longitude": 103.169385,
+            "latitude": 30.692937
+          },
+          "price_range": "",
+          "rating": "",
+          "distance": "",
+          "type": "住宿服务;住宿服务相关;住宿服务相关",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "首日自驾抵西岭雪山片区，就近入住减少次日进山通勤，避免市区往返折返。"
+      },
+      {
+        "check_in": "2026-10-21",
+        "check_out": "2026-10-22",
+        "hotel": {
+          "name": "西岭雪山西舍临峰",
+          "poi_id": "B0M1NZSVXN",
+          "address": "四川省成都市大邑县西岭雪山滑雪场日月坪",
+          "location": {
+            "longitude": 103.169385,
+            "latitude": 30.692937
+          },
+          "price_range": "",
+          "rating": "",
+          "distance": "",
+          "type": "住宿服务;住宿服务相关;住宿服务相关",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "连续第二日雪山活动，同店连住免去换住60分钟整理与行李搬运。"
+      },
+      {
+        "check_in": "2026-10-22",
+        "check_out": "2026-10-23",
+        "hotel": {
+          "name": "青季酒店MINI(成都九眼桥川音川大店)",
+          "poi_id": "B001C8PLB0",
+          "address": "共和路红瓦寺共和村5号商务大楼三层",
+          "location": {
+            "longitude": 104.084214,
+            "latitude": 30.635276
+          },
+          "price_range": "",
+          "rating": "4.6",
+          "distance": "",
+          "type": "经济型连锁酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "雪山行程结束返市区，入住九眼桥经济型酒店，便于末两日市区游览与餐饮。"
+      }
+    ],
+    "stay_comparison": {
+      "strategy": "segmented",
+      "hotel_changes": 1,
+      "travel_minutes": 710,
+      "transfer_minutes": 60,
+      "basis": "路线工具核算所选方案；未取得备选实测时，不宣称节省具体分钟。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": null,
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "多云"
+      },
+      {
+        "date": "2026-10-21",
+        "beyond_window": false,
+        "day_weather": "阴"
+      },
+      {
+        "date": "2026-10-22",
+        "beyond_window": false,
+        "day_weather": "多云"
+      },
+      {
+        "date": "2026-10-23",
+        "beyond_window": false,
+        "day_weather": "多云"
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-20",
+        "day_index": 0,
+        "attractions": [
+          "西岭雪山-前山"
+        ],
+        "meals": [
+          "半山小菜饭",
+          "雪山饭店",
+          "重庆小面"
+        ],
+        "total_minutes": 648,
+        "route_start": null,
+        "route_end": {
+          "name": "西岭雪山西舍临峰",
+          "location": {
+            "longitude": 103.169385,
+            "latitude": 30.692937
+          },
+          "poi_id": "B0M1NZSVXN",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "半山小菜饭",
+            "to_name": "西岭雪山-前山",
+            "from_id": "B0MRHLF5XU",
+            "to_id": "B0FFG2W5F1",
+            "mode": "自驾",
+            "duration_minutes": 1,
+            "distance_meters": 143,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "西岭雪山-前山",
+            "to_name": "雪山饭店",
+            "from_id": "B0FFG2W5F1",
+            "to_id": "B0LKYB3GEU",
+            "mode": "自驾",
+            "duration_minutes": 1,
+            "distance_meters": 70,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "雪山饭店",
+            "to_name": "重庆小面",
+            "from_id": "B0LKYB3GEU",
+            "to_id": "B0K3XH2UV3",
+            "mode": "自驾",
+            "duration_minutes": 2,
+            "distance_meters": 398,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "重庆小面",
+            "to_name": "西岭雪山西舍临峰",
+            "from_id": "B0K3XH2UV3",
+            "to_id": "B0M1NZSVXN",
+            "mode": "自驾",
+            "duration_minutes": 65,
+            "distance_meters": 33505,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 511
+      },
+      {
+        "date": "2026-10-21",
+        "day_index": 1,
+        "attractions": [
+          "西岭雪山景区-步行道"
+        ],
+        "meals": [
+          "百姓食堂",
+          "百姓食堂",
+          "百姓食堂"
+        ],
+        "total_minutes": 655,
+        "route_start": {
+          "name": "西岭雪山西舍临峰",
+          "location": {
+            "longitude": 103.169385,
+            "latitude": 30.692937
+          },
+          "poi_id": "B0M1NZSVXN",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "西岭雪山西舍临峰",
+          "location": {
+            "longitude": 103.169385,
+            "latitude": 30.692937
+          },
+          "poi_id": "B0M1NZSVXN",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "西岭雪山西舍临峰",
+            "to_name": "百姓食堂",
+            "from_id": "B0M1NZSVXN",
+            "to_id": "B0MA3X19IP",
+            "mode": "自驾",
+            "duration_minutes": 20,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ANOMALOUS_ROUTE_RESULT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "百姓食堂",
+            "to_name": "西岭雪山景区-步行道",
+            "from_id": "B0MA3X19IP",
+            "to_id": "B0HG0L4BGI",
+            "mode": "自驾",
+            "duration_minutes": 27,
+            "distance_meters": 11795,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "西岭雪山景区-步行道",
+            "to_name": "百姓食堂",
+            "from_id": "B0HG0L4BGI",
+            "to_id": "B0MA3X19IP",
+            "mode": "自驾",
+            "duration_minutes": 29,
+            "distance_meters": 12147,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "百姓食堂",
+            "to_name": "百姓食堂",
+            "from_id": "B0MA3X19IP",
+            "to_id": "B0MA3X19IP",
+            "mode": "自驾",
+            "duration_minutes": 10,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "百姓食堂",
+            "to_name": "西岭雪山西舍临峰",
+            "from_id": "B0MA3X19IP",
+            "to_id": "B0M1NZSVXN",
+            "mode": "自驾",
+            "duration_minutes": 20,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 605
+      },
+      {
+        "date": "2026-10-22",
+        "day_index": 2,
+        "attractions": [
+          "东湖公园"
+        ],
+        "meals": [
+          "百姓食堂",
+          "老面馆(致民东路店)",
+          "江边码头老妈蹄花(南河苑店)"
+        ],
+        "total_minutes": 831,
+        "route_start": {
+          "name": "西岭雪山西舍临峰",
+          "location": {
+            "longitude": 103.169385,
+            "latitude": 30.692937
+          },
+          "poi_id": "B0M1NZSVXN",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "青季酒店MINI(成都九眼桥川音川大店)",
+          "location": {
+            "longitude": 104.084214,
+            "latitude": 30.635276
+          },
+          "poi_id": "B001C8PLB0",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": true,
+        "route_legs": [
+          {
+            "from_name": "西岭雪山西舍临峰",
+            "to_name": "百姓食堂",
+            "from_id": "B0M1NZSVXN",
+            "to_id": "B0MA3X19IP",
+            "mode": "自驾",
+            "duration_minutes": 20,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ANOMALOUS_ROUTE_RESULT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "百姓食堂",
+            "to_name": "老面馆(致民东路店)",
+            "from_id": "B0MA3X19IP",
+            "to_id": "B0FFJSIY96",
+            "mode": "自驾",
+            "duration_minutes": 360,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "老面馆(致民东路店)",
+            "to_name": "江边码头老妈蹄花(南河苑店)",
+            "from_id": "B0FFJSIY96",
+            "to_id": "B0HAN5N10R",
+            "mode": "自驾",
+            "duration_minutes": 11,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "江边码头老妈蹄花(南河苑店)",
+            "to_name": "东湖公园",
+            "from_id": "B0HAN5N10R",
+            "to_id": "B001C7WGEA",
+            "mode": "自驾",
+            "duration_minutes": 17,
+            "distance_meters": 4424,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "东湖公园",
+            "to_name": "青季酒店MINI(成都九眼桥川音川大店)",
+            "from_id": "B001C7WGEA",
+            "to_id": "B001C8PLB0",
+            "mode": "自驾",
+            "duration_minutes": 16,
+            "distance_meters": 4457,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 487
+      },
+      {
+        "date": "2026-10-23",
+        "day_index": 3,
+        "attractions": [
+          "铁像寺水街",
+          "交子公园"
+        ],
+        "meals": [
+          "闫记早餐店(龙江路店)",
+          "自贡盐帮菜",
+          "叙府"
+        ],
+        "total_minutes": 630,
+        "route_start": {
+          "name": "青季酒店MINI(成都九眼桥川音川大店)",
+          "location": {
+            "longitude": 104.084214,
+            "latitude": 30.635276
+          },
+          "poi_id": "B001C8PLB0",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": null,
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "青季酒店MINI(成都九眼桥川音川大店)",
+            "to_name": "闫记早餐店(龙江路店)",
+            "from_id": "B001C8PLB0",
+            "to_id": "B0LDLNLOAD",
+            "mode": "自驾",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "闫记早餐店(龙江路店)",
+            "to_name": "铁像寺水街",
+            "from_id": "B0LDLNLOAD",
+            "to_id": "B001C937OI",
+            "mode": "自驾",
+            "duration_minutes": 50,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "铁像寺水街",
+            "to_name": "自贡盐帮菜",
+            "from_id": "B001C937OI",
+            "to_id": "B0LKB6S44M",
+            "mode": "自驾",
+            "duration_minutes": 26,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "自贡盐帮菜",
+            "to_name": "交子公园",
+            "from_id": "B0LKB6S44M",
+            "to_id": "B0FFHUHA9B",
+            "mode": "自驾",
+            "duration_minutes": 11,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "交子公园",
+            "to_name": "叙府",
+            "from_id": "B0FFHUHA9B",
+            "to_id": "B0L0ZKDT9W",
+            "mode": "自驾",
+            "duration_minutes": 11,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 285
+      }
+    ],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 1888,
+      "subtotal": 1888,
+      "unknown_items": [
+        "周边长途/景区接驳附加交通费"
+      ],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 1888 元 = 1888 元，另有 1 项金额未知。"
+    },
+    "validate_error": "2026-10-22 的lunch开始时间17:07过晚，请减少前序游玩或通勤。\n2026-10-22 游玩、餐饮、交通与休息合计 831 分钟，超过舒适上限 660 分钟；请减少景点或按片区重排。\n\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0M1NZSVXN\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0M1NZSVXN\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B001C8PLB0\"}], \"hotel_id\": null, \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 648, \"attraction_names\": [\"西岭雪山-前山\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFG2W5F1\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0MRHLF5XU\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0LKYB3GEU\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0K3XH2UV3\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LKYB3GEU\", \"B0MRHLF5XU\", \"B0K3XH2UV3\"], \"unused_restaurant_ids\": [\"B0LKYB3GEU\", \"B0MRHLF5XU\", \"B0K3XH2UV3\"], \"suggested_restaurant_id\": \"B0MRHLF5XU\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0LKYB3GEU\", \"B0MRHLF5XU\", \"B0K3XH2UV3\"], \"unused_restaurant_ids\": [\"B0LKYB3GEU\", \"B0K3XH2UV3\"], \"suggested_restaurant_id\": \"B0LKYB3GEU\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0MGMG8VJ5\", \"B0LKYB3GEU\", \"B0MRHLF5XU\", \"B0K3XH2UV3\"], \"unused_restaurant_ids\": [\"B0MGMG8VJ5\", \"B0K3XH2UV3\"], \"suggested_restaurant_id\": \"B0K3XH2UV3\"}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 655, \"attraction_names\": [\"西岭雪山景区-步行道\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0HG0L4BGI\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0MA3X19IP\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0MA3X19IP\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0MA3X19IP\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0MA3X19IP\"], \"unused_restaurant_ids\": [\"B0MA3X19IP\"], \"suggested_restaurant_id\": \"B0MA3X19IP\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0MA3X19IP\"], \"unused_restaurant_ids\": []}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0MA3X19IP\"], \"unused_restaurant_ids\": []}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 831, \"attraction_names\": [\"东湖公园\"], \"overloaded_routes\": [{\"from_name\": \"西岭雪山西舍临峰\", \"to_name\": \"百姓食堂\", \"duration_minutes\": 20, \"status\": \"estimated\"}, {\"from_name\": \"百姓食堂\", \"to_name\": \"老面馆(致民东路店)\", \"duration_minutes\": 360, \"status\": \"estimated\"}, {\"from_name\": \"老面馆(致民东路店)\", \"to_name\": \"江边码头老妈蹄花(南河苑店)\", \"duration_minutes\": 11, \"status\": \"estimated\"}, {\"from_name\": \"江边码头老妈蹄花(南河苑店)\", \"to_name\": \"东湖公园\", \"duration_minutes\": 17, \"status\": \"known\"}, {\"from_name\": \"东湖公园\", \"to_name\": \"青季酒店MINI(成都九眼桥川音川大店)\", \"duration_minutes\": 16, \"status\": \"known\"}], \"attraction_ids\": [\"B001C7WGEA\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0MA3X19IP\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFJSIY96\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0HAN5N10R\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0MA3X19IP\"], \"unused_restaurant_ids\": []}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0LGRC9UMI\", \"B0JKDSVTI8\", \"B0J6MGC6KZ\", \"B0J0J6INI5\", \"B0HAN5N10R\", \"B0GRY5VSFV\", \"B0FFK638QT\", \"B0FFJSIY96\"], \"unused_restaurant_ids\": [\"B0LGRC9UMI\", \"B0JKDSVTI8\", \"B0J6MGC6KZ\", \"B0J0J6INI5\", \"B0HAN5N10R\", \"B0GRY5VSFV\", \"B0FFK638QT\", \"B0FFJSIY96\"], \"suggested_restaurant_id\": \"B0FFJSIY96\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LGRC9UMI\", \"B0KRRSPI59\", \"B0JKDSVTI8\", \"B0J6MGC6KZ\", \"B0J0J6INI5\", \"B0HDJZUV6M\", \"B0HAN5N10R\", \"B0GRY5VSFV\"], \"unused_restaurant_ids\": [\"B0LGRC9UMI\", \"B0KRRSPI59\", \"B0JKDSVTI8\", \"B0J6MGC6KZ\", \"B0J0J6INI5\", \"B0HDJZUV6M\", \"B0HAN5N10R\", \"B0GRY5VSFV\"], \"suggested_restaurant_id\": \"B0HAN5N10R\"}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 630, \"attraction_names\": [\"铁像寺水街\", \"交子公园\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001C937OI\", \"B0FFHUHA9B\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LDLNLOAD\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0LKB6S44M\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0L0ZKDT9W\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LGRC9UMI\", \"B0LDLNLOAD\", \"B0FFJSIY96\", \"B0FFJ1GTQO\"], \"unused_restaurant_ids\": [\"B0LGRC9UMI\", \"B0LDLNLOAD\", \"B0FFJ1GTQO\"], \"suggested_restaurant_id\": \"B0LDLNLOAD\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0L0ZKDT9W\", \"B0LKB6S44M\", \"B0L1O5OOHS\", \"B0L0H6OYER\", \"B0MUTHL355\", \"B0KGLUWTYR\", \"B0K3KMGJR9\", \"B0JGVR8IDP\"], \"unused_restaurant_ids\": [\"B0L0ZKDT9W\", \"B0LKB6S44M\", \"B0L1O5OOHS\", \"B0L0H6OYER\", \"B0MUTHL355\", \"B0KGLUWTYR\", \"B0K3KMGJR9\", \"B0JGVR8IDP\"], \"suggested_restaurant_id\": \"B0LKB6S44M\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0L0ZKDT9W\", \"B0LKB6S44M\", \"B0L1O5OOHS\", \"B0L0H6OYER\", \"B0MUTHL355\", \"B0KGLUWTYR\", \"B0K3KMGJR9\", \"B0JGVR8IDP\"], \"unused_restaurant_ids\": [\"B0L0ZKDT9W\", \"B0L1O5OOHS\", \"B0L0H6OYER\", \"B0MUTHL355\", \"B0KGLUWTYR\", \"B0K3KMGJR9\", \"B0JGVR8IDP\", \"B0J1693OQ9\"], \"suggested_restaurant_id\": \"B0L0ZKDT9W\"}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。suggested_restaurant_id是跨餐次匹配后的真实候选建议，保持布局时可优先采用以避免局部贪心导致重复；实际路线和预算仍需复核。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。"
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": "2026-10-22 的lunch开始时间17:07过晚，请减少前序游玩或通勤。\n2026-10-22 游玩、餐饮、交通与休息合计 831 分钟，超过舒适上限 660 分钟；请减少景点或按片区重排。\n\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0M1NZSVXN\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0M1NZSVXN\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B001C8PLB0\"}], \"hotel_id\": null, \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 648, \"attraction_names\": [\"西岭雪山-前山\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFG2W5F1\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0MRHLF5XU\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0LKYB3GEU\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0K3XH2UV3\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LKYB3GEU\", \"B0MRHLF5XU\", \"B0K3XH2UV3\"], \"unused_restaurant_ids\": [\"B0LKYB3GEU\", \"B0MRHLF5XU\", \"B0K3XH2UV3\"], \"suggested_restaurant_id\": \"B0MRHLF5XU\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0LKYB3GEU\", \"B0MRHLF5XU\", \"B0K3XH2UV3\"], \"unused_restaurant_ids\": [\"B0LKYB3GEU\", \"B0K3XH2UV3\"], \"suggested_restaurant_id\": \"B0LKYB3GEU\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0MGMG8VJ5\", \"B0LKYB3GEU\", \"B0MRHLF5XU\", \"B0K3XH2UV3\"], \"unused_restaurant_ids\": [\"B0MGMG8VJ5\", \"B0K3XH2UV3\"], \"suggested_restaurant_id\": \"B0K3XH2UV3\"}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 655, \"attraction_names\": [\"西岭雪山景区-步行道\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0HG0L4BGI\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0MA3X19IP\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0MA3X19IP\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0MA3X19IP\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0MA3X19IP\"], \"unused_restaurant_ids\": [\"B0MA3X19IP\"], \"suggested_restaurant_id\": \"B0MA3X19IP\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0MA3X19IP\"], \"unused_restaurant_ids\": []}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0MA3X19IP\"], \"unused_restaurant_ids\": []}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 831, \"attraction_names\": [\"东湖公园\"], \"overloaded_routes\": [{\"from_name\": \"西岭雪山西舍临峰\", \"to_name\": \"百姓食堂\", \"duration_minutes\": 20, \"status\": \"estimated\"}, {\"from_name\": \"百姓食堂\", \"to_name\": \"老面馆(致民东路店)\", \"duration_minutes\": 360, \"status\": \"estimated\"}, {\"from_name\": \"老面馆(致民东路店)\", \"to_name\": \"江边码头老妈蹄花(南河苑店)\", \"duration_minutes\": 11, \"status\": \"estimated\"}, {\"from_name\": \"江边码头老妈蹄花(南河苑店)\", \"to_name\": \"东湖公园\", \"duration_minutes\": 17, \"status\": \"known\"}, {\"from_name\": \"东湖公园\", \"to_name\": \"青季酒店MINI(成都九眼桥川音川大店)\", \"duration_minutes\": 16, \"status\": \"known\"}], \"attraction_ids\": [\"B001C7WGEA\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0MA3X19IP\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFJSIY96\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0HAN5N10R\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0MA3X19IP\"], \"unused_restaurant_ids\": []}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0LGRC9UMI\", \"B0JKDSVTI8\", \"B0J6MGC6KZ\", \"B0J0J6INI5\", \"B0HAN5N10R\", \"B0GRY5VSFV\", \"B0FFK638QT\", \"B0FFJSIY96\"], \"unused_restaurant_ids\": [\"B0LGRC9UMI\", \"B0JKDSVTI8\", \"B0J6MGC6KZ\", \"B0J0J6INI5\", \"B0HAN5N10R\", \"B0GRY5VSFV\", \"B0FFK638QT\", \"B0FFJSIY96\"], \"suggested_restaurant_id\": \"B0FFJSIY96\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LGRC9UMI\", \"B0KRRSPI59\", \"B0JKDSVTI8\", \"B0J6MGC6KZ\", \"B0J0J6INI5\", \"B0HDJZUV6M\", \"B0HAN5N10R\", \"B0GRY5VSFV\"], \"unused_restaurant_ids\": [\"B0LGRC9UMI\", \"B0KRRSPI59\", \"B0JKDSVTI8\", \"B0J6MGC6KZ\", \"B0J0J6INI5\", \"B0HDJZUV6M\", \"B0HAN5N10R\", \"B0GRY5VSFV\"], \"suggested_restaurant_id\": \"B0HAN5N10R\"}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 630, \"attraction_names\": [\"铁像寺水街\", \"交子公园\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001C937OI\", \"B0FFHUHA9B\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LDLNLOAD\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0LKB6S44M\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0L0ZKDT9W\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LGRC9UMI\", \"B0LDLNLOAD\", \"B0FFJSIY96\", \"B0FFJ1GTQO\"], \"unused_restaurant_ids\": [\"B0LGRC9UMI\", \"B0LDLNLOAD\", \"B0FFJ1GTQO\"], \"suggested_restaurant_id\": \"B0LDLNLOAD\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0L0ZKDT9W\", \"B0LKB6S44M\", \"B0L1O5OOHS\", \"B0L0H6OYER\", \"B0MUTHL355\", \"B0KGLUWTYR\", \"B0K3KMGJR9\", \"B0JGVR8IDP\"], \"unused_restaurant_ids\": [\"B0L0ZKDT9W\", \"B0LKB6S44M\", \"B0L1O5OOHS\", \"B0L0H6OYER\", \"B0MUTHL355\", \"B0KGLUWTYR\", \"B0K3KMGJR9\", \"B0JGVR8IDP\"], \"suggested_restaurant_id\": \"B0LKB6S44M\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0L0ZKDT9W\", \"B0LKB6S44M\", \"B0L1O5OOHS\", \"B0L0H6OYER\", \"B0MUTHL355\", \"B0KGLUWTYR\", \"B0K3KMGJR9\", \"B0JGVR8IDP\"], \"unused_restaurant_ids\": [\"B0L0ZKDT9W\", \"B0L1O5OOHS\", \"B0L0H6OYER\", \"B0MUTHL355\", \"B0KGLUWTYR\", \"B0K3KMGJR9\", \"B0JGVR8IDP\", \"B0J1693OQ9\"], \"suggested_restaurant_id\": \"B0L0ZKDT9W\"}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。suggested_restaurant_id是跨餐次匹配后的真实候选建议，保持布局时可优先采用以避免局部贪心导致重复；实际路线和预算仍需复核。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+    "retries": 1,
+    "budget_retries": 0,
+    "planning_calls": 3,
+    "composition_valid": true,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "warnings": [
+      "周边主题检索覆盖市中心直线300公里内候选；实际通勤、预算仍需复核。",
+      "雪山景区不代表出行当天必有积雪；市区天气不能代表山区天气，山区天气及开放状态需另行确认。",
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "西岭雪山：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "四姑娘山景区-观景台：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "四姑娘山漂流：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "达古冰川.四姑娘山.黄龙.九寨沟风景区管理局：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0MGMG8VJ5\n2026-10-20 breakfast 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-20 lunch 餐厅不符合就近/餐次条件，可选ID：B0MGMG8VJ5\n2026-10-20 lunch 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-20 dinner 餐厅不符合就近/餐次条件，可选ID：B0MA3X19IP\n2026-10-20 dinner 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-21 breakfast 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-21 lunch 餐厅不符合就近/餐次条件，可选ID：B0MGMG8VJ5\n2026-10-21 lunch 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0MA3X19IP\n2026-10-22 breakfast 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-23 breakfast 餐厅不符合就近/餐次条件，可选ID：B0LGRC9UMI,B0LDLNLOAD,B0FFJSIY96,B0FFJ1GTQO\n2026-10-23 dinner 餐厅不符合就近/餐次条件，可选ID：B0HR25VQ9G\n2026-10-23 dinner 距用餐片区超过4公里，需换候选或重排景点。\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0M1NZSVXN\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0M1NZSVXN\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B001C8PLB0\"}], \"hotel_id\": null, \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"西岭雪山-前山\", \"西岭雪山景区-观景台\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFG2W5F1\", \"B0K2F9VIDI\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFK6ENWV\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0MA3X19IP\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0MGMG8VJ5\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0MGMG8VJ5\"], \"unused_restaurant_ids\": [\"B0MGMG8VJ5\"], \"suggested_restaurant_id\": \"B0MGMG8VJ5\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0MGMG8VJ5\"], \"unused_restaurant_ids\": [\"B0MGMG8VJ5\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0MA3X19IP\"], \"unused_restaurant_ids\": [], \"suggested_restaurant_id\": \"B0MA3X19IP\"}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"西岭雪山大飞水景区\", \"西岭雪山景区-步行道\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0GKVL4NTK\", \"B0HG0L4BGI\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0MGMG8VJ5\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0MA3X19IP\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0MA3X19IP\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [], \"unused_restaurant_ids\": []}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0MGMG8VJ5\"], \"unused_restaurant_ids\": []}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0MA3X19IP\"], \"unused_restaurant_ids\": []}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"东湖公园\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001C7WGEA\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0MGMG8VJ5\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFJ4WQNC\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0HAN5N10R\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0MA3X19IP\"], \"unused_restaurant_ids\": []}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0LGRC9UMI\", \"B0JKDSVTI8\", \"B0J6MGC6KZ\", \"B0J0J6INI5\", \"B0HAN5N10R\", \"B0GRY5VSFV\", \"B0FFK638QT\", \"B0FFJSIY96\"], \"unused_restaurant_ids\": [\"B0LGRC9UMI\", \"B0JKDSVTI8\", \"B0J6MGC6KZ\", \"B0J0J6INI5\", \"B0HAN5N10R\", \"B0GRY5VSFV\", \"B0FFK638QT\", \"B0FFJSIY96\"], \"suggested_restaurant_id\": \"B0FFJ4WQNC\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LGRC9UMI\", \"B0KRRSPI59\", \"B0JKDSVTI8\", \"B0J6MGC6KZ\", \"B0J0J6INI5\", \"B0HDJZUV6M\", \"B0HAN5N10R\", \"B0GRY5VSFV\"], \"unused_restaurant_ids\": [\"B0LGRC9UMI\", \"B0KRRSPI59\", \"B0JKDSVTI8\", \"B0J6MGC6KZ\", \"B0J0J6INI5\", \"B0HDJZUV6M\", \"B0HAN5N10R\", \"B0GRY5VSFV\"], \"suggested_restaurant_id\": \"B0HAN5N10R\"}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 0, \"attraction_names\": [\"铁像寺水街\", \"交子公园\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001C937OI\", \"B0FFHUHA9B\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0KRRSPI59\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0HR25VQ9G\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFJNEEZV\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LGRC9UMI\", \"B0LDLNLOAD\", \"B0FFJSIY96\", \"B0FFJ1GTQO\"], \"unused_restaurant_ids\": [\"B0LGRC9UMI\", \"B0LDLNLOAD\", \"B0FFJSIY96\", \"B0FFJ1GTQO\"], \"suggested_restaurant_id\": \"B0LGRC9UMI\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0HR25VQ9G\"], \"unused_restaurant_ids\": [\"B0HR25VQ9G\"], \"suggested_restaurant_id\": \"B0HR25VQ9G\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [], \"unused_restaurant_ids\": []}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。suggested_restaurant_id是跨餐次匹配后的真实候选建议，保持布局时可优先采用以避免局部贪心导致重复；实际路线和预算仍需复核。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「西岭雪山景区-观景台」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「西岭雪山大飞水景区」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-21：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：换住含60分钟整理、退房及入住预留；不默认酒店提供寄存，行李须可随行。",
+      "2026-10-22：未自动预订或取消酒店；入住、退房及行李处理条件需确认。",
+      "2026-10-23：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "共 1 项费用金额未知（周边长途/景区接驳附加交通费），未计入总价 —— 所以下面的总计只是已知与估算部分之和，不代表实际开销。",
+      "2026-10-21 lunch 餐厅不符合就近/餐次条件，可选ID：B0MA3X19IP\n2026-10-21 lunch 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-21 dinner 餐厅不符合就近/餐次条件，可选ID：B0MA3X19IP\n2026-10-21 dinner 距用餐片区超过4公里，需换候选或重排景点。\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0M1NZSVXN\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0M1NZSVXN\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B001C8PLB0\"}], \"hotel_id\": null, \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"西岭雪山-前山\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFG2W5F1\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0MRHLF5XU\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0LKYB3GEU\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0K3XH2UV3\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LKYB3GEU\", \"B0MRHLF5XU\", \"B0K3XH2UV3\"], \"unused_restaurant_ids\": [\"B0LKYB3GEU\", \"B0MRHLF5XU\", \"B0K3XH2UV3\"], \"suggested_restaurant_id\": \"B0MRHLF5XU\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0LKYB3GEU\", \"B0MRHLF5XU\", \"B0K3XH2UV3\"], \"unused_restaurant_ids\": [\"B0LKYB3GEU\", \"B0K3XH2UV3\"], \"suggested_restaurant_id\": \"B0LKYB3GEU\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0MGMG8VJ5\", \"B0LKYB3GEU\", \"B0MRHLF5XU\", \"B0K3XH2UV3\"], \"unused_restaurant_ids\": [\"B0MGMG8VJ5\", \"B0K3XH2UV3\"], \"suggested_restaurant_id\": \"B0K3XH2UV3\"}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"西岭雪山景区-步行道\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0HG0L4BGI\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0MA3X19IP\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0LKYB3GEU\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0MRHLF5XU\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0MA3X19IP\"], \"unused_restaurant_ids\": [\"B0MA3X19IP\"], \"suggested_restaurant_id\": \"B0MA3X19IP\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0MA3X19IP\"], \"unused_restaurant_ids\": []}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0MA3X19IP\"], \"unused_restaurant_ids\": []}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"东湖公园\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001C7WGEA\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0MA3X19IP\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFJSIY96\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0HAN5N10R\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0MA3X19IP\"], \"unused_restaurant_ids\": []}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0LGRC9UMI\", \"B0JKDSVTI8\", \"B0J6MGC6KZ\", \"B0J0J6INI5\", \"B0HAN5N10R\", \"B0GRY5VSFV\", \"B0FFK638QT\", \"B0FFJSIY96\"], \"unused_restaurant_ids\": [\"B0LGRC9UMI\", \"B0JKDSVTI8\", \"B0J6MGC6KZ\", \"B0J0J6INI5\", \"B0HAN5N10R\", \"B0GRY5VSFV\", \"B0FFK638QT\", \"B0FFJSIY96\"], \"suggested_restaurant_id\": \"B0FFJSIY96\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LGRC9UMI\", \"B0KRRSPI59\", \"B0JKDSVTI8\", \"B0J6MGC6KZ\", \"B0J0J6INI5\", \"B0HDJZUV6M\", \"B0HAN5N10R\", \"B0GRY5VSFV\"], \"unused_restaurant_ids\": [\"B0LGRC9UMI\", \"B0KRRSPI59\", \"B0JKDSVTI8\", \"B0J6MGC6KZ\", \"B0J0J6INI5\", \"B0HDJZUV6M\", \"B0HAN5N10R\", \"B0GRY5VSFV\"], \"suggested_restaurant_id\": \"B0HAN5N10R\"}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 0, \"attraction_names\": [\"铁像寺水街\", \"交子公园\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001C937OI\", \"B0FFHUHA9B\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LDLNLOAD\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0LKB6S44M\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0L0ZKDT9W\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LGRC9UMI\", \"B0LDLNLOAD\", \"B0FFJSIY96\", \"B0FFJ1GTQO\"], \"unused_restaurant_ids\": [\"B0LGRC9UMI\", \"B0LDLNLOAD\", \"B0FFJ1GTQO\"], \"suggested_restaurant_id\": \"B0LDLNLOAD\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0L0ZKDT9W\", \"B0LKB6S44M\", \"B0L1O5OOHS\", \"B0L0H6OYER\", \"B0MUTHL355\", \"B0KGLUWTYR\", \"B0K3KMGJR9\", \"B0JGVR8IDP\"], \"unused_restaurant_ids\": [\"B0L0ZKDT9W\", \"B0LKB6S44M\", \"B0L1O5OOHS\", \"B0L0H6OYER\", \"B0MUTHL355\", \"B0KGLUWTYR\", \"B0K3KMGJR9\", \"B0JGVR8IDP\"], \"suggested_restaurant_id\": \"B0LKB6S44M\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0L0ZKDT9W\", \"B0LKB6S44M\", \"B0L1O5OOHS\", \"B0L0H6OYER\", \"B0MUTHL355\", \"B0KGLUWTYR\", \"B0K3KMGJR9\", \"B0JGVR8IDP\"], \"unused_restaurant_ids\": [\"B0L0ZKDT9W\", \"B0L1O5OOHS\", \"B0L0H6OYER\", \"B0MUTHL355\", \"B0KGLUWTYR\", \"B0K3KMGJR9\", \"B0JGVR8IDP\", \"B0J1693OQ9\"], \"suggested_restaurant_id\": \"B0L0ZKDT9W\"}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。suggested_restaurant_id是跨餐次匹配后的真实候选建议，保持布局时可优先采用以避免局部贪心导致重复；实际路线和预算仍需复核。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-21：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：换住含60分钟整理、退房及入住预留；不默认酒店提供寄存，行李须可随行。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：未自动预订或取消酒店；入住、退房及行李处理条件需确认。",
+      "2026-10-23：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "共 1 项费用金额未知（周边长途/景区接驳附加交通费），未计入总价 —— 所以下面的总计只是已知与估算部分之和，不代表实际开销。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-21：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：换住含60分钟整理、退房及入住预留；不默认酒店提供寄存，行李须可随行。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：未自动预订或取消酒店；入住、退房及行李处理条件需确认。",
+      "2026-10-23：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "共 1 项费用金额未知（周边长途/景区接驳附加交通费），未计入总价 —— 所以下面的总计只是已知与估算部分之和，不代表实际开销。"
+    ],
+    "usage": {
+      "prompt_tokens": 59003,
+      "completion_tokens": 3519,
+      "llm_calls": 4
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 1888,
+      "subtotal": 1888,
+      "unknown_items": [
+        "周边长途/景区接驳附加交通费"
+      ],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 1888 元 = 1888 元，另有 1 项金额未知。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": null,
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "tool_call_count": 84,
+    "hotel_source": "agent",
+    "final_days": 4,
+    "final_weather_days": 4
+  },
+  "request": {
+    "city": "成都",
+    "start_date": "2026-10-20",
+    "travel_days": 4,
+    "transportation": "自驾",
+    "accommodation": "经济型酒店",
+    "preferences": [
+      "自然风光"
+    ],
+    "must_visit": [],
+    "free_text_input": "两天在周边雪山游玩，其余市区，住宿根据当晚和第二天动线灵活安排，避免远途折返"
+  },
+  "expect": {
+    "success": true,
+    "days": 4
+  },
+  "exception": null,
+  "warnings": [
+    "周边主题检索覆盖市中心直线300公里内候选；实际通勤、预算仍需复核。",
+    "雪山景区不代表出行当天必有积雪；市区天气不能代表山区天气，山区天气及开放状态需另行确认。",
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "西岭雪山：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "四姑娘山景区-观景台：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "四姑娘山漂流：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "达古冰川.四姑娘山.黄龙.九寨沟风景区管理局：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+    "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0MGMG8VJ5",
+    "2026-10-20 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-20 lunch 餐厅不符合就近/餐次条件，可选ID：B0MGMG8VJ5",
+    "2026-10-20 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-20 dinner 餐厅不符合就近/餐次条件，可选ID：B0MA3X19IP",
+    "2026-10-20 dinner 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-21 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-21 lunch 餐厅不符合就近/餐次条件，可选ID：B0MGMG8VJ5",
+    "2026-10-21 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0MA3X19IP",
+    "2026-10-22 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-23 breakfast 餐厅不符合就近/餐次条件，可选ID：B0LGRC9UMI,B0LDLNLOAD,B0FFJSIY96,B0FFJ1GTQO",
+    "2026-10-23 dinner 餐厅不符合就近/餐次条件，可选ID：B0HR25VQ9G",
+    "2026-10-23 dinner 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「西岭雪山景区-观景台」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「西岭雪山大飞水景区」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-20：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+    "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+    "2026-10-21：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+    "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-22：换住含60分钟整理、退房及入住预留；不默认酒店提供寄存，行李须可随行。",
+    "2026-10-22：未自动预订或取消酒店；入住、退房及行李处理条件需确认。",
+    "2026-10-23：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+    "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "共 1 项费用金额未知（周边长途/景区接驳附加交通费），未计入总价 —— 所以下面的总计只是已知与估算部分之和，不代表实际开销。",
+    "2026-10-21 lunch 餐厅不符合就近/餐次条件，可选ID：B0MA3X19IP",
+    "2026-10-21 dinner 餐厅不符合就近/餐次条件，可选ID：B0MA3X19IP",
+    "2026-10-21 dinner 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-22 的lunch开始时间17:07过晚，请减少前序游玩或通勤。",
+    "2026-10-22 游玩、餐饮、交通与休息合计 831 分钟，超过舒适上限 660 分钟；请减少景点或按片区重排。"
+  ],
+  "message": "已返回部分结果：未通过校验：2026-10-22 的lunch开始时间17:07过晚，请减少前序游玩或通勤；2026-10-22 游玩、餐饮、交通与休息合计 831 分钟，超过舒适上限 660 分钟；请减少景点或按片区重排，请见上方提示。",
+  "started_at": "2026-10-20T01:24:34"
+}

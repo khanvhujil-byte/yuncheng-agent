@@ -1,0 +1,270 @@
+{
+  "case_id": "G17",
+  "name": "杭州30天极限长行程",
+  "kind": "generate",
+  "passed": false,
+  "violations": [
+    "days 期望 30，实际 0"
+  ],
+  "duration_s": 70.74,
+  "error_code": "PLAN_VALIDATION_FAILED",
+  "success": false,
+  "days": 0,
+  "response_summary": {
+    "success": false,
+    "error_code": "PLAN_VALIDATION_FAILED",
+    "message": "已返回部分结果：行程未生成，未通过校验：统一编排选择无效：stays 必须为数组，每个应住宿日期恰好一条；不住宿时为空数组；days 数量是 0，但要求正好 30 天，请见上方提示。",
+    "cached": false,
+    "warnings": [
+      "景点候选只有 64 个，少于目标 90 个（30 天 × 3）；编排会按实际数量安排，不凑数。",
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：2026-10-24、2026-10-25、2026-10-26、2026-10-27、2026-10-28、2026-10-29、2026-10-30、2026-10-31、2026-11-01、2026-11-02、2026-11-03、2026-11-04、2026-11-05、2026-11-06、2026-11-07、2026-11-08、2026-11-09、2026-11-10、2026-11-11、2026-11-12、2026-11-13、2026-11-14、2026-11-15、2026-11-16、2026-11-17、2026-11-18。",
+      "杭州长乐森林公园：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "东沙湖公园：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "行程为空，未计算预算。",
+      "统一编排选择无效：stays 必须为数组，每个应住宿日期恰好一条；不住宿时为空数组。",
+      "days 数量是 0，但要求正好 30 天。",
+      "尚未找到可用酒店。"
+    ],
+    "budget": null,
+    "hotel": null,
+    "hotel_nights": 29,
+    "accommodation_version": 0,
+    "stays": [],
+    "stay_comparison": {},
+    "constraint_report": null,
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "小雨"
+      },
+      {
+        "date": "2026-10-21",
+        "beyond_window": false,
+        "day_weather": "小雨"
+      },
+      {
+        "date": "2026-10-22",
+        "beyond_window": false,
+        "day_weather": "多云"
+      },
+      {
+        "date": "2026-10-23",
+        "beyond_window": false,
+        "day_weather": "多云"
+      },
+      {
+        "date": "2026-10-24",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-10-25",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-10-26",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-10-27",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-10-28",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-10-29",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-10-30",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-10-31",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-11-01",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-11-02",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-11-03",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-11-04",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-11-05",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-11-06",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-11-07",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-11-08",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-11-09",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-11-10",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-11-11",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-11-12",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-11-13",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-11-14",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-11-15",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-11-16",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-11-17",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-11-18",
+        "beyond_window": true,
+        "day_weather": ""
+      }
+    ],
+    "days": [],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "budget_verdict": null,
+    "validate_error": "统一编排选择无效：stays 必须为数组，每个应住宿日期恰好一条；不住宿时为空数组。"
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": "统一编排选择无效：stays 必须为数组，每个应住宿日期恰好一条；不住宿时为空数组。",
+    "retries": 2,
+    "budget_retries": 0,
+    "planning_calls": 2,
+    "composition_valid": false,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "warnings": [
+      "景点候选只有 64 个，少于目标 90 个（30 天 × 3）；编排会按实际数量安排，不凑数。",
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：2026-10-24、2026-10-25、2026-10-26、2026-10-27、2026-10-28、2026-10-29、2026-10-30、2026-10-31、2026-11-01、2026-11-02、2026-11-03、2026-11-04、2026-11-05、2026-11-06、2026-11-07、2026-11-08、2026-11-09、2026-11-10、2026-11-11、2026-11-12、2026-11-13、2026-11-14、2026-11-15、2026-11-16、2026-11-17、2026-11-18。",
+      "杭州长乐森林公园：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "东沙湖公园：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "行程为空，未计算预算。"
+    ],
+    "usage": {
+      "prompt_tokens": 47473,
+      "completion_tokens": 14363,
+      "llm_calls": 2
+    },
+    "budget_verdict": null,
+    "constraint_report": null,
+    "tool_call_count": 14,
+    "hotel_source": "agent",
+    "final_days": 0,
+    "final_weather_days": 30
+  },
+  "request": {
+    "city": "杭州",
+    "start_date": "2026-10-20",
+    "travel_days": 30,
+    "transportation": "公共交通",
+    "accommodation": "经济型酒店",
+    "preferences": [
+      "自然风光"
+    ],
+    "must_visit": [],
+    "free_text_input": ""
+  },
+  "expect": {
+    "days": 30,
+    "min_beyond_window": 1,
+    "fabricated": 0,
+    "timeout_s": 480
+  },
+  "exception": null,
+  "warnings": [
+    "景点候选只有 64 个，少于目标 90 个（30 天 × 3）；编排会按实际数量安排，不凑数。",
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：2026-10-24、2026-10-25、2026-10-26、2026-10-27、2026-10-28、2026-10-29、2026-10-30、2026-10-31、2026-11-01、2026-11-02、2026-11-03、2026-11-04、2026-11-05、2026-11-06、2026-11-07、2026-11-08、2026-11-09、2026-11-10、2026-11-11、2026-11-12、2026-11-13、2026-11-14、2026-11-15、2026-11-16、2026-11-17、2026-11-18。",
+    "杭州长乐森林公园：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "东沙湖公园：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+    "行程为空，未计算预算。",
+    "统一编排选择无效：stays 必须为数组，每个应住宿日期恰好一条；不住宿时为空数组。",
+    "days 数量是 0，但要求正好 30 天。",
+    "尚未找到可用酒店。"
+  ],
+  "message": "已返回部分结果：行程未生成，未通过校验：统一编排选择无效：stays 必须为数组，每个应住宿日期恰好一条；不住宿时为空数组；days 数量是 0，但要求正好 30 天，请见上方提示。",
+  "started_at": "2026-10-20T01:09:37"
+}

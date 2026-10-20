@@ -158,7 +158,7 @@ def collect_food(state):
             "sources": {"food": source if places else "degraded"}, "tool_calls": calls}
 
 
-def ensure_food_coverage(plan, state):
+def ensure_food_coverage(plan, state, *, query_limit=None, budget_seconds=None):
     """Recheck coverage against actual stops; bounded fill runs only once/query.
 
     Local retrieval happens first. Up to three scoped searches share six
@@ -170,7 +170,8 @@ def ensure_food_coverage(plan, state):
         return [], []
     from ..models.schemas import Restaurant
     from .candidate_search import local_candidates, priced_allowed, save_fresh
-    from .food_recommendation import coverage_gaps, location
+    from .food_recommendation import coverage_gaps, location, meal_contexts
+    from .tools import haversine_km
     from .requirements import policy
     request = state['request']
     needs = policy(request).food
@@ -184,14 +185,35 @@ def ensure_food_coverage(plan, state):
     attempted = list(state.get('food_coverage_queries') or [])
     started_coverage = monotonic()
     elapsed = float(state.get('food_coverage_elapsed_seconds') or 0)
-    end = started_coverage + max(0, settings.food_coverage_budget_seconds - elapsed)
+    limit = min(settings.food_coverage_query_limit, query_limit) if query_limit is not None else settings.food_coverage_query_limit
+    seconds = min(settings.food_coverage_budget_seconds, budget_seconds) if budget_seconds is not None else settings.food_coverage_budget_seconds
+    end = started_coverage + max(0, seconds - elapsed)
     hotel = state.get('hotel') or plan.get('hotel')
+    def region_key(center):
+        city_center = state.get('city_center')
+        if city_center and center and haversine_km(city_center, center) >= 25:
+            return f'region:{center.longitude:.3f},{center.latitude:.3f}'
+        return request.city
+    # The nearby catalog follows actual dated start/end anchors, including
+    # hotels outside the requested city's administrative boundary.
+    regions = set()
+    for day in plan.get('days', []):
+        for kind, anchor, following in meal_contexts(day, hotel):
+            center = location(following) if kind == 'dinner' and location(following) else location(anchor)
+            key = region_key(center)
+            if center and key != request.city and key not in regions:
+                regions.add(key)
+                regional, _ = local_candidates(key, 'restaurant', '餐厅', needs,
+                                               start_date=request.start_date, days=state['travel_days'], limit=100)
+                for restaurant in regional:
+                    if haversine_km(center, restaurant.location) <= 4:
+                        current.setdefault(restaurant.poi_id, restaurant)
     while (not state.get('food_coverage_blocked_code')
-           and len(attempted) < settings.food_coverage_query_limit and monotonic() < end):
+           and len(attempted) < limit and monotonic() < end):
         gaps = coverage_gaps(plan, hotel, list(current.values()), needs)
         query = None
-        for kind, anchor, _ in gaps:
-            center = location(anchor)
+        for kind, anchor, following in gaps:
+            center = (location(following) if kind == 'dinner' and location(following) else location(anchor))
             if center is None:
                 continue
             keyword = '早餐' if kind == 'breakfast' else '餐厅'
@@ -223,9 +245,10 @@ def ensure_food_coverage(plan, state):
                       'attempt_count':len(report.attempts), 'stop_reason':report.stop_reason,
                       'duration_ms':round((monotonic()-started)*1000)})
         if report.result.status == 'ok':
-            valid = priced_allowed(request.city, 'restaurant', found, needs,
+            query_region = region_key(center)
+            valid = priced_allowed(query_region, 'restaurant', found, needs,
                                    start_date=request.start_date, days=state['travel_days'])
-            save_fresh(request.city, 'restaurant', valid, {'retrieval_reasons':[]})
+            save_fresh(query_region, 'restaurant', valid, {'retrieval_reasons':[]})
             if valid:
                 state['sources'] = {**state.get('sources', {}),
                                     'food':'catalog+amap' if local or state.get('sources', {}).get('food') in {'catalog','catalog_partial','catalog+amap'} else 'amap'}

@@ -1,0 +1,727 @@
+{
+  "case_id": "G19",
+  "name": "昆明3天自由文本周边游",
+  "kind": "generate",
+  "passed": true,
+  "violations": [],
+  "duration_s": 59.84,
+  "error_code": null,
+  "success": true,
+  "days": 3,
+  "response_summary": {
+    "success": true,
+    "error_code": null,
+    "message": "",
+    "cached": false,
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0KBR5QLNB",
+      "2026-10-20 dinner 餐厅不符合就近/餐次条件，可选ID：B0HGVANBK9",
+      "2026-10-21 breakfast 没有符合餐次的候选。",
+      "2026-10-21 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-21 lunch 餐厅不符合就近/餐次条件，可选ID：B0LRBAND3V",
+      "2026-10-21 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0JANMOAF0",
+      "2026-10-22 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-22 dinner 重复餐厅 B0HGVANBK9，附近尚有未使用候选：B0FFGSFEX8",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「王官湿地公园」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「斗南湿地公园」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：本日预报阵雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22 lunch 餐厅不符合就近/餐次条件，可选ID：B0JANMOAF0,B0HGVANBK9"
+    ],
+    "budget": {
+      "ticket_reserve_amount": 100,
+      "total_attractions": 30,
+      "total_hotels": 520,
+      "total_meals": 304,
+      "total_transportation": 120,
+      "total": 974,
+      "items": [
+        {
+          "category": "attraction",
+          "name": "昆明捞渔河湿地公园",
+          "day_index": 0,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：捞渔河湿地公园为免费开放的城市湿地公园，日常无门票。"
+        },
+        {
+          "category": "meal",
+          "name": "云小厨小吃店",
+          "day_index": 0,
+          "amount": 17,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "胖子极品冒菜",
+          "day_index": 0,
+          "amount": 27,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "捞鱼河湿地公园罐罐米线",
+          "day_index": 0,
+          "amount": 80,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "餐厅未提供人均价格，按每人每餐固定规则预留；不是餐厅报价。"
+        },
+        {
+          "category": "attraction",
+          "name": "斗南七彩花海",
+          "day_index": 1,
+          "amount": 30,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：斗南七彩花海为收费花海景区，按日常成人门票约30元估算。"
+        },
+        {
+          "category": "meal",
+          "name": "陈伟小吃店",
+          "day_index": 1,
+          "amount": 17,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "四川饭店(呈贡店)",
+          "day_index": 1,
+          "amount": 27,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "宜良猪脚米线(兴呈路店)",
+          "day_index": 1,
+          "amount": 18,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "沐春湖公园",
+          "day_index": 2,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：沐春湖公园为免费开放的城市公园广场，日常无门票。"
+        },
+        {
+          "category": "attraction",
+          "name": "春融公园",
+          "day_index": 2,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：春融公园为免费开放的城市公园，日常无门票。"
+        },
+        {
+          "category": "meal",
+          "name": "东北面食店",
+          "day_index": 2,
+          "amount": 13,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "西双曼傣·傣味云南特色菜(呈贡店)",
+          "day_index": 2,
+          "amount": 49,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "德四家·云南傣味烧烤品牌(七彩云南店)",
+          "day_index": 2,
+          "amount": 56,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-20 住宿：风情苑招待所(斗南花市店)",
+          "day_index": 0,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-21 住宿：风情苑招待所(斗南花市店)",
+          "day_index": 1,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "transportation",
+          "name": "市内交通（公共交通）",
+          "day_index": null,
+          "amount": 120,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "按每人每天 40 元的固定表估算"
+        }
+      ],
+      "known_total": 0,
+      "estimated_total": 974,
+      "unknown_items": [],
+      "limit": null,
+      "limit_status": "none",
+      "limit_basis": "未设置预算上限。当前口径：已知 0 元 + 估算 974 元 = 974 元。"
+    },
+    "hotel": {
+      "name": "风情苑招待所(斗南花市店)",
+      "poi_id": "B03670YKYV",
+      "address": "龙城街道办事处龙街社区2号",
+      "location": {
+        "longitude": 102.802329,
+        "latitude": 24.885509
+      },
+      "price_range": "",
+      "rating": "4.8",
+      "distance": "距最终行程景点加权平均 4.1 km（直线估计）",
+      "type": "旅馆招待所",
+      "estimated_cost": 260,
+      "cost_status": "estimated",
+      "cost_source": "static_estimate",
+      "price_evidence_url": null,
+      "nights": 2,
+      "check_in_after": null,
+      "check_in_before": null,
+      "check_out_before": null,
+      "operations_evidence_url": null
+    },
+    "hotel_nights": 2,
+    "accommodation_version": 11,
+    "stays": [
+      {
+        "check_in": "2026-10-20",
+        "check_out": "2026-10-21",
+        "hotel": {
+          "name": "风情苑招待所(斗南花市店)",
+          "poi_id": "B03670YKYV",
+          "address": "龙城街道办事处龙街社区2号",
+          "location": {
+            "longitude": 102.802329,
+            "latitude": 24.885509
+          },
+          "price_range": "",
+          "rating": "4.8",
+          "distance": "",
+          "type": "旅馆招待所",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "首日游捞渔河湿地公园，住斗南花市附近便于次日斗南片区活动，连住两晚免换住整理时间。"
+      },
+      {
+        "check_in": "2026-10-21",
+        "check_out": "2026-10-22",
+        "hotel": {
+          "name": "风情苑招待所(斗南花市店)",
+          "poi_id": "B03670YKYV",
+          "address": "龙城街道办事处龙街社区2号",
+          "location": {
+            "longitude": 102.802329,
+            "latitude": 24.885509
+          },
+          "price_range": "",
+          "rating": "4.8",
+          "distance": "",
+          "type": "旅馆招待所",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "次日斗南七彩花海与第三日呈贡公园群均在同一片区，继续连住减少通勤与行李负担。"
+      }
+    ],
+    "stay_comparison": {
+      "strategy": "same_hotel",
+      "hotel_changes": 0,
+      "travel_minutes": 329,
+      "transfer_minutes": 0,
+      "basis": "路线工具核算所选方案；未取得备选实测时，不宣称节省具体分钟。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "风情苑招待所(斗南花市店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "阵雨"
+      },
+      {
+        "date": "2026-10-21",
+        "beyond_window": false,
+        "day_weather": "小雨"
+      },
+      {
+        "date": "2026-10-22",
+        "beyond_window": false,
+        "day_weather": "小雨"
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-20",
+        "day_index": 0,
+        "attractions": [
+          "昆明捞渔河湿地公园"
+        ],
+        "meals": [
+          "云小厨小吃店",
+          "胖子极品冒菜",
+          "捞鱼河湿地公园罐罐米线"
+        ],
+        "total_minutes": 656,
+        "route_start": null,
+        "route_end": {
+          "name": "风情苑招待所(斗南花市店)",
+          "location": {
+            "longitude": 102.802329,
+            "latitude": 24.885509
+          },
+          "poi_id": "B03670YKYV",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "云小厨小吃店",
+            "to_name": "胖子极品冒菜",
+            "from_id": "B0LACUDPI0",
+            "to_id": "B0KBR5QLNB",
+            "mode": "公共交通",
+            "duration_minutes": 11,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "胖子极品冒菜",
+            "to_name": "昆明捞渔河湿地公园",
+            "from_id": "B0KBR5QLNB",
+            "to_id": "B0FFGLWU5H",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "昆明捞渔河湿地公园",
+            "to_name": "捞鱼河湿地公园罐罐米线",
+            "from_id": "B0FFGLWU5H",
+            "to_id": "B0MDSXJLHT",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "捞鱼河湿地公园罐罐米线",
+            "to_name": "风情苑招待所(斗南花市店)",
+            "from_id": "B0MDSXJLHT",
+            "to_id": "B03670YKYV",
+            "mode": "公共交通",
+            "duration_minutes": 71,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（AMAP_ERROR）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 424
+      },
+      {
+        "date": "2026-10-21",
+        "day_index": 1,
+        "attractions": [
+          "斗南七彩花海"
+        ],
+        "meals": [
+          "陈伟小吃店",
+          "四川饭店(呈贡店)",
+          "宜良猪脚米线(兴呈路店)"
+        ],
+        "total_minutes": 646,
+        "route_start": {
+          "name": "风情苑招待所(斗南花市店)",
+          "location": {
+            "longitude": 102.802329,
+            "latitude": 24.885509
+          },
+          "poi_id": "B03670YKYV",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "风情苑招待所(斗南花市店)",
+          "location": {
+            "longitude": 102.802329,
+            "latitude": 24.885509
+          },
+          "poi_id": "B03670YKYV",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "风情苑招待所(斗南花市店)",
+            "to_name": "陈伟小吃店",
+            "from_id": "B03670YKYV",
+            "to_id": "B0FFFENL3E",
+            "mode": "公共交通",
+            "duration_minutes": 11,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "陈伟小吃店",
+            "to_name": "四川饭店(呈贡店)",
+            "from_id": "B0FFFENL3E",
+            "to_id": "B0FFGSFPBH",
+            "mode": "公共交通",
+            "duration_minutes": 11,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "四川饭店(呈贡店)",
+            "to_name": "斗南七彩花海",
+            "from_id": "B0FFGSFPBH",
+            "to_id": "B0M6T7529S",
+            "mode": "公共交通",
+            "duration_minutes": 43,
+            "distance_meters": 5485,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "斗南七彩花海",
+            "to_name": "宜良猪脚米线(兴呈路店)",
+            "from_id": "B0M6T7529S",
+            "to_id": "B0FFKTCR17",
+            "mode": "公共交通",
+            "duration_minutes": 41,
+            "distance_meters": 5538,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "宜良猪脚米线(兴呈路店)",
+            "to_name": "风情苑招待所(斗南花市店)",
+            "from_id": "B0FFKTCR17",
+            "to_id": "B03670YKYV",
+            "mode": "公共交通",
+            "duration_minutes": 11,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 392
+      },
+      {
+        "date": "2026-10-22",
+        "day_index": 2,
+        "attractions": [
+          "沐春湖公园",
+          "春融公园"
+        ],
+        "meals": [
+          "东北面食店",
+          "西双曼傣·傣味云南特色菜(呈贡店)",
+          "德四家·云南傣味烧烤品牌(七彩云南店)"
+        ],
+        "total_minutes": 630,
+        "route_start": {
+          "name": "风情苑招待所(斗南花市店)",
+          "location": {
+            "longitude": 102.802329,
+            "latitude": 24.885509
+          },
+          "poi_id": "B03670YKYV",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": null,
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "风情苑招待所(斗南花市店)",
+            "to_name": "东北面食店",
+            "from_id": "B03670YKYV",
+            "to_id": "B0FFKZ2A6E",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "东北面食店",
+            "to_name": "沐春湖公园",
+            "from_id": "B0FFKZ2A6E",
+            "to_id": "B0K6ARUNZN",
+            "mode": "公共交通",
+            "duration_minutes": 27,
+            "distance_meters": 5096,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "沐春湖公园",
+            "to_name": "西双曼傣·傣味云南特色菜(呈贡店)",
+            "from_id": "B0K6ARUNZN",
+            "to_id": "B0JANMOAF0",
+            "mode": "公共交通",
+            "duration_minutes": 14,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "西双曼傣·傣味云南特色菜(呈贡店)",
+            "to_name": "春融公园",
+            "from_id": "B0JANMOAF0",
+            "to_id": "B036709B8N",
+            "mode": "公共交通",
+            "duration_minutes": 26,
+            "distance_meters": 2778,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "春融公园",
+            "to_name": "德四家·云南傣味烧烤品牌(七彩云南店)",
+            "from_id": "B036709B8N",
+            "to_id": "B0HGVANBK9",
+            "mode": "公共交通",
+            "duration_minutes": 25,
+            "distance_meters": 2761,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 158
+      }
+    ],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 974,
+      "subtotal": 974,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 974 元 = 974 元。"
+    },
+    "validate_error": null
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": null,
+    "retries": 1,
+    "budget_retries": 0,
+    "planning_calls": 3,
+    "composition_valid": true,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0KBR5QLNB\n2026-10-20 dinner 餐厅不符合就近/餐次条件，可选ID：B0HGVANBK9\n2026-10-21 breakfast 没有符合餐次的候选。\n2026-10-21 breakfast 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-21 lunch 餐厅不符合就近/餐次条件，可选ID：B0LRBAND3V\n2026-10-21 lunch 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0JANMOAF0\n2026-10-22 breakfast 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-22 dinner 重复餐厅 B0HGVANBK9，附近尚有未使用候选：B0FFGSFEX8\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B03670YKYV\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B03670YKYV\"}], \"hotel_id\": \"B03670YKYV\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"昆明捞渔河湿地公园\", \"王官湿地公园\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFGLWU5H\", \"B0FFH71TMI\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LRBAND3V\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0KBR5QLNB\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0JANMOAF0\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0KBR5QLNB\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0KBR5QLNB\", \"B0LRBAND3V\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0HGVANBK9\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"斗南七彩花海\", \"斗南湿地公园\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0M6T7529S\", \"B0FFGS2BFT\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LRBAND3V\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0JANMOAF0\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0HGVANBK9\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": []}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": []}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0HGVANBK9\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"沐春湖公园\", \"春融公园\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0K6ARUNZN\", \"B036709B8N\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LRBAND3V\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0JANMOAF0\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0HGVANBK9\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0JANMOAF0\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0JANMOAF0\", \"B0HGVANBK9\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0JANMOAF0\", \"B0HGVANBK9\", \"B0FFGSFEX8\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「王官湿地公园」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「斗南湿地公园」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：本日预报阵雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22 lunch 餐厅不符合就近/餐次条件，可选ID：B0JANMOAF0,B0HGVANBK9\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B03670YKYV\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B03670YKYV\"}], \"hotel_id\": \"B03670YKYV\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"昆明捞渔河湿地公园\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFGLWU5H\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LACUDPI0\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0KBR5QLNB\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0MDSXJLHT\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LACUDPI0\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0KBR5QLNB\", \"B0K2OSNCUJ\", \"B0MDSXJLHT\", \"B0MB7CPKAY\", \"B0LKMR5XHW\", \"B0ID64T49I\", \"B0LACUDPI0\", \"B0L025O0OW\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0KBR5QLNB\", \"B0LRBAND3V\", \"B0K2OSNCUJ\", \"B0MDSXJLHT\", \"B0MB7CPKAY\", \"B0LKMR5XHW\", \"B0ID64T49I\", \"B0LACUDPI0\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"斗南七彩花海\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0M6T7529S\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFFENL3E\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFGSFPBH\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFKTCR17\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFFENL3E\", \"B0FFKZ2A6E\", \"B0FFL5A28F\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFGSFPBH\", \"B0JKYXBVSN\", \"B0FFFENL3E\", \"B0FFKTCR17\", \"B0FFIHMVSS\", \"B0JR9XNUQU\", \"B0LGV7Y6PP\", \"B0J21MEDMW\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFGSFPBH\", \"B0JKYXBVSN\", \"B0FFFENL3E\", \"B0FFKTCR17\", \"B0JR468VI9\", \"B0FFIHMVSS\", \"B0JR9XNUQU\", \"B0LGV7Y6PP\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"沐春湖公园\", \"春融公园\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0K6ARUNZN\", \"B036709B8N\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFKZ2A6E\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0J21MEDMW\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFGSFEX8\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFFENL3E\", \"B0FFKZ2A6E\", \"B0FFL5A28F\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0JANMOAF0\", \"B0HGVANBK9\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0JANMOAF0\", \"B0HGVANBK9\", \"B0FFGSFEX8\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20：本日预报阵雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20：本日预报阵雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+    ],
+    "usage": {
+      "prompt_tokens": 27518,
+      "completion_tokens": 3378,
+      "llm_calls": 4
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 974,
+      "subtotal": 974,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 974 元 = 974 元。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "风情苑招待所(斗南花市店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "tool_call_count": 54,
+    "hotel_source": "agent",
+    "final_days": 3,
+    "final_weather_days": 3
+  },
+  "request": {
+    "city": "昆明",
+    "start_date": "2026-10-20",
+    "travel_days": 3,
+    "transportation": "公共交通",
+    "accommodation": "经济型酒店",
+    "preferences": [
+      "自然风光"
+    ],
+    "must_visit": [],
+    "free_text_input": "想有一天去周边，不要太赶"
+  },
+  "expect": {
+    "success": true,
+    "days": 3
+  },
+  "exception": null,
+  "warnings": [
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+    "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0KBR5QLNB",
+    "2026-10-20 dinner 餐厅不符合就近/餐次条件，可选ID：B0HGVANBK9",
+    "2026-10-21 breakfast 没有符合餐次的候选。",
+    "2026-10-21 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-21 lunch 餐厅不符合就近/餐次条件，可选ID：B0LRBAND3V",
+    "2026-10-21 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0JANMOAF0",
+    "2026-10-22 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-22 dinner 重复餐厅 B0HGVANBK9，附近尚有未使用候选：B0FFGSFEX8",
+    "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+    "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「王官湿地公园」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「斗南湿地公园」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-20：本日预报阵雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+    "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+    "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-22：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+    "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+    "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-22 lunch 餐厅不符合就近/餐次条件，可选ID：B0JANMOAF0,B0HGVANBK9"
+  ],
+  "message": "",
+  "started_at": "2026-10-20T01:10:37"
+}

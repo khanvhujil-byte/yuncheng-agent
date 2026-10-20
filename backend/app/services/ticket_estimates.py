@@ -45,10 +45,20 @@ def fill(plan, request, runtime, selected=None):
     except sqlite3.Error:
         logger.warning('Ticket estimate cache unavailable')
     missing = [key for key in targets if key not in estimates]
-    if missing and not runtime.get('ticket_estimate_attempted') and settings.llm_api_key:
+    attempted = set(runtime.get('ticket_estimate_attempted_ids') or [])
+    calls = int(runtime.get('ticket_estimate_calls') or (1 if runtime.get('ticket_estimate_attempted') else 0))
+    new_missing = [key for key in missing if key not in attempted]
+    if new_missing and calls < 3 and settings.llm_api_key:
+        from .planning_limits import available
+        if not available(runtime):
+            new_missing = []
+    if new_missing and calls < 3 and settings.llm_api_key:
         runtime['ticket_estimate_attempted'] = True
-        # One batch per graph run, including retries. A failure doesn't trigger a loop.
-        batch = {str(i): key for i, key in enumerate(missing[:90])}
+        # A replan may introduce new POIs. Cover them without repeatedly paying
+        # for the same failed item; all rounds share a three-batch ceiling.
+        batch = {str(i): key for i, key in enumerate(new_missing[:90])}
+        runtime['ticket_estimate_calls'] = calls + 1
+        runtime['ticket_estimate_attempted_ids'] = sorted(attempted | set(batch.values()))
         usage = {'llm_calls': 1}
         try:
             text, usage = llm.chat_json(PROMPT, json.dumps({'city': request.city, 'places': [

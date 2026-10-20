@@ -20,7 +20,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from ..config import get_settings
 from ..services import store
 from ..services.store import init_db
-from .routes import ai, community, trip, dialog
+from .routes import ai, community, trip, dialog, travel
 
 logger = logging.getLogger(__name__)
 
@@ -58,6 +58,7 @@ app.include_router(ai.router, prefix="/api")
 # 社区联动接口：前端从这里发布行程 / 看热度，Python 再把请求转给 Java。
 app.include_router(community.router, prefix="/api")
 app.include_router(dialog.router, prefix="/api")
+app.include_router(travel.router, prefix="/api")
 
 app.add_middleware(
     CORSMiddleware,

@@ -1,0 +1,731 @@
+{
+  "case_id": "T04",
+  "name": "青岛3天其中两天海边",
+  "kind": "generate",
+  "passed": true,
+  "violations": [],
+  "duration_s": 89.73,
+  "error_code": null,
+  "success": true,
+  "days": 3,
+  "response_summary": {
+    "success": true,
+    "error_code": null,
+    "message": "",
+    "cached": false,
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "滨海公园：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "海军公园栈桥：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "龙湾景区：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "海滨广场：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-21 重复安排景点「青岛第一海水浴场-沙滩」（2026-10-20 已安排过），已保留首次出现并去重。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0K3M4MJ4M,B021406IX2,B0I14S7ZRX",
+      "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFHFHQDL,B0K3M4MJ4M,B021406IX2,B0I14S7ZRX,B0G3TXQZX6",
+      "2026-10-21 dinner 餐厅不符合就近/餐次条件，可选ID：B021403EJG,B0214084ED,B0MAX7MKG3,B0214019E6,B0FFGVUO5Q,B0FFHFHQDL,B0JRY1FVOU,B0I12B57Y0",
+      "2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFHFHQDL,B0JRY1FVOU,B0K3M4MJ4M,B021406IX2,B0I14S7ZRX,B0FFH1WGLY,B0G3TXQZX6",
+      "2026-10-22 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-22 dinner 餐厅不符合就近/餐次条件，可选ID：B0KABRYNYL",
+      "2026-10-22 dinner 距用餐片区超过4公里，需换候选或重排景点。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「青岛栈桥海水浴场」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「太平山中央公园」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「石老人」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-20 dinner 餐厅不符合就近/餐次条件，可选ID：B021403EJG,B0214084ED,B0MAX7MKG3,B0214019E6,B0FFGVUO5Q,B0FFHFHQDL,B0I12B57Y0,B0K14APTLA",
+      "2026-10-22 breakfast 重复餐厅 B0JRY1FVOU，附近尚有未使用候选：B0K3M4MJ4M,B021406IX2,B0I14S7ZRX,B0FFH1WGLY",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+    ],
+    "budget": {
+      "ticket_reserve_amount": 100,
+      "total_attractions": 0,
+      "total_hotels": 520,
+      "total_meals": 489,
+      "total_transportation": 120,
+      "total": 1129,
+      "items": [
+        {
+          "category": "attraction",
+          "name": "青岛第一海水浴场-沙滩",
+          "day_index": 0,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：青岛第一海水浴场沙滩为公共海滩，日常免费开放。"
+        },
+        {
+          "category": "attraction",
+          "name": "汇泉广场",
+          "day_index": 0,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：汇泉广场为城市公共广场/公园，日常免费。"
+        },
+        {
+          "category": "meal",
+          "name": "裴家小吃店(鱼山路店)",
+          "day_index": 0,
+          "amount": 27,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "众品老方子锅贴甜沫(海底世界店)",
+          "day_index": 0,
+          "amount": 15,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "汇泉王朝大饭店旋转餐厅",
+          "day_index": 0,
+          "amount": 171,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "青岛海滨风景区-踏浪观景台",
+          "day_index": 1,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：青岛海滨风景区踏浪观景台属开放式滨海观景点，日常免费。"
+        },
+        {
+          "category": "meal",
+          "name": "李记早餐大油条馅饼炉包豆浆豆腐脑",
+          "day_index": 1,
+          "amount": 6,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "春和楼(中山路总店)",
+          "day_index": 1,
+          "amount": 69,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "海萍馄饨(莱阳路店)",
+          "day_index": 1,
+          "amount": 21,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "青岛石老人海水浴场",
+          "day_index": 2,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：青岛石老人海水浴场为开放式公共海滨浴场，日常免费。"
+        },
+        {
+          "category": "meal",
+          "name": "永和豆浆(青岛莱阳路8号院店)",
+          "day_index": 2,
+          "amount": 26,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "海聚鲜·海鲜·崂山渔家宴(石老人海水浴场店)",
+          "day_index": 2,
+          "amount": 62,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "湛堂·海鲜烧烤家常菜(南巷近海)",
+          "day_index": 2,
+          "amount": 92,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-20 住宿：如家快捷酒店(青岛栈桥人民会堂地铁站龙口路店)",
+          "day_index": 0,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-21 住宿：如家快捷酒店(青岛栈桥人民会堂地铁站龙口路店)",
+          "day_index": 1,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "transportation",
+          "name": "市内交通（公共交通）",
+          "day_index": null,
+          "amount": 120,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "按每人每天 40 元的固定表估算"
+        }
+      ],
+      "known_total": 0,
+      "estimated_total": 1129,
+      "unknown_items": [],
+      "limit": null,
+      "limit_status": "none",
+      "limit_basis": "未设置预算上限。当前口径：已知 0 元 + 估算 1129 元 = 1129 元。"
+    },
+    "hotel": {
+      "name": "如家快捷酒店(青岛栈桥人民会堂地铁站龙口路店)",
+      "poi_id": "B0FFFW0T3Z",
+      "address": "龙口路36号甲(龙口路与江苏路交汇处)",
+      "location": {
+        "longitude": 120.32913,
+        "latitude": 36.063961
+      },
+      "price_range": "",
+      "rating": "3.4",
+      "distance": "距最终行程景点加权平均 4.1 km（直线估计）",
+      "type": "经济型连锁酒店",
+      "estimated_cost": 260,
+      "cost_status": "estimated",
+      "cost_source": "static_estimate",
+      "price_evidence_url": null,
+      "nights": 2,
+      "check_in_after": null,
+      "check_in_before": null,
+      "check_out_before": null,
+      "operations_evidence_url": null
+    },
+    "hotel_nights": 2,
+    "accommodation_version": 11,
+    "stays": [
+      {
+        "check_in": "2026-10-20",
+        "check_out": "2026-10-21",
+        "hotel": {
+          "name": "如家快捷酒店(青岛栈桥人民会堂地铁站龙口路店)",
+          "poi_id": "B0FFFW0T3Z",
+          "address": "龙口路36号甲(龙口路与江苏路交汇处)",
+          "location": {
+            "longitude": 120.32913,
+            "latitude": 36.063961
+          },
+          "price_range": "",
+          "rating": "3.4",
+          "distance": "",
+          "type": "经济型连锁酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "两晚连住栈桥—人民会堂地铁站附近经济型酒店，紧邻第一海水浴场、汇泉广场与栈桥片区，减少换住整理时间，末日晚间返程也方便。"
+      },
+      {
+        "check_in": "2026-10-21",
+        "check_out": "2026-10-22",
+        "hotel": {
+          "name": "如家快捷酒店(青岛栈桥人民会堂地铁站龙口路店)",
+          "poi_id": "B0FFFW0T3Z",
+          "address": "龙口路36号甲(龙口路与江苏路交汇处)",
+          "location": {
+            "longitude": 120.32913,
+            "latitude": 36.063961
+          },
+          "price_range": "",
+          "rating": "3.4",
+          "distance": "",
+          "type": "经济型连锁酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "次日石老人方向可乘地铁往返，仍以连住为主，避免为单日东线活动搬行李换住。"
+      }
+    ],
+    "stay_comparison": {
+      "strategy": "same_hotel",
+      "hotel_changes": 0,
+      "travel_minutes": 393,
+      "transfer_minutes": 0,
+      "basis": "路线工具核算所选方案；未取得备选实测时，不宣称节省具体分钟。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "如家快捷酒店(青岛栈桥人民会堂地铁站龙口路店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "小雨"
+      },
+      {
+        "date": "2026-10-21",
+        "beyond_window": false,
+        "day_weather": "晴"
+      },
+      {
+        "date": "2026-10-22",
+        "beyond_window": false,
+        "day_weather": "晴"
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-20",
+        "day_index": 0,
+        "attractions": [
+          "青岛第一海水浴场-沙滩",
+          "汇泉广场"
+        ],
+        "meals": [
+          "裴家小吃店(鱼山路店)",
+          "众品老方子锅贴甜沫(海底世界店)",
+          "汇泉王朝大饭店旋转餐厅"
+        ],
+        "total_minutes": 635,
+        "route_start": null,
+        "route_end": {
+          "name": "如家快捷酒店(青岛栈桥人民会堂地铁站龙口路店)",
+          "location": {
+            "longitude": 120.32913,
+            "latitude": 36.063961
+          },
+          "poi_id": "B0FFFW0T3Z",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "裴家小吃店(鱼山路店)",
+            "to_name": "青岛第一海水浴场-沙滩",
+            "from_id": "B0FFHFHQDL",
+            "to_id": "B0FFGFUIPV",
+            "mode": "公共交通",
+            "duration_minutes": 32,
+            "distance_meters": 2392,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "青岛第一海水浴场-沙滩",
+            "to_name": "众品老方子锅贴甜沫(海底世界店)",
+            "from_id": "B0FFGFUIPV",
+            "to_id": "B0MAX7MKG3",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "众品老方子锅贴甜沫(海底世界店)",
+            "to_name": "汇泉广场",
+            "from_id": "B0MAX7MKG3",
+            "to_id": "B0214019EC",
+            "mode": "公共交通",
+            "duration_minutes": 15,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "汇泉广场",
+            "to_name": "汇泉王朝大饭店旋转餐厅",
+            "from_id": "B0214019EC",
+            "to_id": "B0214084ED",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "汇泉王朝大饭店旋转餐厅",
+            "to_name": "如家快捷酒店(青岛栈桥人民会堂地铁站龙口路店)",
+            "from_id": "B0214084ED",
+            "to_id": "B0FFFW0T3Z",
+            "mode": "公共交通",
+            "duration_minutes": 29,
+            "distance_meters": 2424,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 513
+      },
+      {
+        "date": "2026-10-21",
+        "day_index": 1,
+        "attractions": [
+          "青岛海滨风景区-踏浪观景台"
+        ],
+        "meals": [
+          "李记早餐大油条馅饼炉包豆浆豆腐脑",
+          "春和楼(中山路总店)",
+          "海萍馄饨(莱阳路店)"
+        ],
+        "total_minutes": 634,
+        "route_start": {
+          "name": "如家快捷酒店(青岛栈桥人民会堂地铁站龙口路店)",
+          "location": {
+            "longitude": 120.32913,
+            "latitude": 36.063961
+          },
+          "poi_id": "B0FFFW0T3Z",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "如家快捷酒店(青岛栈桥人民会堂地铁站龙口路店)",
+          "location": {
+            "longitude": 120.32913,
+            "latitude": 36.063961
+          },
+          "poi_id": "B0FFFW0T3Z",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "如家快捷酒店(青岛栈桥人民会堂地铁站龙口路店)",
+            "to_name": "李记早餐大油条馅饼炉包豆浆豆腐脑",
+            "from_id": "B0FFFW0T3Z",
+            "to_id": "B0G3TXQZX6",
+            "mode": "公共交通",
+            "duration_minutes": 19,
+            "distance_meters": 2031,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "李记早餐大油条馅饼炉包豆浆豆腐脑",
+            "to_name": "青岛海滨风景区-踏浪观景台",
+            "from_id": "B0G3TXQZX6",
+            "to_id": "B0KUBRX2MY",
+            "mode": "公共交通",
+            "duration_minutes": 19,
+            "distance_meters": 1617,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "青岛海滨风景区-踏浪观景台",
+            "to_name": "春和楼(中山路总店)",
+            "from_id": "B0KUBRX2MY",
+            "to_id": "B0FFF9QE2G",
+            "mode": "公共交通",
+            "duration_minutes": 37,
+            "distance_meters": 2310,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "春和楼(中山路总店)",
+            "to_name": "海萍馄饨(莱阳路店)",
+            "from_id": "B0FFF9QE2G",
+            "to_id": "B0LDDLIVPI",
+            "mode": "公共交通",
+            "duration_minutes": 34,
+            "distance_meters": 3811,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "海萍馄饨(莱阳路店)",
+            "to_name": "如家快捷酒店(青岛栈桥人民会堂地铁站龙口路店)",
+            "from_id": "B0LDDLIVPI",
+            "to_id": "B0FFFW0T3Z",
+            "mode": "公共交通",
+            "duration_minutes": 28,
+            "distance_meters": 1596,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 396
+      },
+      {
+        "date": "2026-10-22",
+        "day_index": 2,
+        "attractions": [
+          "青岛石老人海水浴场"
+        ],
+        "meals": [
+          "永和豆浆(青岛莱阳路8号院店)",
+          "海聚鲜·海鲜·崂山渔家宴(石老人海水浴场店)",
+          "湛堂·海鲜烧烤家常菜(南巷近海)"
+        ],
+        "total_minutes": 630,
+        "route_start": {
+          "name": "如家快捷酒店(青岛栈桥人民会堂地铁站龙口路店)",
+          "location": {
+            "longitude": 120.32913,
+            "latitude": 36.063961
+          },
+          "poi_id": "B0FFFW0T3Z",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": null,
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "如家快捷酒店(青岛栈桥人民会堂地铁站龙口路店)",
+            "to_name": "永和豆浆(青岛莱阳路8号院店)",
+            "from_id": "B0FFFW0T3Z",
+            "to_id": "B0K3M4MJ4M",
+            "mode": "公共交通",
+            "duration_minutes": 24,
+            "distance_meters": 1568,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "永和豆浆(青岛莱阳路8号院店)",
+            "to_name": "海聚鲜·海鲜·崂山渔家宴(石老人海水浴场店)",
+            "from_id": "B0K3M4MJ4M",
+            "to_id": "B0J0D7OHHY",
+            "mode": "公共交通",
+            "duration_minutes": 106,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（AMAP_ERROR）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "海聚鲜·海鲜·崂山渔家宴(石老人海水浴场店)",
+            "to_name": "青岛石老人海水浴场",
+            "from_id": "B0J0D7OHHY",
+            "to_id": "B021406PJ6",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "青岛石老人海水浴场",
+            "to_name": "湛堂·海鲜烧烤家常菜(南巷近海)",
+            "from_id": "B021406PJ6",
+            "to_id": "B0GUUA0CBJ",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 220
+      }
+    ],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 1129,
+      "subtotal": 1129,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 1129 元 = 1129 元。"
+    },
+    "validate_error": null
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": null,
+    "retries": 1,
+    "budget_retries": 0,
+    "planning_calls": 4,
+    "composition_valid": true,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "滨海公园：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "海军公园栈桥：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "龙湾景区：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "海滨广场：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-21 重复安排景点「青岛第一海水浴场-沙滩」（2026-10-20 已安排过），已保留首次出现并去重。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0K3M4MJ4M,B021406IX2,B0I14S7ZRX\n2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFHFHQDL,B0K3M4MJ4M,B021406IX2,B0I14S7ZRX,B0G3TXQZX6\n2026-10-21 dinner 餐厅不符合就近/餐次条件，可选ID：B021403EJG,B0214084ED,B0MAX7MKG3,B0214019E6,B0FFGVUO5Q,B0FFHFHQDL,B0JRY1FVOU,B0I12B57Y0\n2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFHFHQDL,B0JRY1FVOU,B0K3M4MJ4M,B021406IX2,B0I14S7ZRX,B0FFH1WGLY,B0G3TXQZX6\n2026-10-22 lunch 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-22 dinner 餐厅不符合就近/餐次条件，可选ID：B0KABRYNYL\n2026-10-22 dinner 距用餐片区超过4公里，需换候选或重排景点。\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0FFFW0T3Z\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0FFFW0T3Z\"}], \"hotel_id\": \"B0FFFW0T3Z\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"青岛栈桥海水浴场\", \"青岛第一海水浴场-沙滩\", \"汇泉广场\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B021405U2Q\", \"B0FFGFUIPV\", \"B0214019EC\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0G3TXQZX6\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0LDDLIVPI\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFHFHQDL\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0K3M4MJ4M\", \"B021406IX2\", \"B0I14S7ZRX\"], \"unused_restaurant_ids\": [\"B0K3M4MJ4M\", \"B021406IX2\", \"B0I14S7ZRX\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFF9QE2G\", \"B021403EJG\", \"B0214084ED\", \"B0MAX7MKG3\", \"B0214019E6\", \"B0FFGVUO5Q\", \"B0FFHFHQDL\", \"B0I12B57Y0\"], \"unused_restaurant_ids\": [\"B0FFF9QE2G\", \"B021403EJG\", \"B0214084ED\", \"B0MAX7MKG3\", \"B0214019E6\", \"B0FFGVUO5Q\", \"B0FFHFHQDL\", \"B0I12B57Y0\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B021403EJG\", \"B0214084ED\", \"B0MAX7MKG3\", \"B0214019E6\", \"B0FFGVUO5Q\", \"B0FFHFHQDL\", \"B0I12B57Y0\", \"B0K14APTLA\"], \"unused_restaurant_ids\": [\"B021403EJG\", \"B0214084ED\", \"B0MAX7MKG3\", \"B0214019E6\", \"B0FFGVUO5Q\", \"B0FFHFHQDL\", \"B0I12B57Y0\", \"B0K14APTLA\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"青岛海滨风景区-踏浪观景台\", \"太平山中央公园\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0KUBRX2MY\", \"B0IRYZ9JWT\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFFCNQ18\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0MAX7MKG3\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFF9QE2G\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFHFHQDL\", \"B0K3M4MJ4M\", \"B021406IX2\", \"B0I14S7ZRX\", \"B0G3TXQZX6\"], \"unused_restaurant_ids\": [\"B0K3M4MJ4M\", \"B021406IX2\", \"B0I14S7ZRX\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B021403EJG\", \"B0214084ED\", \"B0MAX7MKG3\", \"B0214019E6\", \"B0FFGVUO5Q\", \"B0FFHFHQDL\", \"B0I12B57Y0\", \"B0K14APTLA\"], \"unused_restaurant_ids\": [\"B021403EJG\", \"B0214084ED\", \"B0MAX7MKG3\", \"B0214019E6\", \"B0FFGVUO5Q\", \"B0I12B57Y0\", \"B0K14APTLA\", \"B0FFHU8QC3\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B021403EJG\", \"B0214084ED\", \"B0MAX7MKG3\", \"B0214019E6\", \"B0FFGVUO5Q\", \"B0FFHFHQDL\", \"B0JRY1FVOU\", \"B0I12B57Y0\"], \"unused_restaurant_ids\": [\"B021403EJG\", \"B0214084ED\", \"B0214019E6\", \"B0FFGVUO5Q\", \"B0JRY1FVOU\", \"B0I12B57Y0\", \"B0K14APTLA\", \"B0FFHU8QC3\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"青岛石老人海水浴场\", \"石老人\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B021406PJ6\", \"B0FFFYEL7G\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG19EOD\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0KABRYNYL\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFFRR5R3\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFHFHQDL\", \"B0JRY1FVOU\", \"B0K3M4MJ4M\", \"B021406IX2\", \"B0I14S7ZRX\", \"B0FFH1WGLY\", \"B0G3TXQZX6\"], \"unused_restaurant_ids\": [\"B0JRY1FVOU\", \"B0K3M4MJ4M\", \"B021406IX2\", \"B0I14S7ZRX\", \"B0FFH1WGLY\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [], \"unused_restaurant_ids\": []}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [], \"unused_restaurant_ids\": []}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「青岛栈桥海水浴场」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「太平山中央公园」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「石老人」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-20 dinner 餐厅不符合就近/餐次条件，可选ID：B021403EJG,B0214084ED,B0MAX7MKG3,B0214019E6,B0FFGVUO5Q,B0FFHFHQDL,B0I12B57Y0,B0K14APTLA\n2026-10-22 breakfast 重复餐厅 B0JRY1FVOU，附近尚有未使用候选：B0K3M4MJ4M,B021406IX2,B0I14S7ZRX,B0FFH1WGLY\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0FFFW0T3Z\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0FFFW0T3Z\"}], \"hotel_id\": \"B0FFFW0T3Z\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"青岛第一海水浴场-沙滩\", \"汇泉广场\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFGFUIPV\", \"B0214019EC\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFHFHQDL\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0MAX7MKG3\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0JRY1FVOU\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFHFHQDL\", \"B0JRY1FVOU\"], \"unused_restaurant_ids\": [\"B0FFHFHQDL\", \"B0JRY1FVOU\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B021403EJG\", \"B0214084ED\", \"B0MAX7MKG3\", \"B0214019E6\", \"B0FFGVUO5Q\", \"B0JRY1FVOU\"], \"unused_restaurant_ids\": [\"B021403EJG\", \"B0214084ED\", \"B0MAX7MKG3\", \"B0214019E6\", \"B0FFGVUO5Q\", \"B0JRY1FVOU\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B021403EJG\", \"B0214084ED\", \"B0MAX7MKG3\", \"B0214019E6\", \"B0FFGVUO5Q\", \"B0FFHFHQDL\", \"B0I12B57Y0\", \"B0K14APTLA\"], \"unused_restaurant_ids\": [\"B021403EJG\", \"B0214084ED\", \"B0214019E6\", \"B0FFGVUO5Q\", \"B0I12B57Y0\", \"B0K14APTLA\", \"B0LDDLIVPI\", \"B0FFHU8QC3\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"青岛海滨风景区-踏浪观景台\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0KUBRX2MY\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0G3TXQZX6\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFF9QE2G\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0LDDLIVPI\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFHFHQDL\", \"B0K3M4MJ4M\", \"B021406IX2\", \"B0I14S7ZRX\", \"B0G3TXQZX6\"], \"unused_restaurant_ids\": [\"B0K3M4MJ4M\", \"B021406IX2\", \"B0I14S7ZRX\", \"B0G3TXQZX6\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFF9QE2G\", \"B021403EJG\", \"B0214084ED\", \"B0MAX7MKG3\", \"B0214019E6\", \"B0FFHFHQDL\", \"B0I12B57Y0\", \"B0K14APTLA\"], \"unused_restaurant_ids\": [\"B0FFF9QE2G\", \"B021403EJG\", \"B0214084ED\", \"B0214019E6\", \"B0I12B57Y0\", \"B0K14APTLA\", \"B0LDDLIVPI\", \"B0FFHU8QC3\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFHFHQDL\", \"B0I12B57Y0\", \"B0K14APTLA\", \"B0LDDLIVPI\", \"B0FFHU8QC3\", \"B021406IX2\", \"B0I14S7ZRX\", \"B021405P5H\"], \"unused_restaurant_ids\": [\"B0I12B57Y0\", \"B0K14APTLA\", \"B0LDDLIVPI\", \"B0FFHU8QC3\", \"B021406IX2\", \"B0I14S7ZRX\", \"B021405P5H\", \"B0FFFCNQ18\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"青岛石老人海水浴场\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B021406PJ6\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0JRY1FVOU\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0J0D7OHHY\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0GUUA0CBJ\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFHFHQDL\", \"B0JRY1FVOU\", \"B0K3M4MJ4M\", \"B021406IX2\", \"B0I14S7ZRX\", \"B0FFH1WGLY\", \"B0G3TXQZX6\"], \"unused_restaurant_ids\": [\"B0K3M4MJ4M\", \"B021406IX2\", \"B0I14S7ZRX\", \"B0FFH1WGLY\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0K0HGJS47\", \"B0FFK8F9LB\", \"B0MU69WA08\", \"B0MUAD13VK\", \"B0MRRS0NM8\", \"B0J0D7OHHY\", \"B0LB3A8T3B\", \"B0GUUA0CBJ\"], \"unused_restaurant_ids\": [\"B0K0HGJS47\", \"B0FFK8F9LB\", \"B0MU69WA08\", \"B0MUAD13VK\", \"B0MRRS0NM8\", \"B0J0D7OHHY\", \"B0LB3A8T3B\", \"B0GUUA0CBJ\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0K0HGJS47\", \"B0FFK8F9LB\", \"B0MU69WA08\", \"B0MUAD13VK\", \"B0MRRS0NM8\", \"B0J0D7OHHY\", \"B0LB3A8T3B\", \"B0GUUA0CBJ\"], \"unused_restaurant_ids\": [\"B0K0HGJS47\", \"B0FFK8F9LB\", \"B0MU69WA08\", \"B0MUAD13VK\", \"B0MRRS0NM8\", \"B0LB3A8T3B\", \"B0GUUA0CBJ\", \"B0IKM5M4I6\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+    ],
+    "usage": {
+      "prompt_tokens": 54007,
+      "completion_tokens": 4837,
+      "llm_calls": 5
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 1129,
+      "subtotal": 1129,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 1129 元 = 1129 元。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "如家快捷酒店(青岛栈桥人民会堂地铁站龙口路店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "tool_call_count": 72,
+    "hotel_source": "agent",
+    "final_days": 3,
+    "final_weather_days": 3
+  },
+  "request": {
+    "city": "青岛",
+    "start_date": "2026-10-20",
+    "travel_days": 3,
+    "transportation": "公共交通",
+    "accommodation": "经济型酒店",
+    "preferences": [
+      "自然风光"
+    ],
+    "must_visit": [],
+    "free_text_input": "有两天去海边，想轻松一点"
+  },
+  "expect": {
+    "success": true,
+    "days": 3
+  },
+  "exception": null,
+  "warnings": [
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "滨海公园：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "海军公园栈桥：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "龙湾景区：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "海滨广场：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+    "2026-10-21 重复安排景点「青岛第一海水浴场-沙滩」（2026-10-20 已安排过），已保留首次出现并去重。",
+    "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0K3M4MJ4M,B021406IX2,B0I14S7ZRX",
+    "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFHFHQDL,B0K3M4MJ4M,B021406IX2,B0I14S7ZRX,B0G3TXQZX6",
+    "2026-10-21 dinner 餐厅不符合就近/餐次条件，可选ID：B021403EJG,B0214084ED,B0MAX7MKG3,B0214019E6,B0FFGVUO5Q,B0FFHFHQDL,B0JRY1FVOU,B0I12B57Y0",
+    "2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFHFHQDL,B0JRY1FVOU,B0K3M4MJ4M,B021406IX2,B0I14S7ZRX,B0FFH1WGLY,B0G3TXQZX6",
+    "2026-10-22 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-22 dinner 餐厅不符合就近/餐次条件，可选ID：B0KABRYNYL",
+    "2026-10-22 dinner 距用餐片区超过4公里，需换候选或重排景点。",
+    "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+    "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「青岛栈桥海水浴场」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「太平山中央公园」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「石老人」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-20：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+    "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+    "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+    "2026-10-20 dinner 餐厅不符合就近/餐次条件，可选ID：B021403EJG,B0214084ED,B0MAX7MKG3,B0214019E6,B0FFGVUO5Q,B0FFHFHQDL,B0I12B57Y0,B0K14APTLA",
+    "2026-10-22 breakfast 重复餐厅 B0JRY1FVOU，附近尚有未使用候选：B0K3M4MJ4M,B021406IX2,B0I14S7ZRX,B0FFH1WGLY",
+    "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+  ],
+  "message": "",
+  "started_at": "2026-10-20T01:15:48"
+}

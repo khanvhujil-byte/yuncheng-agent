@@ -11,6 +11,8 @@ import math
 from ..models.schemas import Location
 from .tools import haversine_km
 
+_DEFAULT_END = object()
+
 START_MINUTES = 8 * 60 + 30
 MEAL_MINUTES = {"breakfast": 30, "lunch": 45, "dinner": 60}
 
@@ -30,6 +32,8 @@ def visit_minutes(spot):
 def estimated_minutes(origin, destination, mode):
     a, b = location(origin), location(destination)
     if not a or not b:
+        return 0
+    if a == b:
         return 0
     speed = 4 if mode in ("步行", "walking") else (12 if mode in ("公共交通", "transit") else 22)
     return max(5, math.ceil(haversine_km(a, b) * 1.5 / speed * 60)
@@ -127,6 +131,34 @@ def _protected(spot, state):
                or getattr(a, "name", None) == spot.get("name") for a in anchors)
 
 
+def restore_required_anchors(days, anchors, request, hotel=None):
+    """Restore omitted user choices from factual anchors, never invent stops.
+
+    This does not certify feasibility. All normal identity, theme, route,
+    meal and budget checks run afterwards; fixed dates/themes aren't guessed.
+    """
+    from .day_goals import effective_goals
+    if effective_goals(request):
+        return []
+    notes = []
+    for anchor in anchors:
+        if any((anchor.poi_id and s.poi_id == anchor.poi_id) or s.name == anchor.name
+               for day in days for s in day.attractions):
+            continue
+        eligible = [d for d in days if len(d.attractions) < request.requirements.attractions.max_per_day]
+        if not eligible:
+            continue
+        def score(day):
+            spots = [s.model_dump() for s in day.attractions] + [anchor.model_dump()]
+            return (sum(s.required for s in day.attractions),
+                    sum(visit_minutes(s) for s in spots) + _distance_cost(spots, hotel, request.transportation),
+                    day.day_index)
+        target = min(eligible, key=score)
+        target.attractions.append(anchor.model_copy(deep=True))
+        notes.append(f'{target.date} 已从真实必去候选补回遗漏的「{anchor.name}」，餐饮、路程与预算仍需重新校验。')
+    return notes
+
+
 def _distance_cost(spots, hotel, mode):
     stops = ([hotel] if hotel and location(hotel) else []) + list(spots)
     if hotel and location(hotel):
@@ -146,7 +178,18 @@ def _remove_optional(day, state, hotel=None):
     if len(spots) <= 1:
         return None
     mode = state["request"].transportation
-    candidates = [(index, spot) for index, spot in enumerate(spots) if not _protected(spot, state)]
+    from .day_goals import effective_goals, matches
+    def preserves_theme(index):
+        remaining = spots[:index] + spots[index + 1:]
+        for goal in effective_goals(state['request']):
+            before = sum(visit_minutes(s) for s in spots if matches(s, goal))
+            after = sum(visit_minutes(s) for s in remaining if matches(s, goal))
+            if (before and before * 2 >= sum(visit_minutes(s) for s in spots)
+                    and (not after or after * 2 < sum(visit_minutes(s) for s in remaining))):
+                return False
+        return True
+    candidates = [(index, spot) for index, spot in enumerate(spots)
+                  if not _protected(spot, state) and preserves_theme(index)]
     if not candidates:
         return None
     # Drop the optional stop which consumes most visit + geometric travel time.
@@ -225,7 +268,10 @@ def build_sequence(day, hotel=None, mode="公共交通", minutes=None, comfort_l
                 variant = [(kind, ({**item, "_earliest_start": dinner_start}
                                    if dinner_start and item.get("type") == "dinner" else item), length)
                            for kind, item, length in sequence]
-                timing = simulate(variant, hotel, duration)
+                timing = simulate(variant, day.get('route_start') if day.get('dated_boundaries') else hotel, duration,
+                                  end_hotel=day.get('route_end') if day.get('dated_boundaries') else hotel,
+                                  start_minutes=day.get('start_minutes', START_MINUTES),
+                                  transfer_minutes=day.get('transfer_minutes', 0))
                 # 18:00 remains preferred; an earlier dinner is allowed only when
                 # it avoids an actual late meal or an overlong day (incl. return).
                 score = (timing["late_meal_minutes"], max(0, timing["total_minutes"] - soft_limit),
@@ -235,15 +281,16 @@ def build_sequence(day, hotel=None, mode="公共交通", minutes=None, comfort_l
     return min(candidates, key=lambda item: item[0])[1]
 
 
-def simulate(sequence, hotel, duration):
+def simulate(sequence, hotel, duration, *, end_hotel=_DEFAULT_END, start_minutes=START_MINUTES, transfer_minutes=0):
     """Mirror clock/buffer rules without invoking a route provider."""
-    cursor = START_MINUTES
+    cursor = start_minutes + transfer_minutes//2
+    end_hotel = hotel if end_hotel is _DEFAULT_END else end_hotel
     previous = hotel if hotel and location(hotel) else None
     active = 0
     late = 0
     early_dinner = 0
     travel = 0
-    with_return = sequence + ([("return", hotel, 0)] if hotel and location(hotel) else [])
+    with_return = sequence + ([("return", end_hotel, 0)] if end_hotel and location(end_hotel) else [])
     for position, (kind, item, length) in enumerate(with_return):
         if previous and location(previous) and location(item):
             hop = duration(previous, item)
@@ -253,7 +300,7 @@ def simulate(sequence, hotel, duration):
             break
         if kind == "meal":
             meal = item.get("type")
-            cursor = max(cursor, item.get("_earliest_start", {"lunch": 12 * 60, "dinner": 18 * 60}.get(meal, cursor)))
+            cursor = max(cursor, item.get("_earliest_start", {"breakfast": 7 * 60, "lunch": 12 * 60, "dinner": 18 * 60}.get(meal, cursor)))
             if meal == "dinner":
                 early_dinner = max(0, 18 * 60 - cursor)
             limit = {"lunch": 14 * 60, "dinner": 20 * 60 + 30}.get(meal)
@@ -265,5 +312,6 @@ def simulate(sequence, hotel, duration):
             active = 0
         if location(item):
             previous = item
-    return {"total_minutes": cursor - START_MINUTES, "late_meal_minutes": late,
+    cursor += transfer_minutes - transfer_minutes//2
+    return {"total_minutes": cursor - start_minutes, "late_meal_minutes": late,
             "early_dinner_minutes": early_dinner, "travel_minutes": travel}

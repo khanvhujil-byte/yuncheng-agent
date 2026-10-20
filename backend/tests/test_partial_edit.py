@@ -324,8 +324,9 @@ def test_confirmed_local_candidate_recovers_without_duplicate_edit(saved, monkey
 def test_new_local_edit_resets_route_query_budget_and_records_actual_attempts(saved, monkeypatch):
     from app.services import itinerary_experience
     calls = []
-    monkeypatch.setattr(itinerary_experience.amap, "travel_route", lambda *a, **kw: calls.append(kw) or {
-        "status": "known", "duration_minutes": 5, "distance_meters": 400})
+    from app.services.tools import haversine_km
+    monkeypatch.setattr(itinerary_experience.amap, "travel_route", lambda a,b, **kw: calls.append(kw) or {
+        "status": "known", "duration_minutes": 5, "distance_meters": max(400, round(haversine_km(a,b)*1200))})
     with store._connect() as db:
         snapshot = json.loads(db.execute("SELECT state_json FROM run_snapshot WHERE run_id='original-run'").fetchone()[0])
         snapshot["route_query_count"] = 48

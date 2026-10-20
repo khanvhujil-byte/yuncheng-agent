@@ -4,12 +4,18 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from .requirements import Requirements
+from .schemas import StayLock
 
 Text = Annotated[str, Field(min_length=1, max_length=200)]
 
 
 class SlotPatch(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True)
+    origin_city: Annotated[str, Field(max_length=60)] | None = None
+    intercity_mode: Literal['none', 'train', 'flight', 'auto'] | None = None
+    return_trip: bool | None = None
+    adult_count: Annotated[int, Field(ge=1, le=8)] | None = None
+    room_count: Annotated[int, Field(ge=1, le=4)] | None = None
     city: Text | None = None
     start_date: Annotated[str, Field(max_length=10)] | None = None
     travel_days: Annotated[int, Field(ge=1, le=30)] | None = None
@@ -22,6 +28,11 @@ class SlotPatch(BaseModel):
     must_visit: Annotated[list[Text], Field(max_length=10)] | None = None
     fixed_hotel: Text | None = None
     fixed_hotel_address: Text | None = None
+    stay_locks: Annotated[list[StayLock], Field(max_length=30)] | None = None
+    arrival_address: Text | None = None
+    departure_address: Text | None = None
+    arrival_time: Annotated[str, Field(pattern=r"^(?:[01]\d|2[0-3]):[0-5]\d$")] | None = None
+    departure_time: Annotated[str, Field(pattern=r"^(?:[01]\d|2[0-3]):[0-5]\d$")] | None = None
     free_text_input: Annotated[str, Field(max_length=2000)] | None = None
     # Nested patches stay sparse; conversation.merge deep-merges only supplied fields.
     requirements: Requirements | None = None
@@ -55,6 +66,7 @@ class ModuleEdit(BaseModel):
     module: Literal["hotel", "meals", "attractions", "day"]
     day_index: Annotated[int, Field(ge=0, le=29)] | None = None
     item_index: Annotated[int, Field(ge=0, le=29)] | None = None
+    stay_scope: Literal["night", "segment", "all"] = "all"
     candidate_id: Annotated[str, Field(min_length=1, max_length=160)] | None = None
     candidate_ids: Annotated[list[Text], Field(min_length=1, max_length=6)] | None = None
     instruction: Annotated[str, Field(max_length=2000)] = ""

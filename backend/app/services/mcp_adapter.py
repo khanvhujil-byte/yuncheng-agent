@@ -14,7 +14,7 @@ from . import amap
 from .request_gate import AdmissionTimeout
 from .tool_retry import remaining_seconds
 
-ALLOWED = {"geocode", "search_poi", "get_weather", "measure_distance", "search_restaurants", "search_restaurants_nearby", "travel_route"}
+ALLOWED = {"geocode", "search_poi", "get_weather", "measure_distance", "search_restaurants", "search_restaurants_nearby", "search_hotels_nearby", "travel_route"}
 
 
 @asynccontextmanager

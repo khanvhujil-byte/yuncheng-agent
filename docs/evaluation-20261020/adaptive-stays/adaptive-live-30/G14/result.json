@@ -1,0 +1,535 @@
+{
+  "case_id": "G14",
+  "name": "南京2天纯步行",
+  "kind": "generate",
+  "passed": true,
+  "violations": [],
+  "duration_s": 38.02,
+  "error_code": null,
+  "success": true,
+  "days": 2,
+  "response_summary": {
+    "success": true,
+    "error_code": null,
+    "message": "",
+    "cached": false,
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFF90OUQ,B0019076AC",
+      "2026-10-21 breakfast 重复餐厅 B00190Z96Y，附近尚有未使用候选：B0FFF90OUQ,B0019076AC",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「南京城墙博物馆」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「玄武湖景区」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「瞻园」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「古鸡鸣寺」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-21：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-20 一天占了总花费的 66%（340 元），看看是不是某项估算偏高。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+    ],
+    "budget": {
+      "ticket_reserve_amount": 100,
+      "total_attractions": 65,
+      "total_hotels": 260,
+      "total_meals": 236,
+      "total_transportation": 20,
+      "total": 581,
+      "items": [
+        {
+          "category": "attraction",
+          "name": "南京夫子庙",
+          "day_index": 0,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：夫子庙景区街区日常免费开放，仅内部个别小景点单独收费，按普通成人日常入场估算为0"
+        },
+        {
+          "category": "attraction",
+          "name": "夫子庙秦淮风光带",
+          "day_index": 0,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：夫子庙秦淮风光带为开放式城市风光带，日常免费游览，估算为0"
+        },
+        {
+          "category": "meal",
+          "name": "米豆豆·台湾饭团现做精磨豆浆(夫子庙店)",
+          "day_index": 0,
+          "amount": 16,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "鸡鸣汤包(贡院西街店)",
+          "day_index": 0,
+          "amount": 34,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "蒋有记(老门东店)",
+          "day_index": 0,
+          "amount": 25,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "总统府",
+          "day_index": 1,
+          "amount": 35,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：总统府日常成人门票挂牌价约35元，按日间普通成人票估算"
+        },
+        {
+          "category": "attraction",
+          "name": "六朝博物馆",
+          "day_index": 1,
+          "amount": 30,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：六朝博物馆日常成人门票约30元，按日间普通成人票估算"
+        },
+        {
+          "category": "meal",
+          "name": "叶新小吃店(来凤小区总店)",
+          "day_index": 1,
+          "amount": 25,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "古南都·四川酒家(太平南路总店)",
+          "day_index": 1,
+          "amount": 51,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "家宴·老南京私房菜",
+          "day_index": 1,
+          "amount": 85,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-20 住宿：南京文翠宾馆",
+          "day_index": 0,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "transportation",
+          "name": "市内交通（步行）",
+          "day_index": null,
+          "amount": 20,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "按每人每天 10 元的固定表估算"
+        }
+      ],
+      "known_total": 0,
+      "estimated_total": 581,
+      "unknown_items": [],
+      "limit": null,
+      "limit_status": "none",
+      "limit_basis": "未设置预算上限。当前口径：已知 0 元 + 估算 581 元 = 581 元。"
+    },
+    "hotel": {
+      "name": "南京文翠宾馆",
+      "poi_id": "B0019135QQ",
+      "address": "双塘街道集庆路123号永丰大厦307室",
+      "location": {
+        "longitude": 118.775256,
+        "latitude": 32.018407
+      },
+      "price_range": "",
+      "rating": "3.8",
+      "distance": "距最终行程景点加权平均 2.4 km（直线估计）",
+      "type": "宾馆酒店",
+      "estimated_cost": 260,
+      "cost_status": "estimated",
+      "cost_source": "static_estimate",
+      "price_evidence_url": null,
+      "nights": 1,
+      "check_in_after": null,
+      "check_in_before": null,
+      "check_out_before": null,
+      "operations_evidence_url": null
+    },
+    "hotel_nights": 1,
+    "accommodation_version": 11,
+    "stays": [
+      {
+        "check_in": "2026-10-20",
+        "check_out": "2026-10-21",
+        "hotel": {
+          "name": "南京文翠宾馆",
+          "poi_id": "B0019135QQ",
+          "address": "双塘街道集庆路123号永丰大厦307室",
+          "location": {
+            "longitude": 118.775256,
+            "latitude": 32.018407
+          },
+          "price_range": "",
+          "rating": "3.8",
+          "distance": "",
+          "type": "宾馆酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "位于夫子庙片区，紧邻首日夫子庙、秦淮风光带游览区，步行即可完成当日动线；次日前往总统府、六朝博物馆方向也较顺，仅住一晚无需换住。"
+      }
+    ],
+    "stay_comparison": {
+      "strategy": "same_hotel",
+      "hotel_changes": 0,
+      "travel_minutes": 171,
+      "transfer_minutes": 0,
+      "basis": "路线工具核算所选方案；未取得备选实测时，不宣称节省具体分钟。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "南京文翠宾馆",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "阴"
+      },
+      {
+        "date": "2026-10-21",
+        "beyond_window": false,
+        "day_weather": "多云"
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-20",
+        "day_index": 0,
+        "attractions": [
+          "南京夫子庙",
+          "夫子庙秦淮风光带"
+        ],
+        "meals": [
+          "米豆豆·台湾饭团现做精磨豆浆(夫子庙店)",
+          "鸡鸣汤包(贡院西街店)",
+          "蒋有记(老门东店)"
+        ],
+        "total_minutes": 659,
+        "route_start": null,
+        "route_end": {
+          "name": "南京文翠宾馆",
+          "location": {
+            "longitude": 118.775256,
+            "latitude": 32.018407
+          },
+          "poi_id": "B0019135QQ",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "米豆豆·台湾饭团现做精磨豆浆(夫子庙店)",
+            "to_name": "南京夫子庙",
+            "from_id": "B0FFKWQ786",
+            "to_id": "B00190ANHZ",
+            "mode": "步行",
+            "duration_minutes": 3,
+            "distance_meters": 221,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "南京夫子庙",
+            "to_name": "鸡鸣汤包(贡院西街店)",
+            "from_id": "B00190ANHZ",
+            "to_id": "B0FFLHIV7P",
+            "mode": "步行",
+            "duration_minutes": 5,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（AMAP_ERROR）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "鸡鸣汤包(贡院西街店)",
+            "to_name": "夫子庙秦淮风光带",
+            "from_id": "B0FFLHIV7P",
+            "to_id": "B00191437W",
+            "mode": "步行",
+            "duration_minutes": 4,
+            "distance_meters": 236,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "夫子庙秦淮风光带",
+            "to_name": "蒋有记(老门东店)",
+            "from_id": "B00191437W",
+            "to_id": "B0FFF2HDE5",
+            "mode": "步行",
+            "duration_minutes": 17,
+            "distance_meters": 1230,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "蒋有记(老门东店)",
+            "to_name": "南京文翠宾馆",
+            "from_id": "B0FFF2HDE5",
+            "to_id": "B0019135QQ",
+            "mode": "步行",
+            "duration_minutes": 24,
+            "distance_meters": 1785,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 345
+      },
+      {
+        "date": "2026-10-21",
+        "day_index": 1,
+        "attractions": [
+          "总统府",
+          "六朝博物馆"
+        ],
+        "meals": [
+          "叶新小吃店(来凤小区总店)",
+          "古南都·四川酒家(太平南路总店)",
+          "家宴·老南京私房菜"
+        ],
+        "total_minutes": 630,
+        "route_start": {
+          "name": "南京文翠宾馆",
+          "location": {
+            "longitude": 118.775256,
+            "latitude": 32.018407
+          },
+          "poi_id": "B0019135QQ",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": null,
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "南京文翠宾馆",
+            "to_name": "叶新小吃店(来凤小区总店)",
+            "from_id": "B0019135QQ",
+            "to_id": "B0FFF90OUQ",
+            "mode": "步行",
+            "duration_minutes": 4,
+            "distance_meters": 256,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "叶新小吃店(来凤小区总店)",
+            "to_name": "总统府",
+            "from_id": "B0FFF90OUQ",
+            "to_id": "B00190BMRC",
+            "mode": "步行",
+            "duration_minutes": 62,
+            "distance_meters": 4578,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "总统府",
+            "to_name": "古南都·四川酒家(太平南路总店)",
+            "from_id": "B00190BMRC",
+            "to_id": "B0019051AD",
+            "mode": "步行",
+            "duration_minutes": 17,
+            "distance_meters": 1226,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "古南都·四川酒家(太平南路总店)",
+            "to_name": "六朝博物馆",
+            "from_id": "B0019051AD",
+            "to_id": "B0019135C5",
+            "mode": "步行",
+            "duration_minutes": 15,
+            "distance_meters": 1093,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "六朝博物馆",
+            "to_name": "家宴·老南京私房菜",
+            "from_id": "B0019135C5",
+            "to_id": "B0HAXHN2CM",
+            "mode": "步行",
+            "duration_minutes": 20,
+            "distance_meters": 1434,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 236
+      }
+    ],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 581,
+      "subtotal": 581,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 581 元 = 581 元。"
+    },
+    "validate_error": null
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": null,
+    "retries": 1,
+    "budget_retries": 0,
+    "planning_calls": 2,
+    "composition_valid": true,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFF90OUQ,B0019076AC\n2026-10-21 breakfast 重复餐厅 B00190Z96Y，附近尚有未使用候选：B0FFF90OUQ,B0019076AC\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0019135QQ\"}], \"hotel_id\": \"B0019135QQ\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"南京夫子庙\", \"瞻园\", \"南京城墙博物馆\", \"夫子庙秦淮风光带\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B00190ANHZ\", \"B00190536A\", \"B0H3XR19VD\", \"B00191437W\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B00190Z96Y\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B001911R84\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFF2HDE5\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFF90OUQ\", \"B0019076AC\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFF90OUQ\", \"B0FFF2HDE5\", \"B0019076AC\", \"B001911R84\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFF90OUQ\", \"B0FFF2HDE5\", \"B0019076AC\", \"B001911R84\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"总统府\", \"六朝博物馆\", \"古鸡鸣寺\", \"玄武湖景区\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B00190BMRC\", \"B0019135C5\", \"B0FFH62KNA\", \"B00190BBCZ\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B00190Z96Y\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0019051AD\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFIP8HSG\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFF90OUQ\", \"B00190Z96Y\", \"B0019076AC\", \"B001911R84\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0019051AD\", \"B0HAXHN2CM\", \"B00190Z96Y\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0KKNHX37D\", \"B0G279GZM9\", \"B0FFHKXT0V\", \"B0K30HPN9R\", \"B0J6MBAHI2\", \"B0FFIP8HSG\", \"B0FFFPW68J\", \"B0FFJ5M6GV\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「南京城墙博物馆」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「玄武湖景区」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「瞻园」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「古鸡鸣寺」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-21：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-20 一天占了总花费的 66%（340 元），看看是不是某项估算偏高。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：末日未提供离开点，路线止于末个活动，返程接驳未计入。"
+    ],
+    "usage": {
+      "prompt_tokens": 18493,
+      "completion_tokens": 1774,
+      "llm_calls": 3
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 581,
+      "subtotal": 581,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 581 元 = 581 元。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "南京文翠宾馆",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "tool_call_count": 32,
+    "hotel_source": "agent",
+    "final_days": 2,
+    "final_weather_days": 2
+  },
+  "request": {
+    "city": "南京",
+    "start_date": "2026-10-20",
+    "travel_days": 2,
+    "transportation": "步行",
+    "accommodation": "经济型酒店",
+    "preferences": [
+      "历史文化"
+    ],
+    "must_visit": [],
+    "free_text_input": ""
+  },
+  "expect": {
+    "success": true,
+    "days": 2,
+    "transport_total": 20
+  },
+  "exception": null,
+  "warnings": [
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+    "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFF90OUQ,B0019076AC",
+    "2026-10-21 breakfast 重复餐厅 B00190Z96Y，附近尚有未使用候选：B0FFF90OUQ,B0019076AC",
+    "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+    "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「南京城墙博物馆」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「玄武湖景区」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「瞻园」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「古鸡鸣寺」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+    "2026-10-21：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+    "2026-10-20 一天占了总花费的 66%（340 元），看看是不是某项估算偏高。",
+    "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+  ],
+  "message": "",
+  "started_at": "2026-10-20T01:07:27"
+}

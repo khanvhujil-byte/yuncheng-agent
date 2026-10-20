@@ -1,0 +1,748 @@
+{
+  "case_id": "T07",
+  "name": "杭州3天市内慢游必须连住",
+  "kind": "generate",
+  "passed": true,
+  "violations": [],
+  "duration_s": 43.36,
+  "error_code": null,
+  "success": true,
+  "days": 3,
+  "response_summary": {
+    "success": true,
+    "error_code": null,
+    "message": "",
+    "cached": false,
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFH0UM9G,B0K314G7HG,B0FFIOWE1Z,B0FFH5DUCJ,B0FFHSLAMX",
+      "2026-10-21 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0K314G7HG,B0FFHSLAMX",
+      "2026-10-22 breakfast 重复餐厅 B0MBP71VT3，附近尚有未使用候选：B0FFHSLAMX",
+      "2026-10-22 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-22 dinner 重复餐厅 B0FFK63KYM，附近尚有未使用候选：B0FFF00Q4K,B023B032KR,B0KKMR7ORJ,B0HKYGNQHM,B0FFGPEJZJ,B0KUXL3VHS,B0FFKUN5I7,B0FFFA80YB",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「晓霞弄」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+    ],
+    "budget": {
+      "ticket_reserve_amount": 100,
+      "total_attractions": 55,
+      "total_hotels": 520,
+      "total_meals": 254,
+      "total_transportation": 120,
+      "total": 949,
+      "items": [
+        {
+          "category": "attraction",
+          "name": "杭州西湖风景名胜区-钱王祠",
+          "day_index": 0,
+          "amount": 15,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：钱王祠日常成人门票挂牌价约15元，属于西湖景区内独立收费景点。"
+        },
+        {
+          "category": "attraction",
+          "name": "杭州博物馆",
+          "day_index": 0,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：杭州博物馆为免费开放的公共博物馆，日常成人入场免费。"
+        },
+        {
+          "category": "meal",
+          "name": "雪英早餐店",
+          "day_index": 0,
+          "amount": 34,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "知味观(吴山点心分店)",
+          "day_index": 0,
+          "amount": 34,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "星巴克(杭州西湖天地店)",
+          "day_index": 0,
+          "amount": 30,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "南宋德寿宫遗址博物馆",
+          "day_index": 1,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：南宋德寿宫遗址博物馆免费开放，需预约，日常成人入场免费。"
+        },
+        {
+          "category": "attraction",
+          "name": "五柳巷历史街区",
+          "day_index": 1,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：五柳巷历史街区为免费开放的历史街区，无门票"
+        },
+        {
+          "category": "meal",
+          "name": "望江门面馆(庆春路店)",
+          "day_index": 1,
+          "amount": 35,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "鼎顺小吃(吴山名楼店)",
+          "day_index": 1,
+          "amount": 16,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "钱塘涌金面馆",
+          "day_index": 1,
+          "amount": 25,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "吴山景区-城隍阁景区",
+          "day_index": 2,
+          "amount": 30,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：城隍阁景区日常成人门票挂牌价约30元"
+        },
+        {
+          "category": "attraction",
+          "name": "胡庆馀堂中药博物馆",
+          "day_index": 2,
+          "amount": 10,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：胡庆余堂中药博物馆日常成人门票约10元，为独立收费展馆。"
+        },
+        {
+          "category": "meal",
+          "name": "梁记面馆(耀江广厦店)",
+          "day_index": 2,
+          "amount": 16,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "永和大王(吴山)",
+          "day_index": 2,
+          "amount": 20,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "知味观食品(南山路分店)",
+          "day_index": 2,
+          "amount": 44,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-20 住宿：布丁精选酒店(杭州武林广场西湖文化广场地铁站店)",
+          "day_index": 0,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-21 住宿：布丁精选酒店(杭州武林广场西湖文化广场地铁站店)",
+          "day_index": 1,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "transportation",
+          "name": "市内交通（公共交通）",
+          "day_index": null,
+          "amount": 120,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "按每人每天 40 元的固定表估算"
+        }
+      ],
+      "known_total": 0,
+      "estimated_total": 949,
+      "unknown_items": [],
+      "limit": null,
+      "limit_status": "none",
+      "limit_basis": "未设置预算上限。当前口径：已知 0 元 + 估算 949 元 = 949 元。"
+    },
+    "hotel": {
+      "name": "布丁精选酒店(杭州武林广场西湖文化广场地铁站店)",
+      "poi_id": "B023B14BD7",
+      "address": "湖墅南路96号",
+      "location": {
+        "longitude": 120.156187,
+        "latitude": 30.278191
+      },
+      "price_range": "",
+      "rating": "4.6",
+      "distance": "距最终行程景点加权平均 4.4 km（直线估计）",
+      "type": "经济型连锁酒店",
+      "estimated_cost": 260,
+      "cost_status": "estimated",
+      "cost_source": "static_estimate",
+      "price_evidence_url": null,
+      "nights": 2,
+      "check_in_after": null,
+      "check_in_before": null,
+      "check_out_before": null,
+      "operations_evidence_url": null
+    },
+    "hotel_nights": 2,
+    "accommodation_version": 11,
+    "stays": [
+      {
+        "check_in": "2026-10-20",
+        "check_out": "2026-10-21",
+        "hotel": {
+          "name": "布丁精选酒店(杭州武林广场西湖文化广场地铁站店)",
+          "poi_id": "B023B14BD7",
+          "address": "湖墅南路96号",
+          "location": {
+            "longitude": 120.156187,
+            "latitude": 30.278191
+          },
+          "price_range": "",
+          "rating": "4.6",
+          "distance": "",
+          "type": "经济型连锁酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "市区慢游且要求不换酒店，两晚连住武林广场附近，便于西湖东岸与吴山片区公共交通往返"
+      },
+      {
+        "check_in": "2026-10-21",
+        "check_out": "2026-10-22",
+        "hotel": {
+          "name": "布丁精选酒店(杭州武林广场西湖文化广场地铁站店)",
+          "poi_id": "B023B14BD7",
+          "address": "湖墅南路96号",
+          "location": {
+            "longitude": 120.156187,
+            "latitude": 30.278191
+          },
+          "price_range": "",
+          "rating": "4.6",
+          "distance": "",
+          "type": "经济型连锁酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "次日仍游市区吴山一带，连住免去退房入住60分钟与行李负担"
+      }
+    ],
+    "stay_comparison": {
+      "strategy": "same_hotel",
+      "hotel_changes": 0,
+      "travel_minutes": 428,
+      "transfer_minutes": 0,
+      "basis": "路线工具核算所选方案；未取得备选实测时，不宣称节省具体分钟。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "布丁精选酒店(杭州武林广场西湖文化广场地铁站店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "小雨"
+      },
+      {
+        "date": "2026-10-21",
+        "beyond_window": false,
+        "day_weather": "小雨"
+      },
+      {
+        "date": "2026-10-22",
+        "beyond_window": false,
+        "day_weather": "多云"
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-20",
+        "day_index": 0,
+        "attractions": [
+          "杭州西湖风景名胜区-钱王祠",
+          "杭州博物馆"
+        ],
+        "meals": [
+          "雪英早餐店",
+          "知味观(吴山点心分店)",
+          "星巴克(杭州西湖天地店)"
+        ],
+        "total_minutes": 639,
+        "route_start": null,
+        "route_end": {
+          "name": "布丁精选酒店(杭州武林广场西湖文化广场地铁站店)",
+          "location": {
+            "longitude": 120.156187,
+            "latitude": 30.278191
+          },
+          "poi_id": "B023B14BD7",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "雪英早餐店",
+            "to_name": "杭州西湖风景名胜区-钱王祠",
+            "from_id": "B0MBP71VT3",
+            "to_id": "B0FFFESC91",
+            "mode": "公共交通",
+            "duration_minutes": 20,
+            "distance_meters": 998,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "杭州西湖风景名胜区-钱王祠",
+            "to_name": "知味观(吴山点心分店)",
+            "from_id": "B0FFFESC91",
+            "to_id": "B023B082PU",
+            "mode": "公共交通",
+            "duration_minutes": 29,
+            "distance_meters": 1681,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "知味观(吴山点心分店)",
+            "to_name": "杭州博物馆",
+            "from_id": "B023B082PU",
+            "to_id": "B0FFFWQGI8",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "杭州博物馆",
+            "to_name": "星巴克(杭州西湖天地店)",
+            "from_id": "B0FFFWQGI8",
+            "to_id": "B0FFF00Q4K",
+            "mode": "公共交通",
+            "duration_minutes": 25,
+            "distance_meters": 2062,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "星巴克(杭州西湖天地店)",
+            "to_name": "布丁精选酒店(杭州武林广场西湖文化广场地铁站店)",
+            "from_id": "B0FFF00Q4K",
+            "to_id": "B023B14BD7",
+            "mode": "公共交通",
+            "duration_minutes": 32,
+            "distance_meters": 4616,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 413
+      },
+      {
+        "date": "2026-10-21",
+        "day_index": 1,
+        "attractions": [
+          "南宋德寿宫遗址博物馆",
+          "五柳巷历史街区"
+        ],
+        "meals": [
+          "望江门面馆(庆春路店)",
+          "鼎顺小吃(吴山名楼店)",
+          "钱塘涌金面馆"
+        ],
+        "total_minutes": 645,
+        "route_start": {
+          "name": "布丁精选酒店(杭州武林广场西湖文化广场地铁站店)",
+          "location": {
+            "longitude": 120.156187,
+            "latitude": 30.278191
+          },
+          "poi_id": "B023B14BD7",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "布丁精选酒店(杭州武林广场西湖文化广场地铁站店)",
+          "location": {
+            "longitude": 120.156187,
+            "latitude": 30.278191
+          },
+          "poi_id": "B023B14BD7",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "布丁精选酒店(杭州武林广场西湖文化广场地铁站店)",
+            "to_name": "望江门面馆(庆春路店)",
+            "from_id": "B023B14BD7",
+            "to_id": "B0FFH0UM9G",
+            "mode": "公共交通",
+            "duration_minutes": 43,
+            "distance_meters": 7430,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "望江门面馆(庆春路店)",
+            "to_name": "南宋德寿宫遗址博物馆",
+            "from_id": "B0FFH0UM9G",
+            "to_id": "B0HGNGK3FG",
+            "mode": "公共交通",
+            "duration_minutes": 35,
+            "distance_meters": 3393,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "南宋德寿宫遗址博物馆",
+            "to_name": "鼎顺小吃(吴山名楼店)",
+            "from_id": "B0HGNGK3FG",
+            "to_id": "B023B05W5P",
+            "mode": "公共交通",
+            "duration_minutes": 23,
+            "distance_meters": 2489,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "鼎顺小吃(吴山名楼店)",
+            "to_name": "五柳巷历史街区",
+            "from_id": "B023B05W5P",
+            "to_id": "B0FFFA3PD5",
+            "mode": "公共交通",
+            "duration_minutes": 29,
+            "distance_meters": 2525,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "五柳巷历史街区",
+            "to_name": "钱塘涌金面馆",
+            "from_id": "B0FFFA3PD5",
+            "to_id": "B0K314G7HG",
+            "mode": "公共交通",
+            "duration_minutes": 29,
+            "distance_meters": 2542,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "钱塘涌金面馆",
+            "to_name": "布丁精选酒店(杭州武林广场西湖文化广场地铁站店)",
+            "from_id": "B0K314G7HG",
+            "to_id": "B023B14BD7",
+            "mode": "公共交通",
+            "duration_minutes": 37,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（AMAP_ERROR）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 376
+      },
+      {
+        "date": "2026-10-22",
+        "day_index": 2,
+        "attractions": [
+          "吴山景区-城隍阁景区",
+          "胡庆馀堂中药博物馆"
+        ],
+        "meals": [
+          "梁记面馆(耀江广厦店)",
+          "永和大王(吴山)",
+          "知味观食品(南山路分店)"
+        ],
+        "total_minutes": 630,
+        "route_start": {
+          "name": "布丁精选酒店(杭州武林广场西湖文化广场地铁站店)",
+          "location": {
+            "longitude": 120.156187,
+            "latitude": 30.278191
+          },
+          "poi_id": "B023B14BD7",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": null,
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "布丁精选酒店(杭州武林广场西湖文化广场地铁站店)",
+            "to_name": "梁记面馆(耀江广厦店)",
+            "from_id": "B023B14BD7",
+            "to_id": "B0FFHSLAMX",
+            "mode": "公共交通",
+            "duration_minutes": 38,
+            "distance_meters": 5571,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "梁记面馆(耀江广厦店)",
+            "to_name": "吴山景区-城隍阁景区",
+            "from_id": "B0FFHSLAMX",
+            "to_id": "B0FFG49JKW",
+            "mode": "公共交通",
+            "duration_minutes": 24,
+            "distance_meters": 1264,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "吴山景区-城隍阁景区",
+            "to_name": "永和大王(吴山)",
+            "from_id": "B0FFG49JKW",
+            "to_id": "B023B08AY0",
+            "mode": "公共交通",
+            "duration_minutes": 14,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "永和大王(吴山)",
+            "to_name": "胡庆馀堂中药博物馆",
+            "from_id": "B023B08AY0",
+            "to_id": "B0FFFEL34K",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "胡庆馀堂中药博物馆",
+            "to_name": "知味观食品(南山路分店)",
+            "from_id": "B0FFFEL34K",
+            "to_id": "B0KKMR7ORJ",
+            "mode": "公共交通",
+            "duration_minutes": 26,
+            "distance_meters": 1450,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 160
+      }
+    ],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 949,
+      "subtotal": 949,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 949 元 = 949 元。"
+    },
+    "validate_error": null
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": null,
+    "retries": 1,
+    "budget_retries": 0,
+    "planning_calls": 2,
+    "composition_valid": true,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFH0UM9G,B0K314G7HG,B0FFIOWE1Z,B0FFH5DUCJ,B0FFHSLAMX\n2026-10-21 breakfast 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0K314G7HG,B0FFHSLAMX\n2026-10-22 breakfast 重复餐厅 B0MBP71VT3，附近尚有未使用候选：B0FFHSLAMX\n2026-10-22 breakfast 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-22 dinner 重复餐厅 B0FFK63KYM，附近尚有未使用候选：B0FFF00Q4K,B023B032KR,B0KKMR7ORJ,B0HKYGNQHM,B0FFGPEJZJ,B0KUXL3VHS,B0FFKUN5I7,B0FFFA80YB\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B023B14BD7\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B023B14BD7\"}], \"hotel_id\": \"B023B14BD7\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"杭州西湖风景名胜区-钱王祠\", \"杭州博物馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFFESC91\", \"B0FFFWQGI8\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0MBP71VT3\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B023B082PU\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFK63KYM\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B023B05W5P\", \"B0K314G7HG\", \"B0MBP71VT3\", \"B0KBXCF5HA\", \"B0FFHSLAMX\", \"B023B05XSY\"], \"unused_restaurant_ids\": [\"B023B05W5P\", \"B0K314G7HG\", \"B0MBP71VT3\", \"B0KBXCF5HA\", \"B0FFHSLAMX\", \"B023B05XSY\"], \"suggested_restaurant_id\": \"B0MBP71VT3\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFF00Q4K\", \"B023B032KR\", \"B0KKMR7ORJ\", \"B0HKYGNQHM\", \"B0FFGPEJZJ\", \"B023B08AY0\", \"B023B082PU\", \"B023B05W5P\"], \"unused_restaurant_ids\": [\"B0FFF00Q4K\", \"B023B032KR\", \"B0KKMR7ORJ\", \"B0HKYGNQHM\", \"B0FFGPEJZJ\", \"B023B08AY0\", \"B023B082PU\", \"B023B05W5P\"], \"suggested_restaurant_id\": \"B023B082PU\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFF00Q4K\", \"B023B032KR\", \"B0KKMR7ORJ\", \"B0HKYGNQHM\", \"B0FFGPEJZJ\", \"B023B08AY0\", \"B023B082PU\", \"B023B05W5P\"], \"unused_restaurant_ids\": [\"B0FFF00Q4K\", \"B023B032KR\", \"B0KKMR7ORJ\", \"B0HKYGNQHM\", \"B0FFGPEJZJ\", \"B023B08AY0\", \"B023B05W5P\", \"B0KUXL3VHS\"], \"suggested_restaurant_id\": \"B0FFF00Q4K\"}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"南宋德寿宫遗址博物馆\", \"晓霞弄\", \"五柳巷历史街区\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0HGNGK3FG\", \"B0IAVN9P4G\", \"B0FFFA3PD5\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0G1OCEJFI\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B023B05W5P\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0K314G7HG\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFH0UM9G\", \"B0K314G7HG\", \"B0FFIOWE1Z\", \"B0FFH5DUCJ\", \"B0FFHSLAMX\"], \"unused_restaurant_ids\": [\"B0FFH0UM9G\", \"B0K314G7HG\", \"B0FFIOWE1Z\", \"B0FFH5DUCJ\", \"B0FFHSLAMX\"], \"suggested_restaurant_id\": \"B0FFH0UM9G\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B023B032KR\", \"B0HKYGNQHM\", \"B0FFGPEJZJ\", \"B023B08AY0\", \"B023B082PU\", \"B023B05W5P\", \"B0KUXL3VHS\", \"B0FFKUN5I7\"], \"unused_restaurant_ids\": [\"B023B032KR\", \"B0HKYGNQHM\", \"B0FFGPEJZJ\", \"B023B08AY0\", \"B023B05W5P\", \"B0KUXL3VHS\", \"B0FFKUN5I7\", \"B0HDXC9STO\"], \"suggested_restaurant_id\": \"B023B05W5P\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0K2XLDQIZ\", \"B0FFH0UM9G\", \"B023B091EQ\", \"B0FFF00Q4K\", \"B023B032KR\", \"B0FFG2X36A\", \"B0HKYGNQHM\", \"B0JA2DKF8B\"], \"unused_restaurant_ids\": [\"B0K2XLDQIZ\", \"B0FFH0UM9G\", \"B023B091EQ\", \"B0FFF00Q4K\", \"B023B032KR\", \"B0FFG2X36A\", \"B0HKYGNQHM\", \"B0JA2DKF8B\"], \"suggested_restaurant_id\": \"B0K2XLDQIZ\"}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"吴山景区-城隍阁景区\", \"胡庆馀堂中药博物馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFG49JKW\", \"B0FFFEL34K\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0MBP71VT3\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B023B08AY0\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFK63KYM\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0K314G7HG\", \"B0FFHSLAMX\"], \"unused_restaurant_ids\": [\"B0FFHSLAMX\"], \"suggested_restaurant_id\": \"B0K314G7HG\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B023B032KR\", \"B0KKMR7ORJ\", \"B0HKYGNQHM\", \"B0FFGPEJZJ\", \"B023B08AY0\", \"B023B082PU\", \"B023B05W5P\", \"B0KUXL3VHS\"], \"unused_restaurant_ids\": [\"B023B032KR\", \"B0KKMR7ORJ\", \"B0HKYGNQHM\", \"B0FFGPEJZJ\", \"B023B08AY0\", \"B0KUXL3VHS\", \"B0FFKUN5I7\", \"B0FFFA80YB\"], \"suggested_restaurant_id\": \"B023B08AY0\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFF00Q4K\", \"B023B032KR\", \"B0KKMR7ORJ\", \"B0HKYGNQHM\", \"B0FFGPEJZJ\", \"B023B08AY0\", \"B023B082PU\", \"B023B05W5P\"], \"unused_restaurant_ids\": [\"B0FFF00Q4K\", \"B023B032KR\", \"B0KKMR7ORJ\", \"B0HKYGNQHM\", \"B0FFGPEJZJ\", \"B0KUXL3VHS\", \"B0FFKUN5I7\", \"B0FFFA80YB\"], \"suggested_restaurant_id\": \"B0FFK63KYM\"}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。suggested_restaurant_id是跨餐次匹配后的真实候选建议，保持布局时可优先采用以避免局部贪心导致重复；实际路线和预算仍需复核。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「晓霞弄」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+    ],
+    "usage": {
+      "prompt_tokens": 29706,
+      "completion_tokens": 2313,
+      "llm_calls": 3
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 949,
+      "subtotal": 949,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 949 元 = 949 元。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "布丁精选酒店(杭州武林广场西湖文化广场地铁站店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "tool_call_count": 42,
+    "hotel_source": "agent",
+    "final_days": 3,
+    "final_weather_days": 3
+  },
+  "request": {
+    "city": "杭州",
+    "start_date": "2026-10-20",
+    "travel_days": 3,
+    "transportation": "公共交通",
+    "accommodation": "经济型酒店",
+    "preferences": [],
+    "must_visit": [],
+    "free_text_input": "只在市区慢游，不要换酒店，不去远郊",
+    "requirements": {
+      "hotel": {
+        "stay_policy": "must_same"
+      }
+    }
+  },
+  "expect": {
+    "success": true,
+    "days": 3
+  },
+  "exception": null,
+  "warnings": [
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFH0UM9G,B0K314G7HG,B0FFIOWE1Z,B0FFH5DUCJ,B0FFHSLAMX",
+    "2026-10-21 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0K314G7HG,B0FFHSLAMX",
+    "2026-10-22 breakfast 重复餐厅 B0MBP71VT3，附近尚有未使用候选：B0FFHSLAMX",
+    "2026-10-22 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-22 dinner 重复餐厅 B0FFK63KYM，附近尚有未使用候选：B0FFF00Q4K,B023B032KR,B0KKMR7ORJ,B0HKYGNQHM,B0FFGPEJZJ,B0KUXL3VHS,B0FFKUN5I7,B0FFFA80YB",
+    "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+    "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「晓霞弄」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-20：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+    "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+    "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-21：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+    "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+    "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+  ],
+  "message": "",
+  "started_at": "2026-10-20T01:25:11"
+}

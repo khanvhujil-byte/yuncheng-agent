@@ -84,6 +84,13 @@ class TripState(TypedDict):
 
     # ---- 输入（只读，所有节点都能看）----
     request: TripRequest  # 用户填的原始请求
+    transport_candidates: dict
+    transport_candidate_key: str
+    transport_warnings: list
+    platform_hotel_key: str
+    flyai_ticket_outcomes: dict
+    flyai_ticket_queries: int
+    flyai_ticket_elapsed_seconds: float
 
     # ---- validate_city 产出 ----
     city_center: Optional[Location]  # 城市中心坐标；解析失败为 None，此时直接返回 400 CITY_NOT_FOUND
@@ -120,6 +127,8 @@ class TripState(TypedDict):
     ticket_lookup_results: Dict[str, object]
     ticket_estimates: Dict[str, object]
     ticket_estimate_attempted: bool
+    ticket_estimate_attempted_ids: List[str]
+    ticket_estimate_calls: int
     planning_started_at: float
     planning_calls: int
     composition_valid: bool
@@ -131,8 +140,16 @@ class TripState(TypedDict):
 
     # ---- resolve_hotel 产出（v0.2：后置，因为要看到真实行程）----
     hotels: List[Hotel]  # 候选池：选址用，也可给前端当「备选」展示
+    accommodation_version: int
+    stay_route_hints: list
+    stay_locks: dict
+    trip_endpoints: dict
+    regional_weather: list
+    regional_hotel_queries: list
+    planning_data_requests: list
+    planner_draft: Optional[dict]  # 仅内部拒绝草稿；修复后仍需绑定和独立复核
     hotel_candidate_key: str  # 城市/日期/住宿需求签名；复用候选后仍按新景点重排
-    hotel: Optional[Hotel]  # 最终住宿：**行程级一家**（不是每天一个）
+    hotel: Optional[Hotel]  # 旧版单酒店/v11连住摘要；v11住宿事实以plan.stays为准
 
     # ---- compose_plan 产出 ----
     plan: Optional[TripPlan]  # Agent 4：最终计划。也是 TripState 里唯一对外暴露的计划字段

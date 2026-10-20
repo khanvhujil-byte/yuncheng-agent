@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue'
 import { ArrowRight, ArrowUp, BookOpen, Check, ChevronDown, Compass, Heart, LoaderCircle, LogOut, MapPin, Plus, Route, ShieldCheck, SlidersHorizontal, Utensils, X } from 'lucide-vue-next'
+import BrandLockup from '@/components/BrandLockup.vue'
 import JourneyArtwork from '@/components/JourneyArtwork.vue'
 import ExportPanel from '@/components/ExportPanel.vue'
 import TripSummary from '@/components/TripSummary.vue'
 import DayTimeline from '@/components/DayTimeline.vue'
 import PlanModuleEditor from '@/components/PlanModuleEditor.vue'
 import RequirementPanel from '@/components/RequirementPanel.vue'
+import JourneyInputs from '@/components/JourneyInputs.vue'
+import TravelSearch from '@/components/TravelSearch.vue'
 import { preparePlanForDisplay } from '@/utils/itinerary'
 import { DialogError, hasSession, login, request } from '@/services/dialog'
 import type { ClarificationAnswer, Citation, Conversation, Document, ModuleEdit, Preference, Quality, Slots, Turn, TurnResult } from '@/services/dialog'
@@ -26,7 +29,9 @@ const busy = ref(false)
 const pending = ref<Turn | null>(null)
 const citations = ref<Citation[]>([])
 const candidate = ref<TripPlanResponse | null>(null)
+const moduleEditor = ref<InstanceType<typeof PlanModuleEditor> | null>(null)
 const editor = reactive({ city: '', start_date: '', travel_days: 3, transportation: '公共交通', accommodation: '经济型酒店',
+  origin_city: '', intercity_mode: 'none' as 'none' | 'train' | 'flight' | 'auto', return_trip: true, adult_count: 1, room_count: 1,
   budget_limit: '', nights: '', preferences: '', must_visit: '', fixed_hotel: '', fixed_hotel_address: '', free_text_input: '' })
 const pref = reactive({ key: 'transportation', value: '公共交通' })
 const doc = reactive({ title: '', source: '', content: '', valid_until: '' })
@@ -69,6 +74,10 @@ function syncEditor(slots: Slots) {
   for (const key of Object.keys(editor)) {
     const value = slots[key]
     if (key === 'travel_days') editor.travel_days = typeof value === 'number' ? value : 3
+    else if (key === 'adult_count') editor.adult_count = typeof value === 'number' ? value : 1
+    else if (key === 'room_count') editor.room_count = typeof value === 'number' ? value : 1
+    else if (key === 'return_trip') editor.return_trip = typeof value === 'boolean' ? value : true
+    else if (key === 'intercity_mode') editor.intercity_mode = (value || 'none') as typeof editor.intercity_mode
     else if (key === 'transportation') editor.transportation = String(value || '公共交通')
     else if (key === 'accommodation') editor.accommodation = String(value || '经济型酒店')
     else (editor as Record<string, unknown>)[key] = Array.isArray(value) ? value.join('，') : String(value ?? '')
@@ -149,35 +158,35 @@ onMounted(() => { if (signedIn.value) void task(async () => { await refresh(); c
 </script>
 
 <template>
-  <div class="roam-app">
+  <div class="yuncheng-app">
     <header class="topbar">
-      <router-link to="/chat" class="brand" aria-label="漫游，回到旅行规划"><span class="brand-icon"><Compass :size="25" :stroke-width="1.5" /></span><span>漫游<small>ROAM</small></span></router-link>
+      <router-link to="/chat" class="brand" aria-label="云程，回到旅行规划"><BrandLockup /></router-link>
       <nav class="top-nav" aria-label="主导航"><router-link to="/chat" class="active">旅行工作台</router-link><router-link to="/">快速规划</router-link><router-link to="/community">旅行社区 <ArrowRight :size="13" /></router-link></nav>
       <div class="topbar-end"><span class="product-note">把时间，留给喜欢的事。</span><span v-if="signedIn" class="account-avatar" :title="accountName">{{ accountName.slice(0, 1).toUpperCase() }}</span><a v-else href="#welcome" class="nav-start">开始一段旅行 <ArrowRight :size="14" /></a></div>
     </header>
 
     <main v-if="!signedIn" id="welcome" class="welcome">
       <section class="welcome-story">
-        <span class="eyebrow"><span></span> LESS PLANNING. MORE WANDERING.</span>
+
         <h1>去喜欢的地方，<br>过几天<span>慢生活。</span><svg viewBox="0 0 230 15" aria-hidden="true"><path d="M3 10Q107-4 226 7" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/></svg></h1>
-        <p class="welcome-copy">沿着街巷找一家小馆，在湖边多坐一会儿。<br>把想去的地方告诉漫游，剩下的，一起慢慢安排。</p>
+        <p class="welcome-copy">沿着街巷找一家小馆，在湖边多坐一会儿。<br>把想去的地方告诉云程，剩下的，一起慢慢安排。</p>
         <JourneyArtwork />
         <div class="welcome-features"><span><Utensils :size="17" /> 认真吃好每一餐</span><span><Route :size="17" /> 少折返，多感受</span><span><SlidersHorizontal :size="17" /> 行程随心微调</span></div>
       </section>
       <section class="auth-card" aria-labelledby="auth-title">
         <span class="small-compass"><Compass :size="25" :stroke-width="1.4" /></span>
-        <p class="eyebrow">A JOURNEY OF YOUR OWN</p><h2 id="auth-title">{{ authMode === 'login' ? '欢迎回来，旅行者。' : '你的下一站，从这里开始。' }}</h2><p class="auth-description">保存每一次出发，也记住你的旅行偏好。</p>
+        <h2 id="auth-title">{{ authMode === 'login' ? '欢迎回来，旅行者。' : '你的下一站，从这里开始。' }}</h2><p class="auth-description">保存每一次出发，也记住你的旅行偏好。</p>
         <div class="auth-tabs" role="tablist" aria-label="账号操作"><button role="tab" :aria-selected="authMode === 'login'" :class="{ selected: authMode === 'login' }" @click="authMode = 'login'">登录</button><button role="tab" :aria-selected="authMode === 'register'" :class="{ selected: authMode === 'register' }" @click="authMode = 'register'">创建账号</button></div>
         <form @submit.prevent="authenticate(authMode === 'register')">
           <label class="field">用户名<input v-model="account.username" autocomplete="username" placeholder="3～32 位字母、数字或下划线" minlength="3" maxlength="32" required :disabled="busy"></label>
           <label class="field">密码<input v-model="account.password" type="password" :autocomplete="authMode === 'register' ? 'new-password' : 'current-password'" placeholder="至少 10 个字符" minlength="10" required :disabled="busy"></label>
           <p v-if="error" class="error-banner" role="alert">{{ error }}</p>
-          <button class="button primary auth-submit" :disabled="busy" type="submit"><LoaderCircle v-if="busy" :size="17" class="spin" /><span>{{ busy ? '正在准备你的空间…' : authMode === 'login' ? '开启我的旅行' : '创建账号，开始漫游' }}</span><ArrowRight v-if="!busy" :size="17" /></button>
+          <button class="button primary auth-submit" :disabled="busy" type="submit"><LoaderCircle v-if="busy" :size="17" class="spin" /><span>{{ busy ? '正在准备你的空间…' : authMode === 'login' ? '开启我的旅行' : '创建账号，开始旅程' }}</span><ArrowRight v-if="!busy" :size="17" /></button>
         </form>
         <div class="auth-footnote"><ShieldCheck :size="15" /><span>你的会话、偏好与旅行资料，保存在自己的账号中。</span></div>
         <div class="auth-card-bottom"><span>每一份行程，都可以慢慢打磨。</span><span>✳</span></div>
       </section>
-      <footer class="welcome-footer"><span>漫游 ROAM · 为每一种旅行节奏</span><span>好好规划，自在出发。</span></footer>
+      <footer class="welcome-footer"><span>云程 YUNCHENG · 为每一种旅行节奏</span><span>好好规划，自在出发。</span></footer>
     </main>
 
     <div v-else class="workbench">
@@ -186,15 +195,15 @@ onMounted(() => { if (signedIn.value) void task(async () => { await refresh(); c
         <div class="sidebar-label">我的空间 <span>YOUR SPACE</span></div>
         <nav class="side-nav" aria-label="旅行空间"><button :class="{ selected: activePanel === 'trips' }" :aria-pressed="activePanel === 'trips'" @click="activePanel = 'trips'"><Compass :size="18" /> 我的行程 <span>{{ conversations.length }}</span></button><button :class="{ selected: activePanel === 'preferences' }" :aria-pressed="activePanel === 'preferences'" @click="activePanel = 'preferences'"><Heart :size="18" /> 旅行偏好</button><button :class="{ selected: activePanel === 'documents' }" :aria-pressed="activePanel === 'documents'" @click="activePanel = 'documents'"><BookOpen :size="18" /> 旅行资料 <span v-if="documents.length">{{ documents.length }}</span></button></nav>
         <div class="sidebar-label trip-list-label">最近的旅程 <span>{{ String(conversations.length).padStart(2, '0') }}</span></div>
-        <div class="trip-list"><button v-for="(c, index) in conversations" :key="c.conversation_id" :class="{ selected: c.conversation_id === current?.conversation_id }" :disabled="busy || !!pending" @click="activePanel = 'trips'; task(() => open(c.conversation_id))"><span class="trip-list-icon"><MapPin :size="15" /></span><span><strong>{{ c.conversation_id === current?.conversation_id && current.slots.city ? `${current.slots.city}漫游计划` : `旅行计划 ${String(conversations.length - index).padStart(2, '0')}` }}</strong><small>{{ dateLabel(c.updated_at) }} · {{ c.conversation_id === current?.conversation_id ? '正在编辑' : '已保存' }}</small></span><span v-if="c.conversation_id === current?.conversation_id" class="live-dot"></span></button></div>
-        <div class="mobile-trip-controls"><label class="sr-only" for="mobile-trip-select">切换已保存的旅程</label><select id="mobile-trip-select" :value="current?.conversation_id" :disabled="busy || !!pending" @change="activePanel = 'trips'; task(() => open(($event.target as HTMLSelectElement).value))"><option v-for="(c, index) in conversations" :key="c.conversation_id" :value="c.conversation_id">{{ c.conversation_id === current?.conversation_id && current.slots.city ? `${current.slots.city}漫游计划` : `旅行计划 ${conversations.length - index}` }} · {{ dateLabel(c.updated_at) }}</option></select><button class="text-button" aria-label="查看运行状态" @click="activePanel = 'quality'"><ShieldCheck :size="17" /></button><button class="text-button" :disabled="busy" aria-label="退出登录" @click="logout"><LogOut :size="16" /></button></div>
+        <div class="trip-list"><button v-for="(c, index) in conversations" :key="c.conversation_id" :class="{ selected: c.conversation_id === current?.conversation_id }" :disabled="busy || !!pending" @click="activePanel = 'trips'; task(() => open(c.conversation_id))"><span class="trip-list-icon"><MapPin :size="15" /></span><span><strong>{{ c.conversation_id === current?.conversation_id && current.slots.city ? `${current.slots.city}旅行计划` : `旅行计划 ${String(conversations.length - index).padStart(2, '0')}` }}</strong><small>{{ dateLabel(c.updated_at) }} · {{ c.conversation_id === current?.conversation_id ? '正在编辑' : '已保存' }}</small></span><span v-if="c.conversation_id === current?.conversation_id" class="live-dot"></span></button></div>
+        <div class="mobile-trip-controls"><label class="sr-only" for="mobile-trip-select">切换已保存的旅程</label><select id="mobile-trip-select" :value="current?.conversation_id" :disabled="busy || !!pending" @change="activePanel = 'trips'; task(() => open(($event.target as HTMLSelectElement).value))"><option v-for="(c, index) in conversations" :key="c.conversation_id" :value="c.conversation_id">{{ c.conversation_id === current?.conversation_id && current.slots.city ? `${current.slots.city}旅行计划` : `旅行计划 ${conversations.length - index}` }} · {{ dateLabel(c.updated_at) }}</option></select><button class="text-button" aria-label="查看运行状态" @click="activePanel = 'quality'"><ShieldCheck :size="17" /></button><button class="text-button" :disabled="busy" aria-label="退出登录" @click="logout"><LogOut :size="16" /></button></div>
         <div class="sidebar-bottom"><div class="slow-note"><span>TRAVEL AT YOUR OWN PACE</span><p>不必赶路，<br>好风景值得多停一会儿。</p><Compass :size="42" :stroke-width=".8" /></div><button class="side-utility" :class="{ selected: activePanel === 'quality' }" @click="activePanel = 'quality'"><ShieldCheck :size="16" /> 运行状态</button><button class="side-utility" :disabled="busy" @click="logout"><LogOut :size="16" /> 退出登录</button></div>
       </aside>
 
       <main class="workspace">
         <div v-if="error" class="error-banner" role="alert">{{ error }}</div>
         <template v-if="activePanel === 'trips'">
-          <div class="workspace-heading"><div><p class="eyebrow">YOUR NEXT CHAPTER</p><h1>{{ tripTitle }}</h1><p>把想法交给漫游，把期待留给出发。</p></div><div class="step-label"><span :class="{ complete: ready }">01 <Check v-if="ready" :size="11" /></span> 聊聊想法 <i></i><span :class="{ complete: current?.result?.success }">02</span> 安排行程</div></div>
+          <div class="workspace-heading"><div><h1>{{ tripTitle }}</h1><p>把想法交给云程，把期待留给出发。</p></div><div class="step-label"><span :class="{ complete: ready }">01 <Check v-if="ready" :size="11" /></span> 聊聊想法 <i></i><span :class="{ complete: current?.result?.success }">02</span> 安排行程</div></div>
           <div class="planning-layout">
             <section v-if="current" class="planning-panel">
               <div class="panel-heading"><span class="panel-symbol"><SlidersHorizontal :size="18" /></span><div><h2>这次，想怎么旅行？</h2><p>从一个目的地，或一个小小的想法开始。</p></div></div>
@@ -206,11 +215,13 @@ onMounted(() => { if (signedIn.value) void task(async () => { await refresh(); c
                   <div class="question-options"><button v-for="(option, index) in question.options" :key="index" :disabled="busy || !!pending" @click="send('answer', undefined, undefined, { question_id: question.question_id, option_index: index })">{{ option.label }}</button></div>
                 </article>
               </section>
-              <div class="composer"><label class="sr-only" for="trip-message">告诉漫游你的旅行想法</label><textarea id="trip-message" v-model="message" :disabled="busy || !!pending" rows="3" placeholder="想找一家地道小馆，也想在西湖边发发呆……" @keydown.ctrl.enter="send('message')"></textarea><div class="composer-footer"><span>说说你的想法 · Ctrl + Enter 发送</span><button class="send-button" :disabled="busy || (!message.trim() && !pending)" :aria-label="pending ? '重试并确认上次操作' : '发送旅行想法'" @click="send('message')"><LoaderCircle v-if="busy" :size="17" class="spin" /><ArrowUp v-else :size="19" /></button></div></div>
+              <div class="composer"><label class="sr-only" for="trip-message">告诉云程你的旅行想法</label><textarea id="trip-message" v-model="message" :disabled="busy || !!pending" rows="3" placeholder="想找一家地道小馆，也想在西湖边发发呆……" @keydown.ctrl.enter="send('message')"></textarea><div class="composer-footer"><span>说说你的想法 · Ctrl + Enter 发送</span><button class="send-button" :disabled="busy || (!message.trim() && !pending)" :aria-label="pending ? '重试并确认上次操作' : '发送旅行想法'" @click="send('message')"><LoaderCircle v-if="busy" :size="17" class="spin" /><ArrowUp v-else :size="19" /></button></div></div>
               <div class="or-divider"><span>也可以，直接告诉我</span></div>
               <details class="travel-form" :open="formOpen || !ready"><summary>完善旅行信息 <ChevronDown :size="15" /></summary>
                 <fieldset :disabled="busy || !!pending">
-                  <div class="fields"><label class="field">目的地<div class="input-icon"><MapPin :size="15" /><input v-model="editor.city" placeholder="你想去的城市"></div></label><label class="field">出发日期<input v-model="editor.start_date" type="date"></label><label class="field">旅行天数<div class="number-field"><input v-model.number="editor.travel_days" type="number" min="1" max="30"><span>天</span></div></label><label class="field">交通方式<select v-model="editor.transportation"><option>公共交通</option><option>自驾</option><option>步行</option><option>混合</option></select></label><label class="field">住宿偏好<select v-model="editor.accommodation"><option>经济型酒店</option><option>舒适型酒店</option><option>豪华酒店</option><option>民宿</option></select></label><label class="field">预算上限 <span class="optional">选填</span><div class="number-field"><input v-model="editor.budget_limit" type="number" min="1" placeholder="暂时不限"><span>元</span></div></label></div>
+                  <JourneyInputs :model="editor" :disabled="busy || !!pending" />
+                  <TravelSearch :city="editor.city" :origin="editor.origin_city" :start-date="editor.start_date" :days="editor.travel_days" :disabled="busy || !!pending" />
+                  <div class="fields"><label class="field">目的地<div class="input-icon"><MapPin :size="15" /><input v-model="editor.city" placeholder="你想去的城市"></div></label><label class="field">出发日期<input v-model="editor.start_date" type="date"></label><label class="field">旅行天数<div class="number-field"><input v-model.number="editor.travel_days" type="number" min="1" max="30"><span>天</span></div></label><label class="field">市内交通<select v-model="editor.transportation"><option>公共交通</option><option>自驾</option><option>步行</option><option>混合</option></select></label><label class="field">住宿偏好<select v-model="editor.accommodation"><option>经济型酒店</option><option>舒适型酒店</option><option>豪华酒店</option><option>民宿</option></select></label><label class="field">预算上限 <span class="optional">选填</span><div class="number-field"><input v-model="editor.budget_limit" type="number" min="1" placeholder="暂时不限"><span>元</span></div></label></div>
                   <div class="interest-field"><span>你喜欢的旅行方式</span><div class="interest-chips"><button v-for="interest in interestOptions" :key="interest" type="button" :aria-pressed="editor.preferences.split(/[,，、]/).includes(interest)" :class="{ selected: editor.preferences.split(/[,，、]/).includes(interest) }" @click="toggleInterest(interest)"><Utensils v-if="interest === '美食'" :size="12" />{{ interest }}</button></div><label class="sr-only" for="other-interests">兴趣偏好，可自定义</label><input id="other-interests" v-model="editor.preferences" class="custom-interest" placeholder="或添加其他兴趣，用逗号分隔"></div>
                   <details class="extra-settings"><summary><Plus :size="13" /> 必去景点、已订酒店与其他要求</summary><div class="fields"><label class="field">必去景点<input v-model="editor.must_visit" placeholder="多个景点用逗号分隔"></label><label class="field">住宿晚数<input v-model="editor.nights" type="number" min="0" :placeholder="`默认 ${Math.max(0, editor.travel_days - 1)} 晚`"></label><label class="field">已订酒店<input v-model="editor.fixed_hotel" placeholder="已预订的酒店名称"></label><label class="field">酒店地址<input v-model="editor.fixed_hotel_address" placeholder="帮助找到正确的分店"></label></div><label class="field">额外要求<textarea v-model="editor.free_text_input" rows="2" placeholder="例如：希望午后多留一些休息时间"></textarea></label></details>
                   <button class="button secondary save-requirements" type="button" @click="saveDraft">保存这次旅行要求 <Check :size="15" /></button>
@@ -231,40 +242,40 @@ onMounted(() => { if (signedIn.value) void task(async () => { await refresh(); c
               <template v-if="shown?.data">
                 <div class="canvas-heading"><span><span class="live-dot"></span> {{ current?.pending_edit ? '修改预览' : '我的旅行手册' }}</span><span>{{ shown.data.days.length }} DAYS · {{ shown.data.city }}</span></div>
                 <p v-if="current?.pending_edit" class="notice">这是一份修改预览，确认后才会替换已保存的行程。</p>
-                <TripSummary :plan="shown.data" :preferences="[]" hide-actions />
+                <TripSummary :plan="shown.data" :preferences="[]" hide-actions :editable="!candidate && !current?.edit_preview && !busy && !pending && !current?.pending_edit && !current?.clarifications?.length" @edit-stay="index => moduleEditor?.openStay(index)" />
                 <div class="day-navigation" aria-label="选择行程日期"><button :class="{ selected: selectedDay === null }" :aria-pressed="selectedDay === null" @click="selectedDay = null">完整行程</button><button v-for="(day, index) in shown.data.days" :key="day.date" :class="{ selected: selectedDay === index }" :aria-pressed="selectedDay === index" @click="selectedDay = index">DAY {{ index + 1 }}</button></div>
                 <DayTimeline :days="visibleDays" :sources="shown.data.sources" :hotel="shown.data.hotel" />
                 <p v-if="current?.result?.data && !current.result.success" class="notice">这份草稿尚未通过校验。可修改具体模块，全部校验通过后才会保存为正式行程。</p>
-                <PlanModuleEditor v-if="current?.result?.data" :conversation-id="current.conversation_id" :plan="current.result.data" :disabled="busy || !!pending || !!current.pending_edit || !!current.clarifications?.length" @edit="edit => send('edit', undefined, edit)" />
+                <PlanModuleEditor v-if="current?.result?.data" ref="moduleEditor" :conversation-id="current.conversation_id" :plan="current.result.data" :disabled="busy || !!pending || !!current.pending_edit || !!current.clarifications?.length" @edit="edit => send('edit', undefined, edit)" />
                 <details class="version-history export-options"><summary><BookOpen :size="15" /> 把旅行手册带走或分享 <ChevronDown :size="14" /></summary><ExportPanel :plan="shown.data" :preferences="Array.isArray(current?.slots.preferences) ? current.slots.preferences : []" /></details>
                 <details v-if="versions.length" class="version-history"><summary><BookOpen :size="15" /> 旅行手册的 {{ versions.length }} 个版本 <ChevronDown :size="14" /></summary><article v-for="(v, index) in versions" :key="v.run_id"><span>版本 {{ index + 1 }}<small>{{ dateLabel(v.created_at) }} · {{ v.result.success ? '通过校验' : '尚未完成' }}</small></span><button class="text-button" @click="candidate = v.result; selectedDay = null">查看版本 <ArrowRight :size="13" /></button></article></details>
               </template>
               <template v-else>
-                <div class="canvas-heading"><span><span class="live-dot"></span> 旅程，正在酝酿</span><span>MAKE ROOM FOR GOOD MOMENTS</span></div>
-                <div class="empty-canvas"><span class="eyebrow">A LITTLE INSPIRATION</span><h2>一城一味，<br>总有值得出发的理由。</h2><p>景点、美食、住处与路上的时间，<br>我们会把它们串成适合你的节奏。</p><JourneyArtwork /><div class="inspiration-cards"><button @click="useSuggestion('杭州', '自然风光，美食')"><span class="destination-icon"><MapPin :size="20" /></span><strong>杭州<small>湖山之间，寻一口鲜</small></strong><ArrowRight :size="15" /></button><button @click="useSuggestion('成都', '美食，历史文化')"><span class="destination-icon food"><Utensils :size="20" /></span><strong>成都<small>茶馆小坐，街头寻味</small></strong><ArrowRight :size="15" /></button><button @click="useSuggestion('北京', '历史文化，美食')"><span class="destination-icon culture"><Compass :size="20" /></span><strong>北京<small>拐进胡同，遇见日常</small></strong><ArrowRight :size="15" /></button></div><div class="canvas-bottom"><span><Utensils :size="13" /> 当地美食</span><span><Route :size="13" /> 顺路安排</span><span><SlidersHorizontal :size="13" /> 随时微调</span></div></div>
+                <div class="canvas-heading"><span><span class="live-dot"></span> 旅程，正在酝酿</span></div>
+                <div class="empty-canvas"><h2>一城一味，总有值得出发的理由。</h2><JourneyArtwork /><div class="inspiration-cards"><button @click="useSuggestion('杭州', '自然风光，美食')"><span class="destination-icon"><MapPin :size="20" /></span><strong>杭州<small>湖山之间，寻一口鲜</small></strong><ArrowRight :size="15" /></button><button @click="useSuggestion('成都', '美食，历史文化')"><span class="destination-icon food"><Utensils :size="20" /></span><strong>成都<small>茶馆小坐，街头寻味</small></strong><ArrowRight :size="15" /></button><button @click="useSuggestion('北京', '历史文化，美食')"><span class="destination-icon culture"><Compass :size="20" /></span><strong>北京<small>拐进胡同，遇见日常</small></strong><ArrowRight :size="15" /></button></div><div class="canvas-bottom"><span><Utensils :size="13" /> 当地美食</span><span><Route :size="13" /> 顺路安排</span><span><SlidersHorizontal :size="13" /> 随时微调</span></div></div>
               </template>
             </section>
           </div>
         </template>
 
-        <section v-else-if="activePanel === 'preferences'" class="utility-page"><p class="eyebrow">THE WAY YOU TRAVEL</p><h1>记住你喜欢的节奏。</h1><p class="utility-intro">明确保存后，偏好会用于新的旅行会话。这次聊天里的想法不会自动变成长期偏好。</p><div class="utility-card"><h2><Heart :size="20" /> 我的旅行偏好</h2><div v-if="!preferences.some(p => p.active)" class="utility-empty">还没有保存偏好。从喜欢的交通、住宿或美食开始吧。</div><ul class="saved-list"><li v-for="p in preferences.filter(p => p.active)" :key="p.key"><span><strong>{{ ({ transportation: '交通方式', accommodation: '住宿偏好', preferences: '旅行兴趣', budget_limit: '预算上限' } as Record<string, string>)[p.key] || p.key }}</strong><small>{{ Array.isArray(p.value) ? p.value.join('、') : p.value }}</small></span><button class="text-button" :disabled="busy" @click="task(async () => { await request(`/preferences/${p.key}?expected_version=${p.version}`, 'DELETE'); await refresh() })">撤回 <X :size="13" /></button></li></ul><div class="fields"><label class="field">偏好类型<select v-model="pref.key"><option value="transportation">交通方式</option><option value="accommodation">住宿偏好</option><option value="preferences">兴趣</option><option value="budget_limit">预算上限</option></select></label><label class="field">你的偏好<input v-model="pref.value" placeholder="例如：公共交通"></label></div><button class="button primary" :disabled="busy" @click="savePreference">保存我的偏好 <Check :size="15" /></button></div></section>
-        <section v-else-if="activePanel === 'documents'" class="utility-page"><p class="eyebrow">YOUR TRAVEL NOTEBOOK</p><h1>好好收着，出发要用。</h1><p class="utility-intro">把预约说明、退改规则和旅行笔记放在这里。询问时可以查看原文和出处。</p><div class="utility-card"><h2><BookOpen :size="20" /> 添加旅行资料</h2><div class="fields"><label class="field">资料标题<input v-model="doc.title" placeholder="例如：博物馆预约须知"></label><label class="field">资料出处<input v-model="doc.source" placeholder="网页地址或文件名"></label></div><label class="field">正文<textarea v-model="doc.content" rows="6" placeholder="粘贴想保存的资料内容"></textarea></label><label class="field">有效期 <span class="optional">选填</span><input v-model="doc.valid_until" type="date"></label><button class="button primary" :disabled="busy || !doc.title || !doc.content" @click="task(async () => { await request('/knowledge/documents', 'POST', { ...doc, valid_until: doc.valid_until || null }); doc.content = ''; await refresh() })">保存这份资料 <Plus :size="15" /></button><ul class="saved-list"><li v-for="d in documents" :key="d.document_id"><span><strong>{{ d.title }}</strong><small>{{ d.source }}</small></span><button class="text-button" :disabled="busy" @click="task(async () => { await request(`/knowledge/documents/${d.document_id}`, 'DELETE'); await refresh() })">删除 <X :size="13" /></button></li></ul></div></section>
-        <section v-else class="utility-page"><p class="eyebrow">BEHIND YOUR JOURNEY</p><h1>每次安排，都有迹可循。</h1><p class="utility-intro">这里展示真实运行记录中的统计，帮助了解规划与工具的稳定性。</p><div class="utility-card"><h2><ShieldCheck :size="20" /> 运行状态</h2><button class="button secondary" :disabled="busy" @click="task(async () => { quality = await request<Quality>('/observability/quality') })">查看最新统计 <ArrowRight :size="15" /></button><div v-if="quality" class="quality-grid"><div><span>规划次数</span><strong>{{ quality.sample_runs }}</strong></div><div><span>首次工具成功率</span><strong>{{ (quality.first_success_rate * 100).toFixed(1) }}<small>%</small></strong></div><div><span>重试率</span><strong>{{ (quality.retry_rate * 100).toFixed(1) }}<small>%</small></strong></div><div><span>最终成功率</span><strong>{{ (quality.final_success_rate * 100).toFixed(1) }}<small>%</small></strong></div><p v-for="alert in quality.alerts" :key="alert.code" class="notice">{{ alert.code }}：{{ alert.action }}</p></div></div></section>
-        <footer class="workspace-footer"><span>漫游 ROAM</span><span>认真安排每一次出发。</span></footer>
+        <section v-else-if="activePanel === 'preferences'" class="utility-page"><h1>记住你喜欢的节奏。</h1><p class="utility-intro">明确保存后，偏好会用于新的旅行会话。这次聊天里的想法不会自动变成长期偏好。</p><div class="utility-card"><h2><Heart :size="20" /> 我的旅行偏好</h2><div v-if="!preferences.some(p => p.active)" class="utility-empty">还没有保存偏好。从喜欢的交通、住宿或美食开始吧。</div><ul class="saved-list"><li v-for="p in preferences.filter(p => p.active)" :key="p.key"><span><strong>{{ ({ transportation: '交通方式', accommodation: '住宿偏好', preferences: '旅行兴趣', budget_limit: '预算上限' } as Record<string, string>)[p.key] || p.key }}</strong><small>{{ Array.isArray(p.value) ? p.value.join('、') : p.value }}</small></span><button class="text-button" :disabled="busy" @click="task(async () => { await request(`/preferences/${p.key}?expected_version=${p.version}`, 'DELETE'); await refresh() })">撤回 <X :size="13" /></button></li></ul><div class="fields"><label class="field">偏好类型<select v-model="pref.key"><option value="transportation">交通方式</option><option value="accommodation">住宿偏好</option><option value="preferences">兴趣</option><option value="budget_limit">预算上限</option></select></label><label class="field">你的偏好<input v-model="pref.value" placeholder="例如：公共交通"></label></div><button class="button primary" :disabled="busy" @click="savePreference">保存我的偏好 <Check :size="15" /></button></div></section>
+        <section v-else-if="activePanel === 'documents'" class="utility-page"><h1>好好收着，出发要用。</h1><p class="utility-intro">把预约说明、退改规则和旅行笔记放在这里。询问时可以查看原文和出处。</p><div class="utility-card"><h2><BookOpen :size="20" /> 添加旅行资料</h2><div class="fields"><label class="field">资料标题<input v-model="doc.title" placeholder="例如：博物馆预约须知"></label><label class="field">资料出处<input v-model="doc.source" placeholder="网页地址或文件名"></label></div><label class="field">正文<textarea v-model="doc.content" rows="6" placeholder="粘贴想保存的资料内容"></textarea></label><label class="field">有效期 <span class="optional">选填</span><input v-model="doc.valid_until" type="date"></label><button class="button primary" :disabled="busy || !doc.title || !doc.content" @click="task(async () => { await request('/knowledge/documents', 'POST', { ...doc, valid_until: doc.valid_until || null }); doc.content = ''; await refresh() })">保存这份资料 <Plus :size="15" /></button><ul class="saved-list"><li v-for="d in documents" :key="d.document_id"><span><strong>{{ d.title }}</strong><small>{{ d.source }}</small></span><button class="text-button" :disabled="busy" @click="task(async () => { await request(`/knowledge/documents/${d.document_id}`, 'DELETE'); await refresh() })">删除 <X :size="13" /></button></li></ul></div></section>
+        <section v-else class="utility-page"><h1>每次安排，都有迹可循。</h1><p class="utility-intro">这里展示真实运行记录中的统计，帮助了解规划与工具的稳定性。</p><div class="utility-card"><h2><ShieldCheck :size="20" /> 运行状态</h2><button class="button secondary" :disabled="busy" @click="task(async () => { quality = await request<Quality>('/observability/quality') })">查看最新统计 <ArrowRight :size="15" /></button><div v-if="quality" class="quality-grid"><div><span>规划次数</span><strong>{{ quality.sample_runs }}</strong></div><div><span>首次工具成功率</span><strong>{{ (quality.first_success_rate * 100).toFixed(1) }}<small>%</small></strong></div><div><span>重试率</span><strong>{{ (quality.retry_rate * 100).toFixed(1) }}<small>%</small></strong></div><div><span>最终成功率</span><strong>{{ (quality.final_success_rate * 100).toFixed(1) }}<small>%</small></strong></div><p v-for="alert in quality.alerts" :key="alert.code" class="notice">{{ alert.code }}：{{ alert.action }}</p></div></div></section>
+        <footer class="workspace-footer"><span>云程 YUNCHENG</span><span>认真安排每一次出发。</span></footer>
       </main>
     </div>
   </div>
 </template>
 
 <style scoped>
-.roam-app {
-  --ink: #253e32;
-  --muted: #81877c;
-  --green: #315a43;
-  --line: #e6e7de;
-  --cream: #f7f7f1;
+.yuncheng-app {
+  --ink: var(--yc-ink);
+  --muted: var(--yc-muted);
+  --accent: var(--yc-primary);
+  --line: var(--yc-border);
+  --page-background: var(--yc-page);
   min-height: 100vh;
-  background: var(--cream);
+  background: var(--page-background);
   color: var(--ink);
   font-family: Inter,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
 }
@@ -287,7 +298,7 @@ button:disabled {
 }
 
 button:focus-visible,a:focus-visible,summary:focus-visible {
-  outline: 3px solid #9bb599;
+  outline: 3px solid var(--yc-muted);
   outline-offset: 4px;
 }
 
@@ -315,7 +326,7 @@ button:not(:disabled):active {
   align-items: center;
   gap: 44px;
   border-bottom: 1px solid var(--line);
-  background: #fcfcf8;
+  background: var(--yc-surface);
 }
 
 .brand {
@@ -328,27 +339,16 @@ button:not(:disabled):active {
 .brand-icon {
   width: 40px;
   height: 40px;
-  background: var(--green);
+  background: var(--accent);
   color: #fff;
   border-radius: 13px;
   display: grid;
   place-items: center;
 }
 
-.brand>span:last-child {
-  font-size: 21px;
-  font-weight: 700;
-  letter-spacing: 2px;
-}
 
-.brand small {
-  display: block;
-  font-size: 8px;
-  font-weight: 500;
-  letter-spacing: 4px;
-  margin-top: 1px;
-  color: #788572;
-}
+
+
 
 .top-nav {
   display: flex;
@@ -356,7 +356,7 @@ button:not(:disabled):active {
   gap: 31px;
   height: 100%;
   font-size: 13px;
-  color: #81877d;
+  color: var(--yc-muted);
 }
 
 .top-nav a {
@@ -368,7 +368,7 @@ button:not(:disabled):active {
 }
 
 .top-nav a.active {
-  color: var(--green);
+  color: var(--accent);
   font-weight: 600;
 }
 
@@ -379,12 +379,12 @@ button:not(:disabled):active {
   left: 12px;
   right: 12px;
   bottom: 0;
-  background: var(--green);
+  background: var(--accent);
   border-radius: 2px;
 }
 
 .top-nav a:hover {
-  color: var(--green);
+  color: var(--accent);
 }
 
 .topbar-end {
@@ -396,7 +396,7 @@ button:not(:disabled):active {
 
 .product-note {
   font-size: 11px;
-  color: #8a8e81;
+  color: var(--yc-muted);
 }
 
 .nav-start {
@@ -410,8 +410,8 @@ button:not(:disabled):active {
 .account-avatar {
   width: 34px;
   height: 34px;
-  border: 1px solid #dce1d4;
-  background: #e9eede;
+  border: 1px solid var(--yc-border);
+  background: var(--yc-soft);
   display: grid;
   place-items: center;
   border-radius: 50%;
@@ -421,7 +421,7 @@ button:not(:disabled):active {
 .eyebrow {
   font-size: 9px;
   letter-spacing: 2.4px;
-  color: #84907e;
+  color: var(--yc-muted);
   font-weight: 600;
 }
 
@@ -461,7 +461,7 @@ button:not(:disabled):active {
 }
 
 .welcome-story h1>span {
-  color: #647c53;
+  color: var(--yc-text);
 }
 
 .welcome-story h1>svg {
@@ -470,12 +470,12 @@ button:not(:disabled):active {
   height: 16px;
   bottom: -3px;
   left: 181px;
-  color: #c5b581;
+  color: var(--yc-muted);
 }
 
 .welcome-copy {
   font-size: 13px;
-  color: #888e80;
+  color: var(--yc-muted);
   line-height: 2;
   margin-bottom: 24px;
 }
@@ -491,7 +491,7 @@ button:not(:disabled):active {
   gap: 10px;
   margin-top: 26px;
   font-size: 11px;
-  color: #737f6d;
+  color: var(--yc-muted);
 }
 
 .welcome-features>span {
@@ -501,11 +501,11 @@ button:not(:disabled):active {
 }
 
 .auth-card {
-  background: #fffefb;
-  border: 1px solid #e7e7dc;
+  background: var(--yc-surface);
+  border: 1px solid var(--yc-border);
   border-radius: 21px;
   padding: 38px 35px 0;
-  box-shadow: 0 16px 50px #3c4e3610;
+  box-shadow: 0 16px 50px #243b5510;
   align-self: center;
   margin-bottom: 15px;
 }
@@ -516,9 +516,9 @@ button:not(:disabled):active {
   display: grid;
   place-items: center;
   border-radius: 15px;
-  border: 1px solid #e2e7d7;
-  background: #f5f7ed;
-  color: #5b7550;
+  border: 1px solid var(--yc-border);
+  background: var(--yc-page);
+  color: var(--yc-text);
   margin-bottom: 27px;
 }
 
@@ -551,20 +551,20 @@ button:not(:disabled):active {
   border: 0;
   background: none;
   padding: 0 3px 13px;
-  color: #969b90;
+  color: var(--yc-muted);
   font-size: 12px;
   position: relative;
 }
 
 .auth-tabs .selected {
-  color: var(--green);
+  color: var(--accent);
   font-weight: 600;
 }
 
 .auth-tabs .selected:after {
   content: '';
   height: 2px;
-  background: var(--green);
+  background: var(--accent);
   position: absolute;
   bottom: -1px;
   left: 0;
@@ -575,20 +575,20 @@ button:not(:disabled):active {
   display: block;
   font-size: 11px;
   font-weight: 500;
-  color: #5a6558;
+  color: var(--yc-text);
   line-height: 1.5;
 }
 
 .field input,.field select,.field textarea,.custom-interest {
   display: block;
-  background: #fdfdf9;
+  background: var(--yc-surface);
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  border: 1px solid #e2e4d9;
+  border: 1px solid var(--yc-border);
   border-radius: 9px;
   padding: 11px 12px;
-  color: #334835;
+  color: var(--yc-primary);
   font-size: 12px;
   outline: none;
   margin-top: 8px;
@@ -596,12 +596,12 @@ button:not(:disabled):active {
 }
 
 .field input:focus,.field select:focus,.field textarea:focus,.custom-interest:focus {
-  border-color: #8fa484;
-  box-shadow: 0 0 0 3px #e9eee1;
+  border-color: var(--yc-muted);
+  box-shadow: 0 0 0 3px var(--yc-soft);
 }
 
 .field input::placeholder,.field textarea::placeholder,.custom-interest::placeholder {
-  color: #aaad9f;
+  color: var(--yc-muted);
   font-size: 11px;
 }
 
@@ -622,23 +622,23 @@ button:not(:disabled):active {
 }
 
 .primary {
-  background: var(--green);
-  color: #fffef6;
+  background: var(--accent);
+  color: var(--yc-surface);
 }
 
 .primary:not(:disabled):hover {
-  background: #244833;
-  box-shadow: 0 5px 12px #2f513518;
+  background: var(--yc-primary);
+  box-shadow: 0 5px 12px #243b5518;
 }
 
 .secondary {
-  border: 1px solid #d9dfd0;
-  background: #f4f7ed;
-  color: #526a43;
+  border: 1px solid var(--yc-border);
+  background: var(--yc-page);
+  color: var(--yc-text);
 }
 
 .secondary:not(:disabled):hover {
-  background: #eaf0e0;
+  background: var(--yc-soft);
 }
 
 .auth-submit {
@@ -654,7 +654,7 @@ button:not(:disabled):active {
   gap: 7px;
   font-size: 9px;
   line-height: 1.9;
-  color: #969c8c;
+  color: var(--yc-muted);
   margin: 20px 0 28px;
 }
 
@@ -664,18 +664,18 @@ button:not(:disabled):active {
 }
 
 .auth-card-bottom {
-  border-top: 1px dashed #e3e5d8;
+  border-top: 1px dashed var(--yc-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 18px 0;
-  color: #929985;
+  color: var(--yc-muted);
   font-size: 10px;
 }
 
 .auth-card-bottom>span:last-child {
   font-size: 22px;
-  color: #98a483;
+  color: var(--yc-muted);
 }
 
 .welcome-footer {
@@ -686,7 +686,7 @@ button:not(:disabled):active {
   padding-top: 22px;
   margin-top: 40px;
   font-size: 10px;
-  color: #92988b;
+  color: var(--yc-muted);
 }
 
 .workbench {
@@ -698,7 +698,7 @@ button:not(:disabled):active {
 }
 
 .sidebar {
-  background: #fcfcf8;
+  background: var(--yc-surface);
   border-right: 1px solid var(--line);
   padding: 30px 17px 18px;
   display: flex;
@@ -720,12 +720,12 @@ button:not(:disabled):active {
 
 .new-trip>span {
   margin-left: auto;
-  color: #9cb29a;
+  color: var(--yc-muted);
 }
 
 .sidebar-label {
   font-size: 10px;
-  color: #9aa08f;
+  color: var(--yc-muted);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -755,12 +755,12 @@ button:not(:disabled):active {
   padding: 11px 13px;
   font-size: 12px;
   border-radius: 8px;
-  color: #7c8676;
+  color: var(--yc-muted);
 }
 
 .side-nav>button>span {
   margin-left: auto;
-  background: #e4ebdc;
+  background: var(--yc-soft);
   border-radius: 5px;
   min-width: 20px;
   text-align: center;
@@ -769,8 +769,8 @@ button:not(:disabled):active {
 }
 
 .side-nav>button.selected,.side-nav>button:hover {
-  background: #edf1e6;
-  color: #35543c;
+  background: var(--yc-soft);
+  color: var(--yc-primary);
 }
 
 .trip-list-label {
@@ -795,12 +795,12 @@ button:not(:disabled):active {
   padding: 11px 8px;
   width: 100%;
   text-align: left;
-  color: #64705e;
+  color: var(--yc-text);
 }
 
 .trip-list>button.selected {
-  border-color: #e3e7d8;
-  background: #f5f7ee;
+  border-color: var(--yc-border);
+  background: var(--yc-page);
 }
 
 .trip-list-icon {
@@ -809,7 +809,7 @@ button:not(:disabled):active {
   display: grid;
   place-items: center;
   border-radius: 6px;
-  background: #edf1e5;
+  background: var(--yc-soft);
   flex-shrink: 0;
 }
 
@@ -823,7 +823,7 @@ button:not(:disabled):active {
 
 .trip-list small {
   font-size: 9px;
-  color: #a2a798;
+  color: var(--yc-muted);
   display: block;
   margin-top: 3px;
 }
@@ -833,7 +833,7 @@ button:not(:disabled):active {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #6d8c57;
+  background: var(--yc-text);
   flex-shrink: 0;
 }
 
@@ -849,24 +849,24 @@ button:not(:disabled):active {
 .slow-note {
   position: relative;
   padding: 18px 13px;
-  border: 1px solid #e4e8d9;
+  border: 1px solid var(--yc-border);
   border-radius: 10px;
   margin-bottom: 22px;
   overflow: hidden;
-  background: #f5f7ec;
+  background: var(--yc-page);
 }
 
 .slow-note>span {
   font-size: 6px;
   letter-spacing: .9px;
-  color: #98a283;
+  color: var(--yc-muted);
 }
 
 .slow-note p {
   font-size: 12px;
   line-height: 1.9;
   margin-top: 9px;
-  color: #6e7e60;
+  color: var(--yc-text);
 }
 
 .slow-note>svg {
@@ -874,7 +874,7 @@ button:not(:disabled):active {
   right: 9px;
   bottom: 5px;
   transform: rotate(-20deg);
-  color: #c3ccb2;
+  color: var(--yc-muted);
 }
 
 .side-utility {
@@ -885,12 +885,12 @@ button:not(:disabled):active {
   background: none;
   width: 100%;
   padding: 9px 12px;
-  color: #919986;
+  color: var(--yc-muted);
   font-size: 10px;
 }
 
 .side-utility:hover,.side-utility.selected {
-  color: var(--green);
+  color: var(--accent);
 }
 
 .workspace {
@@ -915,7 +915,7 @@ button:not(:disabled):active {
 
 .workspace-heading>div>p:last-child {
   font-size: 11px;
-  color: #929988;
+  color: var(--yc-muted);
 }
 
 .step-label {
@@ -923,7 +923,7 @@ button:not(:disabled):active {
   align-items: center;
   gap: 8px;
   font-size: 10px;
-  color: #a1a58f;
+  color: var(--yc-muted);
   white-space: nowrap;
 }
 
@@ -931,24 +931,24 @@ button:not(:disabled):active {
   display: flex;
   align-items: center;
   gap: 2px;
-  background: #ecede2;
+  background: var(--yc-soft);
   width: 23px;
   height: 23px;
   justify-content: center;
   font-size: 8px;
   border-radius: 50%;
-  color: #8e947f;
+  color: var(--yc-muted);
 }
 
 .step-label>span.complete {
-  background: #dce8ce;
-  color: #4d7143;
+  background: var(--yc-border);
+  color: var(--yc-text);
 }
 
 .step-label>i {
   width: 20px;
   height: 1px;
-  background: #dadfce;
+  background: var(--yc-border);
   margin: 0 2px;
 }
 
@@ -960,7 +960,7 @@ button:not(:disabled):active {
 }
 
 .planning-panel {
-  background: #fffefa;
+  background: var(--yc-surface);
   border: 1px solid var(--line);
   border-radius: 15px;
   padding: 23px;
@@ -980,8 +980,8 @@ button:not(:disabled):active {
   border-radius: 9px;
   width: 35px;
   height: 35px;
-  background: #edf2e4;
-  color: #60784b;
+  background: var(--yc-soft);
+  color: var(--yc-text);
   flex-shrink: 0;
 }
 
@@ -992,20 +992,20 @@ button:not(:disabled):active {
 
 .panel-heading p {
   font-size: 9px;
-  color: #9aa18d;
+  color: var(--yc-muted);
   margin-top: 5px;
 }
 
 .composer {
-  border: 1px solid #dce2d1;
-  background: #f9fbf3;
+  border: 1px solid var(--yc-border);
+  background: var(--yc-page);
   border-radius: 11px;
   overflow: hidden;
 }
 
 .composer:focus-within {
-  border-color: #9bad8b;
-  box-shadow: 0 0 0 3px #edf2e4;
+  border-color: var(--yc-muted);
+  box-shadow: 0 0 0 3px var(--yc-soft);
 }
 
 .composer textarea {
@@ -1015,14 +1015,14 @@ button:not(:disabled):active {
   width: 100%;
   padding: 13px 13px 0;
   font-size: 11px;
-  color: #50634b;
+  color: var(--yc-text);
   line-height: 1.9;
   resize: vertical;
   min-height: 75px;
 }
 
 .composer textarea::placeholder {
-  color: #a4ac97;
+  color: var(--yc-muted);
 }
 
 .composer-footer {
@@ -1034,7 +1034,7 @@ button:not(:disabled):active {
 
 .composer-footer>span {
   font-size: 8px;
-  color: #a2ab94;
+  color: var(--yc-muted);
 }
 
 .send-button {
@@ -1044,7 +1044,7 @@ button:not(:disabled):active {
   height: 29px;
   border: 0;
   border-radius: 8px;
-  background: var(--green);
+  background: var(--accent);
   color: white;
 }
 
@@ -1053,14 +1053,14 @@ button:not(:disabled):active {
   align-items: center;
   gap: 10px;
   font-size: 9px;
-  color: #a3a994;
+  color: var(--yc-muted);
   margin: 22px 0;
 }
 
 .or-divider:before,.or-divider:after {
   content: '';
   height: 1px;
-  background: #eaede2;
+  background: var(--yc-soft);
   flex: 1;
 }
 
@@ -1121,7 +1121,7 @@ fieldset {
   position: absolute;
   left: 10px;
   top: 12px;
-  color: #9aa68e;
+  color: var(--yc-muted);
 }
 
 .input-icon>input {
@@ -1133,7 +1133,7 @@ fieldset {
   right: 11px;
   top: 11px;
   font-size: 10px;
-  color: #a4ab96;
+  color: var(--yc-muted);
   pointer-events: none;
 }
 
@@ -1152,7 +1152,7 @@ input::-webkit-inner-spin-button {
 
 .optional {
   font-size: 8px;
-  color: #a7ae9a;
+  color: var(--yc-muted);
   font-weight: 400;
 }
 
@@ -1162,7 +1162,7 @@ input::-webkit-inner-spin-button {
 
 .interest-field>span {
   font-size: 10px;
-  color: #6e7a62;
+  color: var(--yc-text);
 }
 
 .interest-chips {
@@ -1176,18 +1176,18 @@ input::-webkit-inner-spin-button {
   display: flex;
   align-items: center;
   gap: 4px;
-  border: 1px solid #e4e7da;
+  border: 1px solid var(--yc-border);
   border-radius: 6px;
-  background: #fcfdf7;
-  color: #8a947c;
+  background: var(--yc-surface);
+  color: var(--yc-muted);
   padding: 6px 9px;
   font-size: 9px;
 }
 
 .interest-chips .selected {
-  border-color: #aec19c;
-  background: #edf3e3;
-  color: #577242;
+  border-color: var(--yc-muted);
+  background: var(--yc-soft);
+  color: var(--yc-text);
 }
 
 .interest-chips button.selected:first-child {
@@ -1200,11 +1200,11 @@ input::-webkit-inner-spin-button {
   font-size: 10px;
   padding: 8px 10px;
   margin-top: 9px;
-  border-color: #e8ebde;
+  border-color: var(--yc-soft);
 }
 
 .extra-settings {
-  border-top: 1px dashed #e2e6d7;
+  border-top: 1px dashed var(--yc-border);
   margin-top: 18px;
   padding-top: 15px;
 }
@@ -1214,7 +1214,7 @@ input::-webkit-inner-spin-button {
   gap: 5px;
   align-items: center;
   font-size: 9px;
-  color: #919e7e;
+  color: var(--yc-muted);
 }
 
 .extra-settings .fields {
@@ -1237,15 +1237,15 @@ input::-webkit-inner-spin-button {
   align-items: center;
   gap: 6px;
   font-size: 9px;
-  color: #758361;
+  color: var(--yc-text);
   padding: 13px 0;
-  border-bottom: 1px solid #e9ecdf;
+  border-bottom: 1px solid var(--yc-soft);
   flex-wrap: wrap;
 }
 
 .saved-label {
   margin-left: auto;
-  color: #97a583;
+  color: var(--yc-muted);
   font-size: 8px;
 }
 
@@ -1263,7 +1263,7 @@ input::-webkit-inner-spin-button {
   align-items: center;
   gap: 5px;
   font-size: 8px;
-  color: #a1aa91;
+  color: var(--yc-muted);
   margin-top: 13px;
   line-height: 1.8;
 }
@@ -1274,13 +1274,13 @@ input::-webkit-inner-spin-button {
   gap: 5px;
   border: 0;
   background: none;
-  color: #687f51;
+  color: var(--yc-text);
   font-size: 10px;
   padding: 5px 0;
 }
 
 .text-button:hover {
-  color: #314f35;
+  color: var(--yc-primary);
   text-decoration: underline;
 }
 
@@ -1292,7 +1292,7 @@ input::-webkit-inner-spin-button {
 
 .itinerary-canvas {
   border: 1px solid var(--line);
-  background: #fcfcf7;
+  background: var(--yc-surface);
   border-radius: 15px;
   min-width: 0;
   overflow: hidden;
@@ -1305,7 +1305,7 @@ input::-webkit-inner-spin-button {
   gap: 10px;
   border-bottom: 1px solid var(--line);
   padding: 17px 22px;
-  color: #929c82;
+  color: var(--yc-muted);
   font-size: 9px;
 }
 
@@ -1313,7 +1313,7 @@ input::-webkit-inner-spin-button {
   display: flex;
   align-items: center;
   gap: 7px;
-  color: #758461;
+  color: var(--yc-text);
 }
 
 .canvas-heading>span:last-child {
@@ -1332,13 +1332,13 @@ input::-webkit-inner-spin-button {
   font-weight: 500;
   letter-spacing: .3px;
   margin: 13px 0;
-  color: #526749;
+  color: var(--yc-text);
 }
 
 .empty-canvas>p {
   font-size: 10px;
   line-height: 2;
-  color: #9ba18c;
+  color: var(--yc-muted);
 }
 
 .empty-canvas>.journey-art {
@@ -1356,36 +1356,36 @@ input::-webkit-inner-spin-button {
   display: flex;
   align-items: center;
   gap: 11px;
-  border: 1px solid #e6e9dc;
+  border: 1px solid var(--yc-border);
   border-radius: 10px;
   padding: 11px 13px;
-  background: #fffffa;
+  background: var(--yc-surface);
   text-align: left;
 }
 
 .inspiration-cards>button:hover {
-  border-color: #b8c5a5;
-  background: #f5f8ed;
+  border-color: var(--yc-muted);
+  background: var(--yc-page);
 }
 
 .inspiration-cards strong {
   display: block;
   font-size: 12px;
   font-weight: 500;
-  color: #637752;
+  color: var(--yc-text);
 }
 
 .inspiration-cards small {
   display: block;
   font-size: 9px;
-  color: #a0a68f;
+  color: var(--yc-muted);
   margin-top: 4px;
   font-weight: 400;
 }
 
 .inspiration-cards>button>svg {
   margin-left: auto;
-  color: #b4bea0;
+  color: var(--yc-muted);
 }
 
 .destination-icon {
@@ -1393,8 +1393,8 @@ input::-webkit-inner-spin-button {
   place-items: center;
   width: 35px;
   height: 37px;
-  background: #edf2e5;
-  color: #96a681;
+  background: var(--yc-soft);
+  color: var(--yc-muted);
   border-radius: 7px;
 }
 
@@ -1404,8 +1404,8 @@ input::-webkit-inner-spin-button {
 }
 
 .destination-icon.culture {
-  background: #ecefdf;
-  color: #9eaa7e;
+  background: var(--yc-soft);
+  color: var(--yc-muted);
 }
 
 .canvas-bottom {
@@ -1414,8 +1414,8 @@ input::-webkit-inner-spin-button {
   justify-content: space-between;
   margin-top: 24px;
   padding-top: 17px;
-  border-top: 1px dashed #e2e7d6;
-  color: #a1ab8e;
+  border-top: 1px dashed var(--yc-border);
+  color: var(--yc-muted);
   font-size: 8px;
 }
 
@@ -1429,7 +1429,7 @@ input::-webkit-inner-spin-button {
   display: flex;
   justify-content: space-between;
   font-size: 8px;
-  color: #a9ad9d;
+  color: var(--yc-muted);
   margin-top: 29px;
   padding: 0 2px;
 }
@@ -1452,12 +1452,12 @@ input::-webkit-inner-spin-button {
 }
 
 .user-message {
-  background: #edf2e4;
+  background: var(--yc-soft);
   padding: 10px 12px;
   border-radius: 10px 10px 0 10px;
   white-space: pre-wrap;
   margin: 10px 0 12px 28px;
-  color: #5b714a;
+  color: var(--yc-text);
 }
 
 .assistant-message {
@@ -1465,13 +1465,13 @@ input::-webkit-inner-spin-button {
   gap: 8px;
   align-items: flex-start;
   padding: 3px 0 8px;
-  color: #7d8970;
+  color: var(--yc-muted);
 }
 
 .assistant-message>svg {
   flex-shrink: 0;
   margin-top: 3px;
-  color: #799065;
+  color: var(--yc-muted);
 }
 
 .assistant-message p {
@@ -1482,9 +1482,9 @@ input::-webkit-inner-spin-button {
   display: flex;
   gap: 9px;
   align-items: flex-start;
-  background: #f4f1e4;
-  border: 1px solid #e8dfc4;
-  color: #8b7b51;
+  background: var(--yc-soft);
+  border: 1px solid var(--yc-border);
+  color: var(--yc-text);
   font-size: 10px;
   line-height: 1.9;
   padding: 12px 13px;
@@ -1525,18 +1525,18 @@ input::-webkit-inner-spin-button {
 }
 
 blockquote {
-  border-left: 2px solid #acba95;
-  background: #f7f8ee;
+  border-left: 2px solid var(--yc-muted);
+  background: var(--yc-page);
   padding: 10px 12px;
   margin: 14px 0;
-  color: #7d876f;
+  color: var(--yc-muted);
   font-size: 10px;
   line-height: 1.9;
   white-space: pre-wrap;
 }
 
 blockquote small {
-  color: #9caa8d;
+  color: var(--yc-muted);
 }
 
 .has-plan {
@@ -1553,7 +1553,7 @@ blockquote small {
   gap: 6px;
   font-size: 11px;
   line-height: 1.8;
-  color: #889575;
+  color: var(--yc-muted);
   margin: 10px 0 20px;
 }
 
@@ -1571,17 +1571,17 @@ blockquote small {
 
 .day-navigation>button {
   padding: 8px 12px;
-  border: 1px solid #e1e6d7;
+  border: 1px solid var(--yc-border);
   border-radius: 7px;
-  background: #fdfef7;
+  background: var(--yc-surface);
   font-size: 10px;
-  color: #859675;
+  color: var(--yc-muted);
 }
 
 .day-navigation>button.selected {
-  background: var(--green);
+  background: var(--accent);
   color: #fff;
-  border-color: var(--green);
+  border-color: var(--accent);
 }
 
 .version-history {
@@ -1595,7 +1595,7 @@ blockquote small {
   gap: 8px;
   align-items: center;
   font-size: 11px;
-  color: #7b8a69;
+  color: var(--yc-muted);
 }
 
 .version-history>summary>svg:last-child {
@@ -1608,14 +1608,14 @@ blockquote small {
   align-items: center;
   padding: 12px 0;
   font-size: 11px;
-  border-bottom: 1px solid #edf0e4;
-  color: #78896a;
+  border-bottom: 1px solid var(--yc-soft);
+  color: var(--yc-muted);
 }
 
 .version-history small {
   display: block;
   font-size: 9px;
-  color: #a0ac91;
+  color: var(--yc-muted);
   margin-top: 4px;
 }
 
@@ -1632,7 +1632,7 @@ blockquote small {
 .utility-intro {
   font-size: 12px;
   line-height: 1.9;
-  color: #909c82;
+  color: var(--yc-muted);
   margin-top: 15px;
   max-width: 630px;
 }
@@ -1641,7 +1641,7 @@ blockquote small {
   padding: 28px;
   border: 1px solid var(--line);
   border-radius: 15px;
-  background: #fffefa;
+  background: var(--yc-surface);
   margin-top: 30px;
 }
 
@@ -1665,9 +1665,9 @@ blockquote small {
 .utility-empty {
   padding: 24px;
   border-radius: 10px;
-  background: #f4f7ec;
+  background: var(--yc-page);
   font-size: 12px;
-  color: #93a180;
+  color: var(--yc-muted);
   line-height: 1.8;
 }
 
@@ -1683,7 +1683,7 @@ blockquote small {
   justify-content: space-between;
   gap: 15px;
   padding: 17px 0;
-  border-bottom: 1px solid #e9eddf;
+  border-bottom: 1px solid var(--yc-soft);
 }
 
 .saved-list strong {
@@ -1694,7 +1694,7 @@ blockquote small {
 .saved-list small {
   display: block;
   font-size: 11px;
-  color: #a0ac91;
+  color: var(--yc-muted);
   margin-top: 7px;
   overflow-wrap: anywhere;
 }
@@ -1707,7 +1707,7 @@ blockquote small {
 }
 
 .quality-grid>div {
-  background: #f4f7ec;
+  background: var(--yc-page);
   border-radius: 10px;
   padding: 20px;
 }
@@ -1715,7 +1715,7 @@ blockquote small {
 .quality-grid>div>span {
   display: block;
   font-size: 11px;
-  color: #91a07e;
+  color: var(--yc-muted);
 }
 
 .quality-grid strong {
@@ -1723,7 +1723,7 @@ blockquote small {
   font-size: 32px;
   font-weight: 400;
   margin-top: 12px;
-  color: #5f7c48;
+  color: var(--yc-text);
 }
 
 .quality-grid strong>small {
@@ -1756,52 +1756,52 @@ blockquote small {
 /* Shared itinerary components inherit the same quiet, paper-like palette. */
 
 .has-plan :deep(.card),.has-plan :deep(.day-card) {
-  border-color: #e4e8db;
+  border-color: var(--yc-border);
   border-radius: 12px;
   box-shadow: none;
-  background: #fffefa;
+  background: var(--yc-surface);
 }
 
 .has-plan :deep(.hero-card) {
-  background: #edf2e4;
+  background: var(--yc-soft);
   border: 0;
   padding: 24px 20px;
 }
 
 .has-plan :deep(.city) {
   font-size: 29px;
-  color: #365039;
+  color: var(--yc-ink);
   font-weight: 500;
 }
 
 .has-plan :deep(.card-title),.has-plan :deep(.block-title) {
-  color: #60764c;
+  color: var(--yc-text);
 }
 
 .has-plan :deep(.muted),.has-plan :deep(.date-range) {
-  color: #929e82;
+  color: var(--yc-muted);
 }
 
 .has-plan :deep(.budget-item),.has-plan :deep(.weather-item),.has-plan :deep(.meal) {
-  background: #f5f7ed;
-  border-color: #e7ebdb;
+  background: var(--yc-page);
+  border-color: var(--yc-soft);
 }
 
 .has-plan :deep(.budget-item.total) {
-  background: #eaf0df;
+  background: var(--yc-soft);
 }
 
 .has-plan :deep(.budget-value),.has-plan :deep(.meal-name) {
-  color: #48603b;
+  color: var(--yc-text);
 }
 
 .has-plan :deep(.date-index) {
-  background: #edf2e2;
-  color: #6b8256;
+  background: var(--yc-soft);
+  color: var(--yc-text);
 }
 
 .has-plan :deep(.date-day) {
-  color: #567045;
+  color: var(--yc-text);
 }
 
 .has-plan :deep(.day-card) {
@@ -1809,7 +1809,7 @@ blockquote small {
 }
 
 .has-plan :deep(.meal) {
-  border: 1px solid #e7ebdb;
+  border: 1px solid var(--yc-soft);
   border-left: 3px solid #c8a36c;
   padding: 12px;
   font-size: 12px;
@@ -1821,7 +1821,7 @@ blockquote small {
 }
 
 .has-plan :deep(.schedule-list) {
-  background: #f8f9f2;
+  background: var(--yc-page);
   border-radius: 10px;
   padding: 12px 12px 12px 30px;
 }
@@ -1831,33 +1831,33 @@ blockquote small {
 }
 
 .has-plan :deep(a) {
-  color: #6e8756;
+  color: var(--yc-text);
 }
 
 .has-plan :deep(.module-editor) {
-  background: #f4f7eb;
-  border: 1px solid #e2e8d4;
+  background: var(--yc-page);
+  border: 1px solid var(--yc-border);
   border-radius: 12px;
   padding: 20px;
 }
 
 .has-plan :deep(.module-editor h3) {
-  color: #4e6b3f;
+  color: var(--yc-text);
 }
 
 .has-plan :deep(.module-editor button) {
-  background: #e9f0df;
-  color: #587444;
-  border-color: #ccd9b9;
+  background: var(--yc-soft);
+  color: var(--yc-text);
+  border-color: var(--yc-border);
 }
 
 .has-plan :deep(.candidate) {
-  background: #fffef9;
-  border-color: #e1e8d4;
+  background: var(--yc-surface);
+  border-color: var(--yc-border);
 }
 
 .has-plan :deep(.candidate input) {
-  accent-color: #577546;
+  accent-color: var(--yc-text);
 }
 
 .has-plan :deep(.route-list) {
@@ -1866,8 +1866,8 @@ blockquote small {
 }
 
 .has-plan :deep(.alert-card) {
-  background: #fcf7e9;
-  border-color: #e9dfbf;
+  background: var(--yc-page);
+  border-color: var(--yc-border);
 }
 
 .has-plan :deep(.alert-list) {
@@ -1876,12 +1876,12 @@ blockquote small {
 }
 
 .has-plan :deep(.spot-name) {
-  color: #49623c;
+  color: var(--yc-text);
 }
 
 .has-plan :deep(.spot-category) {
-  background: #f0f3e5;
-  color: #8b9a75;
+  background: var(--yc-soft);
+  color: var(--yc-muted);
 }
 
 .has-plan :deep(.block) {
@@ -2062,9 +2062,7 @@ blockquote small {
     gap: 20px;
     padding: 0 18px;
   }
-  .brand>span:last-child {
-    font-size: 18px;
-  }
+
   .brand-icon {
     width: 34px;
     height: 34px;
@@ -2395,60 +2393,60 @@ blockquote small {
 }
 
 .welcome-copy,.welcome-features,.auth-description,.workspace-heading>div>p:last-child,.panel-heading p,.empty-canvas>p,.inspiration-cards small,.planning-hint,.canvas-bottom {
-  color: #74816a;
+  color: var(--yc-muted);
 }
 
 .auth-footnote,.trip-list small,.sidebar-label,.saved-label {
-  color: #849078;
+  color: var(--yc-muted);
 }
 
 .side-nav>button {
-  color: #74816b;
+  color: var(--yc-muted);
 }
 
 .interest-chips button {
-  color: #758566;
+  color: var(--yc-muted);
 }
 
 .interest-chips .selected {
-  color: #4d6b37;
+  color: var(--yc-text);
 }
 
 .field input::placeholder,.field textarea::placeholder {
-  color: #939c87;
+  color: var(--yc-muted);
 }
 
 .workspace-footer {
-  color: #8d987e;
+  color: var(--yc-muted);
 }
 
 .has-plan :deep(.spot) {
-  background: #f4f7ec;
-  border: 1px solid #e8ecdf;
+  background: var(--yc-page);
+  border: 1px solid var(--yc-soft);
 }
 
 .has-plan :deep(.spot-index) {
-  background: #789563;
+  background: var(--yc-primary);
 }
 
 .has-plan :deep(.spot-desc),.has-plan :deep(.hint) {
-  color: #7f8e70;
+  color: var(--yc-muted);
 }
 
 .has-plan :deep(.schedule-list time) {
-  color: #6d8955;
+  color: var(--yc-text);
 }
 
 .has-plan :deep(.action-btn.primary) {
-  background: #315a43;
-  border-color: #315a43;
+  background: var(--yc-primary);
+  border-color: var(--yc-primary);
 }
 
 .has-plan :deep(.action-btn) {
   font-size: 12px;
-  background: #f3f7e9;
-  color: #677e52;
-  border-color: #dce5ce;
+  background: var(--yc-page);
+  color: var(--yc-text);
+  border-color: var(--yc-border);
 }
 
 .has-plan :deep(.action-btn.primary) {
@@ -2470,17 +2468,17 @@ blockquote small {
     gap: 18px;
     margin-top: 12px;
     padding-top: 12px;
-    border-top: 1px solid #e8ecde;
+    border-top: 1px solid var(--yc-soft);
   }
   .mobile-trip-controls>select {
     min-width: 0;
     flex: 1;
-    border: 1px solid #e1e7d6;
+    border: 1px solid var(--yc-border);
     border-radius: 7px;
-    background: #f7f9ef;
+    background: var(--yc-page);
     padding: 8px;
     font-size: 11px;
-    color: #6e8359;
+    color: var(--yc-text);
   }
   .top-nav {
     gap: 12px;
@@ -2517,8 +2515,48 @@ blockquote small {
     font-size: 9px;
   }
 }
+/* Cloud workspace: shared palette, readable controls and an open inspiration rail. */
+.topbar { height: 72px; background: var(--yc-surface); padding: 0 32px; gap: 55px; }
+.workbench { grid-template-columns: 224px minmax(0, 1fr); min-height: calc(100vh - 72px); }
+.sidebar { background: #f7faff; }
+.workspace { padding: 30px 26px 20px; }
+.workspace-heading { margin-bottom: 24px; }
+.workspace-heading h1 { font-size: 29px; font-weight: 650; letter-spacing: 0; margin: 3px 0 10px; }
+.workspace-heading>div>p:last-child { font-size: 13px; }
+.planning-layout { grid-template-columns: minmax(330px, .88fr) minmax(0, 1.12fr); gap: 18px; }
+.planning-panel, .itinerary-canvas { border-radius: 9px; background: var(--yc-surface); border-color: var(--yc-border); box-shadow: 0 3px 16px #243b5503; }
+.panel-heading h2 { font-size: 17px; }
+.panel-heading p { font-size: 11px; }
+.fields .field, .interest-field>span { font-size: 12px; }
+.field input, .field select, .field textarea, .custom-interest { font-size: 13px; min-height: 39px; }
+.composer textarea { font-size: 13px; line-height: 1.7; }
+.button { font-size: 13px; }
+.button.primary:hover:not(:disabled) { background: var(--yc-primary-hover); }
+.itinerary-canvas:not(.has-plan)>.canvas-heading { display: none; }
+.empty-canvas { padding: 24px; }
+.empty-canvas>h2 { font-family: var(--yc-font); font-size: 21px; line-height: 1.6; font-weight: 650; color: var(--yc-ink); margin: 0 0 19px; letter-spacing: 0; }
+.empty-canvas>.journey-art { margin: 0; max-width: none; }
+.inspiration-cards { flex-direction: column; gap: 0; margin-top: 14px; }
+.inspiration-cards>button { flex: initial; padding: 18px 0; border: 0; border-bottom: 1px solid var(--yc-border); border-radius: 0; background: transparent; }
+.inspiration-cards>button:last-child { border-bottom: 0; }
+.inspiration-cards strong { font-size: 16px; font-weight: 600; color: var(--yc-ink); }
+.inspiration-cards small { font-size: 12px; color: var(--yc-muted); margin-top: 6px; }
+.inspiration-cards>button>svg { display: block; }
+.destination-icon { width: 44px; height: 44px; color: var(--yc-primary); background: var(--yc-soft); }
+.canvas-bottom { font-size: 11px; margin-top: 8px; }
+.welcome-story h1, .auth-card h2 { font-family: var(--yc-font); }
+.welcome-story h1 { font-weight: 650; }
+.welcome-story h1>svg { display: none; }
+.welcome-copy { font-size: 14px; }
+.auth-description { font-size: 13px; }
+.auth-tabs { font-size: 13px; }
+.welcome-story>.journey-art { margin-top: 28px; }
+@media(min-width:1550px) { .workspace { padding: 36px 34px 20px; } }
+@media(max-width:1200px) { .workbench { grid-template-columns: 180px minmax(0,1fr); } .planning-layout { grid-template-columns: minmax(290px, .9fr) minmax(0, 1fr); gap: 16px; } .workspace { padding: 26px 20px; } .empty-canvas { padding: 22px; } .empty-canvas>h2 { font-size: 19px; } }
+@media(max-width:1000px) { .planning-layout { grid-template-columns: 1fr; } .empty-canvas>.journey-art { max-width: none; } }
+@media(max-width:720px) { .topbar { height: 66px; padding: 0 16px; gap: 12px; } .workbench { display: block; } .workspace { padding: 24px 16px; } .workspace-heading h1 { font-size: 25px; } .planning-panel { padding: 20px 16px; } .empty-canvas { padding: 20px 16px; } .empty-canvas>h2 { font-size: 19px; } .welcome-copy { font-size: 12px; } .canvas-bottom { font-size: 10px; } }
 </style>
 
 <style scoped>
-.clarification-panel{background:#f1f5e9;border:1px solid #d4dfc7;border-radius:12px;padding:16px;margin:16px 0}.clarification-panel h3{margin:0;font-size:15px}.clarification-panel p{font-size:12px;color:#657554;margin:8px 0;line-height:1.7}.clarification-panel article{padding:12px 0;border-top:1px solid #dbe4d0;font-size:12px;line-height:1.8}.question-options{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.question-options button{background:white;border:1px solid #b8ccaa;border-radius:8px;color:#315a43;padding:9px 12px;font-size:12px;text-align:left}
+.clarification-panel{background:var(--yc-soft);border:1px solid var(--yc-border);border-radius:12px;padding:16px;margin:16px 0}.clarification-panel h3{margin:0;font-size:15px}.clarification-panel p{font-size:12px;color:var(--yc-text);margin:8px 0;line-height:1.7}.clarification-panel article{padding:12px 0;border-top:1px solid var(--yc-border);font-size:12px;line-height:1.8}.question-options{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.question-options button{background:white;border:1px solid var(--yc-muted);border-radius:8px;color:var(--yc-primary);padding:9px 12px;font-size:12px;text-align:left}
 </style>

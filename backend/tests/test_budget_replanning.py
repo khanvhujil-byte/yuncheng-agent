@@ -23,8 +23,9 @@ from tests.factories import make_attraction, make_day, make_hotel, make_request,
     ],
 )
 def test_budget_replanning_is_counted_when_entered(
-    monkeypatch, outputs, expected_rounds, expected_success
+    monkeypatch, settings, outputs, expected_rounds, expected_success
 ):
+    monkeypatch.setattr(settings, 'planner_format_retry_enabled', True)
     request = make_request(travel_days=1, nights=1, must_visit=[], budget_limit=600)
     expensive = make_attraction("收费景点", ticket_price=900, ticket_price_status="known")
     cheap = make_attraction("免费景点", ticket_price=0, ticket_price_status="known")
@@ -48,7 +49,7 @@ def test_budget_replanning_is_counted_when_entered(
         entries.append((state.get("budget_retries", 0), state.get("retries", 0)))
         return planner_agent.compose_plan(state)
 
-    def fake_model(_system, _user, *, extra_user=""):
+    def fake_model(_system, _user, *, extra_user="", max_tokens=None):
         notes.append(extra_user)
         choice = next(responses)
         if choice == "bad-json":
@@ -74,13 +75,16 @@ def test_budget_replanning_is_counted_when_entered(
     assert final["budget_verdict"]["status"] == ("within" if expected_success else "known_exceeded")
 
     expected_entries = []
-    round_index = attempt = 0
+    round_index = 0
+    format_repair = False
     for choice in outputs:
-        expected_entries.append((round_index, attempt))
-        attempt += 1
+        # One bounded syntax repair happens inside the same compose node;
+        # provider calls above still count both attempts and their usage.
+        if not format_repair:
+            expected_entries.append((round_index, 0))
+        format_repair = choice == "bad-json" and not format_repair
         if choice == "expensive":
             round_index += 1
-            attempt = 0
     assert entries == expected_entries
     for index, choice in enumerate(outputs[:-1]):
         if choice == "expensive":

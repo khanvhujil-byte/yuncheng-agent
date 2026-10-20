@@ -1,0 +1,763 @@
+{
+  "case_id": "G15",
+  "name": "重庆3天民宿+美食",
+  "kind": "generate",
+  "passed": true,
+  "violations": [],
+  "duration_s": 55.17,
+  "error_code": null,
+  "success": true,
+  "days": 3,
+  "response_summary": {
+    "success": true,
+    "error_code": null,
+    "message": "",
+    "cached": false,
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0LD9R4BSM,B0LD2ZN6V8,B0JGU1BCQY",
+      "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0LD9R4BSM,B0LD2ZN6V8,B0JGU1BCQY",
+      "2026-10-21 breakfast 重复餐厅 B0FFHBGFWL，附近尚有未使用候选：B0LD9R4BSM,B0LD2ZN6V8,B0JGU1BCQY",
+      "2026-10-22 breakfast 重复餐厅 B0FFHBGFWL，附近尚有未使用候选：B0FFKVYWBE",
+      "2026-10-22 lunch 重复餐厅 B0GDUU6NZR，附近尚有未使用候选：B00178768N,B0FFKVYWBE",
+      "酒店每晚300元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「人民解放纪念碑」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「罗汉寺」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0LUKHTVP6"
+    ],
+    "budget": {
+      "ticket_reserve_amount": 100,
+      "total_attractions": 0,
+      "total_hotels": 600,
+      "total_meals": 275,
+      "total_transportation": 120,
+      "total": 995,
+      "items": [
+        {
+          "category": "attraction",
+          "name": "洪崖洞民俗风貌区",
+          "day_index": 0,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：洪崖洞民俗风貌区为开放式免费景区，日常成人无需门票"
+        },
+        {
+          "category": "attraction",
+          "name": "戴家巷崖壁步道",
+          "day_index": 0,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：戴家巷崖壁步道为公共开放步道，免费通行"
+        },
+        {
+          "category": "meal",
+          "name": "巫山蔡包子(洪崖洞店)",
+          "day_index": 0,
+          "amount": 9,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "姜氏正宗重庆小面",
+          "day_index": 0,
+          "amount": 24,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "天棒老火锅(老店)",
+          "day_index": 0,
+          "amount": 81,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "重庆中国三峡博物馆",
+          "day_index": 1,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：重庆中国三峡博物馆为免费开放博物馆，凭有效证件入场"
+        },
+        {
+          "category": "attraction",
+          "name": "下浩里",
+          "day_index": 1,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：下浩里为开放式历史街区，免费游览"
+        },
+        {
+          "category": "meal",
+          "name": "曼玲粥店(财汇广场-A塔楼店)",
+          "day_index": 1,
+          "amount": 18,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "鑫小面(人民村小区店)",
+          "day_index": 1,
+          "amount": 15,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "老街糯米团(洪崖洞店)",
+          "day_index": 1,
+          "amount": 19,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "重庆十八梯传统风貌区",
+          "day_index": 2,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：重庆十八梯传统风貌区为开放式街区，免费进入"
+        },
+        {
+          "category": "attraction",
+          "name": "十八梯观景台",
+          "day_index": 2,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：十八梯观景台为街区公共观景设施，免费使用"
+        },
+        {
+          "category": "meal",
+          "name": "包鲜森.煎小笼包.馄饨粥面(解放碑店)",
+          "day_index": 2,
+          "amount": 10,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "叶记社员老火锅(解放碑步行街店)",
+          "day_index": 2,
+          "amount": 82,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "梯坎面(洪崖洞店)",
+          "day_index": 2,
+          "amount": 17,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-20 住宿：墨然居智能民宿",
+          "day_index": 0,
+          "amount": 300,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-21 住宿：墨然居智能民宿",
+          "day_index": 1,
+          "amount": 300,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "transportation",
+          "name": "市内交通（公共交通）",
+          "day_index": null,
+          "amount": 120,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "按每人每天 40 元的固定表估算"
+        }
+      ],
+      "known_total": 0,
+      "estimated_total": 995,
+      "unknown_items": [],
+      "limit": null,
+      "limit_status": "none",
+      "limit_basis": "未设置预算上限。当前口径：已知 0 元 + 估算 995 元 = 995 元。"
+    },
+    "hotel": {
+      "name": "墨然居智能民宿",
+      "poi_id": "B0FFIAEM91",
+      "address": "较场口85号大元广场亚朵酒店楼上",
+      "location": {
+        "longitude": 106.57637,
+        "latitude": 29.552169
+      },
+      "price_range": "",
+      "rating": "4.7",
+      "distance": "距最终行程景点加权平均 1.2 km（直线估计）",
+      "type": "住宿服务相关",
+      "estimated_cost": 300,
+      "cost_status": "estimated",
+      "cost_source": "static_estimate",
+      "price_evidence_url": null,
+      "nights": 2,
+      "check_in_after": null,
+      "check_in_before": null,
+      "check_out_before": null,
+      "operations_evidence_url": null
+    },
+    "hotel_nights": 2,
+    "accommodation_version": 11,
+    "stays": [
+      {
+        "check_in": "2026-10-20",
+        "check_out": "2026-10-21",
+        "hotel": {
+          "name": "墨然居智能民宿",
+          "poi_id": "B0FFIAEM91",
+          "address": "较场口85号大元广场亚朵酒店楼上",
+          "location": {
+            "longitude": 106.57637,
+            "latitude": 29.552169
+          },
+          "price_range": "",
+          "rating": "4.7",
+          "distance": "",
+          "type": "住宿服务相关",
+          "estimated_cost": 300,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "位于渝中半岛核心，紧邻洪崖洞、十八梯片区，两晚连住避免换住整理与行李搬运，雨天通勤更省时"
+      },
+      {
+        "check_in": "2026-10-21",
+        "check_out": "2026-10-22",
+        "hotel": {
+          "name": "墨然居智能民宿",
+          "poi_id": "B0FFIAEM91",
+          "address": "较场口85号大元广场亚朵酒店楼上",
+          "location": {
+            "longitude": 106.57637,
+            "latitude": 29.552169
+          },
+          "price_range": "",
+          "rating": "4.7",
+          "distance": "",
+          "type": "住宿服务相关",
+          "estimated_cost": 300,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "次日三峡博物馆与下浩里均可由渝中住处公共交通直达，继续连住减少60分钟换住成本"
+      }
+    ],
+    "stay_comparison": {
+      "strategy": "same_hotel",
+      "hotel_changes": 0,
+      "travel_minutes": 389,
+      "transfer_minutes": 0,
+      "basis": "路线工具核算所选方案；未取得备选实测时，不宣称节省具体分钟。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "墨然居智能民宿",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "小雨"
+      },
+      {
+        "date": "2026-10-21",
+        "beyond_window": false,
+        "day_weather": "小雨"
+      },
+      {
+        "date": "2026-10-22",
+        "beyond_window": false,
+        "day_weather": "小雨"
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-20",
+        "day_index": 0,
+        "attractions": [
+          "洪崖洞民俗风貌区",
+          "戴家巷崖壁步道"
+        ],
+        "meals": [
+          "巫山蔡包子(洪崖洞店)",
+          "姜氏正宗重庆小面",
+          "天棒老火锅(老店)"
+        ],
+        "total_minutes": 647,
+        "route_start": null,
+        "route_end": {
+          "name": "墨然居智能民宿",
+          "location": {
+            "longitude": 106.57637,
+            "latitude": 29.552169
+          },
+          "poi_id": "B0FFIAEM91",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "巫山蔡包子(洪崖洞店)",
+            "to_name": "洪崖洞民俗风貌区",
+            "from_id": "B0LD9R4BSM",
+            "to_id": "B0FFG8V7SH",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "洪崖洞民俗风貌区",
+            "to_name": "姜氏正宗重庆小面",
+            "from_id": "B0FFG8V7SH",
+            "to_id": "B0G1RKY8LL",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "姜氏正宗重庆小面",
+            "to_name": "戴家巷崖壁步道",
+            "from_id": "B0G1RKY8LL",
+            "to_id": "B0HBKZPN7C",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（AMAP_ERROR）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "戴家巷崖壁步道",
+            "to_name": "天棒老火锅(老店)",
+            "from_id": "B0HBKZPN7C",
+            "to_id": "B0GDUU6NZR",
+            "mode": "公共交通",
+            "duration_minutes": 22,
+            "distance_meters": 1564,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "天棒老火锅(老店)",
+            "to_name": "墨然居智能民宿",
+            "from_id": "B0GDUU6NZR",
+            "to_id": "B0FFIAEM91",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 454
+      },
+      {
+        "date": "2026-10-21",
+        "day_index": 1,
+        "attractions": [
+          "重庆中国三峡博物馆",
+          "下浩里"
+        ],
+        "meals": [
+          "曼玲粥店(财汇广场-A塔楼店)",
+          "鑫小面(人民村小区店)",
+          "老街糯米团(洪崖洞店)"
+        ],
+        "total_minutes": 659,
+        "route_start": {
+          "name": "墨然居智能民宿",
+          "location": {
+            "longitude": 106.57637,
+            "latitude": 29.552169
+          },
+          "poi_id": "B0FFIAEM91",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "墨然居智能民宿",
+          "location": {
+            "longitude": 106.57637,
+            "latitude": 29.552169
+          },
+          "poi_id": "B0FFIAEM91",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "墨然居智能民宿",
+            "to_name": "曼玲粥店(财汇广场-A塔楼店)",
+            "from_id": "B0FFIAEM91",
+            "to_id": "B0LD2ZN6V8",
+            "mode": "公共交通",
+            "duration_minutes": 18,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（AMAP_ERROR）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "曼玲粥店(财汇广场-A塔楼店)",
+            "to_name": "重庆中国三峡博物馆",
+            "from_id": "B0LD2ZN6V8",
+            "to_id": "B001709RVF",
+            "mode": "公共交通",
+            "duration_minutes": 39,
+            "distance_meters": 4156,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "重庆中国三峡博物馆",
+            "to_name": "鑫小面(人民村小区店)",
+            "from_id": "B001709RVF",
+            "to_id": "B0I2GHEWGO",
+            "mode": "公共交通",
+            "duration_minutes": 14,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "鑫小面(人民村小区店)",
+            "to_name": "下浩里",
+            "from_id": "B0I2GHEWGO",
+            "to_id": "B0FFHS7UNC",
+            "mode": "公共交通",
+            "duration_minutes": 43,
+            "distance_meters": 10032,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "下浩里",
+            "to_name": "老街糯米团(洪崖洞店)",
+            "from_id": "B0FFHS7UNC",
+            "to_id": "B0FFKPM428",
+            "mode": "公共交通",
+            "duration_minutes": 34,
+            "distance_meters": 2449,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "老街糯米团(洪崖洞店)",
+            "to_name": "墨然居智能民宿",
+            "from_id": "B0FFKPM428",
+            "to_id": "B0FFIAEM91",
+            "mode": "公共交通",
+            "duration_minutes": 24,
+            "distance_meters": 1622,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 392
+      },
+      {
+        "date": "2026-10-22",
+        "day_index": 2,
+        "attractions": [
+          "重庆十八梯传统风貌区",
+          "十八梯观景台"
+        ],
+        "meals": [
+          "包鲜森.煎小笼包.馄饨粥面(解放碑店)",
+          "叶记社员老火锅(解放碑步行街店)",
+          "梯坎面(洪崖洞店)"
+        ],
+        "total_minutes": 630,
+        "route_start": {
+          "name": "墨然居智能民宿",
+          "location": {
+            "longitude": 106.57637,
+            "latitude": 29.552169
+          },
+          "poi_id": "B0FFIAEM91",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": null,
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "墨然居智能民宿",
+            "to_name": "包鲜森.煎小笼包.馄饨粥面(解放碑店)",
+            "from_id": "B0FFIAEM91",
+            "to_id": "B0LUKHTVP6",
+            "mode": "公共交通",
+            "duration_minutes": 11,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "包鲜森.煎小笼包.馄饨粥面(解放碑店)",
+            "to_name": "重庆十八梯传统风貌区",
+            "from_id": "B0LUKHTVP6",
+            "to_id": "B0G1XDI8P4",
+            "mode": "公共交通",
+            "duration_minutes": 19,
+            "distance_meters": 904,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "重庆十八梯传统风貌区",
+            "to_name": "叶记社员老火锅(解放碑步行街店)",
+            "from_id": "B0G1XDI8P4",
+            "to_id": "B00178768N",
+            "mode": "公共交通",
+            "duration_minutes": 56,
+            "distance_meters": 2342,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "叶记社员老火锅(解放碑步行街店)",
+            "to_name": "十八梯观景台",
+            "from_id": "B00178768N",
+            "to_id": "B0LDGAD2XG",
+            "mode": "公共交通",
+            "duration_minutes": 43,
+            "distance_meters": 1371,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "十八梯观景台",
+            "to_name": "梯坎面(洪崖洞店)",
+            "from_id": "B0LDGAD2XG",
+            "to_id": "B0FFG2LOI9",
+            "mode": "公共交通",
+            "duration_minutes": 17,
+            "distance_meters": 1717,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 149
+      }
+    ],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 995,
+      "subtotal": 995,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 995 元 = 995 元。"
+    },
+    "validate_error": null
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": null,
+    "retries": 1,
+    "budget_retries": 0,
+    "planning_calls": 3,
+    "composition_valid": true,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0LD9R4BSM,B0LD2ZN6V8,B0JGU1BCQY\n2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0LD9R4BSM,B0LD2ZN6V8,B0JGU1BCQY\n2026-10-21 breakfast 重复餐厅 B0FFHBGFWL，附近尚有未使用候选：B0LD9R4BSM,B0LD2ZN6V8,B0JGU1BCQY\n2026-10-22 breakfast 重复餐厅 B0FFHBGFWL，附近尚有未使用候选：B0FFKVYWBE\n2026-10-22 lunch 重复餐厅 B0GDUU6NZR，附近尚有未使用候选：B00178768N,B0FFKVYWBE\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0FFIAEM91\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0FFIAEM91\"}], \"hotel_id\": \"B0FFIAEM91\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"洪崖洞民俗风貌区\", \"戴家巷崖壁步道\", \"人民解放纪念碑\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFG8V7SH\", \"B0HBKZPN7C\", \"B00170L5D4\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFHBGFWL\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0G1RKY8LL\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0GDUU6NZR\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LD9R4BSM\", \"B0LD2ZN6V8\", \"B0JGU1BCQY\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFHBGFWL\", \"B0017091IQ\", \"B0G1RKY8LL\", \"B0FFKPM428\", \"B0HK0SMXZP\", \"B0KUJDTL2T\", \"B0MA751RGH\", \"B0FFG2LOI9\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0GDUU6NZR\", \"B00178768N\", \"B0FFHBGFWL\", \"B0017091IQ\", \"B0G1RKY8LL\", \"B0FFKPM428\", \"B0HK0SMXZP\", \"B0KUJDTL2T\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"重庆中国三峡博物馆\", \"下浩里\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001709RVF\", \"B0FFHS7UNC\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFHBGFWL\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0I2GHEWGO\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFKPM428\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LD9R4BSM\", \"B0LD2ZN6V8\", \"B0JGU1BCQY\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B00170CSGT\", \"B0I2GHEWGO\", \"B0GDUU6NZR\", \"B00178768N\", \"B0FFHBGFWL\", \"B0017091IQ\", \"B0G1RKY8LL\", \"B0FFKPM428\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B00170CSGT\", \"B0GDUU6NZR\", \"B00178768N\", \"B0FFHBGFWL\", \"B0017091IQ\", \"B0G1RKY8LL\", \"B0FFKPM428\", \"B0HK0SMXZP\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"重庆十八梯传统风貌区\", \"十八梯观景台\", \"罗汉寺\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0G1XDI8P4\", \"B0LDGAD2XG\", \"B001702CBC\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFHBGFWL\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0GDUU6NZR\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFG2LOI9\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFHBGFWL\", \"B0FFKVYWBE\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0GDUU6NZR\", \"B00178768N\", \"B0FFHBGFWL\", \"B0FFKVYWBE\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0GDUU6NZR\", \"B00178768N\", \"B0FFHBGFWL\", \"B0017091IQ\", \"B0G1RKY8LL\", \"B0FFKPM428\", \"B0HK0SMXZP\", \"B0KUJDTL2T\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚300元仅为预算预留，尚未获得实际房价。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「人民解放纪念碑」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「罗汉寺」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0LUKHTVP6\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0FFIAEM91\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0FFIAEM91\"}], \"hotel_id\": \"B0FFIAEM91\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"洪崖洞民俗风貌区\", \"戴家巷崖壁步道\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFG8V7SH\", \"B0HBKZPN7C\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LD9R4BSM\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0G1RKY8LL\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0GDUU6NZR\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LD9R4BSM\", \"B0LD2ZN6V8\", \"B0JGU1BCQY\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFHBGFWL\", \"B0017091IQ\", \"B0G1RKY8LL\", \"B0FFKPM428\", \"B0HK0SMXZP\", \"B0KUJDTL2T\", \"B0MA751RGH\", \"B0FFG2LOI9\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0GDUU6NZR\", \"B00178768N\", \"B0FFHBGFWL\", \"B0017091IQ\", \"B0G1RKY8LL\", \"B0FFKPM428\", \"B0HK0SMXZP\", \"B0KUJDTL2T\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"重庆中国三峡博物馆\", \"下浩里\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001709RVF\", \"B0FFHS7UNC\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LD2ZN6V8\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0I2GHEWGO\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFKPM428\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LD9R4BSM\", \"B0LD2ZN6V8\", \"B0JGU1BCQY\", \"B0LUKHTVP6\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B00170CSGT\", \"B0I2GHEWGO\", \"B0GDUU6NZR\", \"B00178768N\", \"B0FFHBGFWL\", \"B0017091IQ\", \"B0G1RKY8LL\", \"B0FFKPM428\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B00170CSGT\", \"B0GDUU6NZR\", \"B0FFHBGFWL\", \"B0017091IQ\", \"B0G1RKY8LL\", \"B0FFKPM428\", \"B0HK0SMXZP\", \"B0KUJDTL2T\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"重庆十八梯传统风貌区\", \"十八梯观景台\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0G1XDI8P4\", \"B0LDGAD2XG\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0JGU1BCQY\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B00178768N\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFG2LOI9\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LUKHTVP6\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0GDUU6NZR\", \"B00178768N\", \"B0FFHBGFWL\", \"B0HGNSNT35\", \"B0FFF59Z28\", \"B0HKKDK0CZ\", \"B0G1S58CKG\", \"B0KGGA7E0W\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B00170CSGT\", \"B0GDUU6NZR\", \"B00178768N\", \"B0FFHBGFWL\", \"B0017091IQ\", \"B0G1RKY8LL\", \"B0FFKPM428\", \"B0HK0SMXZP\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚300元仅为预算预留，尚未获得实际房价。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "酒店每晚300元仅为预算预留，尚未获得实际房价。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+    ],
+    "usage": {
+      "prompt_tokens": 29643,
+      "completion_tokens": 3406,
+      "llm_calls": 4
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 995,
+      "subtotal": 995,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 995 元 = 995 元。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "墨然居智能民宿",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "tool_call_count": 46,
+    "hotel_source": "agent",
+    "final_days": 3,
+    "final_weather_days": 3
+  },
+  "request": {
+    "city": "重庆",
+    "start_date": "2026-10-20",
+    "travel_days": 3,
+    "transportation": "公共交通",
+    "accommodation": "民宿",
+    "preferences": [
+      "美食"
+    ],
+    "must_visit": [],
+    "free_text_input": ""
+  },
+  "expect": {
+    "success": true,
+    "days": 3
+  },
+  "exception": null,
+  "warnings": [
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+    "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0LD9R4BSM,B0LD2ZN6V8,B0JGU1BCQY",
+    "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0LD9R4BSM,B0LD2ZN6V8,B0JGU1BCQY",
+    "2026-10-21 breakfast 重复餐厅 B0FFHBGFWL，附近尚有未使用候选：B0LD9R4BSM,B0LD2ZN6V8,B0JGU1BCQY",
+    "2026-10-22 breakfast 重复餐厅 B0FFHBGFWL，附近尚有未使用候选：B0FFKVYWBE",
+    "2026-10-22 lunch 重复餐厅 B0GDUU6NZR，附近尚有未使用候选：B00178768N,B0FFKVYWBE",
+    "酒店每晚300元仅为预算预留，尚未获得实际房价。",
+    "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「人民解放纪念碑」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「罗汉寺」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-20：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+    "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+    "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-22：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+    "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+    "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0LUKHTVP6"
+  ],
+  "message": "",
+  "started_at": "2026-10-20T01:08:25"
+}

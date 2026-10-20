@@ -227,6 +227,8 @@ def refresh_plan_tickets(plan, request, day_indices=None, *, lookup_state=None):
     result = _refresh_official(result, request, day_indices)
     settings = get_settings()
     runtime = lookup_state if lookup_state is not None else {}
+    from .flyai_tickets import refresh as refresh_platform_tickets
+    result = refresh_platform_tickets(result, request, selected, runtime)
     if not settings.ticket_web_search_enabled:
         from .ticket_estimates import fill
         return fill(result, request, runtime, selected)

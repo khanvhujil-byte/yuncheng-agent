@@ -25,7 +25,6 @@ from .prompts import LEGACY_PLANNER_AGENT_PROMPT, PLANNER_AGENT_PROMPT
 
 logger = logging.getLogger(__name__)
 
-
 def _chat_json(prompt: str, user: str, *, extra_user: str = "", max_tokens: int | None = None):
     """Call the LLM client, forwarding max_tokens only when the callable supports it.
 
@@ -82,7 +81,7 @@ def _format_weather(items: list[WeatherInfo]) -> str:
     return "\n".join(lines)
 
 
-def _select_candidates(candidates: list[Attraction], travel_days: int) -> tuple[list[Attraction], int]:
+def _select_candidates(candidates: list[Attraction], travel_days: int, goals=None, weather=None) -> tuple[list[Attraction], int]:
     """上下文压缩：只把最有用的候选送进 prompt（对应 learn-claude-code 的 s08）。
 
     为什么需要：实测一次 3 天请求的候选池有 41 条，**全塞进 prompt 会白烧掉一大截输入 token**，
@@ -101,10 +100,14 @@ def _select_candidates(candidates: list[Attraction], travel_days: int) -> tuple[
     if not settings.prompt_compact or total == 0:
         return candidates, total
 
-    anchors = [item for item in candidates if item.required]
+    from ..services.day_goals import matches
+    from ..services.itinerary_experience import severe_weather
+    need_indoor = any(severe_weather(w) for w in (weather or []))
+    anchors = [item for item in candidates if item.required or any(matches(item, goal) for goal in (goals or []))
+               or (need_indoor and any(word in item.name for word in ('博物馆', '美术馆', '科技馆', '水族馆', '海洋馆')))]
     limit = max(settings.prompt_max_candidates, travel_days * 4, len(anchors))
     rest = sorted(
-        (item for item in candidates if not item.required),
+        (item for item in candidates if item not in anchors),
         key=lambda item: (item.rating or 0.0, item.visit_duration),
         reverse=True,
     )
@@ -117,7 +120,8 @@ def _build_user_prompt(state: TripState) -> str:
     req = state["request"]
     anchors = list(state.get("must_visit_resolved") or [])
     must_visit = [a.name for a in anchors]
-    selected, total = _select_candidates(list(state.get("attractions") or []), state["travel_days"])
+    from ..services.day_goals import effective_goals
+    selected, total = _select_candidates(list(state.get("attractions") or []), state["travel_days"], effective_goals(req), state.get('weather'))
 
     pool_note = (
         f"候选池共 {total} 个，已按评分筛出 {len(selected)} 个供你编排"
@@ -172,7 +176,7 @@ def _build_user_prompt(state: TripState) -> str:
 # ================================================================ 两层校验
 
 
-def _validate_structure(days: list[DayPlan], start_date: str, travel_days: int) -> Optional[str]:
+def _validate_structure(days: list[DayPlan], start_date: str, travel_days: int, request=None) -> Optional[str]:
     """第 1 层：结构校验。通过返回 None，不通过返回**具体**的错误说明（用于回喂）。"""
     if len(days) != travel_days:
         return f"days 数量是 {len(days)}，但要求正好 {travel_days} 天。"
@@ -188,7 +192,9 @@ def _validate_structure(days: list[DayPlan], start_date: str, travel_days: int) 
             return f"第 {offset + 1} 天（day_index={offset}）的 date 应是 {expect}，实际是 {day.date}。"
         if day.day_index != offset:
             return f"第 {offset + 1} 天的 day_index 应是 {offset}，实际是 {day.day_index}。"
-        if not day.attractions:
+        from ..services.day_window import policy
+        window = policy(request, expect) if request else None
+        if not day.attractions and not (window and window['allow_empty_attractions']):
             return f"{day.date} 这一天没有安排任何景点。"
         if len(day.attractions) > MAX_SPOTS_PER_DAY:
             # 实测模型会把一天排到 5 个景点。这是「硬约束配校验代码」的又一例：
@@ -197,7 +203,7 @@ def _validate_structure(days: list[DayPlan], start_date: str, travel_days: int) 
                 f"{day.date} 安排了 {len(day.attractions)} 个景点，超过每天上限 "
                 f"{MAX_SPOTS_PER_DAY} 个。请重新分配到其他天（每天 2~3 个）。"
             )
-        if not day.meals:
+        if not day.meals and not (window and not window['meal_types']):
             return f"{day.date} 这一天没有安排三餐。"
     return None
 
@@ -313,6 +319,7 @@ def _enrich(days: list[DayPlan], candidates: list[Attraction]) -> int:
             item.image_url = item.image_url or source.image_url
             item.photos = item.photos or list(source.photos)
             item.required = source.required
+            item.retrieval_scope = source.retrieval_scope
             # ↑ 「必去」标记也在这里回填。它是我们自己的锚点解析结果（city.py 设的
             #   required=True），不该由模型决定 —— 实测模型输出里没有这个字段，
             #   不补的话前端不会给用户打「必去」标。
@@ -379,18 +386,22 @@ def compose_plan(state: TripState) -> dict:
     )
 
     # 长行程的 JSON 明显更长：给足输出 token，否则会被截断成非法 JSON。
-    max_tokens = min(8192, max(2048, 1000 + int(state["travel_days"]) * 300))
+    max_tokens = min(8192, max(2048, 1000 + int(state["travel_days"]) * (360 if state.get('accommodation_version', 0) >= 11 else 300)))
 
     def call_planner(extra: str):
+        from ..services.planning_limits import available
+        counter = state.setdefault('_planner_call_counter', {'count': 0})
+        if not available({**state, 'planning_calls': int(state.get('planning_calls') or 0) + counter['count']}):
+            raise LlmError('PLANNING_LIMIT', '已达到本次编排调用、时间或token上限，停止额外格式修复。')
+        counter['count'] += 1
         prompt = PLANNER_AGENT_PROMPT if state.get('unified_planning') else LEGACY_PLANNER_AGENT_PROMPT
+        if state.get('unified_planning') and state.get('accommodation_version', 0) < 11:
+            prompt += '\n本任务为旧契约恢复，仅输出hotel_id而非stays，整程一家酒店；无住宿时hotel_id=null。'
         return _chat_json(prompt, _build_user_prompt(state), extra_user=extra, max_tokens=max_tokens)
 
     def parse_json(text_raw: str):
-        text = text_raw.strip()
-        if text.startswith("```"):
-            text = text.split("```")[1] if "```" in text[3:] else text[3:]
-            text = text.removeprefix("json").strip()
-        return json.loads(text)
+        from ..services.planner_json import loads
+        return loads(text_raw)
 
     # ---- 调模型（错误分两类：确定性错误 / 网络类 —— 和 amap.py 同一套理念）----
     try:
@@ -401,7 +412,7 @@ def compose_plan(state: TripState) -> dict:
         # 顶掉，随后的 enrich/budget 便只能交付"行程未生成"。
         return {
             "retries": attempts,
-            "validate_error": None,
+            "validate_error": state.get('validate_error') or f"模型服务错误 [{exc.code}]：{exc.detail}",
             "warnings": [f"模型服务不可用（{exc.code}），未能生成行程。"],
             "errors": [f"{exc.code}: {exc.detail}"],
         }
@@ -409,7 +420,7 @@ def compose_plan(state: TripState) -> dict:
         logger.error("LLM 不可达 | %s", exc)
         return {
             "retries": attempts,
-            "validate_error": None,
+            "validate_error": state.get('validate_error') or "模型服务连接失败，编排未完成。",
             "warnings": ["模型服务连接失败，未能生成行程。"],
             "errors": [f"UPSTREAM_TIMEOUT: {exc}"],
         }
@@ -439,6 +450,19 @@ def compose_plan(state: TripState) -> dict:
             payload = parse_json(raw2)
         except json.JSONDecodeError as exc2:
             return {**_retry(attempts, f"输出不是合法 JSON：{exc2}", []), "usage": usage}
+    if isinstance(payload, dict) and payload.get('data_requests') and state.get('accommodation_version', 0) >= 11:
+        from ..services.planning_data import fulfill
+        try:
+            update = fulfill(payload['data_requests'], state)
+        except (ValueError, TypeError, KeyError) as exc:
+            return {**_retry(attempts, f'补采请求无效：{exc}', []), 'usage': usage}
+        return {**update, **_retry(attempts, '补采已按运行配额处理。请依据更新后的候选和planning_data_requests结果生成完整行程；不足时明确冲突，不要重复补采。', update.get('warnings', [])), 'usage': usage}
+    if isinstance(payload, dict) and 'meal_patches' in payload:
+        from ..services.planner_patch import expand
+        try:
+            payload = expand(payload, state)
+        except (ValueError, TypeError, KeyError) as exc:
+            return {**_retry(attempts, f'餐次修复无效：{exc}', []), 'usage':usage}
     if not isinstance(payload, dict) or not isinstance(payload.get("days"), list):
         return {**_retry(attempts, "输出必须是含 days 数组的 JSON 对象。", []), "usage": usage}
 
@@ -447,33 +471,39 @@ def compose_plan(state: TripState) -> dict:
         from ..services.unified_planning import bind_choices
         try:
             payload, chosen_hotel = bind_choices(payload, state)
+            from ..services.intercity import effective_request
+            req = effective_request(req, payload)
         except (ValueError, TypeError, KeyError) as exc:
-            return {**_retry(attempts, f"统一编排选择无效：{exc}", []), "usage": usage}
+            return {**_retry(attempts, f"统一编排选择无效：{exc}。内部planner_draft已保留，可用meal_patches仅修正错误餐次，再完整复核。", []),
+                    "usage": usage, 'planner_draft': payload if state.get('accommodation_version', 0) >= 11 else None}
     # ---- 第 1 层：结构校验 ----
     try:
         days = [DayPlan.model_validate(item) for item in (payload.get("days") or [])]
     except ValidationError as exc:
         return {**_retry(attempts, f"字段结构不合法：{exc.errors()}", []), "usage": usage}
 
-    structure_error = _validate_structure(days, req.start_date, state["travel_days"])
+    structure_error = _validate_structure(days, req.start_date, state["travel_days"], req if state.get('accommodation_version', 0) >= 11 else None)
     if structure_error:
         return {**_retry(attempts, structure_error, []), "usage": usage}
 
     if req.requirements.food.priority == "food_first" and state.get("experience_enabled"):
         identifiers = {r.poi_id for r in state.get("restaurants", [])}
         for day in days:
-            if sorted(m.type for m in day.meals) != ["breakfast", "dinner", "lunch"] or any(
+            if sorted(m.type for m in day.meals) != sorted(day.meal_types if day.meal_types is not None else ['breakfast', 'lunch', 'dinner']) or any(
                     not m.restaurant_id or m.restaurant_id not in identifiers for m in day.meals):
                 return {**_retry(attempts, "美食优先时，必须先从真实餐饮候选指定早中晚三餐restaurant_id，再围绕它们安排景点。", []), "usage": usage}
 
     # ---- 第 2 层：约束校验 ----
+    from ..services.schedule_repair import restore_required_anchors
+    required_notes = restore_required_anchors(days, anchors, req,
+                           chosen_hotel.model_dump() if chosen_hotel else None)
     report, constraint_error = _validate_constraints(days, anchors, candidates)
 
     if constraint_error and attempts < MAX_ATTEMPTS:
         return {**_retry(attempts, constraint_error, []), "usage": usage}
 
     # ---- 通过，或重试用尽 → 落地（重试用尽时如实写 warning，不静默）----
-    warnings: list[str] = []
+    warnings: list[str] = list(required_notes)
     if constraint_error:
         warnings.append(f"行程已生成，但有一个没满足的要求：{constraint_error}")
     warnings.extend(
@@ -491,12 +521,27 @@ def compose_plan(state: TripState) -> dict:
     replaceable = [c for c in candidates if not _excluded(c.name, req.requirements.attractions)]
     dedupe_notes = dedupe_attractions(days, replaceable)
     warnings.extend(dedupe_notes)
+    from ..services.day_goals import audit_days
+    goal_errors = audit_days({'days': [day.model_dump() for day in days]}, req)
+    if goal_errors:
+        constraint_error = '\n'.join(filter(None, [constraint_error, *goal_errors]))
+        if attempts < MAX_ATTEMPTS:
+            return {**_retry(attempts, constraint_error, warnings), 'usage': usage}
 
     plan = {
         **_empty_plan(state),
         "days": [day.model_dump() for day in days],
         "overall_suggestions": str(payload.get("overall_suggestions") or ""),
+        'origin_city': req.origin_city, 'adult_count': req.adult_count, 'room_count': req.room_count,
+        'intercity_legs': payload.get('intercity_legs', []),
+        'transport_warnings': state.get('transport_warnings', []),
     }
+    if payload.get('accommodation_version') == 11:
+        from ..services.stays import attach_boundaries
+        plan.update(accommodation_version=11, stays=payload['stays'],
+                    regional_weather=state.get('regional_weather', []), hotel_nights=state['nights'])
+        attach_boundaries(plan, req, endpoints=state.get('trip_endpoints'))
+        plan['hotel'] = chosen_hotel.model_dump() if chosen_hotel else None
     choice_errors = []
     selection_update = {}
     if state.get('unified_planning'):
@@ -520,7 +565,7 @@ def compose_plan(state: TripState) -> dict:
     # Identity/required-stop validation and source facts have already passed.
     # Reduce an obviously overfull optional selection locally, before hotel
     # selection or paid route retrieval, instead of asking the model to repeat.
-    plan, load_notes = preflight_plan(plan, state)
+    plan, load_notes = preflight_plan(plan, {**state, 'request': req})
     warnings.extend(load_notes)
     logger.info(
         "编排完成 | %d 天 | 必去满足 %d/%d | 重试次数 %d | 回填字段 %d 个景点",
@@ -532,6 +577,7 @@ def compose_plan(state: TripState) -> dict:
     )
     return {
         "plan": plan,
+        "planner_draft": None,
         "constraint_report": report,
         "retries": attempts,
         # 重试耗尽只停止再生成，不能清除仍然成立的约束错误。
@@ -539,6 +585,7 @@ def compose_plan(state: TripState) -> dict:
         **selection_update,
         "warnings": warnings,
         "usage": usage,
+        'transport_candidates': state.get('transport_candidates', {}),
     }
 
 

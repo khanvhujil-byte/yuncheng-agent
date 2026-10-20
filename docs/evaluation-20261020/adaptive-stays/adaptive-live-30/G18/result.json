@@ -1,0 +1,757 @@
+{
+  "case_id": "G18",
+  "name": "哈尔滨3天历史文化",
+  "kind": "generate",
+  "passed": true,
+  "violations": [],
+  "duration_s": 60.95,
+  "error_code": null,
+  "success": true,
+  "days": 3,
+  "response_summary": {
+    "success": true,
+    "error_code": null,
+    "message": "",
+    "cached": false,
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "魁星楼：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "哈尔滨啤酒博物馆：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B01C305FGO,B01C305KTL,B0LUCHSWWT,B0JU1RURAI",
+      "2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B01C305FGO,B01C305KTL,B0LUCHSWWT,B0JU1RURAI",
+      "2026-10-22 lunch 重复餐厅 B01C31876V，附近尚有未使用候选：B01C31AN0L,B01C30I9L8,B0M677YQXW,B0IRRRIV6Z,B0FFICJM1T,B0FFJX5ZJ0,B0JRV5HCV0,B0FFLCIT08",
+      "2026-10-22 dinner 重复餐厅 B01C305FGO，附近尚有未使用候选：B0JK6YU4C5,B01C3017E1,B01C305ISB,B0G0FS9H7P,B01C31AN0L,B01C30I9L8,B0M677YQXW,B0IRRRIV6Z",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「斯大林公园」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「哈尔滨市人民防洪胜利纪念塔」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21 breakfast 重复餐厅 B01C305FGO，附近尚有未使用候选：B0JU1RURAI",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「哈尔滨防洪纪念塔广场」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。"
+    ],
+    "budget": {
+      "ticket_reserve_amount": 100,
+      "total_attractions": 30,
+      "total_hotels": 520,
+      "total_meals": 294,
+      "total_transportation": 120,
+      "total": 964,
+      "items": [
+        {
+          "category": "attraction",
+          "name": "圣·索菲亚教堂",
+          "day_index": 0,
+          "amount": 20,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：圣·索菲亚教堂日常成人参观门票挂牌价约20元，仅入内参观；广场外观免费。"
+        },
+        {
+          "category": "attraction",
+          "name": "索菲亚广场",
+          "day_index": 0,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：索菲亚广场为开放城市广场，免费进入。"
+        },
+        {
+          "category": "meal",
+          "name": "白杨包子新一百店",
+          "day_index": 0,
+          "amount": 20,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "森林小吃(森林街)",
+          "day_index": 0,
+          "amount": 42,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "欣欢元风味小吃(经北小区店)",
+          "day_index": 0,
+          "amount": 33,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "中华巴洛克历史文化街区",
+          "day_index": 1,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：中华巴洛克历史文化街区为开放街区，免费游览。"
+        },
+        {
+          "category": "attraction",
+          "name": "哈尔滨市博物馆",
+          "day_index": 1,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：哈尔滨市博物馆为公立博物馆，日常免费开放。"
+        },
+        {
+          "category": "meal",
+          "name": "道里区吉晟居砂锅面店(新一百店)",
+          "day_index": 1,
+          "amount": 21,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "北山酒馆",
+          "day_index": 1,
+          "amount": 48,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "满宝馄饨(哈尔滨道里曼哈顿店)",
+          "day_index": 1,
+          "amount": 18,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "极乐寺",
+          "day_index": 2,
+          "amount": 10,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：极乐寺日常成人门票约10元，按常规挂牌价估算。"
+        },
+        {
+          "category": "attraction",
+          "name": "哈尔滨工业大学博物馆",
+          "day_index": 2,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：哈尔滨工业大学博物馆通常免费开放，按0元估算。"
+        },
+        {
+          "category": "meal",
+          "name": "森林小吃(森林街)",
+          "day_index": 2,
+          "amount": 42,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "肯德基(兆麟店)",
+          "day_index": 2,
+          "amount": 26,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "老霍家黑皮肘子锅包肉(总店)",
+          "day_index": 2,
+          "amount": 44,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-20 住宿：北之国公寓(中央大街店)",
+          "day_index": 0,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-21 住宿：北之国公寓(中央大街店)",
+          "day_index": 1,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "transportation",
+          "name": "市内交通（公共交通）",
+          "day_index": null,
+          "amount": 120,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "按每人每天 40 元的固定表估算"
+        }
+      ],
+      "known_total": 0,
+      "estimated_total": 964,
+      "unknown_items": [],
+      "limit": null,
+      "limit_status": "none",
+      "limit_basis": "未设置预算上限。当前口径：已知 0 元 + 估算 964 元 = 964 元。"
+    },
+    "hotel": {
+      "name": "北之国公寓(中央大街店)",
+      "poi_id": "B0H6X6TOH3",
+      "address": "经纬街61号经纬360大厦B座10楼1011室",
+      "location": {
+        "longitude": 126.623863,
+        "latitude": 45.766525
+      },
+      "price_range": "",
+      "rating": "4.7",
+      "distance": "距最终行程景点加权平均 1.6 km（直线估计）",
+      "type": "住宿服务相关",
+      "estimated_cost": 260,
+      "cost_status": "estimated",
+      "cost_source": "static_estimate",
+      "price_evidence_url": null,
+      "nights": 2,
+      "check_in_after": null,
+      "check_in_before": null,
+      "check_out_before": null,
+      "operations_evidence_url": null
+    },
+    "hotel_nights": 2,
+    "accommodation_version": 11,
+    "stays": [
+      {
+        "check_in": "2026-10-20",
+        "check_out": "2026-10-21",
+        "hotel": {
+          "name": "北之国公寓(中央大街店)",
+          "poi_id": "B0H6X6TOH3",
+          "address": "经纬街61号经纬360大厦B座10楼1011室",
+          "location": {
+            "longitude": 126.623863,
+            "latitude": 45.766525
+          },
+          "price_range": "",
+          "rating": "4.7",
+          "distance": "",
+          "type": "住宿服务相关",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "中央大街附近经济型住宿，紧邻索菲亚教堂与道里老城片区，首日步行可达主要景点，免去换住整理时间。"
+      },
+      {
+        "check_in": "2026-10-21",
+        "check_out": "2026-10-22",
+        "hotel": {
+          "name": "北之国公寓(中央大街店)",
+          "poi_id": "B0H6X6TOH3",
+          "address": "经纬街61号经纬360大厦B座10楼1011室",
+          "location": {
+            "longitude": 126.623863,
+            "latitude": 45.766525
+          },
+          "price_range": "",
+          "rating": "4.7",
+          "distance": "",
+          "type": "住宿服务相关",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "次日行程集中在道外中华巴洛克与市博物馆片区，仍以中央大街为基地往返，连住减少退房入住60分钟与行李负担。"
+      }
+    ],
+    "stay_comparison": {
+      "strategy": "same_hotel",
+      "hotel_changes": 0,
+      "travel_minutes": 338,
+      "transfer_minutes": 0,
+      "basis": "路线工具核算所选方案；未取得备选实测时，不宣称节省具体分钟。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "北之国公寓(中央大街店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "多云"
+      },
+      {
+        "date": "2026-10-21",
+        "beyond_window": false,
+        "day_weather": "多云"
+      },
+      {
+        "date": "2026-10-22",
+        "beyond_window": false,
+        "day_weather": "晴"
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-20",
+        "day_index": 0,
+        "attractions": [
+          "圣·索菲亚教堂",
+          "索菲亚广场"
+        ],
+        "meals": [
+          "白杨包子新一百店",
+          "森林小吃(森林街)",
+          "欣欢元风味小吃(经北小区店)"
+        ],
+        "total_minutes": 634,
+        "route_start": null,
+        "route_end": {
+          "name": "北之国公寓(中央大街店)",
+          "location": {
+            "longitude": 126.623863,
+            "latitude": 45.766525
+          },
+          "poi_id": "B0H6X6TOH3",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "白杨包子新一百店",
+            "to_name": "圣·索菲亚教堂",
+            "from_id": "B0LUCHSWWT",
+            "to_id": "B01C305G2A",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "圣·索菲亚教堂",
+            "to_name": "森林小吃(森林街)",
+            "from_id": "B01C305G2A",
+            "to_id": "B01C305FGO",
+            "mode": "公共交通",
+            "duration_minutes": 15,
+            "distance_meters": 1116,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "森林小吃(森林街)",
+            "to_name": "索菲亚广场",
+            "from_id": "B01C305FGO",
+            "to_id": "B01C30J89Z",
+            "mode": "公共交通",
+            "duration_minutes": 11,
+            "distance_meters": 1017,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "索菲亚广场",
+            "to_name": "欣欢元风味小吃(经北小区店)",
+            "from_id": "B01C30J89Z",
+            "to_id": "B01C305KTL",
+            "mode": "公共交通",
+            "duration_minutes": 16,
+            "distance_meters": 2139,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "欣欢元风味小吃(经北小区店)",
+            "to_name": "北之国公寓(中央大街店)",
+            "from_id": "B01C305KTL",
+            "to_id": "B0H6X6TOH3",
+            "mode": "公共交通",
+            "duration_minutes": 28,
+            "distance_meters": 870,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 415
+      },
+      {
+        "date": "2026-10-21",
+        "day_index": 1,
+        "attractions": [
+          "中华巴洛克历史文化街区",
+          "哈尔滨市博物馆"
+        ],
+        "meals": [
+          "道里区吉晟居砂锅面店(新一百店)",
+          "北山酒馆",
+          "满宝馄饨(哈尔滨道里曼哈顿店)"
+        ],
+        "total_minutes": 652,
+        "route_start": {
+          "name": "北之国公寓(中央大街店)",
+          "location": {
+            "longitude": 126.623863,
+            "latitude": 45.766525
+          },
+          "poi_id": "B0H6X6TOH3",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "北之国公寓(中央大街店)",
+          "location": {
+            "longitude": 126.623863,
+            "latitude": 45.766525
+          },
+          "poi_id": "B0H6X6TOH3",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "北之国公寓(中央大街店)",
+            "to_name": "道里区吉晟居砂锅面店(新一百店)",
+            "from_id": "B0H6X6TOH3",
+            "to_id": "B0JU1RURAI",
+            "mode": "公共交通",
+            "duration_minutes": 14,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "道里区吉晟居砂锅面店(新一百店)",
+            "to_name": "中华巴洛克历史文化街区",
+            "from_id": "B0JU1RURAI",
+            "to_id": "B0FFFX17PB",
+            "mode": "公共交通",
+            "duration_minutes": 28,
+            "distance_meters": 3795,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "中华巴洛克历史文化街区",
+            "to_name": "北山酒馆",
+            "from_id": "B0FFFX17PB",
+            "to_id": "B01C31876V",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "北山酒馆",
+            "to_name": "哈尔滨市博物馆",
+            "from_id": "B01C31876V",
+            "to_id": "B0LUGDAMN1",
+            "mode": "公共交通",
+            "duration_minutes": 37,
+            "distance_meters": 3199,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "哈尔滨市博物馆",
+            "to_name": "满宝馄饨(哈尔滨道里曼哈顿店)",
+            "from_id": "B0LUGDAMN1",
+            "to_id": "B01C31AN0L",
+            "mode": "公共交通",
+            "duration_minutes": 11,
+            "distance_meters": 661,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "满宝馄饨(哈尔滨道里曼哈顿店)",
+            "to_name": "北之国公寓(中央大街店)",
+            "from_id": "B01C31AN0L",
+            "to_id": "B0H6X6TOH3",
+            "mode": "公共交通",
+            "duration_minutes": 17,
+            "distance_meters": 1228,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 387
+      },
+      {
+        "date": "2026-10-22",
+        "day_index": 2,
+        "attractions": [
+          "极乐寺",
+          "哈尔滨工业大学博物馆"
+        ],
+        "meals": [
+          "森林小吃(森林街)",
+          "肯德基(兆麟店)",
+          "老霍家黑皮肘子锅包肉(总店)"
+        ],
+        "total_minutes": 630,
+        "route_start": {
+          "name": "北之国公寓(中央大街店)",
+          "location": {
+            "longitude": 126.623863,
+            "latitude": 45.766525
+          },
+          "poi_id": "B0H6X6TOH3",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": null,
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "北之国公寓(中央大街店)",
+            "to_name": "森林小吃(森林街)",
+            "from_id": "B0H6X6TOH3",
+            "to_id": "B01C305FGO",
+            "mode": "公共交通",
+            "duration_minutes": 17,
+            "distance_meters": 1774,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "森林小吃(森林街)",
+            "to_name": "极乐寺",
+            "from_id": "B01C305FGO",
+            "to_id": "B01C304057",
+            "mode": "公共交通",
+            "duration_minutes": 32,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（AMAP_ERROR）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "极乐寺",
+            "to_name": "肯德基(兆麟店)",
+            "from_id": "B01C304057",
+            "to_id": "B01C30I9L8",
+            "mode": "公共交通",
+            "duration_minutes": 34,
+            "distance_meters": 4426,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "肯德基(兆麟店)",
+            "to_name": "哈尔滨工业大学博物馆",
+            "from_id": "B01C30I9L8",
+            "to_id": "B01C3179M6",
+            "mode": "公共交通",
+            "duration_minutes": 33,
+            "distance_meters": 3755,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "哈尔滨工业大学博物馆",
+            "to_name": "老霍家黑皮肘子锅包肉(总店)",
+            "from_id": "B01C3179M6",
+            "to_id": "B0JK6YU4C5",
+            "mode": "公共交通",
+            "duration_minutes": 21,
+            "distance_meters": 2887,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 162
+      }
+    ],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 964,
+      "subtotal": 964,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 964 元 = 964 元。"
+    },
+    "validate_error": null
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": null,
+    "retries": 1,
+    "budget_retries": 0,
+    "planning_calls": 3,
+    "composition_valid": true,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "魁星楼：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "哈尔滨啤酒博物馆：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B01C305FGO,B01C305KTL,B0LUCHSWWT,B0JU1RURAI\n2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B01C305FGO,B01C305KTL,B0LUCHSWWT,B0JU1RURAI\n2026-10-22 lunch 重复餐厅 B01C31876V，附近尚有未使用候选：B01C31AN0L,B01C30I9L8,B0M677YQXW,B0IRRRIV6Z,B0FFICJM1T,B0FFJX5ZJ0,B0JRV5HCV0,B0FFLCIT08\n2026-10-22 dinner 重复餐厅 B01C305FGO，附近尚有未使用候选：B0JK6YU4C5,B01C3017E1,B01C305ISB,B0G0FS9H7P,B01C31AN0L,B01C30I9L8,B0M677YQXW,B0IRRRIV6Z\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0H6X6TOH3\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0H6X6TOH3\"}], \"hotel_id\": \"B0H6X6TOH3\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"圣·索菲亚教堂\", \"索菲亚广场\", \"哈尔滨市人民防洪胜利纪念塔\", \"斯大林公园\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B01C305G2A\", \"B01C30J89Z\", \"B01C30I9EP\", \"B01C305H3T\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LUCHSWWT\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B01C305FGO\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFG850TE\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B01C305FGO\", \"B01C305KTL\", \"B0LUCHSWWT\", \"B0JU1RURAI\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B01C305FGO\", \"B01C305KTL\", \"B01C31AN0L\", \"B01C30I9L8\", \"B0M677YQXW\", \"B0FFKX4GGF\", \"B0IRRRIV6Z\", \"B0FFICJM1T\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B01C305FGO\", \"B01C305KTL\", \"B01C31AN0L\", \"B01C30I9L8\", \"B0M677YQXW\", \"B0FFKX4GGF\", \"B0IRRRIV6Z\", \"B0FFICJM1T\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"中华巴洛克历史文化街区\", \"哈尔滨市博物馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFFX17PB\", \"B0LUGDAMN1\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0G3ZMP0VQ\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B01C31876V\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B01C305KTL\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B01C305FGO\", \"B01C305KTL\", \"B0LUCHSWWT\", \"B0JU1RURAI\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B01C305FGO\", \"B01C31876V\", \"B01C31AN0L\", \"B01C30I9L8\", \"B0M677YQXW\", \"B0FFKX4GGF\", \"B0IRRRIV6Z\", \"B0FFICJM1T\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B01C305FGO\", \"B01C305KTL\", \"B01C31AN0L\", \"B01C30I9L8\", \"B0M677YQXW\", \"B0FFKX4GGF\", \"B0IRRRIV6Z\", \"B0FFICJM1T\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"极乐寺\", \"哈尔滨工业大学博物馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B01C304057\", \"B01C3179M6\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFKX4GGF\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B01C31876V\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B01C305FGO\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B01C305FGO\", \"B01C305KTL\", \"B0LUCHSWWT\", \"B0JU1RURAI\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B01C305FGO\", \"B01C305KTL\", \"B01C31876V\", \"B01C31AN0L\", \"B01C30I9L8\", \"B0M677YQXW\", \"B0FFKX4GGF\", \"B0IRRRIV6Z\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0JK6YU4C5\", \"B01C3017E1\", \"B01C305ISB\", \"B0G0FS9H7P\", \"B01C305FGO\", \"B01C305KTL\", \"B01C31AN0L\", \"B01C30I9L8\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「斯大林公园」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「哈尔滨市人民防洪胜利纪念塔」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21 breakfast 重复餐厅 B01C305FGO，附近尚有未使用候选：B0JU1RURAI\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0H6X6TOH3\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0H6X6TOH3\"}], \"hotel_id\": \"B0H6X6TOH3\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"圣·索菲亚教堂\", \"索菲亚广场\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B01C305G2A\", \"B01C30J89Z\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LUCHSWWT\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B01C305FGO\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B01C305KTL\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B01C305FGO\", \"B01C305KTL\", \"B0LUCHSWWT\", \"B0JU1RURAI\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B01C305FGO\", \"B01C305KTL\", \"B01C31AN0L\", \"B01C30I9L8\", \"B0M677YQXW\", \"B0FFKX4GGF\", \"B0IRRRIV6Z\", \"B0FFICJM1T\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B01C305FGO\", \"B01C305KTL\", \"B01C31AN0L\", \"B01C30I9L8\", \"B0M677YQXW\", \"B0FFKX4GGF\", \"B0IRRRIV6Z\", \"B0FFICJM1T\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"中华巴洛克历史文化街区\", \"哈尔滨市博物馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFFX17PB\", \"B0LUGDAMN1\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B01C305FGO\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B01C31876V\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B01C31AN0L\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B01C305FGO\", \"B01C305KTL\", \"B0LUCHSWWT\", \"B0JU1RURAI\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B01C305FGO\", \"B01C31876V\", \"B01C31AN0L\", \"B01C30I9L8\", \"B0M677YQXW\", \"B0FFKX4GGF\", \"B0IRRRIV6Z\", \"B0FFICJM1T\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B01C305FGO\", \"B01C305KTL\", \"B01C31AN0L\", \"B01C30I9L8\", \"B0M677YQXW\", \"B0FFKX4GGF\", \"B0IRRRIV6Z\", \"B0FFICJM1T\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"极乐寺\", \"哈尔滨工业大学博物馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B01C304057\", \"B01C3179M6\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0JU1RURAI\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B01C30I9L8\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0JK6YU4C5\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B01C305FGO\", \"B01C305KTL\", \"B0LUCHSWWT\", \"B0JU1RURAI\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B01C305FGO\", \"B01C305KTL\", \"B01C31876V\", \"B01C31AN0L\", \"B01C30I9L8\", \"B0M677YQXW\", \"B0FFKX4GGF\", \"B0IRRRIV6Z\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0JK6YU4C5\", \"B01C3017E1\", \"B01C305ISB\", \"B0G0FS9H7P\", \"B01C305FGO\", \"B01C305KTL\", \"B01C31AN0L\", \"B01C30I9L8\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「哈尔滨防洪纪念塔广场」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+    ],
+    "usage": {
+      "prompt_tokens": 34773,
+      "completion_tokens": 3614,
+      "llm_calls": 5
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 964,
+      "subtotal": 964,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 964 元 = 964 元。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "北之国公寓(中央大街店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "tool_call_count": 54,
+    "hotel_source": "agent",
+    "final_days": 3,
+    "final_weather_days": 3
+  },
+  "request": {
+    "city": "哈尔滨",
+    "start_date": "2026-10-20",
+    "travel_days": 3,
+    "transportation": "公共交通",
+    "accommodation": "经济型酒店",
+    "preferences": [
+      "历史文化"
+    ],
+    "must_visit": [],
+    "free_text_input": ""
+  },
+  "expect": {
+    "success": true,
+    "days": 3
+  },
+  "exception": null,
+  "warnings": [
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "魁星楼：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "哈尔滨啤酒博物馆：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+    "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B01C305FGO,B01C305KTL,B0LUCHSWWT,B0JU1RURAI",
+    "2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B01C305FGO,B01C305KTL,B0LUCHSWWT,B0JU1RURAI",
+    "2026-10-22 lunch 重复餐厅 B01C31876V，附近尚有未使用候选：B01C31AN0L,B01C30I9L8,B0M677YQXW,B0IRRRIV6Z,B0FFICJM1T,B0FFJX5ZJ0,B0JRV5HCV0,B0FFLCIT08",
+    "2026-10-22 dinner 重复餐厅 B01C305FGO，附近尚有未使用候选：B0JK6YU4C5,B01C3017E1,B01C305ISB,B0G0FS9H7P,B01C31AN0L,B01C30I9L8,B0M677YQXW,B0IRRRIV6Z",
+    "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+    "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「斯大林公园」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「哈尔滨市人民防洪胜利纪念塔」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+    "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+    "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-21 breakfast 重复餐厅 B01C305FGO，附近尚有未使用候选：B0JU1RURAI",
+    "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「哈尔滨防洪纪念塔广场」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。"
+  ],
+  "message": "",
+  "started_at": "2026-10-20T01:09:36"
+}

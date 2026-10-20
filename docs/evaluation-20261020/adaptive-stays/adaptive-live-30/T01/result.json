@@ -1,0 +1,1140 @@
+{
+  "case_id": "T01",
+  "name": "丽江5天其中两天周边雪山",
+  "kind": "generate",
+  "passed": false,
+  "violations": [
+    "success 期望 True，实际 False"
+  ],
+  "duration_s": 80.17,
+  "error_code": "PLAN_VALIDATION_FAILED",
+  "success": false,
+  "days": 5,
+  "response_summary": {
+    "success": false,
+    "error_code": "PLAN_VALIDATION_FAILED",
+    "message": "已返回部分结果：未通过校验：2026-10-20 breakfast 没有符合餐次的候选；2026-10-22 lunch 餐厅不符合就近/餐次条件，可选ID：B0JARUVV6A，请见上方提示。",
+    "cached": false,
+    "warnings": [
+      "周边主题检索覆盖市中心直线300公里内候选；实际通勤、预算仍需复核。",
+      "雪山景区不代表出行当天必有积雪；市区天气不能代表山区天气，山区天气及开放状态需另行确认。",
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：2026-10-24。",
+      "玉龙雪山国家级风景名胜区：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "麓江雪山：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "哈巴雪山：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "香格里拉·哈巴雪山·观景台：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0L1P55WOP",
+      "2026-10-20 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-21 breakfast 重复餐厅 B0FFG865VX，附近尚有未使用候选：B03780I16N,B03781586B,B0J2NUI8WJ,B0FFFDCXXB,B0HKKSI2SA,B0FFM0KDG3,B0KALU7VRY",
+      "2026-10-22 lunch 餐厅不符合就近/餐次条件，可选ID：B0KDNSN7ME",
+      "2026-10-22 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-23 breakfast 重复餐厅 B0FFG865VX，附近尚有未使用候选：B03781586B,B0J2NUI8WJ,B0FFFDCXXB",
+      "2026-10-23 lunch 餐厅不符合就近/餐次条件，可选ID：B0FFG865VX",
+      "2026-10-23 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-24 breakfast 重复餐厅 B0FFG865VX，附近尚有未使用候选：B03780I16N,B03781586B,B0HKKSI2SA,B0FFM0KDG3,B0KALU7VRY",
+      "2026-10-24 lunch 餐厅不符合就近/餐次条件，可选ID：B0L1P55WOP",
+      "2026-10-24 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-24 dinner 餐厅不符合就近/餐次条件，可选ID：B0L1P55WOP",
+      "2026-10-24 dinner 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「玉龙雪山国家级风景名胜区-玉液湖」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「玉龙雪山索道」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「玉龙雪山观景湖」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「东巴谷景区」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-21：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+      "2026-10-21：换住含60分钟整理、退房及入住预留；不默认酒店提供寄存，行李须可随行。",
+      "2026-10-21：未自动预订或取消酒店；入住、退房及行李处理条件需确认。",
+      "2026-10-22：换住含60分钟整理、退房及入住预留；不默认酒店提供寄存，行李须可随行。",
+      "2026-10-22：未自动预订或取消酒店；入住、退房及行李处理条件需确认。",
+      "2026-10-24：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+      "2026-10-24：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-20 breakfast 附近没有4公里内的可用候选，保留当前餐厅（约28.6公里）；营业时间与交通请出发前确认。",
+      "2026-10-22 lunch 附近没有4公里内的可用候选，保留当前餐厅（约10.3公里）；营业时间与交通请出发前确认。",
+      "2026-10-23 lunch 附近没有4公里内的可用候选，保留当前餐厅（约8.5公里）；营业时间与交通请出发前确认。",
+      "共 1 项费用金额未知（周边长途/景区接驳附加交通费），未计入总价 —— 所以下面的总计只是已知与估算部分之和，不代表实际开销。",
+      "2026-10-20 breakfast 没有符合餐次的候选。",
+      "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22 lunch 附近没有4公里内的可用候选，保留当前餐厅（约9.0公里）；营业时间与交通请出发前确认。",
+      "2026-10-22 lunch 餐厅不符合就近/餐次条件，可选ID：B0JARUVV6A",
+      "2026-10-22 lunch 重复餐厅 B0J3SXDY5L，附近尚有未使用候选：B0JARUVV6A",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22 lunch 附近没有4公里内的可用候选，保留当前餐厅（约11.9公里）；营业时间与交通请出发前确认。",
+      "2026-10-23 lunch 附近没有4公里内的可用候选，保留当前餐厅（约8.4公里）；营业时间与交通请出发前确认。"
+    ],
+    "budget": {
+      "ticket_reserve_amount": 100,
+      "total_attractions": 330,
+      "total_hotels": 1040,
+      "total_meals": 1028,
+      "total_transportation": 600,
+      "total": 2998,
+      "items": [
+        {
+          "category": "attraction",
+          "name": "玉龙雪山国家级风景名胜区蓝月谷",
+          "day_index": 0,
+          "amount": 100,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：蓝月谷含在玉龙雪山景区大门票内，日常成人门票约100元，另需景区环保车费用，此处按大门票估算。"
+        },
+        {
+          "category": "meal",
+          "name": "滇西王子·梦回丽江·云南菜地标品牌(梦回丽江店)",
+          "day_index": 0,
+          "amount": 80,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "蓝月谷野生菌牦牛肉腊排骨火锅",
+          "day_index": 0,
+          "amount": 92,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "阿婆情腊排骨火锅·野生菌季(古城旗舰店)",
+          "day_index": 0,
+          "amount": 60,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "玉龙雪山国家级风景名胜区",
+          "day_index": 1,
+          "amount": 100,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：玉龙雪山景区日常成人门票挂牌价约100元，不含索道等二次消费。"
+        },
+        {
+          "category": "meal",
+          "name": "丽鹤饭店(龙潭广场店)",
+          "day_index": 1,
+          "amount": 54,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "袁记云饺(玉龙雪山国家级风景名胜区店)",
+          "day_index": 1,
+          "amount": 27,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "永和大王(茉莉上新·玉龙雪山店)",
+          "day_index": 1,
+          "amount": 32,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "龙女湖",
+          "day_index": 2,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：龙女湖为玉龙雪山景区周边自然湖泊，通常免费开放，估算为0元。"
+        },
+        {
+          "category": "meal",
+          "name": "玉龙甘海子小吃餐饮店",
+          "day_index": 2,
+          "amount": 25,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "餐厅未提供人均价格，按每人每餐固定规则预留；不是餐厅报价。"
+        },
+        {
+          "category": "meal",
+          "name": "蓝月谷野生菌牦牛肉腊排骨火锅",
+          "day_index": 2,
+          "amount": 92,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "田村·酸汤牦牛肉火锅(古城大水车店)",
+          "day_index": 2,
+          "amount": 73,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "文笔山风景区",
+          "day_index": 3,
+          "amount": 30,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：文笔山风景区日常成人门票约30元，按常规挂牌价估算。"
+        },
+        {
+          "category": "meal",
+          "name": "樱花餐厅",
+          "day_index": 3,
+          "amount": 87,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "滇西王子·梦回丽江·云南菜地标品牌(梦回丽江店)",
+          "day_index": 3,
+          "amount": 80,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "云雪丽 纳西庭院 现炒云南菜(古城南门店)",
+          "day_index": 3,
+          "amount": 76,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "玉龙雪山国家级风景名胜区-镜潭湖",
+          "day_index": 4,
+          "amount": 100,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：镜潭湖位于玉龙雪山景区内，随景区大门票入场，日常成人票约100元。"
+        },
+        {
+          "category": "meal",
+          "name": "云雪丽·现炒云南菜(大水车店)",
+          "day_index": 4,
+          "amount": 66,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "蓝月谷野生菌牦牛肉腊排骨火锅",
+          "day_index": 4,
+          "amount": 92,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "蓝月谷野生菌牦牛肉腊排骨火锅",
+          "day_index": 4,
+          "amount": 92,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-20 住宿：丽江丽之蓝商务酒店",
+          "day_index": 0,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-21 住宿：丽江金茂璞修万豪Design Hotels雪山酒店",
+          "day_index": 1,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-22 住宿：丽江丽之蓝商务酒店",
+          "day_index": 2,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-23 住宿：丽江丽之蓝商务酒店",
+          "day_index": 3,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "transportation",
+          "name": "市内交通（自驾）",
+          "day_index": null,
+          "amount": 600,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "按每人每天 120 元的固定表估算"
+        },
+        {
+          "category": "transportation",
+          "name": "周边长途/景区接驳附加交通费",
+          "day_index": null,
+          "amount": null,
+          "status": "unknown",
+          "source": "unknown",
+          "note": "市内固定交通预留不覆盖长途、山区接驳、停车和过路费；需取得报价。"
+        }
+      ],
+      "known_total": 0,
+      "estimated_total": 2998,
+      "unknown_items": [
+        "周边长途/景区接驳附加交通费"
+      ],
+      "limit": null,
+      "limit_status": "none",
+      "limit_basis": "未设置预算上限。当前口径：已知 0 元 + 估算 2998 元 = 2998 元，另有 1 项金额未知。"
+    },
+    "hotel": null,
+    "hotel_nights": 4,
+    "accommodation_version": 11,
+    "stays": [
+      {
+        "check_in": "2026-10-20",
+        "check_out": "2026-10-21",
+        "hotel": {
+          "name": "丽江丽之蓝商务酒店",
+          "poi_id": "B0FFF37GCB",
+          "address": "康仲路16号古城区祥和街道祥云社区康仲路丽江客运站西150米(近古城南门)",
+          "location": {
+            "longitude": 100.2322,
+            "latitude": 26.858576
+          },
+          "price_range": "",
+          "rating": "4.5",
+          "distance": "",
+          "type": "宾馆酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "首晚住市区南侧经济型酒店，便于次日清晨自驾前往玉龙雪山，也方便当晚在古城周边用餐。"
+      },
+      {
+        "check_in": "2026-10-21",
+        "check_out": "2026-10-22",
+        "hotel": {
+          "name": "丽江金茂璞修万豪Design Hotels雪山酒店",
+          "poi_id": "B0FFIWOXFB",
+          "address": "云南省丽江市玉龙纳西族自治县玉龙雪山甘海子",
+          "location": {
+            "longitude": 100.268075,
+            "latitude": 27.095941
+          },
+          "price_range": "",
+          "rating": "",
+          "distance": "",
+          "type": "住宿服务;宾馆酒店;五星级宾馆",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "雪山游览当晚就近入住雪山脚下酒店，减少往返市区约40-50分钟车程，次日可继续雪山片区活动。"
+      },
+      {
+        "check_in": "2026-10-22",
+        "check_out": "2026-10-23",
+        "hotel": {
+          "name": "丽江丽之蓝商务酒店",
+          "poi_id": "B0FFF37GCB",
+          "address": "康仲路16号古城区祥和街道祥云社区康仲路丽江客运站西150米(近古城南门)",
+          "location": {
+            "longitude": 100.2322,
+            "latitude": 26.858576
+          },
+          "price_range": "",
+          "rating": "4.5",
+          "distance": "",
+          "type": "宾馆酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "雪山行程结束后回到市区连住两晚，覆盖市区游览与返程，避免频繁换住整理行李。"
+      },
+      {
+        "check_in": "2026-10-23",
+        "check_out": "2026-10-24",
+        "hotel": {
+          "name": "丽江丽之蓝商务酒店",
+          "poi_id": "B0FFF37GCB",
+          "address": "康仲路16号古城区祥和街道祥云社区康仲路丽江客运站西150米(近古城南门)",
+          "location": {
+            "longitude": 100.2322,
+            "latitude": 26.858576
+          },
+          "price_range": "",
+          "rating": "4.5",
+          "distance": "",
+          "type": "宾馆酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "市区连住第二晚，末日晚餐与次日出发都在古城周边，动线集中。"
+      }
+    ],
+    "stay_comparison": {
+      "strategy": "segmented",
+      "hotel_changes": 2,
+      "travel_minutes": 497,
+      "transfer_minutes": 120,
+      "basis": "路线工具核算所选方案；未取得备选实测时，不宣称节省具体分钟。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": null,
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "多云"
+      },
+      {
+        "date": "2026-10-21",
+        "beyond_window": false,
+        "day_weather": "晴"
+      },
+      {
+        "date": "2026-10-22",
+        "beyond_window": false,
+        "day_weather": "晴"
+      },
+      {
+        "date": "2026-10-23",
+        "beyond_window": false,
+        "day_weather": "晴"
+      },
+      {
+        "date": "2026-10-24",
+        "beyond_window": true,
+        "day_weather": ""
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-20",
+        "day_index": 0,
+        "attractions": [
+          "玉龙雪山国家级风景名胜区蓝月谷"
+        ],
+        "meals": [
+          "滇西王子·梦回丽江·云南菜地标品牌(梦回丽江店)",
+          "蓝月谷野生菌牦牛肉腊排骨火锅",
+          "阿婆情腊排骨火锅·野生菌季(古城旗舰店)"
+        ],
+        "total_minutes": 652,
+        "route_start": null,
+        "route_end": {
+          "name": "丽江丽之蓝商务酒店",
+          "location": {
+            "longitude": 100.2322,
+            "latitude": 26.858576
+          },
+          "poi_id": "B0FFF37GCB",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "滇西王子·梦回丽江·云南菜地标品牌(梦回丽江店)",
+            "to_name": "蓝月谷野生菌牦牛肉腊排骨火锅",
+            "from_id": "B0FFG865VX",
+            "to_id": "B0J3SXDY5L",
+            "mode": "自驾",
+            "duration_minutes": 50,
+            "distance_meters": 34764,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "蓝月谷野生菌牦牛肉腊排骨火锅",
+            "to_name": "玉龙雪山国家级风景名胜区蓝月谷",
+            "from_id": "B0J3SXDY5L",
+            "to_id": "B0378157WA",
+            "mode": "自驾",
+            "duration_minutes": 3,
+            "distance_meters": 1078,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "玉龙雪山国家级风景名胜区蓝月谷",
+            "to_name": "阿婆情腊排骨火锅·野生菌季(古城旗舰店)",
+            "from_id": "B0378157WA",
+            "to_id": "B0G0YMJVKI",
+            "mode": "自驾",
+            "duration_minutes": 44,
+            "distance_meters": 33595,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "阿婆情腊排骨火锅·野生菌季(古城旗舰店)",
+            "to_name": "丽江丽之蓝商务酒店",
+            "from_id": "B0G0YMJVKI",
+            "to_id": "B0FFF37GCB",
+            "mode": "自驾",
+            "duration_minutes": 17,
+            "distance_meters": 3095,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 712
+      },
+      {
+        "date": "2026-10-21",
+        "day_index": 1,
+        "attractions": [
+          "玉龙雪山国家级风景名胜区"
+        ],
+        "meals": [
+          "丽鹤饭店(龙潭广场店)",
+          "袁记云饺(玉龙雪山国家级风景名胜区店)",
+          "永和大王(茉莉上新·玉龙雪山店)"
+        ],
+        "total_minutes": 642,
+        "route_start": {
+          "name": "丽江丽之蓝商务酒店",
+          "location": {
+            "longitude": 100.2322,
+            "latitude": 26.858576
+          },
+          "poi_id": "B0FFF37GCB",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "丽江金茂璞修万豪Design Hotels雪山酒店",
+          "location": {
+            "longitude": 100.268075,
+            "latitude": 27.095941
+          },
+          "poi_id": "B0FFIWOXFB",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": true,
+        "route_legs": [
+          {
+            "from_name": "丽江丽之蓝商务酒店",
+            "to_name": "丽鹤饭店(龙潭广场店)",
+            "from_id": "B0FFF37GCB",
+            "to_id": "B03780I16N",
+            "mode": "自驾",
+            "duration_minutes": 9,
+            "distance_meters": 3244,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "丽鹤饭店(龙潭广场店)",
+            "to_name": "袁记云饺(玉龙雪山国家级风景名胜区店)",
+            "from_id": "B03780I16N",
+            "to_id": "B0KDNSN7ME",
+            "mode": "自驾",
+            "duration_minutes": 39,
+            "distance_meters": 27898,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "袁记云饺(玉龙雪山国家级风景名胜区店)",
+            "to_name": "玉龙雪山国家级风景名胜区",
+            "from_id": "B0KDNSN7ME",
+            "to_id": "B0378008FA",
+            "mode": "自驾",
+            "duration_minutes": 3,
+            "distance_meters": 299,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "玉龙雪山国家级风景名胜区",
+            "to_name": "永和大王(茉莉上新·玉龙雪山店)",
+            "from_id": "B0378008FA",
+            "to_id": "B0MBLZT1HU",
+            "mode": "自驾",
+            "duration_minutes": 2,
+            "distance_meters": 291,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "永和大王(茉莉上新·玉龙雪山店)",
+            "to_name": "丽江金茂璞修万豪Design Hotels雪山酒店",
+            "from_id": "B0MBLZT1HU",
+            "to_id": "B0FFIWOXFB",
+            "mode": "自驾",
+            "duration_minutes": 7,
+            "distance_meters": 2041,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 593
+      },
+      {
+        "date": "2026-10-22",
+        "day_index": 2,
+        "attractions": [
+          "龙女湖"
+        ],
+        "meals": [
+          "玉龙甘海子小吃餐饮店",
+          "蓝月谷野生菌牦牛肉腊排骨火锅",
+          "田村·酸汤牦牛肉火锅(古城大水车店)"
+        ],
+        "total_minutes": 649,
+        "route_start": {
+          "name": "丽江金茂璞修万豪Design Hotels雪山酒店",
+          "location": {
+            "longitude": 100.268075,
+            "latitude": 27.095941
+          },
+          "poi_id": "B0FFIWOXFB",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "丽江丽之蓝商务酒店",
+          "location": {
+            "longitude": 100.2322,
+            "latitude": 26.858576
+          },
+          "poi_id": "B0FFF37GCB",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": true,
+        "route_legs": [
+          {
+            "from_name": "丽江金茂璞修万豪Design Hotels雪山酒店",
+            "to_name": "玉龙甘海子小吃餐饮店",
+            "from_id": "B0FFIWOXFB",
+            "to_id": "B0L02UNUKT",
+            "mode": "自驾",
+            "duration_minutes": 8,
+            "distance_meters": 2765,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "玉龙甘海子小吃餐饮店",
+            "to_name": "蓝月谷野生菌牦牛肉腊排骨火锅",
+            "from_id": "B0L02UNUKT",
+            "to_id": "B0J3SXDY5L",
+            "mode": "自驾",
+            "duration_minutes": 23,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "蓝月谷野生菌牦牛肉腊排骨火锅",
+            "to_name": "龙女湖",
+            "from_id": "B0J3SXDY5L",
+            "to_id": "B0378157WK",
+            "mode": "自驾",
+            "duration_minutes": 59,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "龙女湖",
+            "to_name": "田村·酸汤牦牛肉火锅(古城大水车店)",
+            "from_id": "B0378157WK",
+            "to_id": "B0KAHD1IE4",
+            "mode": "自驾",
+            "duration_minutes": 44,
+            "distance_meters": 22056,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "田村·酸汤牦牛肉火锅(古城大水车店)",
+            "to_name": "丽江丽之蓝商务酒店",
+            "from_id": "B0KAHD1IE4",
+            "to_id": "B0FFF37GCB",
+            "mode": "自驾",
+            "duration_minutes": 14,
+            "distance_meters": 3871,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 570
+      },
+      {
+        "date": "2026-10-23",
+        "day_index": 3,
+        "attractions": [
+          "文笔山风景区"
+        ],
+        "meals": [
+          "樱花餐厅",
+          "滇西王子·梦回丽江·云南菜地标品牌(梦回丽江店)",
+          "云雪丽 纳西庭院 现炒云南菜(古城南门店)"
+        ],
+        "total_minutes": 640,
+        "route_start": {
+          "name": "丽江丽之蓝商务酒店",
+          "location": {
+            "longitude": 100.2322,
+            "latitude": 26.858576
+          },
+          "poi_id": "B0FFF37GCB",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "丽江丽之蓝商务酒店",
+          "location": {
+            "longitude": 100.2322,
+            "latitude": 26.858576
+          },
+          "poi_id": "B0FFF37GCB",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "丽江丽之蓝商务酒店",
+            "to_name": "樱花餐厅",
+            "from_id": "B0FFF37GCB",
+            "to_id": "B03781586B",
+            "mode": "自驾",
+            "duration_minutes": 13,
+            "distance_meters": 1898,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "樱花餐厅",
+            "to_name": "滇西王子·梦回丽江·云南菜地标品牌(梦回丽江店)",
+            "from_id": "B03781586B",
+            "to_id": "B0FFG865VX",
+            "mode": "自驾",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "滇西王子·梦回丽江·云南菜地标品牌(梦回丽江店)",
+            "to_name": "文笔山风景区",
+            "from_id": "B0FFG865VX",
+            "to_id": "B0378008WK",
+            "mode": "自驾",
+            "duration_minutes": 27,
+            "distance_meters": 14051,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "文笔山风景区",
+            "to_name": "云雪丽 纳西庭院 现炒云南菜(古城南门店)",
+            "from_id": "B0378008WK",
+            "to_id": "B0FFFDCXXB",
+            "mode": "自驾",
+            "duration_minutes": 46,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "云雪丽 纳西庭院 现炒云南菜(古城南门店)",
+            "to_name": "丽江丽之蓝商务酒店",
+            "from_id": "B0FFFDCXXB",
+            "to_id": "B0FFF37GCB",
+            "mode": "自驾",
+            "duration_minutes": 5,
+            "distance_meters": 1443,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 653
+      },
+      {
+        "date": "2026-10-24",
+        "day_index": 4,
+        "attractions": [
+          "玉龙雪山国家级风景名胜区-镜潭湖"
+        ],
+        "meals": [
+          "云雪丽·现炒云南菜(大水车店)",
+          "蓝月谷野生菌牦牛肉腊排骨火锅",
+          "蓝月谷野生菌牦牛肉腊排骨火锅"
+        ],
+        "total_minutes": 630,
+        "route_start": {
+          "name": "丽江丽之蓝商务酒店",
+          "location": {
+            "longitude": 100.2322,
+            "latitude": 26.858576
+          },
+          "poi_id": "B0FFF37GCB",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": null,
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "丽江丽之蓝商务酒店",
+            "to_name": "云雪丽·现炒云南菜(大水车店)",
+            "from_id": "B0FFF37GCB",
+            "to_id": "B0FFM0KDG3",
+            "mode": "自驾",
+            "duration_minutes": 10,
+            "distance_meters": 3666,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "云雪丽·现炒云南菜(大水车店)",
+            "to_name": "玉龙雪山国家级风景名胜区-镜潭湖",
+            "from_id": "B0FFM0KDG3",
+            "to_id": "B0FFGMRNLN",
+            "mode": "自驾",
+            "duration_minutes": 49,
+            "distance_meters": 34514,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "玉龙雪山国家级风景名胜区-镜潭湖",
+            "to_name": "蓝月谷野生菌牦牛肉腊排骨火锅",
+            "from_id": "B0FFGMRNLN",
+            "to_id": "B0J3SXDY5L",
+            "mode": "自驾",
+            "duration_minutes": 2,
+            "distance_meters": 407,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "蓝月谷野生菌牦牛肉腊排骨火锅",
+            "to_name": "蓝月谷野生菌牦牛肉腊排骨火锅",
+            "from_id": "B0J3SXDY5L",
+            "to_id": "B0J3SXDY5L",
+            "mode": "自驾",
+            "duration_minutes": 10,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 470
+      }
+    ],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 2998,
+      "subtotal": 2998,
+      "unknown_items": [
+        "周边长途/景区接驳附加交通费"
+      ],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 2998 元 = 2998 元，另有 1 项金额未知。"
+    },
+    "validate_error": "2026-10-20 breakfast 没有符合餐次的候选。\n2026-10-22 lunch 餐厅不符合就近/餐次条件，可选ID：B0JARUVV6A\n2026-10-22 lunch 重复餐厅 B0J3SXDY5L，附近尚有未使用候选：B0JARUVV6A\n\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0FFF37GCB\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0FFIWOXFB\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B0FFF37GCB\"}, {\"check_in\": \"2026-10-23\", \"hotel_id\": \"B0FFF37GCB\"}], \"hotel_id\": null, \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 652, \"attraction_names\": [\"玉龙雪山国家级风景名胜区蓝月谷\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378157WA\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG865VX\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0J3SXDY5L\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0G0YMJVKI\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": []}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0J3SXDY5L\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 642, \"attraction_names\": [\"玉龙雪山国家级风景名胜区\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378008FA\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B03780I16N\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0KDNSN7ME\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0MBLZT1HU\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\", \"B0FFM0KDG3\", \"B0KALU7VRY\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0KDNSN7ME\", \"B0MBLZT1HU\", \"B0L1P55WOP\", \"B0L02UNUKT\", \"B0LAKSF4D6\", \"B0MUR48MF5\", \"B0LDVR52ZE\", \"B0LUV6DQ5D\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0KDNSN7ME\", \"B0MBLZT1HU\", \"B0L02UNUKT\", \"B0LAKSF4D6\", \"B0MUR48MF5\", \"B0LDVR52ZE\", \"B0LUV6DQ5D\", \"B0FFHJV02V\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 649, \"attraction_names\": [\"龙女湖\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378157WK\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0L02UNUKT\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0J3SXDY5L\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0KAHD1IE4\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0L02UNUKT\", \"B0MUR48MF5\", \"B0KRR6M8YR\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": []}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"]}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 640, \"attraction_names\": [\"文笔山风景区\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378008WK\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B03781586B\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFG865VX\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFFDCXXB\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": []}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\"]}]}, {\"date\": \"2026-10-24\", \"day_index\": 4, \"total_minutes\": 630, \"attraction_names\": [\"玉龙雪山国家级风景名胜区-镜潭湖\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFGMRNLN\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFM0KDG3\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0J3SXDY5L\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0J3SXDY5L\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\", \"B0FFM0KDG3\", \"B0KALU7VRY\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0J3SXDY5L\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0J3SXDY5L\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。"
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": "2026-10-20 breakfast 没有符合餐次的候选。\n2026-10-22 lunch 餐厅不符合就近/餐次条件，可选ID：B0JARUVV6A\n2026-10-22 lunch 重复餐厅 B0J3SXDY5L，附近尚有未使用候选：B0JARUVV6A\n\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0FFF37GCB\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0FFIWOXFB\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B0FFF37GCB\"}, {\"check_in\": \"2026-10-23\", \"hotel_id\": \"B0FFF37GCB\"}], \"hotel_id\": null, \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 652, \"attraction_names\": [\"玉龙雪山国家级风景名胜区蓝月谷\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378157WA\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG865VX\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0J3SXDY5L\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0G0YMJVKI\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": []}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0J3SXDY5L\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 642, \"attraction_names\": [\"玉龙雪山国家级风景名胜区\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378008FA\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B03780I16N\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0KDNSN7ME\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0MBLZT1HU\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\", \"B0FFM0KDG3\", \"B0KALU7VRY\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0KDNSN7ME\", \"B0MBLZT1HU\", \"B0L1P55WOP\", \"B0L02UNUKT\", \"B0LAKSF4D6\", \"B0MUR48MF5\", \"B0LDVR52ZE\", \"B0LUV6DQ5D\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0KDNSN7ME\", \"B0MBLZT1HU\", \"B0L02UNUKT\", \"B0LAKSF4D6\", \"B0MUR48MF5\", \"B0LDVR52ZE\", \"B0LUV6DQ5D\", \"B0FFHJV02V\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 649, \"attraction_names\": [\"龙女湖\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378157WK\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0L02UNUKT\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0J3SXDY5L\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0KAHD1IE4\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0L02UNUKT\", \"B0MUR48MF5\", \"B0KRR6M8YR\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": []}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"]}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 640, \"attraction_names\": [\"文笔山风景区\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378008WK\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B03781586B\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFG865VX\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFFDCXXB\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": []}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\"]}]}, {\"date\": \"2026-10-24\", \"day_index\": 4, \"total_minutes\": 630, \"attraction_names\": [\"玉龙雪山国家级风景名胜区-镜潭湖\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFGMRNLN\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFM0KDG3\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0J3SXDY5L\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0J3SXDY5L\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\", \"B0FFM0KDG3\", \"B0KALU7VRY\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0J3SXDY5L\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0J3SXDY5L\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+    "retries": 1,
+    "budget_retries": 0,
+    "planning_calls": 3,
+    "composition_valid": true,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "warnings": [
+      "周边主题检索覆盖市中心直线300公里内候选；实际通勤、预算仍需复核。",
+      "雪山景区不代表出行当天必有积雪；市区天气不能代表山区天气，山区天气及开放状态需另行确认。",
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：2026-10-24。",
+      "玉龙雪山国家级风景名胜区：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "麓江雪山：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "哈巴雪山：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "香格里拉·哈巴雪山·观景台：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0L1P55WOP\n2026-10-20 breakfast 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-21 breakfast 重复餐厅 B0FFG865VX，附近尚有未使用候选：B03780I16N,B03781586B,B0J2NUI8WJ,B0FFFDCXXB,B0HKKSI2SA,B0FFM0KDG3,B0KALU7VRY\n2026-10-22 lunch 餐厅不符合就近/餐次条件，可选ID：B0KDNSN7ME\n2026-10-22 lunch 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-23 breakfast 重复餐厅 B0FFG865VX，附近尚有未使用候选：B03781586B,B0J2NUI8WJ,B0FFFDCXXB\n2026-10-23 lunch 餐厅不符合就近/餐次条件，可选ID：B0FFG865VX\n2026-10-23 lunch 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-24 breakfast 重复餐厅 B0FFG865VX，附近尚有未使用候选：B03780I16N,B03781586B,B0HKKSI2SA,B0FFM0KDG3,B0KALU7VRY\n2026-10-24 lunch 餐厅不符合就近/餐次条件，可选ID：B0L1P55WOP\n2026-10-24 lunch 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-24 dinner 餐厅不符合就近/餐次条件，可选ID：B0L1P55WOP\n2026-10-24 dinner 距用餐片区超过4公里，需换候选或重排景点。\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0FFF37GCB\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0FFIWOXFB\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B0FFF37GCB\"}, {\"check_in\": \"2026-10-23\", \"hotel_id\": \"B0FFF37GCB\"}], \"hotel_id\": null, \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"玉龙雪山国家级风景名胜区蓝月谷\", \"玉龙雪山国家级风景名胜区-玉液湖\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378157WA\", \"B037814YDS\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG865VX\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0L1P55WOP\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0G0YMJVKI\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0L1P55WOP\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0L1P55WOP\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"玉龙雪山国家级风景名胜区\", \"玉龙雪山索道\", \"玉龙雪山观景湖\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378008FA\", \"B0378157WL\", \"B0K6DS8TXV\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG865VX\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0KDNSN7ME\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0MBLZT1HU\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\", \"B0FFM0KDG3\", \"B0KALU7VRY\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0KDNSN7ME\", \"B0MBLZT1HU\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0KDNSN7ME\", \"B0MBLZT1HU\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"东巴谷景区\", \"龙女湖\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378008F8\", \"B0378157WK\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0MBLZT1HU\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0L1P55WOP\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0KAHD1IE4\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0KDNSN7ME\", \"B0MBLZT1HU\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": []}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"]}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 0, \"attraction_names\": [\"文笔山风景区\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378008WK\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG865VX\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0J2NUI8WJ\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFFDCXXB\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": []}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\"]}]}, {\"date\": \"2026-10-24\", \"day_index\": 4, \"total_minutes\": 0, \"attraction_names\": [\"玉龙雪山国家级风景名胜区-镜潭湖\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFGMRNLN\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG865VX\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFM0KDG3\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B03780I16N\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\", \"B0FFM0KDG3\", \"B0KALU7VRY\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0L1P55WOP\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0L1P55WOP\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「玉龙雪山国家级风景名胜区-玉液湖」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「玉龙雪山索道」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「玉龙雪山观景湖」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「东巴谷景区」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-21：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+      "2026-10-21：换住含60分钟整理、退房及入住预留；不默认酒店提供寄存，行李须可随行。",
+      "2026-10-21：未自动预订或取消酒店；入住、退房及行李处理条件需确认。",
+      "2026-10-22：换住含60分钟整理、退房及入住预留；不默认酒店提供寄存，行李须可随行。",
+      "2026-10-22：未自动预订或取消酒店；入住、退房及行李处理条件需确认。",
+      "2026-10-24：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+      "2026-10-24：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-20 breakfast 附近没有4公里内的可用候选，保留当前餐厅（约28.6公里）；营业时间与交通请出发前确认。",
+      "2026-10-22 lunch 附近没有4公里内的可用候选，保留当前餐厅（约10.3公里）；营业时间与交通请出发前确认。",
+      "2026-10-23 lunch 附近没有4公里内的可用候选，保留当前餐厅（约8.5公里）；营业时间与交通请出发前确认。",
+      "共 1 项费用金额未知（周边长途/景区接驳附加交通费），未计入总价 —— 所以下面的总计只是已知与估算部分之和，不代表实际开销。",
+      "2026-10-20 breakfast 没有符合餐次的候选。\n2026-10-20 breakfast 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-22 lunch 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-23 lunch 餐厅不符合就近/餐次条件，可选ID：B0FFG865VX\n2026-10-23 lunch 距用餐片区超过4公里，需换候选或重排景点。\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0FFF37GCB\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0FFIWOXFB\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B0FFF37GCB\"}, {\"check_in\": \"2026-10-23\", \"hotel_id\": \"B0FFF37GCB\"}], \"hotel_id\": null, \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"玉龙雪山国家级风景名胜区蓝月谷\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378157WA\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG865VX\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0J3SXDY5L\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0G0YMJVKI\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": []}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0J3SXDY5L\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"玉龙雪山国家级风景名胜区\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378008FA\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B03780I16N\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0KDNSN7ME\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0MBLZT1HU\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\", \"B0FFM0KDG3\", \"B0KALU7VRY\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0KDNSN7ME\", \"B0MBLZT1HU\", \"B0L1P55WOP\", \"B0L02UNUKT\", \"B0LAKSF4D6\", \"B0MUR48MF5\", \"B0LDVR52ZE\", \"B0LUV6DQ5D\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0KDNSN7ME\", \"B0MBLZT1HU\", \"B0L02UNUKT\", \"B0LAKSF4D6\", \"B0MUR48MF5\", \"B0LDVR52ZE\", \"B0LUV6DQ5D\", \"B0FFHJV02V\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"龙女湖\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378157WK\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0L02UNUKT\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0JARUVV6A\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0KAHD1IE4\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0L02UNUKT\", \"B0MUR48MF5\", \"B0KRR6M8YR\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": []}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"]}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 0, \"attraction_names\": [\"文笔山风景区\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378008WK\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B03781586B\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0J2NUI8WJ\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFFDCXXB\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": []}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\"]}]}, {\"date\": \"2026-10-24\", \"day_index\": 4, \"total_minutes\": 0, \"attraction_names\": [\"玉龙雪山国家级风景名胜区-镜潭湖\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFGMRNLN\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFM0KDG3\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0J3SXDY5L\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0J3SXDY5L\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\", \"B0FFM0KDG3\", \"B0KALU7VRY\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0J3SXDY5L\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0J3SXDY5L\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-21：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+      "2026-10-21：换住含60分钟整理、退房及入住预留；不默认酒店提供寄存，行李须可随行。",
+      "2026-10-21：未自动预订或取消酒店；入住、退房及行李处理条件需确认。",
+      "2026-10-22：换住含60分钟整理、退房及入住预留；不默认酒店提供寄存，行李须可随行。",
+      "2026-10-22：未自动预订或取消酒店；入住、退房及行李处理条件需确认。",
+      "2026-10-24：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+      "2026-10-24：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-20 breakfast 附近没有4公里内的可用候选，保留当前餐厅（约28.6公里）；营业时间与交通请出发前确认。",
+      "2026-10-22 lunch 附近没有4公里内的可用候选，保留当前餐厅（约9.0公里）；营业时间与交通请出发前确认。",
+      "2026-10-23 lunch 附近没有4公里内的可用候选，保留当前餐厅（约8.5公里）；营业时间与交通请出发前确认。",
+      "共 1 项费用金额未知（周边长途/景区接驳附加交通费），未计入总价 —— 所以下面的总计只是已知与估算部分之和，不代表实际开销。",
+      "2026-10-20 breakfast 没有符合餐次的候选。\n2026-10-20 breakfast 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-22 lunch 餐厅不符合就近/餐次条件，可选ID：B0JARUVV6A\n2026-10-22 lunch 重复餐厅 B0J3SXDY5L，附近尚有未使用候选：B0JARUVV6A\n2026-10-22 lunch 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-23 lunch 距用餐片区超过4公里，需换候选或重排景点。\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0FFF37GCB\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0FFIWOXFB\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B0FFF37GCB\"}, {\"check_in\": \"2026-10-23\", \"hotel_id\": \"B0FFF37GCB\"}], \"hotel_id\": null, \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"玉龙雪山国家级风景名胜区蓝月谷\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378157WA\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG865VX\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0J3SXDY5L\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0G0YMJVKI\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": []}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0J3SXDY5L\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"玉龙雪山国家级风景名胜区\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378008FA\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B03780I16N\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0KDNSN7ME\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0MBLZT1HU\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\", \"B0FFM0KDG3\", \"B0KALU7VRY\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0KDNSN7ME\", \"B0MBLZT1HU\", \"B0L1P55WOP\", \"B0L02UNUKT\", \"B0LAKSF4D6\", \"B0MUR48MF5\", \"B0LDVR52ZE\", \"B0LUV6DQ5D\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0KDNSN7ME\", \"B0MBLZT1HU\", \"B0L02UNUKT\", \"B0LAKSF4D6\", \"B0MUR48MF5\", \"B0LDVR52ZE\", \"B0LUV6DQ5D\", \"B0FFHJV02V\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"龙女湖\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378157WK\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0L02UNUKT\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0J3SXDY5L\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0KAHD1IE4\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0L02UNUKT\", \"B0MUR48MF5\", \"B0KRR6M8YR\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": []}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"]}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 0, \"attraction_names\": [\"文笔山风景区\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378008WK\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B03781586B\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFG865VX\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFFDCXXB\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": []}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\"]}]}, {\"date\": \"2026-10-24\", \"day_index\": 4, \"total_minutes\": 0, \"attraction_names\": [\"玉龙雪山国家级风景名胜区-镜潭湖\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFGMRNLN\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFM0KDG3\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0J3SXDY5L\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0J3SXDY5L\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\", \"B0FFM0KDG3\", \"B0KALU7VRY\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0J3SXDY5L\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0J3SXDY5L\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-21：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+      "2026-10-21：换住含60分钟整理、退房及入住预留；不默认酒店提供寄存，行李须可随行。",
+      "2026-10-21：未自动预订或取消酒店；入住、退房及行李处理条件需确认。",
+      "2026-10-22：换住含60分钟整理、退房及入住预留；不默认酒店提供寄存，行李须可随行。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：未自动预订或取消酒店；入住、退房及行李处理条件需确认。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-24：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+      "2026-10-24：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-20 breakfast 附近没有4公里内的可用候选，保留当前餐厅（约28.6公里）；营业时间与交通请出发前确认。",
+      "2026-10-22 lunch 附近没有4公里内的可用候选，保留当前餐厅（约11.9公里）；营业时间与交通请出发前确认。",
+      "2026-10-23 lunch 附近没有4公里内的可用候选，保留当前餐厅（约8.4公里）；营业时间与交通请出发前确认。",
+      "共 1 项费用金额未知（周边长途/景区接驳附加交通费），未计入总价 —— 所以下面的总计只是已知与估算部分之和，不代表实际开销。"
+    ],
+    "usage": {
+      "prompt_tokens": 45057,
+      "completion_tokens": 4365,
+      "llm_calls": 4
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 2998,
+      "subtotal": 2998,
+      "unknown_items": [
+        "周边长途/景区接驳附加交通费"
+      ],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 2998 元 = 2998 元，另有 1 项金额未知。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": null,
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "tool_call_count": 82,
+    "hotel_source": "agent",
+    "final_days": 5,
+    "final_weather_days": 5
+  },
+  "request": {
+    "city": "丽江",
+    "start_date": "2026-10-20",
+    "travel_days": 5,
+    "transportation": "自驾",
+    "accommodation": "经济型酒店",
+    "preferences": [
+      "自然风光"
+    ],
+    "must_visit": [],
+    "free_text_input": "有两天想去周边的雪山，另外三天在市区，不要太赶"
+  },
+  "expect": {
+    "success": true,
+    "days": 5
+  },
+  "exception": null,
+  "warnings": [
+    "周边主题检索覆盖市中心直线300公里内候选；实际通勤、预算仍需复核。",
+    "雪山景区不代表出行当天必有积雪；市区天气不能代表山区天气，山区天气及开放状态需另行确认。",
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：2026-10-24。",
+    "玉龙雪山国家级风景名胜区：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "麓江雪山：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "哈巴雪山：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "香格里拉·哈巴雪山·观景台：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+    "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0L1P55WOP",
+    "2026-10-20 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-21 breakfast 重复餐厅 B0FFG865VX，附近尚有未使用候选：B03780I16N,B03781586B,B0J2NUI8WJ,B0FFFDCXXB,B0HKKSI2SA,B0FFM0KDG3,B0KALU7VRY",
+    "2026-10-22 lunch 餐厅不符合就近/餐次条件，可选ID：B0KDNSN7ME",
+    "2026-10-22 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-23 breakfast 重复餐厅 B0FFG865VX，附近尚有未使用候选：B03781586B,B0J2NUI8WJ,B0FFFDCXXB",
+    "2026-10-23 lunch 餐厅不符合就近/餐次条件，可选ID：B0FFG865VX",
+    "2026-10-23 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-24 breakfast 重复餐厅 B0FFG865VX，附近尚有未使用候选：B03780I16N,B03781586B,B0HKKSI2SA,B0FFM0KDG3,B0KALU7VRY",
+    "2026-10-24 lunch 餐厅不符合就近/餐次条件，可选ID：B0L1P55WOP",
+    "2026-10-24 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-24 dinner 餐厅不符合就近/餐次条件，可选ID：B0L1P55WOP",
+    "2026-10-24 dinner 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「玉龙雪山国家级风景名胜区-玉液湖」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「玉龙雪山索道」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「玉龙雪山观景湖」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「东巴谷景区」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-20：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+    "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+    "2026-10-21：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+    "2026-10-21：换住含60分钟整理、退房及入住预留；不默认酒店提供寄存，行李须可随行。",
+    "2026-10-21：未自动预订或取消酒店；入住、退房及行李处理条件需确认。",
+    "2026-10-22：换住含60分钟整理、退房及入住预留；不默认酒店提供寄存，行李须可随行。",
+    "2026-10-22：未自动预订或取消酒店；入住、退房及行李处理条件需确认。",
+    "2026-10-24：周边/山区天气与开放状态尚未现场核实，不能以市区预报保证适宜出行。",
+    "2026-10-24：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+    "2026-10-20 breakfast 附近没有4公里内的可用候选，保留当前餐厅（约28.6公里）；营业时间与交通请出发前确认。",
+    "2026-10-22 lunch 附近没有4公里内的可用候选，保留当前餐厅（约10.3公里）；营业时间与交通请出发前确认。",
+    "2026-10-23 lunch 附近没有4公里内的可用候选，保留当前餐厅（约8.5公里）；营业时间与交通请出发前确认。",
+    "共 1 项费用金额未知（周边长途/景区接驳附加交通费），未计入总价 —— 所以下面的总计只是已知与估算部分之和，不代表实际开销。",
+    "2026-10-20 breakfast 没有符合餐次的候选。",
+    "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-22 lunch 附近没有4公里内的可用候选，保留当前餐厅（约9.0公里）；营业时间与交通请出发前确认。",
+    "2026-10-22 lunch 餐厅不符合就近/餐次条件，可选ID：B0JARUVV6A",
+    "2026-10-22 lunch 重复餐厅 B0J3SXDY5L，附近尚有未使用候选：B0JARUVV6A",
+    "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-22 lunch 附近没有4公里内的可用候选，保留当前餐厅（约11.9公里）；营业时间与交通请出发前确认。",
+    "2026-10-23 lunch 附近没有4公里内的可用候选，保留当前餐厅（约8.4公里）；营业时间与交通请出发前确认。"
+  ],
+  "message": "已返回部分结果：未通过校验：2026-10-20 breakfast 没有符合餐次的候选；2026-10-22 lunch 餐厅不符合就近/餐次条件，可选ID：B0JARUVV6A，请见上方提示。",
+  "started_at": "2026-10-20T01:14:01"
+}

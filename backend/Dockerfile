@@ -1,5 +1,11 @@
 # 后端镜像。构建上下文是 backend/，所以 .env 不会被打进去（密钥永远走运行时注入）。
+FROM node:22-bookworm-slim AS flyai-node
 FROM python:3.13-slim
+
+# Official FlyAI CLI runs as an isolated Node subprocess; no global npm install.
+COPY --from=flyai-node /usr/local/bin/node /usr/local/bin/node
+RUN apt-get update && apt-get install -y --no-install-recommends libstdc++6 \
+    && rm -rf /var/lib/apt/lists/*
 
 # 不写 .pyc、日志不缓冲（容器里日志必须能实时流出来，否则看不到进度）
 ENV PYTHONUNBUFFERED=1 \
@@ -15,6 +21,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app ./app
 COPY scripts ./scripts
+RUN python scripts/install_flyai.py
 
 # 行程库（SQLite）落在 /app/data —— compose 里挂成 volume，容器删了数据还在
 RUN mkdir -p /app/data

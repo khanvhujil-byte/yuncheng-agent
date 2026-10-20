@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import threading
 
 import pytest
@@ -11,7 +11,7 @@ from tests.test_ticket_web import trip
 def parse(html, name='杭州西湖风景名胜区-曲院风荷'):
     page = ticket_web.Page()
     page.feed(html)
-    return ticket_web.extract_policy(page, name, '杭州', datetime.now(timezone.utc).date().isoformat())
+    return ticket_web.extract_policy(page, name, '杭州', datetime.now(timezone(timedelta(hours=8))).date().isoformat())
 
 
 @pytest.mark.parametrize(('html','price'), [
@@ -43,7 +43,7 @@ def test_alias_does_not_borrow_parent_child_offer_or_another_venue_price(html):
 
 
 def test_season_requires_explicit_dates_and_chooses_target_policy():
-    today = datetime.now(timezone.utc).date()
+    today = datetime.now(timezone(timedelta(hours=8))).date()
     value = parse('<h1>杭州曲院风荷</h1><p>旺季(4月1日至10月31日)成人票60元</p>'
                   '<p>淡季(11月1日至3月31日)成人票40元</p>')
     assert value['amount'] == (60 if 4 <= today.month <= 10 else 40)

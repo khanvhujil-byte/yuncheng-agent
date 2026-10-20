@@ -32,7 +32,7 @@
  *                  ★ 后端 schemas.py 的 DataSource 是 Literal，没登记的值会直接 500，
  *                    所以这里必须同步加上 —— 两份文件是同一份契约的两种语言表达。
  */
-export type DataSource = 'amap' | 'llm_estimated' | 'degraded' | 'user' | 'java' | 'catalog' | 'catalog+amap' | 'catalog_partial'
+export type DataSource = 'amap' | 'llm_estimated' | 'degraded' | 'user' | 'java' | 'catalog' | 'catalog+amap' | 'catalog_partial' | 'flyai'
 
 /**
  * sources 字段的 key 约定（后端按这些 key 填，前端按这些 key 查）。
@@ -85,15 +85,29 @@ export interface PlaceNeeds extends ModuleNeeds {
 }
 export interface Requirements {
   food?: PlaceNeeds & { priority?: 'nearby' | 'food_first'; travel_scope?: 'nearby' | 'citywide'; max_cost_per_meal?: number | null }
-  attractions?: PlaceNeeds & { max_per_day?: number }
-  hotel?: PlaceNeeds & { max_price_per_night?: number | null }
+  attractions?: PlaceNeeds & { max_per_day?: number; day_goals?: { theme: string; days: number; scope?: 'city' | 'surrounding'; day_indices?: number[] }[] }
+  hotel?: PlaceNeeds & { max_price_per_night?: number | null; stay_policy?: 'auto' | 'prefer_same' | 'must_same'; luggage_policy?: 'carry' | 'storage_required' }
   transport?: ModuleNeeds & { max_leg_minutes?: number | null; allow_estimated_routes?: boolean }
   pace?: ModuleNeeds & { max_day_minutes?: number; max_activity_minutes?: number | null }
   weather?: ModuleNeeds & { avoid_rain_outdoors?: boolean }
   budget?: ModuleNeeds
 }
 
+export interface StayLock { check_in: string; hotel_name: string; address?: string; city?: string }
+export interface OvernightStay { check_in: string; check_out: string; hotel: Hotel; locked: boolean; reason: string }
+export interface RoutePoint { name: string; location?: Location | null; poi_id?: string | null }
+
 export interface TripRequest {
+  origin_city?: string
+  intercity_mode?: 'none' | 'train' | 'flight' | 'auto'
+  return_trip?: boolean
+  adult_count?: number
+  room_count?: number
+  stay_locks?: StayLock[]
+  arrival_address?: string | null
+  departure_address?: string | null
+  arrival_time?: string | null
+  departure_time?: string | null
   requirements?: Requirements
   /** 目的地城市，如「杭州」 */
   city: string
@@ -161,6 +175,7 @@ export interface Attraction {
   /** 图片 URL 列表，来自高德 POI 自带的 photos */
   photos?: string[]
   poi_id?: string | null
+  retrieval_scope?: 'city' | 'surrounding'
   image_url?: string | null
   /**
    * 门票价（元）。★ v0.7 起**可空**，两种「没有数字」必须分开：
@@ -181,6 +196,10 @@ export interface Attraction {
 
 /** 酒店（v0.2：行程级一家，不是每天一个） */
 export interface Hotel {
+  provider_id?: string | null
+  provider_url?: string | null
+  platform_quotes?: Record<string, unknown>[]
+  price_note?: string
   poi_id?: string | null
   name: string
   address?: string
@@ -276,6 +295,14 @@ export interface DayPlan {
   meals: Meal[]
   /** 当日小计费用（元），由后端代码加总 */
   day_total_cost?: number
+  dated_boundaries?: boolean
+  meal_types?: Array<'breakfast' | 'lunch' | 'dinner'> | null
+  route_start?: RoutePoint | null
+  route_end?: RoutePoint | null
+  stay_check_in?: string | null
+  hotel_change?: boolean
+  transfer_minutes?: number
+  route_boundary_note?: string
   route_legs?: RouteLeg[]
   schedule?: ScheduleItem[]
   visit_minutes?: number
@@ -357,7 +384,36 @@ export interface ConstraintReport {
 }
 
 /** 最终的旅行计划 */
+export interface IntercityLeg {
+  offer_id: string
+  direction: 'outbound' | 'return'
+  mode: 'train' | 'flight'
+  origin: string
+  destination: string
+  departure_at: string
+  arrival_at: string
+  departure_station: string
+  arrival_station: string
+  transport_no: string
+  seat_class: string
+  duration_minutes: number
+  amount_per_adult: number | null
+  price_status: CostStatus
+  url?: string | null
+  observed_at: string
+  expires_at: string
+  exit_buffer_minutes: number
+  boarding_buffer_minutes: number
+  local_endpoint?: RoutePoint | null
+  price_note: string
+}
+
 export interface TripPlan {
+  origin_city?: string
+  adult_count?: number
+  room_count?: number
+  intercity_legs?: IntercityLeg[]
+  transport_warnings?: string[]
   city_characteristics?: string[]
   hotel_reason?: string
   city: string
@@ -374,6 +430,10 @@ export interface TripPlan {
   hotel_nights?: number
   /** V1 预留：跨区域行程分段住宿。V0 恒为空数组 */
   hotel_segments?: Hotel[]
+  accommodation_version?: number
+  stays?: OvernightStay[]
+  stay_comparison?: { strategy?: string; hotel_changes?: number; travel_minutes?: number; transfer_minutes?: number; basis?: string }
+  regional_weather?: { poi_id?: string; name: string; date: string; status: string; note: string; day_weather?: string; district_forecast?: { day_weather?: string; day_temp?: string | number; night_temp?: string | number } }[]
   /** 硬约束对账报告 */
   constraint_report?: ConstraintReport | null
   /** 降级与估算的说明文字。有内容就必须在界面上显示出来 */

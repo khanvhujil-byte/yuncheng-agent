@@ -1,0 +1,140 @@
+{
+  "case_id": "G08",
+  "name": "丽江5天民宿+超窗口1天",
+  "kind": "generate",
+  "passed": false,
+  "violations": [
+    "success 期望 True，实际 False",
+    "days 期望 5，实际 0"
+  ],
+  "duration_s": 17.22,
+  "error_code": "PLAN_VALIDATION_FAILED",
+  "success": false,
+  "days": 0,
+  "response_summary": {
+    "success": false,
+    "error_code": "PLAN_VALIDATION_FAILED",
+    "message": "已返回部分结果：行程未生成，hotel 未取到完整数据，未通过校验：统一编排选择无效：2026-10-20 hotel_id 不在已核验酒店候选池；days 数量是 0，但要求正好 5 天，请见上方提示。",
+    "cached": false,
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "未检索到符合要求的酒店候选，编排不得虚构住宿。",
+      "以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：2026-10-24。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "行程为空，未计算预算。",
+      "统一编排选择无效：2026-10-20 hotel_id 不在已核验酒店候选池。",
+      "days 数量是 0，但要求正好 5 天。",
+      "尚未找到可用酒店。"
+    ],
+    "budget": null,
+    "hotel": null,
+    "hotel_nights": 4,
+    "accommodation_version": 0,
+    "stays": [],
+    "stay_comparison": {},
+    "constraint_report": null,
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "多云"
+      },
+      {
+        "date": "2026-10-21",
+        "beyond_window": false,
+        "day_weather": "晴"
+      },
+      {
+        "date": "2026-10-22",
+        "beyond_window": false,
+        "day_weather": "晴"
+      },
+      {
+        "date": "2026-10-23",
+        "beyond_window": false,
+        "day_weather": "晴"
+      },
+      {
+        "date": "2026-10-24",
+        "beyond_window": true,
+        "day_weather": ""
+      }
+    ],
+    "days": [],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "degraded",
+      "weather": "amap"
+    },
+    "budget_verdict": null,
+    "validate_error": "统一编排选择无效：2026-10-20 hotel_id 不在已核验酒店候选池。"
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": "统一编排选择无效：2026-10-20 hotel_id 不在已核验酒店候选池。",
+    "retries": 2,
+    "budget_retries": 0,
+    "planning_calls": 2,
+    "composition_valid": false,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "degraded",
+      "weather": "amap"
+    },
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "未检索到符合要求的酒店候选，编排不得虚构住宿。",
+      "以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：2026-10-24。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "行程为空，未计算预算。"
+    ],
+    "usage": {
+      "prompt_tokens": 13678,
+      "completion_tokens": 1698,
+      "llm_calls": 2
+    },
+    "budget_verdict": null,
+    "constraint_report": null,
+    "tool_call_count": 6,
+    "hotel_source": "agent",
+    "final_days": 0,
+    "final_weather_days": 5
+  },
+  "request": {
+    "city": "丽江",
+    "start_date": "2026-10-20",
+    "travel_days": 5,
+    "transportation": "公共交通",
+    "accommodation": "民宿",
+    "preferences": [
+      "自然风光"
+    ],
+    "must_visit": [],
+    "free_text_input": ""
+  },
+  "expect": {
+    "success": true,
+    "days": 5,
+    "min_beyond_window": 1,
+    "fabricated": 0
+  },
+  "exception": null,
+  "warnings": [
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "未检索到符合要求的酒店候选，编排不得虚构住宿。",
+    "以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：2026-10-24。",
+    "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+    "行程为空，未计算预算。",
+    "统一编排选择无效：2026-10-20 hotel_id 不在已核验酒店候选池。",
+    "days 数量是 0，但要求正好 5 天。",
+    "尚未找到可用酒店。"
+  ],
+  "message": "已返回部分结果：行程未生成，hotel 未取到完整数据，未通过校验：统一编排选择无效：2026-10-20 hotel_id 不在已核验酒店候选池；days 数量是 0，但要求正好 5 天，请见上方提示。",
+  "started_at": "2026-10-20T01:33:52"
+}

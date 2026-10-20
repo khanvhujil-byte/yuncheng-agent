@@ -4,6 +4,8 @@
 
 生产部署与验收以 [上线准备与验收](docs/上线准备与验收-20261019.md) 为准。使用 `docker-compose.production.yml`；默认 `docker-compose.yml` 仅用于开发。Python SQLite 数据卷现在包含账号与会话，必须备份。
 
+手机同网体验、公网 HTTPS 部署和 GitHub 上传步骤见 [手机访问与 GitHub 部署指南](docs/手机访问与GitHub部署-20261020.md)。前端默认同源访问 API；本地前端运行 `npm run dev:lan` 后，手机连接同一 Wi-Fi，访问电脑局域网地址的 5173 端口。服务端密钥只配置在后端。
+
 **一个由两个服务组成的系统**：
 
 - **Python（FastAPI + LangGraph）** 负责 AI 能力：景点、天气、餐饮、酒店并行采集，编排 Agent 统一选择，

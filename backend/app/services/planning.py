@@ -112,7 +112,7 @@ def _to_trip_plan(final: dict, req: TripRequest) -> dict:
         这些碎片拼不到一起，所以必须在这里合。
     """
     plan = final.get("plan") or {}
-    warnings = list(final.get("warnings") or [])
+    warnings = _public_reasons(list(final.get("warnings") or []))
 
     return {
         # ① 先用 plan 的内容打底
@@ -201,6 +201,18 @@ def _unresolved_reasons(final: dict, data: dict) -> list[str]:
     return reasons
 
 
+def _public_reasons(unresolved: list[str]) -> list[str]:
+    """Keep actionable failures; retry matrices stay in the run journal."""
+    reasons = []
+    for raw in unresolved:
+        public = str(raw).split('【上次方案和按相同规则计算的候选】', 1)[0]
+        for line in public.splitlines():
+            line = line.strip()
+            if line:
+                reasons.append(line[:600] + ('…' if len(line) > 600 else ''))
+    return list(dict.fromkeys(reasons))
+
+
 def _partial_message(degraded: list[str], unresolved: list[str], has_days: bool) -> str:
     """部分结果的说明。**必须说清是"哪一类"没达成**，不能只丢一句"部分结果"。"""
     parts: list[str] = []
@@ -210,7 +222,7 @@ def _partial_message(degraded: list[str], unresolved: list[str], has_days: bool)
         parts.append(f"{'、'.join(degraded)} 未取到完整数据")
     if unresolved:
         # 去掉校验原因自带的句号：否则拼出来是"……请去掉重复。，请见上方提示。"
-        parts.append("未通过校验：" + "；".join(reason.rstrip("。") for reason in unresolved[:2]))
+        parts.append("未通过校验：" + "；".join(reason.rstrip("。") for reason in _public_reasons(unresolved)[:2]))
     return "已返回部分结果：" + "，".join(parts) + "，请见上方提示。"
 
 
@@ -239,7 +251,7 @@ def _finalize(
     判据是「sources 里有没有 degraded」，而不是「warnings 是否为空」——
     warnings 里混着降级类与说明类（如「必去景点已解析为…」），后者不代表行程不完整。
     """
-    warnings = list(final.get("warnings") or [])
+    warnings = _public_reasons(list(final.get("warnings") or []))
 
     # 预检失败（validate_city 没拿到 adcode，图已经走到 END）
     # 错误码由 validate_city 写进 state，这里不硬编码 —— 否则
@@ -284,6 +296,8 @@ def _finalize(
     unresolved = _unresolved_reasons(final, data) + _budget_reasons(final.get("budget_verdict")) + delivery_errors
     final = {**final, "delivery_errors": unresolved}
     ok = bool(days) and not degraded and not unresolved
+    warnings = list(dict.fromkeys([*warnings, *_public_reasons(unresolved)]))
+    data['warnings'] = warnings
     _record_delivery(thread_id, final, ok, elapsed_ms, warnings)
     message = "" if ok else _partial_message(degraded, unresolved, bool(days))
 
@@ -291,7 +305,7 @@ def _finalize(
     # 后两条都不能省：降级的入库 = 把一次故障永久固化；
     # 不合格的入库 = 把一份"系统自己知道排不下"的计划变成之后所有人的默认答案；
     # 预算未验证的入库 = 把一次不确定性固化成默认答案。
-    if ok and not cached and _cacheable_budget_status(final.get("budget_verdict")):
+    if ok and not cached and req.intercity_mode == 'none' and _cacheable_budget_status(final.get("budget_verdict")):
         try:
             store.save_itinerary(fingerprint, req, data)
             logger.info("行程已入库 | fingerprint=%s days=%d", fingerprint[:8], len(days))
@@ -334,6 +348,7 @@ def _finalize(
     return TripPlanResponse(
         success=ok,
         message=message,
+        error_code=None if ok else (final.get('error_code') or 'PLAN_VALIDATION_FAILED'),
         data=data,
         warnings=warnings,
         thread_id=thread_id,
@@ -394,7 +409,7 @@ def _cached_response(
     unresolved.extend(_budget_reasons(budget_verdict))
 
     ok = bool(days) and not degraded and not unresolved
-    warnings = list(data.get("warnings") or [])
+    warnings = _public_reasons(list(data.get("warnings") or []))
     # A cache entry that is *intrinsically* invalid (bad plan content, stale
     # constraint/budget verdict) must not keep being served. Transient
     # degradation (weather/price source down right now) is different: the
@@ -409,6 +424,8 @@ def _cached_response(
     _record_delivery(thread_id, {"request": req, "cached": True, "delivery_errors": unresolved, "tool_calls": refreshed_tools,
                        "usage": refreshed_usage, "budget_verdict": budget_verdict}, ok, elapsed_ms, warnings)
     warnings.extend(audit.get("warnings") or [])
+    warnings = list(dict.fromkeys([*warnings, *_public_reasons(unresolved)]))
+    data['warnings'] = warnings
 
     delivery_logging.log_run(
         thread_id=thread_id, fingerprint=fingerprint, cached=True, success=ok,
@@ -453,6 +470,15 @@ def _reuse_with_new_dates(plan: dict, req: TripRequest) -> dict:
     except ValueError:
         return data  # 日期本身不合法，交给正常路径去报错
 
+    if data.get('accommodation_version', 0) >= 11:
+        old_start = date.fromisoformat(data['start_date'])
+        shift = start - old_start
+        for stay in data.get('stays', []):
+            stay['check_in'] = (date.fromisoformat(stay['check_in']) + shift).isoformat()
+            stay['check_out'] = (date.fromisoformat(stay['check_out']) + shift).isoformat()
+        for w in data.get('regional_weather', []):
+            w['date'] = (date.fromisoformat(w['date']) + shift).isoformat()
+            w.update(status='unknown', district_forecast={}, note='本次访问日期的周边天气未核实，请重新查询；旧预报不沿用。')
     days = data.get("days") or []
     for index, day in enumerate(days):
         day["date"] = (start + timedelta(days=index)).isoformat()
@@ -492,6 +518,15 @@ def _reuse_with_new_dates(plan: dict, req: TripRequest) -> dict:
         )
     data["warnings"] = kept
     data["_refresh_tool_calls"] = ctx.calls
+    if data.get('accommodation_version', 0) >= 11:
+        from .stays import attach_boundaries
+        from .regional_stays import resolve_request_anchors
+        try:
+            _, endpoints = resolve_request_anchors(req)
+        except (ValueError, amap.AmapError, amap.AmapUnreachable):
+            endpoints = {}
+            data['warnings'].append('到离点核验失败，不能沿用旧接驳路线作为事实。')
+        attach_boundaries(data, req, endpoints=endpoints)
     imported_prices = (data.get("hotel") or {}).get("cost_source") == "imported" or any(
         a.get("ticket_price_source") == "imported" for d in days for a in d.get("attractions",[])) or any(
         m.get("cost_source") == "imported" for d in days for m in d.get("meals",[]))
@@ -581,9 +616,15 @@ def _reuse_with_new_dates(plan: dict, req: TripRequest) -> dict:
     nights = req.nights if req.nights is not None else req.travel_days - 1
     if hotel is not None:
         refreshed_hotel = apply_prices(req.city, "hotel", [hotel], service_date=req.start_date, nights=nights)[0]
+        from .platform_hotels import quoted
+        refreshed_hotel = quoted(refreshed_hotel, req.start_date)
         prices_changed |= refreshed_hotel != hotel
         hotel = refreshed_hotel
         data["hotel"] = hotel.model_dump()
+    if data.get('accommodation_version', 0) >= 11:
+        from .partial_edit import _refresh_stay_prices
+        _refresh_stay_prices(data, req)
+        prices_changed = True
     if imported_prices or prices_changed or reserve_needed:
         updated = patch_budget({"plan":data,"request":req,"travel_days":req.travel_days,"nights":nights,"hotel":hotel})
         data = updated["plan"]
@@ -610,7 +651,7 @@ def plan(req: TripRequest, *, graph=None, run_id: str | None = None, seed: dict 
     if invalid is not None:
         return invalid
     hit = store.find_itinerary(fingerprint)
-    if hit is not None and seed is None:
+    if hit is not None and seed is None and req.intercity_mode == 'none':
         return _cached_response(hit, req, run_id, fingerprint, elapsed())
     if graph is None:
         from ..agents.graph import app as graph

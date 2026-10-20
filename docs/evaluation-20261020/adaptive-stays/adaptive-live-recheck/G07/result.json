@@ -1,0 +1,664 @@
+{
+  "case_id": "G07",
+  "name": "三亚3天豪华酒店+自驾",
+  "kind": "generate",
+  "passed": true,
+  "violations": [],
+  "duration_s": 51.93,
+  "error_code": null,
+  "success": true,
+  "days": 3,
+  "response_summary": {
+    "success": true,
+    "error_code": null,
+    "message": "",
+    "cached": false,
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "强降雨、雷暴或高温日期已补充室内场馆候选；开放时间与预约仍需核实。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 没有符合餐次的候选。",
+      "2026-10-20 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-21 breakfast 重复餐厅 B0G2O5EYAC，附近尚有未使用候选：B0I62AFP0O",
+      "2026-10-21 dinner 餐厅不符合就近/餐次条件，可选ID：B0I62AFP0O,B0G2O5EYAC",
+      "2026-10-21 dinner 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-22 dinner 餐厅不符合就近/餐次条件，可选ID：B0FFFH001J",
+      "2026-10-22 dinner 距用餐片区超过4公里，需换候选或重排景点。",
+      "酒店每晚900元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-21 重复安排景点「亚特兰蒂斯失落的空间水族馆」（2026-10-20 已安排过），已保留首次出现并去重。",
+      "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0LBKPT5EQ,B0FFKOM56P,B0FFG817B8,B0L67S1BUQ,B0J0JHBEJC,B0I1L1NO9M,B0L6UC0UYD,B0G14OFOP7",
+      "2026-10-21 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-21：换住含60分钟整理、退房及入住预留；不默认酒店提供寄存，行李须可随行。",
+      "2026-10-21：未自动预订或取消酒店；入住、退房及行李处理条件需确认。"
+    ],
+    "budget": {
+      "ticket_reserve_amount": 100,
+      "total_attractions": 279,
+      "total_hotels": 1800,
+      "total_meals": 1115,
+      "total_transportation": 360,
+      "total": 3554,
+      "items": [
+        {
+          "category": "attraction",
+          "name": "亚特兰蒂斯失落的空间水族馆",
+          "day_index": 0,
+          "amount": 198,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：亚特兰蒂斯失落的空间水族馆日常成人挂牌门票约198元，按常规日间入场估算。"
+        },
+        {
+          "category": "meal",
+          "name": "清真兰州牛肉拉面",
+          "day_index": 0,
+          "amount": 25,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "香格里拉度假酒店-厨艺舞台(Chuyiwutai)",
+          "day_index": 0,
+          "amount": 181,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "亚特兰蒂斯·松鹤楼",
+          "day_index": 0,
+          "amount": 231,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "大东海旅游区",
+          "day_index": 1,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：大东海旅游区为开放式公共海滩，无日常成人门票。"
+        },
+        {
+          "category": "meal",
+          "name": "三亚亚特兰蒂斯酒店·番红花自助餐厅",
+          "day_index": 1,
+          "amount": 334,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "馋当当海南私房菜(大东海店)",
+          "day_index": 1,
+          "amount": 84,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "宫满西廷(大东海店)",
+          "day_index": 1,
+          "amount": 116,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "天涯海角游览区",
+          "day_index": 2,
+          "amount": 81,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：天涯海角游览区日常成人门票约81元，按常规日间入园估算。"
+        },
+        {
+          "category": "meal",
+          "name": "梅姐小吃店",
+          "day_index": 2,
+          "amount": 29,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "云魁正宗过桥米线(天涯海角店)",
+          "day_index": 2,
+          "amount": 35,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "韩丰阁美食(欧椰清补凉)",
+          "day_index": 2,
+          "amount": 80,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "餐厅未提供人均价格，按每人每餐固定规则预留；不是餐厅报价。"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-20 住宿：三亚亚特兰蒂斯酒店",
+          "day_index": 0,
+          "amount": 900,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-21 住宿：三亚珠江花园酒店",
+          "day_index": 1,
+          "amount": 900,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "transportation",
+          "name": "市内交通（自驾）",
+          "day_index": null,
+          "amount": 360,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "按每人每天 120 元的固定表估算"
+        }
+      ],
+      "known_total": 0,
+      "estimated_total": 3554,
+      "unknown_items": [],
+      "limit": null,
+      "limit_status": "none",
+      "limit_basis": "未设置预算上限。当前口径：已知 0 元 + 估算 3554 元 = 3554 元。"
+    },
+    "hotel": null,
+    "hotel_nights": 2,
+    "accommodation_version": 11,
+    "stays": [
+      {
+        "check_in": "2026-10-20",
+        "check_out": "2026-10-21",
+        "hotel": {
+          "name": "三亚亚特兰蒂斯酒店",
+          "poi_id": "B0FFF5XKDI",
+          "address": "海棠北路36号",
+          "location": {
+            "longitude": 109.744975,
+            "latitude": 18.357049
+          },
+          "price_range": "",
+          "rating": "4.7",
+          "distance": "",
+          "type": "宾馆酒店",
+          "estimated_cost": 900,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "首日主玩海棠湾亚特兰蒂斯水族馆，住海棠湾减少往返通勤，次日再转大东海。"
+      },
+      {
+        "check_in": "2026-10-21",
+        "check_out": "2026-10-22",
+        "hotel": {
+          "name": "三亚珠江花园酒店",
+          "poi_id": "B03830MO7N",
+          "address": "东海路1号",
+          "location": {
+            "longitude": 109.52377,
+            "latitude": 18.221785
+          },
+          "price_range": "",
+          "rating": "4.7",
+          "distance": "",
+          "type": "餐饮相关",
+          "estimated_cost": 900,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "次日大东海片区游览，住大东海便于步行与就近用餐，第三日去天涯海角也顺路。"
+      }
+    ],
+    "stay_comparison": {
+      "strategy": "segmented",
+      "hotel_changes": 1,
+      "travel_minutes": 149,
+      "transfer_minutes": 60,
+      "basis": "路线工具核算所选方案；未取得备选实测时，不宣称节省具体分钟。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": null,
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "多云"
+      },
+      {
+        "date": "2026-10-21",
+        "beyond_window": false,
+        "day_weather": "雷阵雨"
+      },
+      {
+        "date": "2026-10-22",
+        "beyond_window": false,
+        "day_weather": "多云"
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-20",
+        "day_index": 0,
+        "attractions": [
+          "亚特兰蒂斯失落的空间水族馆"
+        ],
+        "meals": [
+          "清真兰州牛肉拉面",
+          "香格里拉度假酒店-厨艺舞台(Chuyiwutai)",
+          "亚特兰蒂斯·松鹤楼"
+        ],
+        "total_minutes": 636,
+        "route_start": null,
+        "route_end": {
+          "name": "三亚亚特兰蒂斯酒店",
+          "location": {
+            "longitude": 109.744975,
+            "latitude": 18.357049
+          },
+          "poi_id": "B0FFF5XKDI",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "清真兰州牛肉拉面",
+            "to_name": "香格里拉度假酒店-厨艺舞台(Chuyiwutai)",
+            "from_id": "B0L67S1BUQ",
+            "to_id": "B0FFG817B8",
+            "mode": "自驾",
+            "duration_minutes": 5,
+            "distance_meters": 1814,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "香格里拉度假酒店-厨艺舞台(Chuyiwutai)",
+            "to_name": "亚特兰蒂斯失落的空间水族馆",
+            "from_id": "B0FFG817B8",
+            "to_id": "B0FFH2JS91",
+            "mode": "自驾",
+            "duration_minutes": 4,
+            "distance_meters": 1217,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "亚特兰蒂斯失落的空间水族馆",
+            "to_name": "亚特兰蒂斯·松鹤楼",
+            "from_id": "B0FFH2JS91",
+            "to_id": "B0FFKOM56P",
+            "mode": "自驾",
+            "duration_minutes": 1,
+            "distance_meters": 49,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "亚特兰蒂斯·松鹤楼",
+            "to_name": "三亚亚特兰蒂斯酒店",
+            "from_id": "B0FFKOM56P",
+            "to_id": "B0FFF5XKDI",
+            "mode": "自驾",
+            "duration_minutes": 1,
+            "distance_meters": 1,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 1655
+      },
+      {
+        "date": "2026-10-21",
+        "day_index": 1,
+        "attractions": [
+          "大东海旅游区"
+        ],
+        "meals": [
+          "三亚亚特兰蒂斯酒店·番红花自助餐厅",
+          "馋当当海南私房菜(大东海店)",
+          "宫满西廷(大东海店)"
+        ],
+        "total_minutes": 639,
+        "route_start": {
+          "name": "三亚亚特兰蒂斯酒店",
+          "location": {
+            "longitude": 109.744975,
+            "latitude": 18.357049
+          },
+          "poi_id": "B0FFF5XKDI",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "三亚珠江花园酒店",
+          "location": {
+            "longitude": 109.52377,
+            "latitude": 18.221785
+          },
+          "poi_id": "B03830MO7N",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": true,
+        "route_legs": [
+          {
+            "from_name": "三亚亚特兰蒂斯酒店",
+            "to_name": "三亚亚特兰蒂斯酒店·番红花自助餐厅",
+            "from_id": "B0FFF5XKDI",
+            "to_id": "B0LBKPT5EQ",
+            "mode": "自驾",
+            "duration_minutes": 3,
+            "distance_meters": 265,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "三亚亚特兰蒂斯酒店·番红花自助餐厅",
+            "to_name": "馋当当海南私房菜(大东海店)",
+            "from_id": "B0LBKPT5EQ",
+            "to_id": "B0G2O5EYAC",
+            "mode": "自驾",
+            "duration_minutes": 47,
+            "distance_meters": 34324,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "馋当当海南私房菜(大东海店)",
+            "to_name": "大东海旅游区",
+            "from_id": "B0G2O5EYAC",
+            "to_id": "B03830NTNI",
+            "mode": "自驾",
+            "duration_minutes": 8,
+            "distance_meters": 1020,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "大东海旅游区",
+            "to_name": "宫满西廷(大东海店)",
+            "from_id": "B03830NTNI",
+            "to_id": "B0I62AFP0O",
+            "mode": "自驾",
+            "duration_minutes": 8,
+            "distance_meters": 1444,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "宫满西廷(大东海店)",
+            "to_name": "三亚珠江花园酒店",
+            "from_id": "B0I62AFP0O",
+            "to_id": "B03830MO7N",
+            "mode": "自驾",
+            "duration_minutes": 4,
+            "distance_meters": 714,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 1554
+      },
+      {
+        "date": "2026-10-22",
+        "day_index": 2,
+        "attractions": [
+          "天涯海角游览区"
+        ],
+        "meals": [
+          "梅姐小吃店",
+          "云魁正宗过桥米线(天涯海角店)",
+          "韩丰阁美食(欧椰清补凉)"
+        ],
+        "total_minutes": 630,
+        "route_start": {
+          "name": "三亚珠江花园酒店",
+          "location": {
+            "longitude": 109.52377,
+            "latitude": 18.221785
+          },
+          "poi_id": "B03830MO7N",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": null,
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "三亚珠江花园酒店",
+            "to_name": "梅姐小吃店",
+            "from_id": "B03830MO7N",
+            "to_id": "B0GRV7S9BV",
+            "mode": "自驾",
+            "duration_minutes": 5,
+            "distance_meters": 1041,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "梅姐小吃店",
+            "to_name": "云魁正宗过桥米线(天涯海角店)",
+            "from_id": "B0GRV7S9BV",
+            "to_id": "B0KGK5N9PH",
+            "mode": "自驾",
+            "duration_minutes": 50,
+            "distance_meters": 26825,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "云魁正宗过桥米线(天涯海角店)",
+            "to_name": "天涯海角游览区",
+            "from_id": "B0KGK5N9PH",
+            "to_id": "B03830048T",
+            "mode": "自驾",
+            "duration_minutes": 9,
+            "distance_meters": 726,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "天涯海角游览区",
+            "to_name": "韩丰阁美食(欧椰清补凉)",
+            "from_id": "B03830048T",
+            "to_id": "B0MUG7MOF8",
+            "mode": "自驾",
+            "duration_minutes": 4,
+            "distance_meters": 385,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 345
+      }
+    ],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 3554,
+      "subtotal": 3554,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 3554 元 = 3554 元。"
+    },
+    "validate_error": null
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": null,
+    "retries": 1,
+    "budget_retries": 0,
+    "planning_calls": 3,
+    "composition_valid": true,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "强降雨、雷暴或高温日期已补充室内场馆候选；开放时间与预约仍需核实。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 没有符合餐次的候选。\n2026-10-20 breakfast 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-21 breakfast 重复餐厅 B0G2O5EYAC，附近尚有未使用候选：B0I62AFP0O\n2026-10-21 dinner 餐厅不符合就近/餐次条件，可选ID：B0I62AFP0O,B0G2O5EYAC\n2026-10-21 dinner 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-22 dinner 餐厅不符合就近/餐次条件，可选ID：B0FFFH001J\n2026-10-22 dinner 距用餐片区超过4公里，需换候选或重排景点。\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B03830MO7N\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B03830MO7N\"}], \"hotel_id\": \"B03830MO7N\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"亚特兰蒂斯失落的空间水族馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFH2JS91\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFK2AMUX\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFLHZQHX\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0G2O5EYAC\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [], \"unused_restaurant_ids\": []}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFLHZQHX\"], \"unused_restaurant_ids\": [\"B0FFLHZQHX\"], \"suggested_restaurant_id\": \"B0FFLHZQHX\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0I62AFP0O\", \"B0G2O5EYAC\"], \"unused_restaurant_ids\": [\"B0I62AFP0O\", \"B0G2O5EYAC\"], \"suggested_restaurant_id\": \"B0I62AFP0O\"}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"大东海旅游区\", \"鹿回头风景区\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B03830NTNI\", \"B03830MO5N\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0G2O5EYAC\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0I62AFP0O\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0J2Y5K49A\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0I62AFP0O\", \"B0G2O5EYAC\"], \"unused_restaurant_ids\": [\"B0I62AFP0O\"], \"suggested_restaurant_id\": \"B0G2O5EYAC\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0I62AFP0O\", \"B0G2O5EYAC\"], \"unused_restaurant_ids\": [\"B0I62AFP0O\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0I62AFP0O\", \"B0G2O5EYAC\"], \"unused_restaurant_ids\": []}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"天涯海角游览区\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B03830048T\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0G2O5EYAC\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFFH001J\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0HGSR6IW6\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0I62AFP0O\", \"B0G2O5EYAC\"], \"unused_restaurant_ids\": []}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFFH001J\"], \"unused_restaurant_ids\": [\"B0FFFH001J\"], \"suggested_restaurant_id\": \"B0FFFH001J\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFFH001J\"], \"unused_restaurant_ids\": []}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。suggested_restaurant_id是跨餐次匹配后的真实候选建议，保持布局时可优先采用以避免局部贪心导致重复；实际路线和预算仍需复核。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚900元仅为预算预留，尚未获得实际房价。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-21 重复安排景点「亚特兰蒂斯失落的空间水族馆」（2026-10-20 已安排过），已保留首次出现并去重。",
+      "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0LBKPT5EQ,B0FFKOM56P,B0FFG817B8,B0L67S1BUQ,B0J0JHBEJC,B0I1L1NO9M,B0L6UC0UYD,B0G14OFOP7\n2026-10-21 breakfast 距用餐片区超过4公里，需换候选或重排景点。\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0FFF5XKDI\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B03830MO7N\"}], \"hotel_id\": null, \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"亚特兰蒂斯失落的空间水族馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFH2JS91\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG817B8\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFKOM56P\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0LBKPT5EQ\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LBKPT5EQ\", \"B0FFKOM56P\", \"B0FFG817B8\", \"B0L67S1BUQ\", \"B0J0JHBEJC\"], \"unused_restaurant_ids\": [\"B0LBKPT5EQ\", \"B0FFKOM56P\", \"B0FFG817B8\", \"B0L67S1BUQ\", \"B0J0JHBEJC\"], \"suggested_restaurant_id\": \"B0L67S1BUQ\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0LBKPT5EQ\", \"B0FFKOM56P\", \"B0FFG817B8\", \"B0L67S1BUQ\", \"B0J0JHBEJC\", \"B0I1L1NO9M\", \"B0L6UC0UYD\", \"B0FFHJPM1B\"], \"unused_restaurant_ids\": [\"B0LBKPT5EQ\", \"B0FFKOM56P\", \"B0L67S1BUQ\", \"B0J0JHBEJC\", \"B0I1L1NO9M\", \"B0L6UC0UYD\", \"B0FFHJPM1B\", \"B03830NET6\"], \"suggested_restaurant_id\": \"B0FFG817B8\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LBKPT5EQ\", \"B0FFKOM56P\", \"B0FFG817B8\"], \"unused_restaurant_ids\": [\"B0LBKPT5EQ\"], \"suggested_restaurant_id\": \"B0FFKOM56P\"}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"大东海旅游区\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B03830NTNI\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LGFCS5I6\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0G2O5EYAC\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0I62AFP0O\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LBKPT5EQ\", \"B0FFKOM56P\", \"B0FFG817B8\", \"B0L67S1BUQ\", \"B0J0JHBEJC\", \"B0I1L1NO9M\", \"B0L6UC0UYD\", \"B0G14OFOP7\"], \"unused_restaurant_ids\": [\"B0L67S1BUQ\", \"B0J0JHBEJC\", \"B0I1L1NO9M\", \"B0L6UC0UYD\", \"B0G14OFOP7\", \"B0FFIIO84X\"], \"suggested_restaurant_id\": \"B0LBKPT5EQ\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0I62AFP0O\", \"B0G2O5EYAC\", \"B03830MO7N\", \"B0JKBUQ7LA\", \"B03830MOQY\", \"B03830NEKM\", \"B0FFKSBCUK\", \"B03830106H\"], \"unused_restaurant_ids\": [\"B0I62AFP0O\", \"B0G2O5EYAC\", \"B03830MO7N\", \"B0JKBUQ7LA\", \"B03830MOQY\", \"B03830NEKM\", \"B0FFKSBCUK\", \"B03830106H\"], \"suggested_restaurant_id\": \"B0G2O5EYAC\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0I62AFP0O\", \"B0G2O5EYAC\", \"B03830MO7N\", \"B0JKBUQ7LA\", \"B03830MOQY\", \"B03830NEKM\", \"B0FFKSBCUK\", \"B03830106H\"], \"unused_restaurant_ids\": [\"B0I62AFP0O\", \"B03830MO7N\", \"B0JKBUQ7LA\", \"B03830MOQY\", \"B03830NEKM\", \"B0FFKSBCUK\", \"B03830106H\", \"B0FFJ1UUFG\"], \"suggested_restaurant_id\": \"B0I62AFP0O\"}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"天涯海角游览区\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B03830048T\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0GRV7S9BV\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0KGK5N9PH\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0MUG7MOF8\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0GRV7S9BV\", \"B0LGFCS5I6\", \"B0FFGAOK3G\", \"B0KDLHPBEH\"], \"unused_restaurant_ids\": [\"B0GRV7S9BV\", \"B0FFGAOK3G\", \"B0KDLHPBEH\"], \"suggested_restaurant_id\": \"B0GRV7S9BV\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0MUG7MOF8\", \"B0KGK5N9PH\", \"B0FFJH177Q\", \"B0K0GS2DJ7\", \"B0KRVS8PRT\", \"B0KD4H2UJV\", \"B0LKH7QVD3\", \"B0MAVU7IOF\"], \"unused_restaurant_ids\": [\"B0MUG7MOF8\", \"B0KGK5N9PH\", \"B0FFJH177Q\", \"B0K0GS2DJ7\", \"B0KRVS8PRT\", \"B0KD4H2UJV\", \"B0LKH7QVD3\", \"B0MAVU7IOF\"], \"suggested_restaurant_id\": \"B0KGK5N9PH\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0MUG7MOF8\", \"B0KGK5N9PH\", \"B0FFJH177Q\", \"B0K0GS2DJ7\", \"B0KRVS8PRT\", \"B0KD4H2UJV\", \"B0LKH7QVD3\", \"B0MAVU7IOF\"], \"unused_restaurant_ids\": [\"B0MUG7MOF8\", \"B0FFJH177Q\", \"B0K0GS2DJ7\", \"B0KRVS8PRT\", \"B0KD4H2UJV\", \"B0LKH7QVD3\", \"B0MAVU7IOF\", \"B0LUCBVXVF\"], \"suggested_restaurant_id\": \"B0MUG7MOF8\"}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。suggested_restaurant_id是跨餐次匹配后的真实候选建议，保持布局时可优先采用以避免局部贪心导致重复；实际路线和预算仍需复核。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-21：换住含60分钟整理、退房及入住预留；不默认酒店提供寄存，行李须可随行。",
+      "2026-10-21：未自动预订或取消酒店；入住、退房及行李处理条件需确认。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-21：换住含60分钟整理、退房及入住预留；不默认酒店提供寄存，行李须可随行。",
+      "2026-10-21：未自动预订或取消酒店；入住、退房及行李处理条件需确认。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。"
+    ],
+    "usage": {
+      "prompt_tokens": 36653,
+      "completion_tokens": 2848,
+      "llm_calls": 4
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 3554,
+      "subtotal": 3554,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 3554 元 = 3554 元。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": null,
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "tool_call_count": 44,
+    "hotel_source": "agent",
+    "final_days": 3,
+    "final_weather_days": 3
+  },
+  "request": {
+    "city": "三亚",
+    "start_date": "2026-10-20",
+    "travel_days": 3,
+    "transportation": "自驾",
+    "accommodation": "豪华酒店",
+    "preferences": [
+      "自然风光"
+    ],
+    "must_visit": [],
+    "free_text_input": ""
+  },
+  "expect": {
+    "success": true,
+    "days": 3,
+    "transport_total": 360
+  },
+  "exception": null,
+  "warnings": [
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "强降雨、雷暴或高温日期已补充室内场馆候选；开放时间与预约仍需核实。",
+    "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+    "2026-10-20 breakfast 没有符合餐次的候选。",
+    "2026-10-20 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-21 breakfast 重复餐厅 B0G2O5EYAC，附近尚有未使用候选：B0I62AFP0O",
+    "2026-10-21 dinner 餐厅不符合就近/餐次条件，可选ID：B0I62AFP0O,B0G2O5EYAC",
+    "2026-10-21 dinner 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-22 dinner 餐厅不符合就近/餐次条件，可选ID：B0FFFH001J",
+    "2026-10-22 dinner 距用餐片区超过4公里，需换候选或重排景点。",
+    "酒店每晚900元仅为预算预留，尚未获得实际房价。",
+    "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+    "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+    "2026-10-21 重复安排景点「亚特兰蒂斯失落的空间水族馆」（2026-10-20 已安排过），已保留首次出现并去重。",
+    "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0LBKPT5EQ,B0FFKOM56P,B0FFG817B8,B0L67S1BUQ,B0J0JHBEJC,B0I1L1NO9M,B0L6UC0UYD,B0G14OFOP7",
+    "2026-10-21 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-21：换住含60分钟整理、退房及入住预留；不默认酒店提供寄存，行李须可随行。",
+    "2026-10-21：未自动预订或取消酒店；入住、退房及行李处理条件需确认。"
+  ],
+  "message": "",
+  "started_at": "2026-10-20T01:21:02"
+}

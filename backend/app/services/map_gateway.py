@@ -30,11 +30,25 @@ def geocode(address, city=None):
     return _validate(tuple[Location | None, str | None], data)
 
 
-def search_poi(keywords, city, offset=20, page=1):
+def search_poi(keywords, city, offset=20, page=1, *, citylimit=True):
     if get_settings().map_backend == "local":
-        return amap.search_poi(keywords, city, offset=offset, page=page)
-    return _validate(list[Attraction], _call("search_poi", {
-        "keywords": keywords, "city": city, "offset": offset, "page": page}))
+        options = {} if citylimit else {'citylimit': False}
+        return amap.search_poi(keywords, city, offset=offset, page=page, **options)
+    arguments = {"keywords": keywords, "city": city, "offset": offset, "page": page}
+    if not citylimit:
+        arguments['citylimit'] = False
+    return _validate(list[Attraction], _call("search_poi", arguments))
+
+
+def search_hotels_nearby(center, radius=20000, limit=12):
+    from ..models.schemas import Hotel
+    if not 100 <= radius <= 20000 or not 1 <= limit <= 20 or not math.isfinite(center.longitude) or not math.isfinite(center.latitude):
+        raise AmapError('INVALID_REQUEST', '酒店周边查询参数不合法')
+    if get_settings().map_backend == 'local':
+        return amap.search_hotels_nearby(center, radius, limit)
+    rows = _validate(list[Hotel], _call('search_hotels_nearby', {'center':center.model_dump(), 'radius':radius, 'limit':limit}))
+    from .tools import haversine_km
+    return [h for h in rows if h.location and haversine_km(center, h.location) <= radius/1000]
 
 
 def get_weather(adcode):

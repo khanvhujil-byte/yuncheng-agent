@@ -1,0 +1,289 @@
+{
+  "case_id": "G01",
+  "name": "杭州1天无偏好基线",
+  "kind": "generate",
+  "passed": true,
+  "violations": [],
+  "duration_s": 18.76,
+  "error_code": null,
+  "success": true,
+  "days": 1,
+  "response_summary": {
+    "success": true,
+    "error_code": null,
+    "message": "",
+    "cached": false,
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「杭州西湖风景名胜区-钱王祠」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+    ],
+    "budget": {
+      "ticket_reserve_amount": 100,
+      "total_attractions": 0,
+      "total_hotels": 0,
+      "total_meals": 128,
+      "total_transportation": 40,
+      "total": 168,
+      "items": [
+        {
+          "category": "attraction",
+          "name": "南宋德寿宫遗址博物馆",
+          "day_index": 0,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：南宋德寿宫遗址博物馆为免费开放的国有博物馆，日常成人入场通常需预约但不收费，估算为0元。"
+        },
+        {
+          "category": "attraction",
+          "name": "杭州博物馆",
+          "day_index": 0,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：杭州博物馆为免费开放的国有博物馆，日常成人入场不收费，估算为0元。"
+        },
+        {
+          "category": "meal",
+          "name": "桔子游埠豆浆·面(鼓楼店)",
+          "day_index": 0,
+          "amount": 17,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "知味观(吴山点心分店)",
+          "day_index": 0,
+          "amount": 34,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "壹品轩·东坡家宴(西湖店)",
+          "day_index": 0,
+          "amount": 77,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "hotel",
+          "name": "本次不住宿",
+          "day_index": null,
+          "amount": 0,
+          "status": "known",
+          "source": "static_estimate",
+          "note": ""
+        },
+        {
+          "category": "transportation",
+          "name": "市内交通（公共交通）",
+          "day_index": null,
+          "amount": 40,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "按每人每天 40 元的固定表估算"
+        }
+      ],
+      "known_total": 0,
+      "estimated_total": 168,
+      "unknown_items": [],
+      "limit": null,
+      "limit_status": "none",
+      "limit_basis": "未设置预算上限。当前口径：已知 0 元 + 估算 168 元 = 168 元。"
+    },
+    "hotel": null,
+    "hotel_nights": 0,
+    "accommodation_version": 11,
+    "stays": [],
+    "stay_comparison": {
+      "strategy": "same_hotel",
+      "hotel_changes": 0,
+      "travel_minutes": 80,
+      "transfer_minutes": 0,
+      "basis": "路线工具核算所选方案；未取得备选实测时，不宣称节省具体分钟。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": null,
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "小雨"
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-20",
+        "day_index": 0,
+        "attractions": [
+          "南宋德寿宫遗址博物馆",
+          "杭州博物馆"
+        ],
+        "meals": [
+          "桔子游埠豆浆·面(鼓楼店)",
+          "知味观(吴山点心分店)",
+          "壹品轩·东坡家宴(西湖店)"
+        ],
+        "total_minutes": 630,
+        "route_start": null,
+        "route_end": null,
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "桔子游埠豆浆·面(鼓楼店)",
+            "to_name": "南宋德寿宫遗址博物馆",
+            "from_id": "B0G1OCEJFI",
+            "to_id": "B0HGNGK3FG",
+            "mode": "公共交通",
+            "duration_minutes": 15,
+            "distance_meters": 904,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "南宋德寿宫遗址博物馆",
+            "to_name": "知味观(吴山点心分店)",
+            "from_id": "B0HGNGK3FG",
+            "to_id": "B023B082PU",
+            "mode": "公共交通",
+            "duration_minutes": 24,
+            "distance_meters": 1746,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "知味观(吴山点心分店)",
+            "to_name": "杭州博物馆",
+            "from_id": "B023B082PU",
+            "to_id": "B0FFFWQGI8",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "杭州博物馆",
+            "to_name": "壹品轩·东坡家宴(西湖店)",
+            "from_id": "B0FFFWQGI8",
+            "to_id": "B0FFK63KYM",
+            "mode": "公共交通",
+            "duration_minutes": 29,
+            "distance_meters": 2458,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口结果，出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 168
+      }
+    ],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog",
+      "weather": "amap",
+      "hotel": "amap"
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 168,
+      "subtotal": 168,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 168 元 = 168 元。"
+    },
+    "validate_error": null
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": null,
+    "retries": 1,
+    "budget_retries": 0,
+    "planning_calls": 1,
+    "composition_valid": true,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog",
+      "weather": "amap",
+      "hotel": "amap"
+    },
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「杭州西湖风景名胜区-钱王祠」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+    ],
+    "usage": {
+      "prompt_tokens": 10175,
+      "completion_tokens": 581,
+      "llm_calls": 2
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 168,
+      "subtotal": 168,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 168 元 = 168 元。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": null,
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "tool_call_count": 12,
+    "hotel_source": "agent",
+    "final_days": 1,
+    "final_weather_days": 1
+  },
+  "request": {
+    "city": "杭州",
+    "start_date": "2026-10-20",
+    "travel_days": 1,
+    "transportation": "公共交通",
+    "accommodation": "经济型酒店",
+    "preferences": [],
+    "must_visit": [],
+    "free_text_input": ""
+  },
+  "expect": {
+    "success": true,
+    "days": 1
+  },
+  "exception": null,
+  "warnings": [
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「杭州西湖风景名胜区-钱王祠」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+    "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+  ],
+  "message": "",
+  "started_at": "2026-10-20T01:00:38"
+}

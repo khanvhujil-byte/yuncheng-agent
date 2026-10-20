@@ -12,6 +12,15 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
+      // Browser requests stay same-origin, including on phones on the LAN.
+      '/api': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true,
+      },
+      '/health': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true,
+      },
       /**
        * 社区服务（Java，8080）走**同源反代**。
        *

@@ -32,7 +32,7 @@ from .tool_retry import ExecutionReport, RetryPolicy, run
 logger = logging.getLogger(__name__)
 
 # ---- 过滤与相关性（原来写在 attraction_agent 里，v0.3 搬进工具层）----
-EXCLUDED_TYPECODE_PREFIXES = ("05", "10")  # 05=餐饮服务 10=住宿服务，不是景点
+EXCLUDED_TYPECODE_PREFIXES = ("05", "10", "15")  # 餐饮、住宿和交通设施不是游览景点
 HOTEL_TYPECODE_PREFIX = "10"  # 住宿服务
 RELEVANCE_THRESHOLD = 0.6  # 逐字重叠率阈值；高德对中文会分词，必须自己判相关性
 MAX_PAGE_SIZE = 20  # 高德单次返回上限
@@ -67,6 +67,8 @@ class ToolContext:
     travel_days: int
     nights: int = 0
     requirements: Requirements = field(default_factory=Requirements)
+    city_center: Optional[Location] = None
+    regional_keywords: list[str] = field(default_factory=list)
 
     # ---- 收集箱（结构化数据，不进对话）----
     attractions: dict[str, Attraction] = field(default_factory=dict)
@@ -102,6 +104,8 @@ def _is_attraction(poi: Attraction) -> bool:
     typecode 缺失时保留：宁可多留一条，也不静默丢数据。
     """
     codes = _codes(poi.typecode)
+    if any(word in poi.name for word in ('公交站', '停车场', '停车点', '售票处', '检票口', '游客中心')):
+        return False
     if not codes:
         return True
     return not any(code[:2] in EXCLUDED_TYPECODE_PREFIXES for code in codes)
@@ -205,17 +209,35 @@ def _search_attractions(args: dict, ctx: ToolContext) -> ToolResult:
     if not keyword:
         return ToolResult.failure("错误：keyword 不能为空。请给出搜索关键词（建议用用户的偏好标签）。", "INVALID_ARGUMENT")
     limit = max(1, min(int(args.get("limit") or MAX_PAGE_SIZE), MAX_PAGE_SIZE))
+    page = max(1, min(int(args.get('page') or 1), 5))
+    regional = keyword in ctx.regional_keywords
 
     from .candidate_search import decision, local_candidates, minimum_candidates, save_fresh, with_stats
     local, retrieval = local_candidates(ctx.city, "attraction", keyword, ctx.requirements.attractions,
                                          start_date=ctx.start_date, days=ctx.travel_days, limit=limit)
+    def in_scope(poi):
+        if not regional:
+            return poi.retrieval_scope != 'surrounding'
+        return ctx.city_center is not None and haversine_km(ctx.city_center, poi.location) <= 300
+    local = [poi for poi in local if in_scope(poi)]
+    if page > 1:
+        # The catalog does not expose provider page numbers. Reusing page-one
+        # rows for every page would silently make long-trip expansion a no-op.
+        local = []
+    retrieval['local_count'] = len(local)
     retrieval = decision(retrieval, len(local) >= min(limit, minimum_candidates("attraction", ctx.travel_days)))
     fresh, failure = [], None
     if not retrieval["cache_hit"]:
         retrieval["upstream_calls"] = 1
         try:
-            fresh = amap.search_poi(keyword, ctx.city, offset=limit, page=1)
+            options = {'citylimit': False} if regional else {}
+            fresh = amap.search_poi(keyword, ctx.city, offset=limit, page=page, **options)
+            fresh = [poi for poi in fresh if in_scope(poi)]
+            if regional:
+                fresh = [poi.model_copy(update={'retrieval_scope': 'surrounding'}) for poi in fresh]
             retrieval["upstream_count"] = len(fresh)
+            if regional:
+                retrieval['search_scope'] = 'surrounding_within_300km'
         except (amap.AmapError, amap.AmapUnreachable) as exc:
             failure = _upstream_failure(ctx, f"搜索「{keyword}」", exc)
             retrieval["retrieval_decision"] = "local_partial_upstream_error" if local else "upstream_error"
@@ -476,6 +498,7 @@ TOOLS: dict[str, dict[str, Any]] = {
             "properties": {
                 "keyword": {"type": "string", "description": "搜索关键词，建议用用户的偏好标签"},
                 "limit": {"type": "integer", "description": "返回条数，默认 20，上限 20"},
+                "page": {"type": "integer", "minimum": 1, "maximum": 5, "description": "地图分页，默认第1页；长行程补足不同候选时使用"},
             },
             "required": ["keyword"],
         },

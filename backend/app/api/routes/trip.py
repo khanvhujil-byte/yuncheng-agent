@@ -107,7 +107,7 @@ def plan_async(req: TripRequest, user_id: str | None = Depends(optional_user)) -
     # 命中行程库就不必起任务：登记一个「已完成」的任务，让 SSE 同一套流程立刻把结果推出去。
     # success 必须和复核结论一致：命中一条复核不通过的历史行程时不能先报成功。
     hit = store.find_itinerary(fingerprint)
-    if hit is not None:
+    if hit is not None and req.intercity_mode == 'none':
         response = _cached_response(hit, req, thread_id, fingerprint, 0)
         runner.register_done_job(thread_id, req, response.model_dump())
         return {

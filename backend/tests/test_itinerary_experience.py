@@ -120,7 +120,10 @@ def test_active_graph_food_fanin_delivery_and_monitoring(monkeypatch):
     def compose(system,prompt,**kwargs):
         assert "真实餐厅0" in prompt and "city_characteristics" in prompt
         # Food/weather must both have completed before the model sees context.
-        assert "晴" in prompt and '"ticket_price": 50' in prompt
+        context, _ = json.JSONDecoder().raw_decode(prompt)
+        table = context['attractions']
+        facts = [dict(zip(table['columns'], row)) for row in table['rows']]
+        assert "晴" in prompt and facts[0]['ticket_price'] == 50
         day=copy.deepcopy(plan["days"][0])
         day["meals"]=[{"type":k,"name":"模型编造餐厅"} for k in ("breakfast","lunch","dinner")]
         return json.dumps(joint_payload([day],state["restaurants"]),ensure_ascii=False),{"llm_calls":1}

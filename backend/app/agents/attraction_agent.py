@@ -45,6 +45,9 @@ def _user_prompt(state: TripState) -> str:
 
 def collect_attractions(state: TripState) -> dict:
     req = state["request"]
+    from ..services.day_goals import effective_goals, search_queries
+    goals = effective_goals(req)
+    theme_queries = search_queries(goals, req.city)
     anchors = list(state.get("must_visit_resolved") or [])
 
     ctx = ToolContext(
@@ -54,9 +57,16 @@ def collect_attractions(state: TripState) -> dict:
         travel_days=state["travel_days"],
         nights=state["nights"],
         requirements=req.requirements,
+        city_center=state.get('city_center'),
+        regional_keywords=[word for word, regional in theme_queries if regional],
     )
     for anchor in anchors:
         ctx.attractions[anchor.poi_id or anchor.name] = anchor
+
+    # Counted themes are obligations, independent of general pool size.
+    if goals:
+        execute_batch('attractions', [({'id': f'goal-{i}'}, 'search_attractions',
+                       {'keyword': word, 'limit': 20}) for i, (word, _) in enumerate(theme_queries)], ctx)
 
     if get_settings().attraction_use_agent:
         result = run_agent("attractions", ATTRACTION_AGENT_PROMPT, _user_prompt(state), ctx, max_steps=MAX_STEPS)
@@ -68,6 +78,8 @@ def collect_attractions(state: TripState) -> dict:
             *req.requirements.attractions.keywords,
             *(p for p in req.preferences if p not in food_labels),
         ] if k.strip())) or ["景点"]
+        if '景点' not in keywords and len(keywords) < 12:
+            keywords.append('景点')
         pending = [({"id": f"attractions-{i}"}, "search_attractions", {"keyword": keyword, "limit": 20})
                    for i, keyword in enumerate(keywords[:12])]
         outcomes = execute_batch("attractions", pending, ctx)
@@ -78,9 +90,20 @@ def collect_attractions(state: TripState) -> dict:
         if len(keywords) > 12:
             ctx.errors.append("SEARCH_QUERY_LIMIT: 本次仅检索前12个不同关键词，未覆盖其余关键词。")
 
+    if state['travel_days'] > 6 and len(ctx.attractions) < state['travel_days'] * 2:
+        from ..services.tools import execute
+        keyword = '景点'
+        for page in (2, 3, 4, 5):
+            outcome = execute('attractions', 'search_attractions', {'keyword': keyword, 'limit': 20, 'page': page}, ctx)
+            if len(ctx.attractions) >= state['travel_days'] * 2 or (outcome.status == 'error' and not outcome.retryable):
+                break
     spots = list(ctx.attractions.values())
     target = state["travel_days"] * TARGET_PER_DAY
     warnings: list[str] = []
+    if any(goal.scope == 'surrounding' for goal in goals):
+        warnings.append('周边主题检索覆盖市中心直线300公里内候选；实际通勤、预算仍需复核。')
+    if any(goal.theme == '雪山' for goal in goals):
+        warnings.append('雪山景区不代表出行当天必有积雪；市区天气不能代表山区天气，山区天气及开放状态需另行确认。')
     if len(spots) < target:
         warnings.append(
             f"景点候选只有 {len(spots)} 个，少于目标 {target} 个"

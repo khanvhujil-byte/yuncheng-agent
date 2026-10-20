@@ -13,7 +13,6 @@
  */
 import dayjs, { type Dayjs } from 'dayjs'
 import {
-  Compass,
   History,
   LoaderCircle,
   RotateCcw,
@@ -25,9 +24,12 @@ import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 import DayTimeline from '@/components/DayTimeline.vue'
+import BrandLockup from '@/components/BrandLockup.vue'
 import JourneyArtwork from '@/components/JourneyArtwork.vue'
 import ExportPanel from '@/components/ExportPanel.vue'
 import TripSummary from '@/components/TripSummary.vue'
+import JourneyInputs from '@/components/JourneyInputs.vue'
+import TravelSearch from '@/components/TravelSearch.vue'
 import { preparePlanForDisplay } from '@/utils/itinerary'
 import { finishPlanning } from '@/services/planningFlow'
 import { hasSession, request as dialogRequest } from '@/services/dialog'
@@ -82,6 +84,7 @@ interface ProgressItem {
 const POLL_DEADLINE_MS = 90_000
 
 const form = reactive<TripRequest>({
+  origin_city: '', intercity_mode: 'none', return_trip: true, adult_count: 1, room_count: 1,
   city: '杭州',
   start_date: dayjs().add(1, 'day').format('YYYY-MM-DD'),
   end_date: dayjs().add(3, 'day').format('YYYY-MM-DD'),
@@ -272,6 +275,12 @@ function onDaysChange(value: number | string | null): void {
 }
 
 function validate(): boolean {
+  if (form.intercity_mode !== 'none' && (!form.origin_city?.trim() || form.origin_city.trim() === form.city.trim())) {
+    status.value = 'error'; errorMessage.value = '请填写与目的地不同的出发城市。'; errorCode.value = 'INVALID_REQUEST'; return false
+  }
+  if (!Number.isInteger(form.adult_count) || !Number.isInteger(form.room_count) || (form.room_count || 1) > (form.adult_count || 1)) {
+    status.value = 'error'; errorMessage.value = '请检查同行成人与房间数，房间数不能多于成人数。'; return false
+  }
   cityMissing.value = !form.city.trim()
   if (cityMissing.value) {
     status.value = 'error'
@@ -287,6 +296,7 @@ function buildRequest(): TripRequest {
   return {
     ...form,
     city: form.city.trim(),
+    origin_city: form.origin_city?.trim() || '',
     preferences: [...form.preferences],
     must_visit: (form.must_visit ?? []).map((item) => item.trim()).filter(Boolean),
     fixed_hotel: form.fixed_hotel?.trim() ? form.fixed_hotel.trim() : undefined,
@@ -530,8 +540,7 @@ function reset(): void {
   <div class="page">
     <header class="hero">
       <div class="brand">
-        <Compass :size="26" />
-        <span>漫游 <small>ROAM</small></span>
+        <router-link to="/chat" aria-label="云程，回到旅行工作台"><BrandLockup /></router-link>
         <router-link class="nav-link" to="/chat">旅行工作台</router-link>
         <!-- 社区页的数据来自另一个服务（Java），但对用户来说只是"换个页面看看别人去哪" -->
         <router-link class="nav-link" to="/community">
@@ -539,11 +548,11 @@ function reset(): void {
           社区行程榜
         </router-link>
       </div>
-      <div class="form-hero"><span>LET’S MAKE A LITTLE ROOM FOR TRAVEL</span><h1>把向往，排进日常之外。</h1><p class="subtitle">说说目的地和旅行偏好，让美食、风景与好时光顺路相遇。</p></div>
+      <div class="form-hero"><h1>把向往，排进日常之外。</h1><p class="subtitle">说说目的地和旅行偏好，让美食、风景与好时光顺路相遇。</p></div>
       <a-button v-if="threadId" :disabled="status === 'loading'" @click="checkExistingResult">查看上次任务结果</a-button>
       <div v-if="backendOnline === false" class="offline">
         <TriangleAlert :size="14" />
-        后端未连接（http://127.0.0.1:8000）。请先启动后端，再点「生成行程」。
+        服务暂未连接。请检查网络，以及后端和 API 代理是否已启动，再点「生成行程」。
       </div>
     </header>
 
@@ -552,6 +561,8 @@ function reset(): void {
       <aside class="panel">
         <div class="form-section-heading"><span>01</span><div><h2>你的旅行设定</h2><p>安排好必要的，留白给惊喜。</p></div></div>
         <a-form layout="vertical" :model="form">
+          <JourneyInputs :model="form" :disabled="status === 'loading'" />
+          <TravelSearch :city="form.city" :origin="form.origin_city" :start-date="form.start_date" :days="form.travel_days" :disabled="status === 'loading'" />
           <a-form-item label="目的地城市" :validate-status="cityMissing ? 'error' : ''">
             <a-input
               v-model:value="form.city"
@@ -617,7 +628,7 @@ function reset(): void {
             />
           </a-form-item>
 
-          <a-form-item label="交通方式">
+          <a-form-item label="市内交通">
             <a-select v-model:value="form.transportation" size="large">
               <a-select-option v-for="item in TRANSPORT_OPTIONS" :key="item" :value="item">
                 {{ item }}
@@ -696,7 +707,7 @@ function reset(): void {
       <main class="panel result">
         <!-- 初始 -->
         <div v-if="status === 'idle'" class="placeholder">
-          <span class="placeholder-kicker">YOUR NEXT CHAPTER</span>
+
           <p class="placeholder-title">不必赶路，<br>让旅行有自己的节奏。</p>
           <p class="placeholder-text">填好左侧的旅行信息，景点、美食、住处与路程，<br>会一起出现在你的旅行手册里。</p>
           <JourneyArtwork />
@@ -813,7 +824,7 @@ function reset(): void {
   gap: 10px;
   font-size: 22px;
   font-weight: 650;
-  color: #1b1f27;
+  color: var(--yc-ink);
 }
 
 .subtitle {
@@ -828,7 +839,7 @@ function reset(): void {
   gap: 6px;
   margin-top: 12px;
   padding: 6px 12px;
-  background: #fffbf0;
+  background: var(--yc-page);
   border: 1px solid #ffe3a3;
   border-radius: 8px;
   color: #8a6100;
@@ -844,7 +855,7 @@ function reset(): void {
 
 .panel {
   background: #fff;
-  border: 1px solid #eceef2;
+  border: 1px solid var(--yc-border);
   border-radius: 12px;
   padding: 20px;
 }
@@ -867,7 +878,7 @@ function reset(): void {
   justify-content: center;
   height: 320px;
   text-align: center;
-  color: #8c94a3;
+  color: var(--yc-muted);
 }
 
 .placeholder-icon {
@@ -899,13 +910,13 @@ function reset(): void {
   gap: 8px;
   font-size: 15px;
   font-weight: 600;
-  color: #1b1f27;
+  color: var(--yc-ink);
   margin-bottom: 16px;
 }
 
 .spin {
   animation: spin 1s linear infinite;
-  color: #3566c9;
+  color: var(--yc-primary);
 }
 
 @keyframes spin {
@@ -941,7 +952,7 @@ function reset(): void {
 }
 
 .progress-item.done .progress-label {
-  color: #1b1f27;
+  color: var(--yc-ink);
 }
 
 .progress-label {
@@ -964,7 +975,7 @@ function reset(): void {
 
 .marker.running {
   background: transparent;
-  border: 2px solid #3566c9;
+  border: 2px solid var(--yc-primary);
   border-top-color: transparent;
   animation: spin 0.8s linear infinite;
 }
@@ -974,7 +985,7 @@ function reset(): void {
 }
 
 .marker.degraded {
-  background: #d79b00;
+  background: var(--yc-text);
 }
 
 .marker.failed {
@@ -989,25 +1000,25 @@ function reset(): void {
 }
 
 .progress-tag.running {
-  color: #2b5fb8;
+  color: var(--yc-primary);
   background: #e8f1ff;
 }
 
 .progress-tag.waiting {
-  color: #8c94a3;
+  color: var(--yc-muted);
   background: #f2f4f7;
 }
 
 .progress-elapsed {
   margin-left: auto;
   font-size: 12px;
-  color: #8c94a3;
+  color: var(--yc-muted);
 }
 
 .loading-hint {
   margin: 18px 0 0;
   font-size: 12px;
-  color: #8c94a3;
+  color: var(--yc-muted);
 }
 
 .muted-hint {
@@ -1028,7 +1039,7 @@ function reset(): void {
 .resume-text {
   margin: 0 0 12px;
   font-size: 13px;
-  color: #2b5fb8;
+  color: var(--yc-primary);
   line-height: 1.8;
 }
 
@@ -1048,7 +1059,7 @@ function reset(): void {
 
 .error-message {
   margin: 0 0 6px;
-  color: #3d4453;
+  color: var(--yc-ink);
   font-size: 14px;
   line-height: 1.8;
 }
@@ -1056,7 +1067,7 @@ function reset(): void {
 .error-code {
   margin: 0;
   font-size: 12px;
-  color: #8c94a3;
+  color: var(--yc-muted);
 }
 
 .error-actions {
@@ -1074,13 +1085,13 @@ function reset(): void {
 
 .result-meta {
   font-size: 12px;
-  color: #8c94a3;
+  color: var(--yc-muted);
 }
 
 .thread {
   margin-left: 10px;
   padding: 1px 6px;
-  background: #f7f9fc;
+  background: var(--yc-page);
   border-radius: 4px;
 }
 
@@ -1096,7 +1107,7 @@ function reset(): void {
   gap: 5px;
   margin-left: 10px;
   padding: 4px 12px;
-  border: 1px solid #e3e6ec;
+  border: 1px solid var(--yc-border);
   border-radius: 999px;
   background: #fff;
   color: #4a5261;
@@ -1108,13 +1119,13 @@ function reset(): void {
 
 .nav-link:hover {
   border-color: #c9cfd9;
-  color: #1b1f27;
+  color: var(--yc-ink);
 }
 
 .page {
   max-width: 1320px;
   padding: 0 36px 50px;
-  color: #344b35;
+  color: var(--yc-ink);
 }
 
 .hero {
@@ -1123,14 +1134,14 @@ function reset(): void {
 
 .brand {
   height: 82px;
-  border-bottom: 1px solid #e2e6d9;
-  color: #35543b;
+  border-bottom: 1px solid var(--yc-border);
+  color: var(--yc-primary);
   font-size: 21px;
   gap: 10px;
 }
 
 .brand>svg {
-  background: #315a43;
+  background: var(--yc-primary);
   color: #fff;
   padding: 8px;
   width: 40px;
@@ -1138,26 +1149,16 @@ function reset(): void {
   border-radius: 12px;
 }
 
-.brand>span {
-  font-weight: 650;
-  letter-spacing: 2px;
-}
 
-.brand>span>small {
-  font-size: 9px;
-  letter-spacing: 3px;
-  font-weight: 500;
-  vertical-align: middle;
-  color: #8c9b7b;
-  margin-left: 7px;
-}
+
+
 
 .nav-link {
   margin-left: auto;
   font-size: 12px;
   border: 0;
   background: none;
-  color: #7f8c71;
+  color: var(--yc-muted);
   padding: 8px 0;
 }
 
@@ -1172,21 +1173,21 @@ function reset(): void {
 .form-hero>span {
   font-size: 8px;
   letter-spacing: 2.3px;
-  color: #9ba88a;
+  color: var(--yc-muted);
 }
 
 .form-hero>h1 {
-  font-family: 'Noto Serif SC','STZhongsong','Songti SC','SimSun',serif;
+  font-family: var(--yc-font);
   font-size: 32px;
   letter-spacing: .5px;
-  font-weight: 500;
-  color: #425a3e;
+  font-weight: 650;
+  color: var(--yc-text);
   margin: 14px 0 13px;
 }
 
 .subtitle {
   font-size: 12px;
-  color: #929d84;
+  color: var(--yc-muted);
   margin: 0;
 }
 
@@ -1196,8 +1197,8 @@ function reset(): void {
 }
 
 .panel {
-  background: #fffefa;
-  border-color: #e1e6d8;
+  background: var(--yc-surface);
+  border-color: var(--yc-border);
   border-radius: 15px;
   padding: 25px;
 }
@@ -1208,7 +1209,7 @@ function reset(): void {
   gap: 12px;
   margin-bottom: 25px;
   padding-bottom: 21px;
-  border-bottom: 1px solid #ebeee3;
+  border-bottom: 1px solid var(--yc-soft);
 }
 
 .form-section-heading>span {
@@ -1216,10 +1217,10 @@ function reset(): void {
   place-items: center;
   width: 33px;
   height: 33px;
-  border: 1px solid #e0e7d4;
-  background: #f2f6e8;
+  border: 1px solid var(--yc-border);
+  background: var(--yc-soft);
   border-radius: 9px;
-  color: #80966b;
+  color: var(--yc-muted);
   font-family: Georgia,serif;
   font-size: 12px;
 }
@@ -1228,18 +1229,18 @@ function reset(): void {
   font-size: 16px;
   font-weight: 500;
   margin: 0;
-  color: #4e6545;
+  color: var(--yc-text);
 }
 
 .form-section-heading p {
   font-size: 10px;
-  color: #a0aa90;
+  color: var(--yc-muted);
   margin: 5px 0 0;
 }
 
 .panel :deep(.ant-form-item-label>label) {
   font-size: 12px;
-  color: #69785b;
+  color: var(--yc-text);
 }
 
 .panel :deep(.ant-form-item) {
@@ -1247,13 +1248,13 @@ function reset(): void {
 }
 
 .panel :deep(.ant-input-affix-wrapper),.panel :deep(.ant-input-number),.panel :deep(.ant-picker),.panel :deep(.ant-select-selector) {
-  background: #fdfdf8 !important;
-  border-color: #e1e6d7 !important;
+  background: var(--yc-surface) !important;
+  border-color: var(--yc-border) !important;
 }
 
 .panel :deep(.ant-checkbox-wrapper) {
   font-size: 12px;
-  color: #89977a;
+  color: var(--yc-muted);
 }
 
 .panel :deep(.ant-input),.panel :deep(.ant-input-number-input) {
@@ -1267,7 +1268,7 @@ function reset(): void {
 .result {
   padding: 25px;
   min-height: 640px;
-  background: #fcfcf7;
+  background: var(--yc-surface);
 }
 
 .placeholder {
@@ -1281,22 +1282,22 @@ function reset(): void {
 .placeholder-kicker {
   font-size: 8px;
   letter-spacing: 2.6px;
-  color: #9aa887;
+  color: var(--yc-muted);
 }
 
 .placeholder-title {
-  font-family: 'Noto Serif SC','STZhongsong','Songti SC','SimSun',serif;
+  font-family: var(--yc-font);
   font-size: 34px;
   line-height: 1.6;
   font-weight: 500;
-  color: #526b47;
+  color: var(--yc-text);
   margin: 17px 0;
 }
 
 .placeholder-text {
   font-size: 12px;
   line-height: 2;
-  color: #a0aa91;
+  color: var(--yc-muted);
   max-width: none;
 }
 
@@ -1310,54 +1311,54 @@ function reset(): void {
   align-items: center;
   justify-content: center;
   gap: 20px;
-  border-top: 1px dashed #e2e8d5;
+  border-top: 1px dashed var(--yc-border);
   padding-top: 22px;
   margin-top: 30px;
   font-size: 10px;
-  color: #9eac8a;
+  color: var(--yc-muted);
 }
 
 .placeholder-tags>i {
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: #b4bfa3;
+  background: var(--yc-muted);
 }
 
 .result :deep(.card),.result :deep(.day-card) {
-  background: #fffefa;
-  border-color: #e2e8d7;
+  background: var(--yc-surface);
+  border-color: var(--yc-border);
   border-radius: 12px;
 }
 
 .result :deep(.hero-card) {
-  background: #edf3e3;
+  background: var(--yc-soft);
   border: 0;
 }
 
 .result :deep(.city) {
-  color: #45613a;
+  color: var(--yc-text);
 }
 
 .result :deep(.budget-item),.result :deep(.weather-item),.result :deep(.meal) {
-  background: #f5f8ed;
+  background: var(--yc-page);
 }
 
 .result :deep(.card-title),.result :deep(.block-title) {
-  color: #617b4e;
+  color: var(--yc-text);
 }
 
 .result :deep(.budget-value),.result :deep(.date-day) {
-  color: #577441;
+  color: var(--yc-text);
 }
 
 .result :deep(.date-index) {
-  background: #edf2e1;
-  color: #8b9f73;
+  background: var(--yc-soft);
+  color: var(--yc-muted);
 }
 
 .result :deep(.meal) {
-  border: 1px solid #e7ebdc;
+  border: 1px solid var(--yc-soft);
   border-left: 3px solid #c6a371;
 }
 
@@ -1367,55 +1368,55 @@ function reset(): void {
 }
 
 .result :deep(.muted),.result :deep(.date-range) {
-  color: #98a48a;
+  color: var(--yc-muted);
 }
 
 .result :deep(.alert-card) {
-  background: #fbf7e9;
-  border-color: #e8dfc4;
+  background: var(--yc-page);
+  border-color: var(--yc-border);
 }
 
 .result :deep(a) {
-  color: #69864f;
+  color: var(--yc-text);
 }
 
 .loading-head {
-  color: #5c7648;
+  color: var(--yc-text);
 }
 
 .spin {
-  color: #69894e;
+  color: var(--yc-text);
 }
 
 .marker.running {
-  border-color: #78955d;
+  border-color: var(--yc-muted);
   border-top-color: transparent;
 }
 
 .loading-hint {
-  color: #99a889;
+  color: var(--yc-muted);
 }
 
 .result-meta {
-  color: #a0ad90;
+  color: var(--yc-muted);
 }
 
 .thread {
-  background: #f0f4e6;
-  color: #98a883;
+  background: var(--yc-soft);
+  color: var(--yc-muted);
 }
 
 .progress-item {
-  color: #8c9d79;
+  color: var(--yc-muted);
 }
 
 .progress-item.done .progress-label {
-  color: #5d7748;
+  color: var(--yc-text);
 }
 
 .progress-tag.running {
-  background: #edf4e1;
-  color: #7b965f;
+  background: var(--yc-soft);
+  color: var(--yc-muted);
 }
 
 @media (max-width:940px) {
@@ -1453,9 +1454,7 @@ function reset(): void {
     height: 70px;
     font-size: 18px;
   }
-  .brand>span>small {
-    display: none;
-  }
+
   .nav-link {
     font-size: 10px;
   }
@@ -1505,33 +1504,33 @@ function reset(): void {
 }
 
 .result :deep(.spot) {
-  background: #f4f7ec;
-  border: 1px solid #e8ecdf;
+  background: var(--yc-page);
+  border: 1px solid var(--yc-soft);
 }
 
 .result :deep(.spot-index) {
-  background: #789563;
+  background: var(--yc-primary);
 }
 
 .result :deep(.spot-desc) {
-  color: #7f8e70;
+  color: var(--yc-muted);
 }
 
 .result :deep(.schedule-list time) {
-  color: #6d8955;
+  color: var(--yc-text);
 }
 
 .result :deep(.action-btn.primary) {
-  background: #315a43;
-  border-color: #315a43;
+  background: var(--yc-primary);
+  border-color: var(--yc-primary);
 }
 
 .export-options {
-  border-top: 1px solid #e2e8d6;
+  border-top: 1px solid var(--yc-border);
   margin-top: 24px;
   padding-top: 18px;
   font-size: 12px;
-  color: #789062;
+  color: var(--yc-muted);
 }
 
 .export-options>summary {

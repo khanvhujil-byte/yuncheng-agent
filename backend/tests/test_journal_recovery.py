@@ -32,7 +32,7 @@ def install_scenario(monkeypatch, choices=(0, 1, 1, 2)):
     audits = []
     restaurants = restaurants_at(spots[0].location)
 
-    def model(_system, _user, *, extra_user=""):
+    def model(_system, _user, *, extra_user="", max_tokens=None):
         spot = spots[choices[len(calls)]]
         calls.append(spot.name)
         return json.dumps(joint_payload([make_day(0, req.start_date, [spot])], restaurants, "JHOTEL"), ensure_ascii=False), {

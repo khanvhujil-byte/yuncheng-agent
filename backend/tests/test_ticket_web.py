@@ -8,7 +8,7 @@ from tests.factories import make_attraction, make_day, make_request
 
 
 def trip():
-    today = datetime.now(timezone.utc).date().isoformat()
+    today = datetime.now(timezone(timedelta(hours=8))).date().isoformat()
     req = make_request(city='深圳', start_date=today, travel_days=1, nights=0, must_visit=[])
     return req, {'days': [make_day(0, today, [make_attraction('测试景区', poi_id='A', ticket_price=None)])]}
 

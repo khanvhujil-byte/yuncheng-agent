@@ -88,6 +88,23 @@ def _known(raw):
             and (raw.get("distance_meters") is None or _number(raw["distance_meters"])))
 
 
+def _anomalous(raw, a, b, mode):
+    """Conservative integrity gate, never a claim about expected road times."""
+    if not _known(raw):
+        return False
+    straight = haversine_km(a, b)
+    minutes = raw['duration_minutes']
+    meters = raw.get('distance_meters')
+    selected = _MODE_ALIASES.get(mode, mode)
+    if straight > 1 and (minutes <= 0 or (meters is not None and meters < straight*800)):
+        return True
+    if meters is not None and meters > max(100000, straight*30000):
+        return True
+    if selected in ('driving', 'transit') and minutes > max(300, straight*20):
+        return True
+    return False
+
+
 def _memory_hit(value, now, ttl):
     if not isinstance(value, dict) or not _number(value.get("_cached_at")):
         return False
@@ -215,6 +232,10 @@ def _query(a, b, mode, city, quota, settings):
             return rejected
         try:
             raw = amap.travel_route(a, b, mode=mode, city=city)
+            if _anomalous(raw, a, b, mode):
+                return ToolResult(status='error', message='供应商路线与坐标显著不一致，需核验；不作为已验证路线',
+                                  error_code='ANOMALOUS_ROUTE_RESULT', retryable=True,
+                                  stats={'observed_route':raw, 'straight_km':round(haversine_km(a,b),3)})
             if _known(raw):
                 return ToolResult.success("已取得真实路线时间", returned_count=1)
             if isinstance(raw, dict) and raw.get("status") == "known":
@@ -277,11 +298,14 @@ def prefetch_routes(pairs, *, mode, city, cache, query_count=0, max_queries=48,
     pending = {}
     for key, pair in unique.items():
         reused = cached_route(cache.get(key), now=now, ttl=ttl)
+        if reused is not None and _anomalous(reused, *pair, mode):
+            reused = None
         if reused is None:
             pending[key] = pair
         else:
             cache[key] = reused
     observations = _read_observations(pending, ttl) if monotonic() < quota.end else {}
+    observations = {key: value for key, value in observations.items() if not _anomalous(value, *pending[key], mode)}
     cache.update(observations)
     calls = []
     for key in observations:

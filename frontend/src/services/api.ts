@@ -7,6 +7,7 @@
 
 import axios, { AxiosError } from 'axios'
 import { completedResult } from './planningFlow'
+import { API_BASE_URL } from './apiBase'
 
 import type {
   ApiErrorBody,
@@ -18,15 +19,6 @@ import type {
   TripPlanResponse,
   TripRequest,
 } from '@/types/trip'
-
-/**
- * 解析后的后端地址。
- *
- * 为什么单独抽一个常量：axios 有自己的 baseURL，而流式那条路走的是原生 fetch，
- * fetch 不认 axios 的 baseURL。两边各写一份的话，哪天换了端口就会出现
- * 「同步能用、流式连不上」这种最难查的偏差。所以地址只解析一次，两边共用。
- */
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'
 
 /** 后端错误码 → 给人看的中文提示 */
 const ERROR_MESSAGES: Record<string, string> = {
@@ -41,7 +33,7 @@ const ERROR_MESSAGES: Record<string, string> = {
   LLM_AUTH_ERROR: '模型 Key 无效。请检查后端 backend/.env 里的 LLM_API_KEY。',
   LLM_QUOTA_EXCEEDED: '模型账户余额不足，请充值后重试。',
   LLM_RATE_LIMITED: '模型接口触发限流，请等几秒重试。',
-  NETWORK_ERROR: '连不上后端。确认后端已启动（默认 http://127.0.0.1:8000）。',
+  NETWORK_ERROR: '连不上服务，请检查网络连接以及后端和 API 代理是否已启动。',
   // ---- v0.2 新增：锚点与预检相关的错误码 ----
   DATE_RANGE_MISMATCH:
     '日期区间和天数对不上。例如选了 10 月 1 日到 5 日（5 天），天数却填 3 —— 请改到一致。',

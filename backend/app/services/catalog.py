@@ -373,9 +373,11 @@ def persist_plan(plan, city, *, attractions=(), hotels=(), restaurants=()):
     restaurants = [Restaurant.model_validate(item) for item in restaurants]
     selected_attractions = {item.poi_id for day in plan.days for item in day.attractions if item.poi_id}
     selected_restaurants = {getattr(item, "restaurant_id", None) for day in plan.days for item in day.meals}
-    selected_hotel = plan.hotel.poi_id if plan.hotel else None
+    selected_hotels = {s.hotel.poi_id for s in plan.stays}
+    if plan.hotel:
+        selected_hotels.add(plan.hotel.poi_id)
     return {
         "attractions": upsert_places(city, "attraction", [p for p in attractions if p.poi_id in selected_attractions], preserve_existing=True),
-        "hotels": upsert_places(city, "hotel", [p for p in hotels if p.poi_id == selected_hotel], preserve_existing=True),
+        "hotels": upsert_places(city, "hotel", [p for p in hotels if p.poi_id in selected_hotels], preserve_existing=True),
         "restaurants": upsert_places(city, "restaurant", [p for p in restaurants if p.poi_id in selected_restaurants], preserve_existing=True),
     }

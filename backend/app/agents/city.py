@@ -174,6 +174,14 @@ def validate_city(state: TripState) -> dict:
             return fail("CITY_MISMATCH", "指定酒店距离目的地市中心超过 100 公里，请确认地点")
         hotel_anchor = _hotel_of(matches[0], nights)
 
+    from ..services.regional_stays import resolve_request_anchors
+    try:
+        stay_locks, trip_endpoints = resolve_request_anchors(req)
+    except (AmapError, AmapUnreachable) as exc:
+        return fail(exc.code, "解析按日酒店或到离地点失败：" + str(exc))
+    except ValueError as exc:
+        return fail('CLARIFICATION_REQUIRED', str(exc))
+
     logger.info(
         "城市解析成功 | city=%s adcode=%s center=%s,%s | 天数=%d 晚数=%d",
         req.city,
@@ -196,6 +204,7 @@ def validate_city(state: TripState) -> dict:
         "warnings": warnings,
         "must_visit_resolved": resolved,  # 下游 attraction_agent 会把它注入候选池
         "hotel_anchor": hotel_anchor,
+        "stay_locks": stay_locks, "trip_endpoints": trip_endpoints,
         "community_hot": hot,
         # 让"有没有拿到热度"这件事在响应里可见（与 sources 的既有约定一致：
         # 数据从哪来、有没有降级，一律如实标出）

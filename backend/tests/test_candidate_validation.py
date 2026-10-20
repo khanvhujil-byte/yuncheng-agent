@@ -52,7 +52,7 @@ def test_candidate_validation_controls_success_and_cache(
     responses = iter(model_outputs)
     calls = []
 
-    def fake_model(_system, _user, *, extra_user=""):
+    def fake_model(_system, _user, *, extra_user="", max_tokens=None):
         calls.append(extra_user)
         choice = next(responses)
         payload = {

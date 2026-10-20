@@ -1,0 +1,520 @@
+{
+  "case_id": "G09",
+  "name": "苏州2天低预算800",
+  "kind": "generate",
+  "passed": true,
+  "violations": [],
+  "duration_s": 46.18,
+  "error_code": null,
+  "success": true,
+  "days": 2,
+  "response_summary": {
+    "success": true,
+    "error_code": null,
+    "message": "",
+    "cached": false,
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "未检索到符合要求的酒店候选，编排不得虚构住宿。",
+      "甪直古镇：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "兴福禅寺：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "西山岛包山禅寺：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "太仓博物馆：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFLJBZDQ",
+      "2026-10-20 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-20 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-20 dinner 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B020005PJU",
+      "2026-10-21 breakfast 重复餐厅 B0LAA7ATAP，附近尚有未使用候选：B020005PJU",
+      "2026-10-21 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「苏州博物馆(本馆)」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-20 一天占了总花费的 67%（504 元），看看是不是某项估算偏高。",
+      "2026-10-20 一天占了总花费的 62%（430 元），看看是不是某项估算偏高。"
+    ],
+    "budget": {
+      "ticket_reserve_amount": 100,
+      "total_attractions": 135,
+      "total_hotels": 260,
+      "total_meals": 214,
+      "total_transportation": 80,
+      "total": 689,
+      "items": [
+        {
+          "category": "attraction",
+          "name": "甪直古镇",
+          "day_index": 0,
+          "amount": 55,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：甪直古镇景区日常成人联票挂牌价约55元，含主要景点；古镇街区本身可免费进入，按收费景区门票估算。"
+        },
+        {
+          "category": "meal",
+          "name": "一笼鲜包子店(甪直店)",
+          "day_index": 0,
+          "amount": 15,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "甪直一碗面",
+          "day_index": 0,
+          "amount": 40,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "廊桥奥灶面馆",
+          "day_index": 0,
+          "amount": 20,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "拙政园",
+          "day_index": 1,
+          "amount": 80,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：拙政园日常成人门票挂牌价为80元（旺季），淡季约70元，取日常参考80元。"
+        },
+        {
+          "category": "meal",
+          "name": "苏粥(甪直店)",
+          "day_index": 1,
+          "amount": 17,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "吴记小园楼(西北街店)",
+          "day_index": 1,
+          "amount": 74,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "陆正兴.评弹面馆(观前街总店)",
+          "day_index": 1,
+          "amount": 48,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-20 住宿：格林豪泰智选酒店(苏州甪直古镇晓市路店)",
+          "day_index": 0,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "transportation",
+          "name": "市内交通（公共交通）",
+          "day_index": null,
+          "amount": 80,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "按每人每天 40 元的固定表估算"
+        }
+      ],
+      "known_total": 0,
+      "estimated_total": 689,
+      "unknown_items": [],
+      "limit": 800,
+      "limit_status": "within",
+      "limit_basis": "已知 0 元 + 估算 689 元 = 689 元，在上限 800 元以内（余 111 元），且没有金额未知的项。范围：该结论只在当前数据快照与估算口径下成立。"
+    },
+    "hotel": {
+      "name": "格林豪泰智选酒店(苏州甪直古镇晓市路店)",
+      "poi_id": "B0FFMEXK7S",
+      "address": "江苏省苏州市吴中区甪直镇晓市路38号",
+      "location": {
+        "longitude": 120.869092,
+        "latitude": 31.269947
+      },
+      "price_range": "",
+      "rating": "",
+      "distance": "距最终行程景点加权平均 12.0 km（直线估计）",
+      "type": "住宿服务;宾馆酒店;宾馆酒店",
+      "estimated_cost": 260,
+      "cost_status": "estimated",
+      "cost_source": "static_estimate",
+      "price_evidence_url": null,
+      "nights": 1,
+      "check_in_after": null,
+      "check_in_before": null,
+      "check_out_before": null,
+      "operations_evidence_url": null
+    },
+    "hotel_nights": 1,
+    "accommodation_version": 11,
+    "stays": [
+      {
+        "check_in": "2026-10-20",
+        "check_out": "2026-10-21",
+        "hotel": {
+          "name": "格林豪泰智选酒店(苏州甪直古镇晓市路店)",
+          "poi_id": "B0FFMEXK7S",
+          "address": "江苏省苏州市吴中区甪直镇晓市路38号",
+          "location": {
+            "longitude": 120.869092,
+            "latitude": 31.269947
+          },
+          "price_range": "",
+          "rating": "",
+          "distance": "",
+          "type": "住宿服务;宾馆酒店;宾馆酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "首日主游甪直古镇，选择古镇内经济型连锁酒店，步行可达景区与餐饮，免去往返市区长途通勤；次日再前往市区园林片区。"
+      }
+    ],
+    "stay_comparison": {
+      "strategy": "same_hotel",
+      "hotel_changes": 0,
+      "travel_minutes": 215,
+      "transfer_minutes": 0,
+      "basis": "路线工具核算所选方案；未取得备选实测时，不宣称节省具体分钟。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "格林豪泰智选酒店(苏州甪直古镇晓市路店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "阴"
+      },
+      {
+        "date": "2026-10-21",
+        "beyond_window": false,
+        "day_weather": "阴"
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-20",
+        "day_index": 0,
+        "attractions": [
+          "甪直古镇"
+        ],
+        "meals": [
+          "一笼鲜包子店(甪直店)",
+          "甪直一碗面",
+          "廊桥奥灶面馆"
+        ],
+        "total_minutes": 648,
+        "route_start": null,
+        "route_end": {
+          "name": "格林豪泰智选酒店(苏州甪直古镇晓市路店)",
+          "location": {
+            "longitude": 120.869092,
+            "latitude": 31.269947
+          },
+          "poi_id": "B0FFMEXK7S",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "一笼鲜包子店(甪直店)",
+            "to_name": "甪直一碗面",
+            "from_id": "B0I3JZ64LF",
+            "to_id": "B0JDHC8DR9",
+            "mode": "公共交通",
+            "duration_minutes": 26,
+            "distance_meters": 2521,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口结果，出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "甪直一碗面",
+            "to_name": "甪直古镇",
+            "from_id": "B0JDHC8DR9",
+            "to_id": "B02000141D",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "甪直古镇",
+            "to_name": "廊桥奥灶面馆",
+            "from_id": "B02000141D",
+            "to_id": "B0FFIHM4UE",
+            "mode": "公共交通",
+            "duration_minutes": 11,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "廊桥奥灶面馆",
+            "to_name": "格林豪泰智选酒店(苏州甪直古镇晓市路店)",
+            "from_id": "B0FFIHM4UE",
+            "to_id": "B0FFMEXK7S",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 430
+      },
+      {
+        "date": "2026-10-21",
+        "day_index": 1,
+        "attractions": [
+          "拙政园"
+        ],
+        "meals": [
+          "苏粥(甪直店)",
+          "吴记小园楼(西北街店)",
+          "陆正兴.评弹面馆(观前街总店)"
+        ],
+        "total_minutes": 630,
+        "route_start": {
+          "name": "格林豪泰智选酒店(苏州甪直古镇晓市路店)",
+          "location": {
+            "longitude": 120.869092,
+            "latitude": 31.269947
+          },
+          "poi_id": "B0FFMEXK7S",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": null,
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "格林豪泰智选酒店(苏州甪直古镇晓市路店)",
+            "to_name": "苏粥(甪直店)",
+            "from_id": "B0FFMEXK7S",
+            "to_id": "B0FFIXMOOX",
+            "mode": "公共交通",
+            "duration_minutes": 16,
+            "distance_meters": 1013,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "苏粥(甪直店)",
+            "to_name": "吴记小园楼(西北街店)",
+            "from_id": "B0FFIXMOOX",
+            "to_id": "B0FFG4L1T4",
+            "mode": "公共交通",
+            "duration_minutes": 96,
+            "distance_meters": 31602,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "吴记小园楼(西北街店)",
+            "to_name": "拙政园",
+            "from_id": "B0FFG4L1T4",
+            "to_id": "B020001R2Q",
+            "mode": "公共交通",
+            "duration_minutes": 15,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（AMAP_ERROR）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "拙政园",
+            "to_name": "陆正兴.评弹面馆(观前街总店)",
+            "from_id": "B020001R2Q",
+            "to_id": "B0200178QP",
+            "mode": "公共交通",
+            "duration_minutes": 26,
+            "distance_meters": 1956,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 259
+      }
+    ],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "catalog+amap",
+      "weather": "amap"
+    },
+    "budget_verdict": {
+      "status": "within",
+      "limit": 800,
+      "known_total": 0,
+      "estimated_total": 689,
+      "subtotal": 689,
+      "unknown_items": [],
+      "basis": "已知 0 元 + 估算 689 元 = 689 元，在上限 800 元以内（余 111 元），且没有金额未知的项。范围：该结论只在当前数据快照与估算口径下成立。"
+    },
+    "validate_error": null
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": null,
+    "retries": 1,
+    "budget_retries": 0,
+    "planning_calls": 2,
+    "composition_valid": true,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "catalog+amap",
+      "weather": "amap"
+    },
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "未检索到符合要求的酒店候选，编排不得虚构住宿。",
+      "甪直古镇：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "兴福禅寺：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "西山岛包山禅寺：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "太仓博物馆：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFLJBZDQ\n2026-10-20 breakfast 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-20 lunch 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-20 dinner 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B020005PJU\n2026-10-21 breakfast 重复餐厅 B0LAA7ATAP，附近尚有未使用候选：B020005PJU\n2026-10-21 breakfast 距用餐片区超过4公里，需换候选或重排景点。\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0FFMEXK7S\"}], \"hotel_id\": \"B0FFMEXK7S\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"甪直古镇\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B02000141D\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LAA7ATAP\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFLJBZDQ\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFLJBZDQ\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": []}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": []}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": []}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"拙政园\", \"苏州博物馆(本馆)\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B020001R2Q\", \"B020001285\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LAA7ATAP\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFG4L1T4\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0200178QP\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": []}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG4L1T4\", \"B0FFHG59CD\", \"B020005PJU\", \"B0FFJCTQDN\", \"B0FFLH54T5\", \"B0FFI11MGA\", \"B0G36MM6JA\", \"B0G175WXVH\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0200178QP\", \"B0FFG4L1T4\", \"B0FFHG59CD\", \"B020005PJU\", \"B0FFJCTQDN\", \"B0FFLH54T5\", \"B0FFI11MGA\", \"B0G36MM6JA\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「苏州博物馆(本馆)」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-20 一天占了总花费的 67%（504 元），看看是不是某项估算偏高。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-20 一天占了总花费的 62%（430 元），看看是不是某项估算偏高。"
+    ],
+    "usage": {
+      "prompt_tokens": 24089,
+      "completion_tokens": 1661,
+      "llm_calls": 3
+    },
+    "budget_verdict": {
+      "status": "within",
+      "limit": 800,
+      "known_total": 0,
+      "estimated_total": 689,
+      "subtotal": 689,
+      "unknown_items": [],
+      "basis": "已知 0 元 + 估算 689 元 = 689 元，在上限 800 元以内（余 111 元），且没有金额未知的项。范围：该结论只在当前数据快照与估算口径下成立。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "格林豪泰智选酒店(苏州甪直古镇晓市路店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "tool_call_count": 40,
+    "hotel_source": "agent",
+    "final_days": 2,
+    "final_weather_days": 2
+  },
+  "request": {
+    "city": "苏州",
+    "start_date": "2026-10-20",
+    "travel_days": 2,
+    "transportation": "公共交通",
+    "accommodation": "经济型酒店",
+    "preferences": [
+      "历史文化"
+    ],
+    "must_visit": [],
+    "free_text_input": "",
+    "budget_limit": 800
+  },
+  "expect": {
+    "days": 2,
+    "budget_limit_status_in": [
+      "within",
+      "estimated_exceeded",
+      "known_exceeded",
+      "unverified"
+    ]
+  },
+  "exception": null,
+  "warnings": [
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "未检索到符合要求的酒店候选，编排不得虚构住宿。",
+    "甪直古镇：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "兴福禅寺：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "西山岛包山禅寺：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "太仓博物馆：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+    "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFLJBZDQ",
+    "2026-10-20 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-20 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-20 dinner 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B020005PJU",
+    "2026-10-21 breakfast 重复餐厅 B0LAA7ATAP，附近尚有未使用候选：B020005PJU",
+    "2026-10-21 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+    "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+    "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「苏州博物馆(本馆)」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+    "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-21：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+    "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-20 一天占了总花费的 67%（504 元），看看是不是某项估算偏高。",
+    "2026-10-20 一天占了总花费的 62%（430 元），看看是不是某项估算偏高。"
+  ],
+  "message": "",
+  "started_at": "2026-10-20T01:04:30"
+}

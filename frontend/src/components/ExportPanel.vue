@@ -33,6 +33,7 @@ const props = defineProps<{
 
 /** 数据来源 → 中文说明。和后端 DataSource 联合类型逐字对应 */
 const SOURCE_LABELS: Record<DataSource, string> = {
+  flyai: '飞猪平台参考',
   amap: '高德实查',
   catalog: '本地已核验资料',
   'catalog+amap': '本地资料与高德补查',
@@ -111,19 +112,35 @@ const markdown = computed(() => {
 
   // ---------- 标题与概览 ----------
   const nights = plan.hotel_nights ?? 0
-  lines.push(`# ${plan.city} ${plan.days.length} 日行程`)
+  lines.push(`# 云程 YUNCHENG · ${plan.city} ${plan.days.length} 日行程`)
   lines.push('')
   lines.push(
     `- 城市：${plan.city}`,
   )
   lines.push(`- 日期：${plan.start_date} 至 ${plan.end_date}`)
+  lines.push(`- 出行口径：${plan.adult_count || 1} 位成人，${plan.room_count || 1} 间房；预算为同行合计`)
+  if (plan.intercity_legs?.length) {
+    lines.push('', '## 城际交通')
+    for (const leg of plan.intercity_legs) {
+      lines.push(`- ${leg.direction === 'outbound' ? '去程' : '返程'} ${leg.transport_no}：${leg.departure_station} ${leg.departure_at} → ${leg.arrival_station} ${leg.arrival_at}`)
+      lines.push(`  - 成人参考价：${leg.amount_per_adult == null ? '待核实' : money(leg.amount_per_adult)}；${leg.price_note}`)
+      if (leg.url?.startsWith('https://')) lines.push(`  - 平台资料：${leg.url}`)
+    }
+  }
   lines.push(`- 天数 / 晚数：${plan.days.length} 天 ${nights} 晚`)
 
   // ---------- 住宿 ----------
   lines.push('')
   lines.push('## 住宿')
   lines.push('')
-  if (plan.hotel) {
+  if ((plan.accommodation_version ?? 0) >= 11) {
+    for (const stay of plan.stays ?? []) {
+      lines.push(`- ${stay.check_in} 入住 → ${stay.check_out} 退房：${oneLine(stay.hotel.name)}${stay.locked ? '（已锁定）' : ''}`)
+      lines.push(`  - 房费：${stay.hotel.cost_status === 'unknown' ? '待核实' : `${money(stay.hotel.estimated_cost)} / 间 / 晚（${stay.hotel.cost_source === 'static_estimate' ? '预算预留' : '参考'}）`}`)
+      if (stay.reason) lines.push(`  - 依据：${oneLine(stay.reason)}`)
+    }
+    if (!plan.stays?.length) lines.push('本次无需住宿或住宿尚未确定，请查看校验状态。')
+  } else if (plan.hotel) {
     const hotel = plan.hotel
     const hotelSource = sourceText('hotel')
     lines.push(`- 名称：${hotel.name}${hotelSource ? `（来源：${hotelSource}）` : ''}`)
@@ -155,6 +172,8 @@ const markdown = computed(() => {
     lines.push('')
     if (day.description) lines.push(`> ${oneLine(day.description)}`)
     if (day.description) lines.push('')
+    if (day.dated_boundaries) lines.push(`- 当日动线：${day.route_start?.name || '首个活动'} → ${day.route_end?.name || '末个活动'}${day.hotel_change ? '（今日换住）' : ''}`)
+    if (day.route_boundary_note) lines.push(`- 范围与待核实：${oneLine(day.route_boundary_note)}`)
     if (day.transportation) lines.push(`- 交通：${day.transportation}`)
     if (day.accommodation) lines.push(`- 住宿类型：${day.accommodation}`)
     if (day.day_total_cost !== undefined) {
@@ -326,7 +345,7 @@ const markdown = computed(() => {
 const fileName = computed(() => {
   // 文件名里的斜杠、冒号等在 Windows 上是非法字符，统一替换掉
   const city = (props.plan.city || '行程').replace(/[\\/:*?"<>|]/g, '')
-  return `${city}${props.plan.days.length}日行程.md`
+  return `云程-${city}${props.plan.days.length}日行程.md`
 })
 
 // ================================================================ 发布到社区
@@ -451,7 +470,7 @@ function print(): void {
 <style scoped>
 .card {
   background: #fff;
-  border: 1px solid #eceef2;
+  border: 1px solid var(--yc-border);
   border-radius: 12px;
   padding: 18px 20px;
 }
@@ -462,7 +481,7 @@ function print(): void {
   gap: 6px;
   font-size: 14px;
   font-weight: 600;
-  color: #1b1f27;
+  color: var(--yc-ink);
   margin-bottom: 12px;
 }
 
@@ -486,8 +505,8 @@ function print(): void {
   padding: 9px 16px;
   font-size: 14px;
   font-family: inherit;
-  color: #3d4453;
-  background: #f7f9fc;
+  color: var(--yc-ink);
+  background: var(--yc-page);
   border: 1px solid #e3e7ee;
   border-radius: 10px;
   cursor: pointer;
@@ -501,19 +520,19 @@ function print(): void {
 
 .action-btn.primary {
   color: #fff;
-  background: #3566c9;
-  border-color: #3566c9;
+  background: var(--yc-primary);
+  border-color: var(--yc-primary);
 }
 
 .action-btn.primary:hover {
-  background: #2b57b0;
-  border-color: #2b57b0;
+  background: var(--yc-primary-hover);
+  border-color: var(--yc-primary-hover);
 }
 
 .footnote {
   margin: 12px 0 0;
   font-size: 12px;
-  color: #8c94a3;
+  color: var(--yc-muted);
   line-height: 1.8;
   word-break: break-all;
 }
@@ -529,7 +548,7 @@ function print(): void {
 }
 
 .publish-msg.good {
-  color: #2f7d54;
+  color: var(--yc-primary);
 }
 
 .publish-msg.bad {

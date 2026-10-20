@@ -1,0 +1,11 @@
+{
+  "VerifiedAt": "2026-10-20T01:52:28.0027786+08:00",
+  "BackendHealth": {
+    "status": "ok",
+    "service": "trip-planner-agent",
+    "version": "0.8.0"
+  },
+  "StaysSchema": true,
+  "BoundaryMealSchema": true,
+  "FrontendStatus": 200
+}

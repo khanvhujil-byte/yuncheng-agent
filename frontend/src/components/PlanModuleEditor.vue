@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { request } from '@/services/dialog'
 import type { EditCandidate, EditCandidates, ModuleEdit } from '@/services/dialog'
 import type { TripPlan } from '@/types/trip'
@@ -8,6 +8,7 @@ const props = defineProps<{ conversationId: string; plan: TripPlan; disabled?: b
 const emit = defineEmits<{ edit: [edit: ModuleEdit] }>()
 const module = ref<ModuleEdit['module']>('meals')
 const dayIndex = ref(0)
+const stayScope = ref<'night' | 'segment' | 'all'>('night')
 const itemIndex = ref(0)
 const candidates = ref<EditCandidate[]>([])
 const chosen = ref<string[]>([])
@@ -15,22 +16,25 @@ const loading = ref(false)
 const loaded = ref(false)
 const locked = ref(false)
 const error = ref('')
+const element = ref<HTMLElement | null>(null)
 let sequence = 0
 const day = computed(() => props.plan.days[dayIndex.value])
 const items = computed(() => module.value === 'meals' ? day.value?.meals ?? [] : day.value?.attractions ?? [])
 const multiple = computed(() => module.value === 'day')
+const selectableDays = computed(() => module.value === 'hotel' && (props.plan.accommodation_version ?? 0) >= 11
+  ? props.plan.days.filter(d => props.plan.stays?.some(s => s.check_in === d.date)) : props.plan.days)
 
 function reset() {
   sequence++; candidates.value = []; chosen.value = []; loaded.value = false; locked.value = false
   loading.value = false; error.value = ''; itemIndex.value = 0
 }
-watch([module, dayIndex, () => props.conversationId, () => props.plan], reset)
+watch([module, dayIndex, stayScope, () => props.conversationId, () => props.plan], reset)
 async function load() {
   const ticket = ++sequence
   loading.value = true; error.value = ''; chosen.value = []
   try {
     const query = new URLSearchParams({ module: module.value })
-    if (module.value !== 'hotel') query.set('day_index', String(dayIndex.value))
+    if (module.value !== 'hotel' || ((props.plan.accommodation_version ?? 0) >= 11 && stayScope.value !== 'all')) query.set('day_index', String(dayIndex.value))
     const data = await request<EditCandidates>(`/conversations/${props.conversationId}/edit-candidates?${query}`)
     if (ticket !== sequence) return
     candidates.value = data.candidates; locked.value = data.locked; loaded.value = true
@@ -43,7 +47,7 @@ function select(id: string, checked: boolean) {
 function preview() {
   if (!chosen.value.length || locked.value || props.disabled) return
   emit('edit', { module: module.value,
-    ...(module.value === 'hotel' ? {} : { day_index: dayIndex.value }),
+    ...(module.value === 'hotel' ? ((props.plan.accommodation_version ?? 0) >= 11 ? { stay_scope: stayScope.value, ...(stayScope.value === 'all' ? {} : { day_index: dayIndex.value }) } : {}) : { day_index: dayIndex.value }),
     ...(['meals', 'attractions'].includes(module.value) ? { item_index: itemIndex.value } : {}),
     ...(multiple.value ? { candidate_ids: chosen.value } : { candidate_id: chosen.value[0] }),
   })
@@ -52,15 +56,24 @@ function price(candidate: EditCandidate) {
   if (candidate.estimated_cost == null || candidate.price_status === 'unknown') return '费用待查'
   return `¥${candidate.estimated_cost}${candidate.price_status === 'known' ? '' : '（参考）'}`
 }
+async function openStay(index: number) {
+  if (props.disabled) return
+  module.value = 'hotel'; dayIndex.value = index; stayScope.value = 'segment'
+  await nextTick()
+  element.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  await load()
+}
+defineExpose({ openStay })
 </script>
 
 <template>
-  <section class="module-editor">
+  <section ref="element" class="module-editor">
     <h3>修改这份行程</h3>
     <p>选中要换的内容，先查看修改预览，再确认保存。系统会更新相关路线、时间安排和预算。</p>
     <div class="controls">
-      <label>修改内容<select v-model="module" :disabled="disabled || loading"><option value="meals">一顿餐饮</option><option value="attractions">一个景点</option><option value="hotel">全程酒店</option><option value="day">某天的景点安排</option></select></label>
-      <label v-if="module !== 'hotel'">哪一天<select v-model.number="dayIndex" :disabled="disabled || loading"><option v-for="(d, index) in plan.days" :key="d.date" :value="index">第 {{ index + 1 }} 天 · {{ d.date }}</option></select></label>
+      <label>修改内容<select v-model="module" :disabled="disabled || loading"><option value="meals">一顿餐饮</option><option value="attractions">一个景点</option><option value="hotel">住宿安排</option><option value="day">某天的景点安排</option></select></label>
+      <label v-if="module === 'hotel' && (plan.accommodation_version ?? 0) >= 11">修改范围<select v-model="stayScope" :disabled="disabled || loading"><option value="night">某一晚</option><option value="segment">连续同酒店的住宿段</option><option value="all">全部未锁定夜晚</option></select></label>
+      <label v-if="module !== 'hotel' || ((plan.accommodation_version ?? 0) >= 11 && stayScope !== 'all')">{{ module === 'hotel' ? '入住日' : '哪一天' }}<select v-model.number="dayIndex" :disabled="disabled || loading"><option v-for="d in selectableDays" :key="d.date" :value="d.day_index">第 {{ d.day_index + 1 }} 天 · {{ d.date }}</option></select></label>
       <label v-if="module === 'meals' || module === 'attractions'">替换哪一项<select v-model.number="itemIndex" :disabled="disabled || loading"><option v-for="(item, index) in items" :key="index" :value="index">{{ item.name }}</option></select></label>
       <button :disabled="disabled || loading || ((module === 'meals' || module === 'attractions') && !items.length)" @click="load">{{ loading ? '查询候选中…' : '查询可替换候选' }}</button>
     </div>

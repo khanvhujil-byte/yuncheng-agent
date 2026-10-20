@@ -16,13 +16,13 @@ def policy(request):
     return getattr(request, "requirements", None) or Requirements()
 
 
-def context(request, *modules):
+def context(request, *modules, include_raw=True):
     needs = policy(request)
-    selected = {key: getattr(needs, key).model_dump() for key in modules}
-    return ("\n【用户分环节要求】\n" + json.dumps(selected, ensure_ascii=False)
+    selected = {key: getattr(needs, key).model_dump(exclude_defaults=True) for key in modules}
+    return ("\n【用户分环节要求】\n" + json.dumps(selected, ensure_ascii=False, separators=(',', ':'))
             + "\n文字instructions是偏好，不能宣称已核实设施、过敏安全、营业或预约事实。"
               "必须服从明确的排除项、数值限制和已指定地点；冲突不得静默放宽。"
-            + "\n用户原始补充：" + (request.free_text_input or "（无）"))
+            + ("\n用户原始补充：" + (request.free_text_input or "（无）") if include_raw else ''))
 
 
 def excluded(name, needs):
@@ -87,7 +87,8 @@ def audit_requirements(plan, request):
                 elif not needs.transport.allow_estimated_routes and leg.get("status") != "known":
                     errors.append(f"{label} 有未核实路线，用户要求使用真实路线时间。")
         if needs.weather.avoid_rain_outdoors:
-            weather = next((w for w in plan.get("weather_info", []) if w.get("date") == day.get("date")), None)
+            remote = plan.get('accommodation_version', 0) >= 11 and any(a.get('retrieval_scope') == 'surrounding' for a in day.get('attractions', []))
+            weather = None if remote else next((w for w in plan.get("weather_info", []) if w.get("date") == day.get("date")), None)
             outdoors = [a for a in day.get("attractions", []) if not any(
                 word in (a.get("category", "") or "") + a["name"] for word in ("博物馆", "美术馆", "展览", "科技馆", "室内"))]
             if outdoors:
@@ -95,8 +96,18 @@ def audit_requirements(plan, request):
                     errors.append(f"{label} 天气未知，无法确认户外安排符合避雨要求。")
                 elif "雨" in weather["day_weather"]:
                     errors.append(f"{label} 预报有雨，但仍安排户外景点，不符合用户避雨要求。")
+    # Dated identity/locks/boundaries need the collector state and are audited
+    # by delivery.audit and enrich_segmented. This stateless module only owns
+    # measurable requirement rules, not a second name-based anchor resolver.
+    if plan.get('accommodation_version', 0) >= 11:
+        from ..models.schemas import Hotel
+        for stay in plan.get('stays', []):
+            if not hotel_allowed(Hotel.model_validate(stay['hotel']), needs.hotel):
+                errors.append(f"{stay['check_in']}酒店不符合住宿硬约束。")
     if plan.get("hotel"):
         from ..models.schemas import Hotel
         if not hotel_allowed(Hotel.model_validate(plan["hotel"]), needs.hotel):
             errors.append("所选酒店不符合排除名单或每晚参考价上限。")
+    from .day_goals import audit_days
+    errors.extend(audit_days(plan, request))
     return list(dict.fromkeys(errors))

@@ -1,0 +1,1131 @@
+{
+  "case_id": "G08",
+  "name": "丽江5天民宿+超窗口1天",
+  "kind": "generate",
+  "passed": true,
+  "violations": [],
+  "duration_s": 61.9,
+  "error_code": null,
+  "success": true,
+  "days": 5,
+  "response_summary": {
+    "success": true,
+    "error_code": null,
+    "message": "",
+    "cached": false,
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：2026-10-24。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B037815754",
+      "2026-10-20 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-20 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-21 lunch 餐厅不符合就近/餐次条件，可选ID：B0378149MX",
+      "2026-10-21 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-23 breakfast 重复餐厅 B0FFG865VX，附近尚有未使用候选：B03781586B,B0FFFDCXXB,B0KALU7VRY",
+      "2026-10-23 lunch 餐厅不符合就近/餐次条件，可选ID：B0KAHD1IE4,B03780I16N,B0HKKSI2SA,B0FFM0KDG3",
+      "2026-10-23 dinner 重复餐厅 B0G0YMJVKI，附近尚有未使用候选：B03781586B,B0FFFDCXXB,B0KALU7VRY",
+      "2026-10-24 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFG865VX,B03781586B,B0J2NUI8WJ,B0FFFDCXXB,B0FFM0KDG3,B0KALU7VRY",
+      "2026-10-24 breakfast 重复餐厅 B03780I16N，附近尚有未使用候选：B03781586B,B0FFFDCXXB,B0KALU7VRY",
+      "酒店每晚300元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「拉市海湿地公园-玻璃栈道」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「丽江玉水寨风景区」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-23 为给三餐、真实通勤与休息留足时间，未安排可选景点「中济海公园」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-24：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-24：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+    ],
+    "budget": {
+      "ticket_reserve_amount": 100,
+      "total_attractions": 60,
+      "total_hotels": 1200,
+      "total_meals": 910,
+      "total_transportation": 200,
+      "total": 2370,
+      "items": [
+        {
+          "category": "attraction",
+          "name": "丽江拉市海湿地公园",
+          "day_index": 0,
+          "amount": 30,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：拉市海湿地公园日常成人门票约30元，参考当地挂牌价估算"
+        },
+        {
+          "category": "meal",
+          "name": "海之轩餐厅",
+          "day_index": 0,
+          "amount": 82,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "舒圆小吃店",
+          "day_index": 0,
+          "amount": 60,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "餐厅未提供人均价格，按每人每餐固定规则预留；不是餐厅报价。"
+        },
+        {
+          "category": "meal",
+          "name": "滇西王子·梦回丽江·云南菜地标品牌(梦回丽江店)",
+          "day_index": 0,
+          "amount": 80,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "丽江玉湖景区",
+          "day_index": 1,
+          "amount": 30,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：玉湖景区日常成人门票约30元估算"
+        },
+        {
+          "category": "meal",
+          "name": "兰有小吃",
+          "day_index": 1,
+          "amount": 13,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "丽江阔留古·纳西特色餐厅",
+          "day_index": 1,
+          "amount": 98,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "丽鹤饭店(龙潭广场店)",
+          "day_index": 1,
+          "amount": 54,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "黑龙潭-象山",
+          "day_index": 2,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：黑龙潭公园对游客日常免费开放，象山为公园范围，估算为0"
+        },
+        {
+          "category": "attraction",
+          "name": "花马溪谷",
+          "day_index": 2,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：花马溪谷为别墅住宅区，非收费景区，估算为0"
+        },
+        {
+          "category": "meal",
+          "name": "古楼小吃·纳西烤鱼·云南家常菜",
+          "day_index": 2,
+          "amount": 59,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "云宝香饭店",
+          "day_index": 2,
+          "amount": 59,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "云雪丽·现炒云南菜(大水车店)",
+          "day_index": 2,
+          "amount": 66,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "丽江古城-狮乳泉",
+          "day_index": 3,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：狮乳泉位于丽江古城内，古城维护费不属景点门票，泉点本身免费，估算为0"
+        },
+        {
+          "category": "attraction",
+          "name": "解脱林",
+          "day_index": 3,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：解脱林为免费开放的宗教文化景点，估算为0"
+        },
+        {
+          "category": "meal",
+          "name": "裘记小吃店",
+          "day_index": 3,
+          "amount": 30,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "田村·酸汤牦牛肉火锅(古城大水车店)",
+          "day_index": 3,
+          "amount": 73,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "樱花餐厅",
+          "day_index": 3,
+          "amount": 87,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "莲花池",
+          "day_index": 4,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：莲花池为免费开放的小型景点，估算为0"
+        },
+        {
+          "category": "attraction",
+          "name": "丽江枕水人家-白马龙潭",
+          "day_index": 4,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：白马龙潭为古城内免费泉点，估算为0"
+        },
+        {
+          "category": "meal",
+          "name": "忆食飨包粥坊(忠义店)",
+          "day_index": 4,
+          "amount": 14,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "云雪丽 纳西庭院 现炒云南菜(古城南门店)",
+          "day_index": 4,
+          "amount": 76,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "渣渣米线(古城店)",
+          "day_index": 4,
+          "amount": 59,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-20 住宿：过街楼客栈(丽江古城木府店)",
+          "day_index": 0,
+          "amount": 300,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-21 住宿：过街楼客栈(丽江古城木府店)",
+          "day_index": 1,
+          "amount": 300,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-22 住宿：过街楼客栈(丽江古城木府店)",
+          "day_index": 2,
+          "amount": 300,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-23 住宿：过街楼客栈(丽江古城木府店)",
+          "day_index": 3,
+          "amount": 300,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "transportation",
+          "name": "市内交通（公共交通）",
+          "day_index": null,
+          "amount": 200,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "按每人每天 40 元的固定表估算"
+        }
+      ],
+      "known_total": 0,
+      "estimated_total": 2370,
+      "unknown_items": [],
+      "limit": null,
+      "limit_status": "none",
+      "limit_basis": "未设置预算上限。当前口径：已知 0 元 + 估算 2370 元 = 2370 元。"
+    },
+    "hotel": {
+      "name": "过街楼客栈(丽江古城木府店)",
+      "poi_id": "B0FFF37GUM",
+      "address": "光义街光碧巷9号(木府后门旁)",
+      "location": {
+        "longitude": 100.233095,
+        "latitude": 26.869096
+      },
+      "price_range": "",
+      "rating": "4.7",
+      "distance": "距最终行程景点加权平均 3.9 km（直线估计）",
+      "type": "旅馆招待所",
+      "estimated_cost": 300,
+      "cost_status": "estimated",
+      "cost_source": "static_estimate",
+      "price_evidence_url": null,
+      "nights": 4,
+      "check_in_after": null,
+      "check_in_before": null,
+      "check_out_before": null,
+      "operations_evidence_url": null
+    },
+    "hotel_nights": 4,
+    "accommodation_version": 11,
+    "stays": [
+      {
+        "check_in": "2026-10-20",
+        "check_out": "2026-10-21",
+        "hotel": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "poi_id": "B0FFF37GUM",
+          "address": "光义街光碧巷9号(木府后门旁)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "price_range": "",
+          "rating": "4.7",
+          "distance": "",
+          "type": "旅馆招待所",
+          "estimated_cost": 300,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "古城木府片区连住四晚，避免换住整理负担，便于步行覆盖古城及黑龙潭片区"
+      },
+      {
+        "check_in": "2026-10-21",
+        "check_out": "2026-10-22",
+        "hotel": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "poi_id": "B0FFF37GUM",
+          "address": "光义街光碧巷9号(木府后门旁)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "price_range": "",
+          "rating": "4.7",
+          "distance": "",
+          "type": "旅馆招待所",
+          "estimated_cost": 300,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "延续连住，次日玉湖方向早出发"
+      },
+      {
+        "check_in": "2026-10-22",
+        "check_out": "2026-10-23",
+        "hotel": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "poi_id": "B0FFF37GUM",
+          "address": "光义街光碧巷9号(木府后门旁)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "price_range": "",
+          "rating": "4.7",
+          "distance": "",
+          "type": "旅馆招待所",
+          "estimated_cost": 300,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "黑龙潭、花马溪谷均在古城北侧，回古城住宿合理"
+      },
+      {
+        "check_in": "2026-10-23",
+        "check_out": "2026-10-24",
+        "hotel": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "poi_id": "B0FFF37GUM",
+          "address": "光义街光碧巷9号(木府后门旁)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "price_range": "",
+          "rating": "4.7",
+          "distance": "",
+          "type": "旅馆招待所",
+          "estimated_cost": 300,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "古城内景点步行可达，无需换住"
+      }
+    ],
+    "stay_comparison": {
+      "strategy": "same_hotel",
+      "hotel_changes": 0,
+      "travel_minutes": 861,
+      "transfer_minutes": 0,
+      "basis": "路线工具核算所选方案；未取得备选实测时，不宣称节省具体分钟。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "过街楼客栈(丽江古城木府店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "多云"
+      },
+      {
+        "date": "2026-10-21",
+        "beyond_window": false,
+        "day_weather": "晴"
+      },
+      {
+        "date": "2026-10-22",
+        "beyond_window": false,
+        "day_weather": "晴"
+      },
+      {
+        "date": "2026-10-23",
+        "beyond_window": false,
+        "day_weather": "晴"
+      },
+      {
+        "date": "2026-10-24",
+        "beyond_window": true,
+        "day_weather": ""
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-20",
+        "day_index": 0,
+        "attractions": [
+          "丽江拉市海湿地公园"
+        ],
+        "meals": [
+          "海之轩餐厅",
+          "舒圆小吃店",
+          "滇西王子·梦回丽江·云南菜地标品牌(梦回丽江店)"
+        ],
+        "total_minutes": 647,
+        "route_start": null,
+        "route_end": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "poi_id": "B0FFF37GUM",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "海之轩餐厅",
+            "to_name": "丽江拉市海湿地公园",
+            "from_id": "B0KDS7X978",
+            "to_id": "B0FFHEGGA9",
+            "mode": "公共交通",
+            "duration_minutes": 24,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "丽江拉市海湿地公园",
+            "to_name": "舒圆小吃店",
+            "from_id": "B0FFHEGGA9",
+            "to_id": "B0IUOC8IAI",
+            "mode": "公共交通",
+            "duration_minutes": 58,
+            "distance_meters": 4294,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "舒圆小吃店",
+            "to_name": "滇西王子·梦回丽江·云南菜地标品牌(梦回丽江店)",
+            "from_id": "B0IUOC8IAI",
+            "to_id": "B0FFG865VX",
+            "mode": "公共交通",
+            "duration_minutes": 46,
+            "distance_meters": 13589,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "滇西王子·梦回丽江·云南菜地标品牌(梦回丽江店)",
+            "to_name": "过街楼客栈(丽江古城木府店)",
+            "from_id": "B0FFG865VX",
+            "to_id": "B0FFF37GUM",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 592
+      },
+      {
+        "date": "2026-10-21",
+        "day_index": 1,
+        "attractions": [
+          "丽江玉湖景区"
+        ],
+        "meals": [
+          "兰有小吃",
+          "丽江阔留古·纳西特色餐厅",
+          "丽鹤饭店(龙潭广场店)"
+        ],
+        "total_minutes": 657,
+        "route_start": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "poi_id": "B0FFF37GUM",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "poi_id": "B0FFF37GUM",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "过街楼客栈(丽江古城木府店)",
+            "to_name": "兰有小吃",
+            "from_id": "B0FFF37GUM",
+            "to_id": "B0HRLU26J6",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "兰有小吃",
+            "to_name": "丽江阔留古·纳西特色餐厅",
+            "from_id": "B0HRLU26J6",
+            "to_id": "B0MD04PHT5",
+            "mode": "公共交通",
+            "duration_minutes": 88,
+            "distance_meters": 18670,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "丽江阔留古·纳西特色餐厅",
+            "to_name": "丽江玉湖景区",
+            "from_id": "B0MD04PHT5",
+            "to_id": "B0KAUUFZBQ",
+            "mode": "公共交通",
+            "duration_minutes": 58,
+            "distance_meters": 4961,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "丽江玉湖景区",
+            "to_name": "丽鹤饭店(龙潭广场店)",
+            "from_id": "B0KAUUFZBQ",
+            "to_id": "B03780I16N",
+            "mode": "公共交通",
+            "duration_minutes": 91,
+            "distance_meters": 15860,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "丽鹤饭店(龙潭广场店)",
+            "to_name": "过街楼客栈(丽江古城木府店)",
+            "from_id": "B03780I16N",
+            "to_id": "B0FFF37GUM",
+            "mode": "公共交通",
+            "duration_minutes": 22,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（AMAP_ERROR）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 535
+      },
+      {
+        "date": "2026-10-22",
+        "day_index": 2,
+        "attractions": [
+          "黑龙潭-象山",
+          "花马溪谷"
+        ],
+        "meals": [
+          "古楼小吃·纳西烤鱼·云南家常菜",
+          "云宝香饭店",
+          "云雪丽·现炒云南菜(大水车店)"
+        ],
+        "total_minutes": 647,
+        "route_start": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "poi_id": "B0FFF37GUM",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "poi_id": "B0FFF37GUM",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "过街楼客栈(丽江古城木府店)",
+            "to_name": "古楼小吃·纳西烤鱼·云南家常菜",
+            "from_id": "B0FFF37GUM",
+            "to_id": "B0HDBXFELZ",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（AMAP_ERROR）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "古楼小吃·纳西烤鱼·云南家常菜",
+            "to_name": "黑龙潭-象山",
+            "from_id": "B0HDBXFELZ",
+            "to_id": "B0FFL4YX6G",
+            "mode": "公共交通",
+            "duration_minutes": 76,
+            "distance_meters": 2986,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "黑龙潭-象山",
+            "to_name": "云宝香饭店",
+            "from_id": "B0FFL4YX6G",
+            "to_id": "B0HKKSI2SA",
+            "mode": "公共交通",
+            "duration_minutes": 17,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "云宝香饭店",
+            "to_name": "花马溪谷",
+            "from_id": "B0HKKSI2SA",
+            "to_id": "B03780IGBE",
+            "mode": "公共交通",
+            "duration_minutes": 19,
+            "distance_meters": 1067,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "花马溪谷",
+            "to_name": "云雪丽·现炒云南菜(大水车店)",
+            "from_id": "B03780IGBE",
+            "to_id": "B0FFM0KDG3",
+            "mode": "公共交通",
+            "duration_minutes": 22,
+            "distance_meters": 1819,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "云雪丽·现炒云南菜(大水车店)",
+            "to_name": "过街楼客栈(丽江古城木府店)",
+            "from_id": "B0FFM0KDG3",
+            "to_id": "B0FFF37GUM",
+            "mode": "公共交通",
+            "duration_minutes": 39,
+            "distance_meters": 2785,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 524
+      },
+      {
+        "date": "2026-10-23",
+        "day_index": 3,
+        "attractions": [
+          "丽江古城-狮乳泉",
+          "解脱林"
+        ],
+        "meals": [
+          "裘记小吃店",
+          "田村·酸汤牦牛肉火锅(古城大水车店)",
+          "樱花餐厅"
+        ],
+        "total_minutes": 648,
+        "route_start": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "poi_id": "B0FFF37GUM",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "poi_id": "B0FFF37GUM",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "过街楼客栈(丽江古城木府店)",
+            "to_name": "裘记小吃店",
+            "from_id": "B0FFF37GUM",
+            "to_id": "B0FFJOWXP9",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "裘记小吃店",
+            "to_name": "丽江古城-狮乳泉",
+            "from_id": "B0FFJOWXP9",
+            "to_id": "B0FFHHIR1V",
+            "mode": "公共交通",
+            "duration_minutes": 14,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "丽江古城-狮乳泉",
+            "to_name": "田村·酸汤牦牛肉火锅(古城大水车店)",
+            "from_id": "B0FFHHIR1V",
+            "to_id": "B0KAHD1IE4",
+            "mode": "公共交通",
+            "duration_minutes": 16,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "田村·酸汤牦牛肉火锅(古城大水车店)",
+            "to_name": "解脱林",
+            "from_id": "B0KAHD1IE4",
+            "to_id": "B0FFJ7QGOR",
+            "mode": "公共交通",
+            "duration_minutes": 30,
+            "distance_meters": 1504,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "解脱林",
+            "to_name": "樱花餐厅",
+            "from_id": "B0FFJ7QGOR",
+            "to_id": "B03781586B",
+            "mode": "公共交通",
+            "duration_minutes": 50,
+            "distance_meters": 3456,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "樱花餐厅",
+            "to_name": "过街楼客栈(丽江古城木府店)",
+            "from_id": "B03781586B",
+            "to_id": "B0FFF37GUM",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 530
+      },
+      {
+        "date": "2026-10-24",
+        "day_index": 4,
+        "attractions": [
+          "莲花池",
+          "丽江枕水人家-白马龙潭"
+        ],
+        "meals": [
+          "忆食飨包粥坊(忠义店)",
+          "云雪丽 纳西庭院 现炒云南菜(古城南门店)",
+          "渣渣米线(古城店)"
+        ],
+        "total_minutes": 630,
+        "route_start": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "poi_id": "B0FFF37GUM",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": null,
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "过街楼客栈(丽江古城木府店)",
+            "to_name": "忆食飨包粥坊(忠义店)",
+            "from_id": "B0FFF37GUM",
+            "to_id": "B0JRLK0ZKH",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "忆食飨包粥坊(忠义店)",
+            "to_name": "莲花池",
+            "from_id": "B0JRLK0ZKH",
+            "to_id": "B037814QUP",
+            "mode": "公共交通",
+            "duration_minutes": 14,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "莲花池",
+            "to_name": "云雪丽 纳西庭院 现炒云南菜(古城南门店)",
+            "from_id": "B037814QUP",
+            "to_id": "B0FFFDCXXB",
+            "mode": "公共交通",
+            "duration_minutes": 47,
+            "distance_meters": 3076,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "云雪丽 纳西庭院 现炒云南菜(古城南门店)",
+            "to_name": "丽江枕水人家-白马龙潭",
+            "from_id": "B0FFFDCXXB",
+            "to_id": "B0FFFGMB86",
+            "mode": "公共交通",
+            "duration_minutes": 41,
+            "distance_meters": 2531,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "丽江枕水人家-白马龙潭",
+            "to_name": "渣渣米线(古城店)",
+            "from_id": "B0FFFGMB86",
+            "to_id": "B0J2NUI8WJ",
+            "mode": "公共交通",
+            "duration_minutes": 14,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 189
+      }
+    ],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 2370,
+      "subtotal": 2370,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 2370 元 = 2370 元。"
+    },
+    "validate_error": null
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": null,
+    "retries": 1,
+    "budget_retries": 0,
+    "planning_calls": 2,
+    "composition_valid": true,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：2026-10-24。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B037815754\n2026-10-20 breakfast 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-20 lunch 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-21 lunch 餐厅不符合就近/餐次条件，可选ID：B0378149MX\n2026-10-21 lunch 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-23 breakfast 重复餐厅 B0FFG865VX，附近尚有未使用候选：B03781586B,B0FFFDCXXB,B0KALU7VRY\n2026-10-23 lunch 餐厅不符合就近/餐次条件，可选ID：B0KAHD1IE4,B03780I16N,B0HKKSI2SA,B0FFM0KDG3\n2026-10-23 dinner 重复餐厅 B0G0YMJVKI，附近尚有未使用候选：B03781586B,B0FFFDCXXB,B0KALU7VRY\n2026-10-24 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFG865VX,B03781586B,B0J2NUI8WJ,B0FFFDCXXB,B0FFM0KDG3,B0KALU7VRY\n2026-10-24 breakfast 重复餐厅 B03780I16N，附近尚有未使用候选：B03781586B,B0FFFDCXXB,B0KALU7VRY\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0FFF37GUM\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0FFF37GUM\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B0FFF37GUM\"}, {\"check_in\": \"2026-10-23\", \"hotel_id\": \"B0FFF37GUM\"}], \"hotel_id\": \"B0FFF37GUM\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"丽江拉市海湿地公园\", \"拉市海湿地公园-玻璃栈道\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFHEGGA9\", \"B0HBXLQCQE\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0J2NUI8WJ\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B037815754\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0G0YMJVKI\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [], \"unused_restaurant_ids\": []}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [], \"unused_restaurant_ids\": []}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"], \"unused_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0FFFDCXXB\", \"B0HKKSI2SA\", \"B0FFM0KDG3\"], \"suggested_restaurant_id\": \"B0G0YMJVKI\"}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"丽江玉水寨风景区\", \"丽江玉湖景区\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B037814VR2\", \"B0KAUUFZBQ\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG865VX\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFG77HB0\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0KAHD1IE4\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B0FFG865VX\", \"B03780I16N\", \"B03781586B\", \"B0FFFDCXXB\", \"B0HKKSI2SA\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"suggested_restaurant_id\": \"B0FFFDCXXB\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [], \"unused_restaurant_ids\": []}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"], \"unused_restaurant_ids\": [\"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0FFFDCXXB\", \"B0HKKSI2SA\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"suggested_restaurant_id\": \"B03780I16N\"}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"黑龙潭-象山\", \"花马溪谷\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFL4YX6G\", \"B03780IGBE\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B03780I16N\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0HKKSI2SA\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFM0KDG3\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B03780I16N\", \"B03781586B\", \"B0FFFDCXXB\", \"B0HKKSI2SA\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"suggested_restaurant_id\": \"B0KALU7VRY\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0KAHD1IE4\", \"B03780I16N\", \"B0HKKSI2SA\", \"B0FFM0KDG3\"], \"unused_restaurant_ids\": [\"B0HKKSI2SA\", \"B0FFM0KDG3\"], \"suggested_restaurant_id\": \"B0FFM0KDG3\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"], \"unused_restaurant_ids\": [\"B03781586B\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"suggested_restaurant_id\": \"B03781586B\"}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 0, \"attraction_names\": [\"中济海公园\", \"丽江古城-狮乳泉\", \"解脱林\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0GRXXA3A1\", \"B0FFHHIR1V\", \"B0FFJ7QGOR\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG865VX\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFG77HB0\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0G0YMJVKI\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B03781586B\", \"B0FFFDCXXB\", \"B0KALU7VRY\"], \"suggested_restaurant_id\": \"B0J2NUI8WJ\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0KAHD1IE4\", \"B03780I16N\", \"B0HKKSI2SA\", \"B0FFM0KDG3\"], \"unused_restaurant_ids\": [], \"suggested_restaurant_id\": \"B0HKKSI2SA\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"], \"unused_restaurant_ids\": [\"B03781586B\", \"B0FFFDCXXB\", \"B0KALU7VRY\"], \"suggested_restaurant_id\": \"B0KAHD1IE4\"}]}, {\"date\": \"2026-10-24\", \"day_index\": 4, \"total_minutes\": 0, \"attraction_names\": [\"莲花池\", \"丽江枕水人家-白马龙潭\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B037814QUP\", \"B0FFFGMB86\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B03780I16N\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFFDCXXB\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B03781586B\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B03781586B\", \"B0FFFDCXXB\", \"B0KALU7VRY\"], \"suggested_restaurant_id\": \"B0FFG865VX\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B03781586B\", \"B0FFFDCXXB\", \"B0KALU7VRY\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"], \"unused_restaurant_ids\": [\"B03781586B\", \"B0KALU7VRY\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。suggested_restaurant_id是跨餐次匹配后的真实候选建议，保持布局时可优先采用以避免局部贪心导致重复；实际路线和预算仍需复核。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚300元仅为预算预留，尚未获得实际房价。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「拉市海湿地公园-玻璃栈道」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「丽江玉水寨风景区」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-23 为给三餐、真实通勤与休息留足时间，未安排可选景点「中济海公园」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-24：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-24：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "酒店每晚300元仅为预算预留，尚未获得实际房价。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-24：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-24：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+    ],
+    "usage": {
+      "prompt_tokens": 23088,
+      "completion_tokens": 3240,
+      "llm_calls": 3
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 2370,
+      "subtotal": 2370,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 2370 元 = 2370 元。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "过街楼客栈(丽江古城木府店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "tool_call_count": 83,
+    "hotel_source": "agent",
+    "final_days": 5,
+    "final_weather_days": 5
+  },
+  "request": {
+    "city": "丽江",
+    "start_date": "2026-10-20",
+    "travel_days": 5,
+    "transportation": "公共交通",
+    "accommodation": "民宿",
+    "preferences": [
+      "自然风光"
+    ],
+    "must_visit": [],
+    "free_text_input": ""
+  },
+  "expect": {
+    "success": true,
+    "days": 5,
+    "min_beyond_window": 1,
+    "fabricated": 0
+  },
+  "exception": null,
+  "warnings": [
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：2026-10-24。",
+    "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+    "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B037815754",
+    "2026-10-20 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-20 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-21 lunch 餐厅不符合就近/餐次条件，可选ID：B0378149MX",
+    "2026-10-21 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-23 breakfast 重复餐厅 B0FFG865VX，附近尚有未使用候选：B03781586B,B0FFFDCXXB,B0KALU7VRY",
+    "2026-10-23 lunch 餐厅不符合就近/餐次条件，可选ID：B0KAHD1IE4,B03780I16N,B0HKKSI2SA,B0FFM0KDG3",
+    "2026-10-23 dinner 重复餐厅 B0G0YMJVKI，附近尚有未使用候选：B03781586B,B0FFFDCXXB,B0KALU7VRY",
+    "2026-10-24 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFG865VX,B03781586B,B0J2NUI8WJ,B0FFFDCXXB,B0FFM0KDG3,B0KALU7VRY",
+    "2026-10-24 breakfast 重复餐厅 B03780I16N，附近尚有未使用候选：B03781586B,B0FFFDCXXB,B0KALU7VRY",
+    "酒店每晚300元仅为预算预留，尚未获得实际房价。",
+    "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「拉市海湿地公园-玻璃栈道」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「丽江玉水寨风景区」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-23 为给三餐、真实通勤与休息留足时间，未安排可选景点「中济海公园」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+    "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-24：本日天气未知，保留室内备选，出发前重新查询。",
+    "2026-10-24：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+    "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+  ],
+  "message": "",
+  "started_at": "2026-10-20T01:44:00"
+}

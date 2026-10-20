@@ -1,0 +1,525 @@
+{
+  "case_id": "G04",
+  "name": "上海2天美食购物+舒适型+混合交通",
+  "kind": "generate",
+  "passed": true,
+  "violations": [],
+  "duration_s": 43.58,
+  "error_code": null,
+  "success": true,
+  "days": 2,
+  "response_summary": {
+    "success": true,
+    "error_code": null,
+    "message": "",
+    "cached": false,
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0KRKH5ID1,B0KR7ML9TK,B00153179B,B0MB1DW74N",
+      "2026-10-20 dinner 餐厅不符合就近/餐次条件，可选ID：B0GRUR6E73,B0H1PGHSD8,B0FFI0GO4F,B00156E0Q8,B00154DV09,B0FFI71O7E,B00155M0OB,B0H0JMUPBK",
+      "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0KRKH5ID1,B0KR7ML9TK,B00153179B,B0MB1DW74N",
+      "2026-10-21 dinner 餐厅不符合就近/餐次条件，可选ID：B0GRUR6E73,B0GK29L8UZ,B0H1PGHSD8,B0FFI0GO4F,B00156E0Q8,B00154DV09,B0FFI71O7E,B00155M0OB",
+      "酒店每晚450元仅为预算预留，尚未获得实际房价。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「新天地广场」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「上海静安大悦城」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「上海k11购物艺术中心」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-20 一天占了总花费的 61%（715 元），看看是不是某项估算偏高。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「外滩观景台」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-20 一天占了总花费的 71%（645 元），看看是不是某项估算偏高。"
+    ],
+    "budget": {
+      "ticket_reserve_amount": 100,
+      "total_attractions": 0,
+      "total_hotels": 450,
+      "total_meals": 303,
+      "total_transportation": 160,
+      "total": 913,
+      "items": [
+        {
+          "category": "attraction",
+          "name": "南京路步行街",
+          "day_index": 0,
+          "amount": 0,
+          "status": "estimated",
+          "source": "venue_policy",
+          "note": "按购物类目规划普通入场，不设门票预算；购物、餐饮和付费展览等消费另计。这是类目规则，非官网免费票价核验。"
+        },
+        {
+          "category": "attraction",
+          "name": "第一百货商业中心",
+          "day_index": 0,
+          "amount": 0,
+          "status": "estimated",
+          "source": "venue_policy",
+          "note": "按购物类目规划普通入场，不设门票预算；购物、餐饮和付费展览等消费另计。这是类目规则，非官网免费票价核验。"
+        },
+        {
+          "category": "meal",
+          "name": "老客勒上海小吃店",
+          "day_index": 0,
+          "amount": 44,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "佳家汤包(黄河路店)",
+          "day_index": 0,
+          "amount": 46,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "小杨生煎(上海新闸路店)",
+          "day_index": 0,
+          "amount": 25,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "万国建筑博览群",
+          "day_index": 1,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：万国建筑博览群为外滩沿街历史建筑群，属公共街区景观，日常免费参观"
+        },
+        {
+          "category": "meal",
+          "name": "老上海小吃(福州路店)",
+          "day_index": 1,
+          "amount": 33,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "老上海菜馆",
+          "day_index": 1,
+          "amount": 75,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "上海丽笙精选海仑宾馆",
+          "day_index": 1,
+          "amount": 80,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "餐厅未提供人均价格，按每人每餐固定规则预留；不是餐厅报价。"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-20 住宿：筑小满青年酒店(上海静安寺长寿路地铁站店)",
+          "day_index": 0,
+          "amount": 450,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "transportation",
+          "name": "市内交通（混合）",
+          "day_index": null,
+          "amount": 160,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "按每人每天 80 元的固定表估算"
+        }
+      ],
+      "known_total": 0,
+      "estimated_total": 913,
+      "unknown_items": [],
+      "limit": null,
+      "limit_status": "none",
+      "limit_basis": "未设置预算上限。当前口径：已知 0 元 + 估算 913 元 = 913 元。"
+    },
+    "hotel": {
+      "name": "筑小满青年酒店(上海静安寺长寿路地铁站店)",
+      "poi_id": "B0MUUHWRHU",
+      "address": "安远路505号3层",
+      "location": {
+        "longitude": 121.440614,
+        "latitude": 31.237931
+      },
+      "price_range": "",
+      "rating": "4.8",
+      "distance": "距最终行程景点加权平均 3.9 km（直线估计）",
+      "type": "住宿服务相关",
+      "estimated_cost": 450,
+      "cost_status": "estimated",
+      "cost_source": "static_estimate",
+      "price_evidence_url": null,
+      "nights": 1,
+      "check_in_after": null,
+      "check_in_before": null,
+      "check_out_before": null,
+      "operations_evidence_url": null
+    },
+    "hotel_nights": 1,
+    "accommodation_version": 11,
+    "stays": [
+      {
+        "check_in": "2026-10-20",
+        "check_out": "2026-10-21",
+        "hotel": {
+          "name": "筑小满青年酒店(上海静安寺长寿路地铁站店)",
+          "poi_id": "B0MUUHWRHU",
+          "address": "安远路505号3层",
+          "location": {
+            "longitude": 121.440614,
+            "latitude": 31.237931
+          },
+          "price_range": "",
+          "rating": "4.8",
+          "distance": "",
+          "type": "住宿服务相关",
+          "estimated_cost": 450,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "两日行程集中在南京东路—外滩—人民广场片区，单晚连住静安寺长寿路地铁站附近，往返各片区通勤均衡，避免换住整理与行李负担。"
+      }
+    ],
+    "stay_comparison": {
+      "strategy": "same_hotel",
+      "hotel_changes": 0,
+      "travel_minutes": 232,
+      "transfer_minutes": 0,
+      "basis": "路线工具核算所选方案；未取得备选实测时，不宣称节省具体分钟。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "筑小满青年酒店(上海静安寺长寿路地铁站店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "小雨"
+      },
+      {
+        "date": "2026-10-21",
+        "beyond_window": false,
+        "day_weather": "阴"
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-20",
+        "day_index": 0,
+        "attractions": [
+          "南京路步行街",
+          "第一百货商业中心"
+        ],
+        "meals": [
+          "老客勒上海小吃店",
+          "佳家汤包(黄河路店)",
+          "小杨生煎(上海新闸路店)"
+        ],
+        "total_minutes": 654,
+        "route_start": null,
+        "route_end": {
+          "name": "筑小满青年酒店(上海静安寺长寿路地铁站店)",
+          "location": {
+            "longitude": 121.440614,
+            "latitude": 31.237931
+          },
+          "poi_id": "B0MUUHWRHU",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "老客勒上海小吃店",
+            "to_name": "南京路步行街",
+            "from_id": "B0KRKH5ID1",
+            "to_id": "B0FFF5VNSV",
+            "mode": "混合",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "南京路步行街",
+            "to_name": "佳家汤包(黄河路店)",
+            "from_id": "B0FFF5VNSV",
+            "to_id": "B0GRUR6E73",
+            "mode": "混合",
+            "duration_minutes": 17,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（AMAP_ERROR）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "佳家汤包(黄河路店)",
+            "to_name": "第一百货商业中心",
+            "from_id": "B0GRUR6E73",
+            "to_id": "B001548591",
+            "mode": "混合",
+            "duration_minutes": 14,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "第一百货商业中心",
+            "to_name": "小杨生煎(上海新闸路店)",
+            "from_id": "B001548591",
+            "to_id": "B0H1PGHSD8",
+            "mode": "混合",
+            "duration_minutes": 29,
+            "distance_meters": 3024,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "小杨生煎(上海新闸路店)",
+            "to_name": "筑小满青年酒店(上海静安寺长寿路地铁站店)",
+            "from_id": "B0H1PGHSD8",
+            "to_id": "B0MUUHWRHU",
+            "mode": "混合",
+            "duration_minutes": 19,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（AMAP_ERROR）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 645
+      },
+      {
+        "date": "2026-10-21",
+        "day_index": 1,
+        "attractions": [
+          "万国建筑博览群"
+        ],
+        "meals": [
+          "老上海小吃(福州路店)",
+          "老上海菜馆",
+          "上海丽笙精选海仑宾馆"
+        ],
+        "total_minutes": 630,
+        "route_start": {
+          "name": "筑小满青年酒店(上海静安寺长寿路地铁站店)",
+          "location": {
+            "longitude": 121.440614,
+            "latitude": 31.237931
+          },
+          "poi_id": "B0MUUHWRHU",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": null,
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "筑小满青年酒店(上海静安寺长寿路地铁站店)",
+            "to_name": "老上海小吃(福州路店)",
+            "from_id": "B0MUUHWRHU",
+            "to_id": "B0KR7ML9TK",
+            "mode": "混合",
+            "duration_minutes": 41,
+            "distance_meters": 7364,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "老上海小吃(福州路店)",
+            "to_name": "万国建筑博览群",
+            "from_id": "B0KR7ML9TK",
+            "to_id": "B0FFG7HY0E",
+            "mode": "混合",
+            "duration_minutes": 54,
+            "distance_meters": 3685,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口结果，出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "万国建筑博览群",
+            "to_name": "老上海菜馆",
+            "from_id": "B0FFG7HY0E",
+            "to_id": "B0GK29L8UZ",
+            "mode": "混合",
+            "duration_minutes": 14,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "老上海菜馆",
+            "to_name": "上海丽笙精选海仑宾馆",
+            "from_id": "B0GK29L8UZ",
+            "to_id": "B0FFI0GO4F",
+            "mode": "混合",
+            "duration_minutes": 32,
+            "distance_meters": 1087,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口结果，出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 268
+      }
+    ],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 913,
+      "subtotal": 913,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 913 元 = 913 元。"
+    },
+    "validate_error": null
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": null,
+    "retries": 1,
+    "budget_retries": 0,
+    "planning_calls": 2,
+    "composition_valid": true,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0KRKH5ID1,B0KR7ML9TK,B00153179B,B0MB1DW74N\n2026-10-20 dinner 餐厅不符合就近/餐次条件，可选ID：B0GRUR6E73,B0H1PGHSD8,B0FFI0GO4F,B00156E0Q8,B00154DV09,B0FFI71O7E,B00155M0OB,B0H0JMUPBK\n2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0KRKH5ID1,B0KR7ML9TK,B00153179B,B0MB1DW74N\n2026-10-21 dinner 餐厅不符合就近/餐次条件，可选ID：B0GRUR6E73,B0GK29L8UZ,B0H1PGHSD8,B0FFI0GO4F,B00156E0Q8,B00154DV09,B0FFI71O7E,B00155M0OB\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0MUUHWRHU\"}], \"hotel_id\": \"B0MUUHWRHU\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"南京路步行街\", \"第一百货商业中心\", \"上海静安大悦城\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFF5VNSV\", \"B001548591\", \"B00155Q45M\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0GRUR6E73\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B001557EGG\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0GK29L8UZ\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0KRKH5ID1\", \"B0KR7ML9TK\", \"B00153179B\", \"B0MB1DW74N\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0GRUR6E73\", \"B0FFI0GO4F\", \"B00156E0Q8\", \"B00154DV09\", \"B0FFI71O7E\", \"B00155M0OB\", \"B0H0JMUPBK\", \"B0MU4RBH06\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0GRUR6E73\", \"B0H1PGHSD8\", \"B0FFI0GO4F\", \"B00156E0Q8\", \"B00154DV09\", \"B0FFI71O7E\", \"B00155M0OB\", \"B0H0JMUPBK\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"外滩观景台\", \"万国建筑博览群\", \"上海k11购物艺术中心\", \"新天地广场\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFLBPUT6\", \"B0FFG7HY0E\", \"B00156EKCV\", \"B00155HPFQ\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFJ3B2EJ\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0H0JMUPBK\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0J067ROZX\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0KRKH5ID1\", \"B0KR7ML9TK\", \"B00153179B\", \"B0MB1DW74N\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0GK29L8UZ\", \"B0FFI0GO4F\", \"B00156E0Q8\", \"B00154DV09\", \"B0FFI71O7E\", \"B00155M0OB\", \"B0H0JMUPBK\", \"B0MU4RBH06\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0GRUR6E73\", \"B0GK29L8UZ\", \"B0H1PGHSD8\", \"B0FFI0GO4F\", \"B00156E0Q8\", \"B00154DV09\", \"B0FFI71O7E\", \"B00155M0OB\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚450元仅为预算预留，尚未获得实际房价。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「新天地广场」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「上海静安大悦城」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「上海k11购物艺术中心」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-20 一天占了总花费的 61%（715 元），看看是不是某项估算偏高。",
+      "酒店每晚450元仅为预算预留，尚未获得实际房价。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「外滩观景台」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-20 一天占了总花费的 71%（645 元），看看是不是某项估算偏高。"
+    ],
+    "usage": {
+      "prompt_tokens": 20441,
+      "completion_tokens": 1777,
+      "llm_calls": 3
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 913,
+      "subtotal": 913,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 913 元 = 913 元。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "筑小满青年酒店(上海静安寺长寿路地铁站店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "tool_call_count": 41,
+    "hotel_source": "agent",
+    "final_days": 2,
+    "final_weather_days": 2
+  },
+  "request": {
+    "city": "上海",
+    "start_date": "2026-10-20",
+    "travel_days": 2,
+    "transportation": "混合",
+    "accommodation": "舒适型酒店",
+    "preferences": [
+      "美食",
+      "购物"
+    ],
+    "must_visit": [],
+    "free_text_input": ""
+  },
+  "expect": {
+    "success": true,
+    "days": 2,
+    "transport_total": 160
+  },
+  "exception": null,
+  "warnings": [
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+    "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0KRKH5ID1,B0KR7ML9TK,B00153179B,B0MB1DW74N",
+    "2026-10-20 dinner 餐厅不符合就近/餐次条件，可选ID：B0GRUR6E73,B0H1PGHSD8,B0FFI0GO4F,B00156E0Q8,B00154DV09,B0FFI71O7E,B00155M0OB,B0H0JMUPBK",
+    "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0KRKH5ID1,B0KR7ML9TK,B00153179B,B0MB1DW74N",
+    "2026-10-21 dinner 餐厅不符合就近/餐次条件，可选ID：B0GRUR6E73,B0GK29L8UZ,B0H1PGHSD8,B0FFI0GO4F,B00156E0Q8,B00154DV09,B0FFI71O7E,B00155M0OB",
+    "酒店每晚450元仅为预算预留，尚未获得实际房价。",
+    "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「新天地广场」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「上海静安大悦城」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「上海k11购物艺术中心」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+    "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-21：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+    "2026-10-20 一天占了总花费的 61%（715 元），看看是不是某项估算偏高。",
+    "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「外滩观景台」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-20 一天占了总花费的 71%（645 元），看看是不是某项估算偏高。"
+  ],
+  "message": "",
+  "started_at": "2026-10-20T01:02:21"
+}

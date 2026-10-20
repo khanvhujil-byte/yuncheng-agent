@@ -1,7 +1,7 @@
 import type { Requirements, TripPlanResponse } from '@/types/trip'
+import { API_BASE_URL as base } from './apiBase'
 
-const base = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'
-export type Slots = Record<string, string | number | string[] | Requirements | null>
+export type Slots = Record<string, string | number | boolean | string[] | Requirements | null>
 export interface ClarificationQuestion {
   question_id: string
   module: string
@@ -31,6 +31,7 @@ export interface Turn {
 }
 export interface ModuleEdit {
   module: 'hotel' | 'meals' | 'attractions' | 'day'
+  stay_scope?: 'night' | 'segment' | 'all'
   day_index?: number
   item_index?: number
   candidate_id?: string

@@ -26,9 +26,22 @@ class FoodNeeds(PlaceNeeds):
 
 class AttractionNeeds(PlaceNeeds):
     max_per_day: Annotated[int, Field(ge=1, le=4)] = 4
+    day_goals: Annotated[list['DayGoal'], Field(max_length=10)] = Field(default_factory=list)
+
+
+class DayGoal(BaseModel):
+    """A theme must be the main activity on this many distinct trip days."""
+    model_config = ConfigDict(extra="forbid", strict=True)
+    theme: ShortText
+    days: Annotated[int, Field(ge=1, le=30)]
+    scope: Literal["city", "surrounding"] = "city"
+    day_indices: Annotated[list[Annotated[int, Field(ge=0, le=29)]], Field(max_length=30)] = Field(default_factory=list)
 
 
 class HotelNeeds(PlaceNeeds):
+    stay_policy: Literal["auto", "prefer_same", "must_same"] = "auto"
+    luggage_policy: Literal["carry", "storage_required"] = "carry"
+
     max_price_per_night: Annotated[int, Field(ge=1, le=100_000)] | None = None
 
 

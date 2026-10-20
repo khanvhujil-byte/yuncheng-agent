@@ -60,7 +60,7 @@ def _context(current):
     # Cached/legacy runs may only retain the delivered facts. Those remain
     # usable, but an absent candidate pool must never be invented.
     attractions = state.get("attractions") or [a for day in plan["days"] for a in day["attractions"]]
-    hotels = state.get("hotels") or ([plan["hotel"]] if plan.get("hotel") else [])
+    hotels = state.get("hotels") or [s["hotel"] for s in plan.get("stays", [])] or ([plan["hotel"]] if plan.get("hotel") else [])
     restaurants = state.get("restaurants") or []
     pools = {"attractions": [Attraction.model_validate(a) for a in attractions],
              "hotel": [Hotel.model_validate(h) for h in hotels],
@@ -97,6 +97,9 @@ def _context(current):
     # was narrower than the final resolver output.
     if plan.get("hotel") and _id(plan["hotel"]) not in {_id(h) for h in pools["hotel"]}:
         pools["hotel"].append(Hotel.model_validate(plan["hotel"]))
+    for stay in plan.get('stays', []):
+        if _id(stay['hotel']) not in {_id(h) for h in pools['hotel']}:
+            pools['hotel'].append(Hotel.model_validate(stay['hotel']))
     state.update(request=req, attractions=pools["attractions"], hotels=pools["hotel"], restaurants=pools["meals"],
                  weather=plan["weather_info"], hotel=Hotel.model_validate(plan["hotel"]) if plan.get("hotel") else None,
                  nights=plan["hotel_nights"], travel_days=req.travel_days, end_date=plan["end_date"])
@@ -118,6 +121,9 @@ def candidates(current, module, day_index=None):
     priced = apply_prices(req.city, {"attractions": "attraction", "hotel": "hotel", "meals": "restaurant"}[kind],
                           pools[kind], service_date=service_date, nights=plan["hotel_nights"],
                           travel_days=1 if day_index is not None else req.travel_days)
+    if kind == 'hotel':
+        from .platform_hotels import quoted
+        priced = [quoted(h, service_date) for h in priced]
     priced = _eligible(priced, kind, req)
     items = []
     for item in priced:
@@ -128,13 +134,19 @@ def candidates(current, module, day_index=None):
                       "price_status": raw.get("avg_cost_status", raw.get("ticket_price_status", raw.get("cost_status", "estimated"))),
                       "ranking_name": raw.get("ranking_name"), "ranking_rank": raw.get("ranking_rank")})
     current_ids = []
-    if module == "hotel" and plan.get("hotel"):
+    if module == 'hotel' and plan.get('accommodation_version', 0) >= 11:
+        relevant = [s for s in plan['stays'] if day_index is None or s['check_in'] == plan['days'][day_index]['date']]
+        current_ids = [_id(s['hotel']) for s in relevant]
+        locked = bool(req.fixed_hotel) or bool(relevant and all(s['locked'] for s in relevant))
+    else:
+        locked = bool(module == 'hotel' and req.fixed_hotel)
+    if module == "hotel" and plan.get("accommodation_version", 0) < 11 and plan.get("hotel"):
         current_ids = [_id(plan["hotel"])]
-    elif day_index is not None:
+    elif module != 'hotel' and day_index is not None:
         key = "attractions" if kind == "attractions" else "meals"
         current_ids = [a.get("restaurant_id") if key == "meals" else _id(a) for a in plan["days"][day_index][key]]
     return {"module": module, "day_index": day_index, "candidates": items,
-            "current_ids": current_ids, "locked": bool(module == "hotel" and req.fixed_hotel)}
+            "current_ids": current_ids, "locked": locked}
 
 
 class _Selection(BaseModel):
@@ -217,14 +229,60 @@ def _refresh_prices(plan, req, state):
             # Updating money does not rewrite the recorded restaurant choice,
             # description, source attribution or rank in another module.
             meal.update({key: pricing.get(key) for key in ("estimated_cost", "cost_status", "cost_source", "cost_note", "evidence_url")})
-    if plan.get("hotel"):
+    if plan.get('accommodation_version', 0) >= 11:
+        _refresh_stay_prices(plan, req)
+    elif plan.get("hotel"):
         hotel = apply_prices(req.city, "hotel", [Hotel.model_validate(plan["hotel"])],
                              service_date=req.start_date, nights=plan["hotel_nights"])[0]
-        plan["hotel"] = hotel.model_dump(mode="json")
+        from .platform_hotels import quoted
+        plan["hotel"] = quoted(hotel, req.start_date).model_dump(mode="json")
     if plan != before:
         plan["warnings"] = list(dict.fromkeys([*(plan.get("warnings") or []),
             "已按本次出行日期重新核验来源价格；失效报价不会继续沿用，餐饮预留费用仍明确标为估算。 "]))
     return plan
+
+
+def _refresh_stay_prices(plan, req):
+    from .price_catalog import apply_prices
+    from .platform_hotels import quoted
+    for stay in plan.get('stays', []):
+        h = apply_prices(req.city, 'hotel', [Hotel.model_validate(stay['hotel'])], service_date=stay['check_in'], nights=1)[0]
+        stay['hotel'] = quoted(h, stay['check_in']).model_dump(mode='json')
+    _stay_summary(plan)
+
+
+def _stay_summary(plan):
+    from .stays import identity
+    hotels = [s['hotel'] for s in plan.get('stays', [])]
+    plan['hotel'] = copy.deepcopy(hotels[0]) if hotels and len({identity(h) for h in hotels}) == 1 else None
+    if plan['hotel']:
+        plan['hotel']['nights'] = len(hotels)
+
+
+def _target_stays(plan, edit):
+    stays = plan.get('stays', [])
+    if edit.stay_scope == 'all':
+        if edit.day_index is not None:
+            raise HTTPException(422, '全部住宿修改不接受日期；单晚请选择night。')
+        targets = [s for s in stays if not s.get('locked')]
+    else:
+        if edit.day_index is None or edit.day_index >= len(plan['days']):
+            raise HTTPException(422, '请明确要更换的入住日。')
+        d = plan['days'][edit.day_index]['date']
+        index = next((i for i, s in enumerate(stays) if s['check_in'] == d), None)
+        if index is None:
+            raise HTTPException(422, '该日没有住宿。')
+        left = right = index
+        if edit.stay_scope == 'segment':
+            from .stays import identity
+            while left > 0 and identity(stays[left-1]['hotel']) == identity(stays[index]['hotel']):
+                left -= 1
+            while right+1 < len(stays) and identity(stays[right+1]['hotel']) == identity(stays[index]['hotel']):
+                right += 1
+        targets = stays[left:right+1]
+    if not targets or any(s.get('locked') for s in targets):
+        raise HTTPException(422, '选定住宿已锁定或没有可修改夜晚；原行程保留。')
+    return targets
 
 
 def prepare(current, edit: ModuleEdit):
@@ -237,7 +295,7 @@ def prepare(current, edit: ModuleEdit):
             entries = day[edit.module]
             if edit.item_index is None or not 0 <= edit.item_index < len(entries):
                 raise HTTPException(422, "请明确该日要替换的景点或餐次。")
-    elif edit.day_index is not None or edit.item_index is not None:
+    elif (edit.day_index is not None and plan.get("accommodation_version", 0) < 11) or edit.item_index is not None:
         raise HTTPException(422, "酒店是全行程模块，不接受日期或条目索引。")
     if edit.module == "hotel" and req.fixed_hotel:
         raise HTTPException(422, "当前酒店由用户指定，不能局部替换；请先明确修改指定酒店要求。")
@@ -245,15 +303,19 @@ def prepare(current, edit: ModuleEdit):
         raise HTTPException(422, "本行程无需住宿，不能添加酒店费用。")
     if edit.module == "day" and edit.item_index is not None:
         raise HTTPException(422, "整日景点调整不接受单个条目索引。")
+    targets = _target_stays(plan, edit) if edit.module == 'hotel' and plan.get('accommodation_version', 0) >= 11 else []
     from .price_catalog import apply_prices
     kind = "attractions" if edit.module == "day" else edit.module
-    service_date = day["date"] if edit.module != "hotel" else req.start_date
+    service_date = day["date"] if edit.module != "hotel" else targets[0]["check_in"] if targets else req.start_date
     priced = apply_prices(req.city, {"attractions": "attraction", "hotel": "hotel", "meals": "restaurant"}[kind],
                           pools[kind], service_date=service_date, nights=plan["hotel_nights"])
+    if kind == 'hotel':
+        from .platform_hotels import quoted
+        priced = [quoted(h, service_date) for h in priced]
     selected, usage = _select(edit, _eligible(priced, kind, req), plan, req)
     selected_ids = [_id(item) for item in selected]
     if edit.module == "hotel":
-        existing_ids = [_id(plan["hotel"])] if plan.get("hotel") else []
+        existing_ids = list(dict.fromkeys(_id(s["hotel"]) for s in targets)) if targets else ([_id(plan["hotel"])] if plan.get("hotel") else [])
     elif edit.module == "day":
         existing_ids = [_id(a) for a in day["attractions"]]
     elif edit.module == "attractions":
@@ -263,7 +325,18 @@ def prepare(current, edit: ModuleEdit):
     if selected_ids == existing_ids:
         raise HTTPException(422, "选择与现有安排相同，没有产生修改。")
     before = copy.deepcopy(plan)
-    if edit.module == "hotel":
+    if edit.module == 'hotel' and targets:
+        from .stays import attach_boundaries
+        for stay in targets:
+            stay['hotel'] = _dict(selected[0])
+            stay['hotel']['nights'] = 1
+            stay['reason'] = '用户明确选择；按本晚日期重算价格与跨日路线。'
+        _stay_summary(plan)
+        attach_boundaries(plan, req, endpoints=state.get('trip_endpoints'))
+        changed_dates = {s['check_in'] for s in targets}
+        affected = [i for i, d in enumerate(plan['days']) if d['date'] in changed_dates or (i > 0 and plan['days'][i-1]['date'] in changed_dates)]
+        summary = '仅更换所选住宿夜晚，保留其他酒店、景点和三餐，重算关联日期路线和整程预算。'
+    elif edit.module == "hotel":
         plan["hotel"] = _dict(selected[0])
         plan["hotel"]["nights"] = plan["hotel_nights"]
         plan["hotel_reason"] = "用户在已核验酒店候选中明确选择；路线和预算按新酒店重新核算。"
@@ -284,7 +357,8 @@ def prepare(current, edit: ModuleEdit):
     if plan == before:
         raise HTTPException(422, "选择与现有安排相同，没有产生修改。")
     parsed = TripPlan.model_validate(plan)
-    error = _validate_structure(parsed.days, req.start_date, req.travel_days)
+    from .intercity import effective_request
+    error = _validate_structure(parsed.days, req.start_date, req.travel_days, effective_request(req, plan) if parsed.accommodation_version >= 11 else None)
     report, constraint_error = _validate_constraints(parsed.days, state.get("must_visit_resolved") or [], pools["attractions"])
     if error or constraint_error:
         raise HTTPException(422, error or constraint_error)

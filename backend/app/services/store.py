@@ -43,7 +43,7 @@ logger = logging.getLogger(__name__)
 DB_PATH = Path(__file__).resolve().parents[2] / "data" / "trip_planner.db"
 # v5 introduces local-first retrieval with independently checked POI/price facts.
 # Prior complete-plan caches must not bypass the new collection contract.
-FINGERPRINT_CONTRACT_VERSION = 10
+FINGERPRINT_CONTRACT_VERSION = 11
 ITINERARY_CACHE_TTL_SECONDS = 3600
 
 SCHEMA = """
@@ -177,6 +177,8 @@ def fingerprint_of(req: TripRequest) -> str:
     nights = req.nights if req.nights is not None else max(req.travel_days - 1, 0)
     payload = {
         "city": req.city.strip(),
+        "party": [req.adult_count, req.room_count],
+        "intercity": [req.origin_city.strip(), req.intercity_mode, req.return_trip],
         "travel_days": req.travel_days,
         "nights": nights,
         "transportation": req.transportation.strip(),
@@ -185,6 +187,8 @@ def fingerprint_of(req: TripRequest) -> str:
         "must_visit": sorted(m.strip() for m in (req.must_visit or []) if m.strip()),
         "fixed_hotel": (req.fixed_hotel or "").strip(),
         "fixed_hotel_address": (req.fixed_hotel_address or "").strip(),
+        "stay_locks": [s.model_dump() for s in req.stay_locks],
+        "endpoints": [req.arrival_address, req.departure_address, req.arrival_time, req.departure_time],
         "contract_version": FINGERPRINT_CONTRACT_VERSION,
         "requirements": req.requirements.model_dump(),
         "free_text_input": (req.free_text_input or "").strip(),

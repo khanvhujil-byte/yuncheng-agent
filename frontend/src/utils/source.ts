@@ -9,6 +9,7 @@ import type { DataSource, SourceMap } from '@/types/trip'
 
 /** 来源 → 中文标签 */
 const SOURCE_LABELS: Record<DataSource, string> = {
+  flyai: '飞猪平台参考',
   amap: '高德实查',
   catalog: '本地已核验资料',
   'catalog+amap': '本地资料与高德补查',

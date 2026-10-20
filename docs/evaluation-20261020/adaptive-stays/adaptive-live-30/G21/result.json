@@ -1,0 +1,956 @@
+{
+  "case_id": "G21",
+  "name": "拉萨4天自然风光",
+  "kind": "generate",
+  "passed": true,
+  "violations": [],
+  "duration_s": 56.15,
+  "error_code": null,
+  "success": true,
+  "days": 4,
+  "response_summary": {
+    "success": true,
+    "error_code": null,
+    "message": "",
+    "cached": false,
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "神秘树林：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0I0P7ZROP,B0H2HUJYR2,B0FFF343IA,B0JDYLNQC6,B0MUVOY4MY",
+      "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0I0P7ZROP,B0H2HUJYR2,B0FFF343IA,B0JDYLNQC6,B0MUVOY4MY",
+      "2026-10-21 breakfast 重复餐厅 B0FFFEXHB4，附近尚有未使用候选：B0I0P7ZROP,B0FFF343IA,B0JDYLNQC6,B0MUVOY4MY",
+      "2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0I0P7ZROP,B0H2HUJYR2",
+      "2026-10-22 breakfast 重复餐厅 B0FFFEXHB4，附近尚有未使用候选：B0I0P7ZROP",
+      "2026-10-23 breakfast 餐厅不符合就近/餐次条件，可选ID：B0I0P7ZROP,B0H2HUJYR2,B0FFF343IA,B0JDYLNQC6,B0MUVOY4MY",
+      "2026-10-23 breakfast 重复餐厅 B0FFFEXHB4，附近尚有未使用候选：B0I0P7ZROP,B0FFF343IA,B0JDYLNQC6,B0MUVOY4MY",
+      "2026-10-23 lunch 餐厅不符合就近/餐次条件，可选ID：B0KDMCCVTI,B0FFF5QW0U,B0G1G9O7IP,B0FFKS7LM4,B037B02604,B0JDJUDDQW",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「药王山观景台」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「夏扎大院」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+    ],
+    "budget": {
+      "ticket_reserve_amount": 100,
+      "total_attractions": 375,
+      "total_hotels": 780,
+      "total_meals": 467,
+      "total_transportation": 160,
+      "total": 1782,
+      "items": [
+        {
+          "category": "attraction",
+          "name": "布达拉宫",
+          "day_index": 0,
+          "amount": 200,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：布达拉宫日常成人门票挂牌价约200元，旺季需预约；按日间普通成人票估算。"
+        },
+        {
+          "category": "attraction",
+          "name": "布达拉宫广场",
+          "day_index": 0,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：布达拉宫广场为开放城市广场，免费进入。"
+        },
+        {
+          "category": "meal",
+          "name": "西安小吃(拉萨百货大楼店)",
+          "day_index": 0,
+          "amount": 26,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "周瓜瓢三鲜米线布达拉宫店",
+          "day_index": 0,
+          "amount": 25,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "城中阿若鲁土辣子面馆",
+          "day_index": 0,
+          "amount": 24,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "西藏博物馆",
+          "day_index": 1,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：西藏博物馆为公立博物馆，日常免费参观。"
+        },
+        {
+          "category": "attraction",
+          "name": "罗布林卡",
+          "day_index": 1,
+          "amount": 60,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：罗布林卡日常成人门票挂牌价约60元。"
+        },
+        {
+          "category": "meal",
+          "name": "永金包子店",
+          "day_index": 1,
+          "amount": 17,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "阳康藏餐馆",
+          "day_index": 1,
+          "amount": 59,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "田村·酸汤牦牛肉火锅(太阳岛店)",
+          "day_index": 1,
+          "amount": 75,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "大昭寺",
+          "day_index": 2,
+          "amount": 85,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：大昭寺日常成人门票挂牌价约85元。"
+        },
+        {
+          "category": "attraction",
+          "name": "小昭寺",
+          "day_index": 2,
+          "amount": 30,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：小昭寺日常成人门票约30元。"
+        },
+        {
+          "category": "meal",
+          "name": "江妹中餐小吃",
+          "day_index": 2,
+          "amount": 27,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "旬食·藏地时令定食(八廓街步行街店)",
+          "day_index": 2,
+          "amount": 35,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "安多诺增藏餐一分店",
+          "day_index": 2,
+          "amount": 70,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "拉鲁湿地国家级自然保护区",
+          "day_index": 3,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：拉鲁湿地国家级自然保护区以保护为主，日常不设常规收费门票，按0元估算。"
+        },
+        {
+          "category": "attraction",
+          "name": "团结公园",
+          "day_index": 3,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：团结公园为城市免费公园。"
+        },
+        {
+          "category": "meal",
+          "name": "李陈张·鲜粥豆浆油条集市(德吉支路店)",
+          "day_index": 3,
+          "amount": 18,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "木雅康桑观景餐厅",
+          "day_index": 3,
+          "amount": 36,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "百年川菜·冒菜(拉百店)",
+          "day_index": 3,
+          "amount": 55,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-20 住宿：平措康桑青年旅舍(布达拉宫大昭寺店)",
+          "day_index": 0,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-21 住宿：平措康桑青年旅舍(布达拉宫大昭寺店)",
+          "day_index": 1,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-22 住宿：平措康桑青年旅舍(布达拉宫大昭寺店)",
+          "day_index": 2,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "transportation",
+          "name": "市内交通（公共交通）",
+          "day_index": null,
+          "amount": 160,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "按每人每天 40 元的固定表估算"
+        }
+      ],
+      "known_total": 0,
+      "estimated_total": 1782,
+      "unknown_items": [],
+      "limit": null,
+      "limit_status": "none",
+      "limit_basis": "未设置预算上限。当前口径：已知 0 元 + 估算 1782 元 = 1782 元。"
+    },
+    "hotel": {
+      "name": "平措康桑青年旅舍(布达拉宫大昭寺店)",
+      "poi_id": "B037B0297T",
+      "address": "朵森格北路48号",
+      "location": {
+        "longitude": 91.12898,
+        "latitude": 29.653914
+      },
+      "price_range": "",
+      "rating": "4.6",
+      "distance": "距最终行程景点加权平均 1.9 km（直线估计）",
+      "type": "青年旅舍",
+      "estimated_cost": 260,
+      "cost_status": "estimated",
+      "cost_source": "static_estimate",
+      "price_evidence_url": null,
+      "nights": 3,
+      "check_in_after": null,
+      "check_in_before": null,
+      "check_out_before": null,
+      "operations_evidence_url": null
+    },
+    "hotel_nights": 3,
+    "accommodation_version": 11,
+    "stays": [
+      {
+        "check_in": "2026-10-20",
+        "check_out": "2026-10-21",
+        "hotel": {
+          "name": "平措康桑青年旅舍(布达拉宫大昭寺店)",
+          "poi_id": "B037B0297T",
+          "address": "朵森格北路48号",
+          "location": {
+            "longitude": 91.12898,
+            "latitude": 29.653914
+          },
+          "price_range": "",
+          "rating": "4.6",
+          "distance": "",
+          "type": "青年旅舍",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "位于布达拉宫与大昭寺之间，前三日市内景点通勤均衡，连住免去换住整理时间"
+      },
+      {
+        "check_in": "2026-10-21",
+        "check_out": "2026-10-22",
+        "hotel": {
+          "name": "平措康桑青年旅舍(布达拉宫大昭寺店)",
+          "poi_id": "B037B0297T",
+          "address": "朵森格北路48号",
+          "location": {
+            "longitude": 91.12898,
+            "latitude": 29.653914
+          },
+          "price_range": "",
+          "rating": "4.6",
+          "distance": "",
+          "type": "青年旅舍",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "次日西藏博物馆、罗布林卡在西侧，从此处出发仍属合理市内通勤，继续连住"
+      },
+      {
+        "check_in": "2026-10-22",
+        "check_out": "2026-10-23",
+        "hotel": {
+          "name": "平措康桑青年旅舍(布达拉宫大昭寺店)",
+          "poi_id": "B037B0297T",
+          "address": "朵森格北路48号",
+          "location": {
+            "longitude": 91.12898,
+            "latitude": 29.653914
+          },
+          "price_range": "",
+          "rating": "4.6",
+          "distance": "",
+          "type": "青年旅舍",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "大昭寺、小昭寺步行可达，末日晚间返程也方便，保持连住"
+      }
+    ],
+    "stay_comparison": {
+      "strategy": "same_hotel",
+      "hotel_changes": 0,
+      "travel_minutes": 568,
+      "transfer_minutes": 0,
+      "basis": "路线工具核算所选方案；未取得备选实测时，不宣称节省具体分钟。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "平措康桑青年旅舍(布达拉宫大昭寺店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "晴"
+      },
+      {
+        "date": "2026-10-21",
+        "beyond_window": false,
+        "day_weather": "晴"
+      },
+      {
+        "date": "2026-10-22",
+        "beyond_window": false,
+        "day_weather": "晴"
+      },
+      {
+        "date": "2026-10-23",
+        "beyond_window": false,
+        "day_weather": "晴"
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-20",
+        "day_index": 0,
+        "attractions": [
+          "布达拉宫",
+          "布达拉宫广场"
+        ],
+        "meals": [
+          "西安小吃(拉萨百货大楼店)",
+          "周瓜瓢三鲜米线布达拉宫店",
+          "城中阿若鲁土辣子面馆"
+        ],
+        "total_minutes": 653,
+        "route_start": null,
+        "route_end": {
+          "name": "平措康桑青年旅舍(布达拉宫大昭寺店)",
+          "location": {
+            "longitude": 91.12898,
+            "latitude": 29.653914
+          },
+          "poi_id": "B037B0297T",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "西安小吃(拉萨百货大楼店)",
+            "to_name": "布达拉宫",
+            "from_id": "B0I0P7ZROP",
+            "to_id": "B037B01F68",
+            "mode": "公共交通",
+            "duration_minutes": 37,
+            "distance_meters": 2067,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "布达拉宫",
+            "to_name": "周瓜瓢三鲜米线布达拉宫店",
+            "from_id": "B037B01F68",
+            "to_id": "B0K6AAOGBD",
+            "mode": "公共交通",
+            "duration_minutes": 47,
+            "distance_meters": 3663,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "周瓜瓢三鲜米线布达拉宫店",
+            "to_name": "布达拉宫广场",
+            "from_id": "B0K6AAOGBD",
+            "to_id": "B0FFFXMY88",
+            "mode": "公共交通",
+            "duration_minutes": 14,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "布达拉宫广场",
+            "to_name": "城中阿若鲁土辣子面馆",
+            "from_id": "B0FFFXMY88",
+            "to_id": "B0H2HUJYR2",
+            "mode": "公共交通",
+            "duration_minutes": 14,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "城中阿若鲁土辣子面馆",
+            "to_name": "平措康桑青年旅舍(布达拉宫大昭寺店)",
+            "from_id": "B0H2HUJYR2",
+            "to_id": "B037B0297T",
+            "mode": "公共交通",
+            "duration_minutes": 18,
+            "distance_meters": 1237,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 575
+      },
+      {
+        "date": "2026-10-21",
+        "day_index": 1,
+        "attractions": [
+          "西藏博物馆",
+          "罗布林卡"
+        ],
+        "meals": [
+          "永金包子店",
+          "阳康藏餐馆",
+          "田村·酸汤牦牛肉火锅(太阳岛店)"
+        ],
+        "total_minutes": 641,
+        "route_start": {
+          "name": "平措康桑青年旅舍(布达拉宫大昭寺店)",
+          "location": {
+            "longitude": 91.12898,
+            "latitude": 29.653914
+          },
+          "poi_id": "B037B0297T",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "平措康桑青年旅舍(布达拉宫大昭寺店)",
+          "location": {
+            "longitude": 91.12898,
+            "latitude": 29.653914
+          },
+          "poi_id": "B037B0297T",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "平措康桑青年旅舍(布达拉宫大昭寺店)",
+            "to_name": "永金包子店",
+            "from_id": "B037B0297T",
+            "to_id": "B0FFF343IA",
+            "mode": "公共交通",
+            "duration_minutes": 27,
+            "distance_meters": 2944,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "永金包子店",
+            "to_name": "西藏博物馆",
+            "from_id": "B0FFF343IA",
+            "to_id": "B037B00866",
+            "mode": "公共交通",
+            "duration_minutes": 19,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（AMAP_ERROR）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "西藏博物馆",
+            "to_name": "阳康藏餐馆",
+            "from_id": "B037B00866",
+            "to_id": "B0I1463AR8",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "阳康藏餐馆",
+            "to_name": "罗布林卡",
+            "from_id": "B0I1463AR8",
+            "to_id": "B037B01C57",
+            "mode": "公共交通",
+            "duration_minutes": 14,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "罗布林卡",
+            "to_name": "田村·酸汤牦牛肉火锅(太阳岛店)",
+            "from_id": "B037B01C57",
+            "to_id": "B0G1RU21E4",
+            "mode": "公共交通",
+            "duration_minutes": 47,
+            "distance_meters": 5064,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "田村·酸汤牦牛肉火锅(太阳岛店)",
+            "to_name": "平措康桑青年旅舍(布达拉宫大昭寺店)",
+            "from_id": "B0G1RU21E4",
+            "to_id": "B037B0297T",
+            "mode": "公共交通",
+            "duration_minutes": 34,
+            "distance_meters": 3075,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 511
+      },
+      {
+        "date": "2026-10-22",
+        "day_index": 2,
+        "attractions": [
+          "大昭寺",
+          "小昭寺"
+        ],
+        "meals": [
+          "江妹中餐小吃",
+          "旬食·藏地时令定食(八廓街步行街店)",
+          "安多诺增藏餐一分店"
+        ],
+        "total_minutes": 657,
+        "route_start": {
+          "name": "平措康桑青年旅舍(布达拉宫大昭寺店)",
+          "location": {
+            "longitude": 91.12898,
+            "latitude": 29.653914
+          },
+          "poi_id": "B037B0297T",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "平措康桑青年旅舍(布达拉宫大昭寺店)",
+          "location": {
+            "longitude": 91.12898,
+            "latitude": 29.653914
+          },
+          "poi_id": "B037B0297T",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "平措康桑青年旅舍(布达拉宫大昭寺店)",
+            "to_name": "江妹中餐小吃",
+            "from_id": "B037B0297T",
+            "to_id": "B0FFFY4EX0",
+            "mode": "公共交通",
+            "duration_minutes": 23,
+            "distance_meters": 1183,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "江妹中餐小吃",
+            "to_name": "大昭寺",
+            "from_id": "B0FFFY4EX0",
+            "to_id": "B037B00F2D",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "大昭寺",
+            "to_name": "旬食·藏地时令定食(八廓街步行街店)",
+            "from_id": "B037B00F2D",
+            "to_id": "B0FFKPA92S",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "旬食·藏地时令定食(八廓街步行街店)",
+            "to_name": "小昭寺",
+            "from_id": "B0FFKPA92S",
+            "to_id": "B037B01D16",
+            "mode": "公共交通",
+            "duration_minutes": 16,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "小昭寺",
+            "to_name": "安多诺增藏餐一分店",
+            "from_id": "B037B01D16",
+            "to_id": "B0FFF5QQY7",
+            "mode": "公共交通",
+            "duration_minutes": 27,
+            "distance_meters": 3514,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "安多诺增藏餐一分店",
+            "to_name": "平措康桑青年旅舍(布达拉宫大昭寺店)",
+            "from_id": "B0FFF5QQY7",
+            "to_id": "B037B0297T",
+            "mode": "公共交通",
+            "duration_minutes": 22,
+            "distance_meters": 1513,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 547
+      },
+      {
+        "date": "2026-10-23",
+        "day_index": 3,
+        "attractions": [
+          "拉鲁湿地国家级自然保护区",
+          "团结公园"
+        ],
+        "meals": [
+          "李陈张·鲜粥豆浆油条集市(德吉支路店)",
+          "木雅康桑观景餐厅",
+          "百年川菜·冒菜(拉百店)"
+        ],
+        "total_minutes": 630,
+        "route_start": {
+          "name": "平措康桑青年旅舍(布达拉宫大昭寺店)",
+          "location": {
+            "longitude": 91.12898,
+            "latitude": 29.653914
+          },
+          "poi_id": "B037B0297T",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": null,
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "平措康桑青年旅舍(布达拉宫大昭寺店)",
+            "to_name": "李陈张·鲜粥豆浆油条集市(德吉支路店)",
+            "from_id": "B037B0297T",
+            "to_id": "B0JDYLNQC6",
+            "mode": "公共交通",
+            "duration_minutes": 31,
+            "distance_meters": 3294,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "李陈张·鲜粥豆浆油条集市(德吉支路店)",
+            "to_name": "拉鲁湿地国家级自然保护区",
+            "from_id": "B0JDYLNQC6",
+            "to_id": "B037B022TL",
+            "mode": "公共交通",
+            "duration_minutes": 71,
+            "distance_meters": 5445,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "拉鲁湿地国家级自然保护区",
+            "to_name": "木雅康桑观景餐厅",
+            "from_id": "B037B022TL",
+            "to_id": "B0KDMCCVTI",
+            "mode": "公共交通",
+            "duration_minutes": 31,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（AMAP_ERROR）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "木雅康桑观景餐厅",
+            "to_name": "团结公园",
+            "from_id": "B0KDMCCVTI",
+            "to_id": "B0L165S6H1",
+            "mode": "公共交通",
+            "duration_minutes": 22,
+            "distance_meters": 2228,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "团结公园",
+            "to_name": "百年川菜·冒菜(拉百店)",
+            "from_id": "B0L165S6H1",
+            "to_id": "B0FFIQZSAD",
+            "mode": "公共交通",
+            "duration_minutes": 17,
+            "distance_meters": 1789,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 149
+      }
+    ],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 1782,
+      "subtotal": 1782,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 1782 元 = 1782 元。"
+    },
+    "validate_error": null
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": null,
+    "retries": 1,
+    "budget_retries": 0,
+    "planning_calls": 2,
+    "composition_valid": true,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "神秘树林：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0I0P7ZROP,B0H2HUJYR2,B0FFF343IA,B0JDYLNQC6,B0MUVOY4MY\n2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0I0P7ZROP,B0H2HUJYR2,B0FFF343IA,B0JDYLNQC6,B0MUVOY4MY\n2026-10-21 breakfast 重复餐厅 B0FFFEXHB4，附近尚有未使用候选：B0I0P7ZROP,B0FFF343IA,B0JDYLNQC6,B0MUVOY4MY\n2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0I0P7ZROP,B0H2HUJYR2\n2026-10-22 breakfast 重复餐厅 B0FFFEXHB4，附近尚有未使用候选：B0I0P7ZROP\n2026-10-23 breakfast 餐厅不符合就近/餐次条件，可选ID：B0I0P7ZROP,B0H2HUJYR2,B0FFF343IA,B0JDYLNQC6,B0MUVOY4MY\n2026-10-23 breakfast 重复餐厅 B0FFFEXHB4，附近尚有未使用候选：B0I0P7ZROP,B0FFF343IA,B0JDYLNQC6,B0MUVOY4MY\n2026-10-23 lunch 餐厅不符合就近/餐次条件，可选ID：B0KDMCCVTI,B0FFF5QW0U,B0G1G9O7IP,B0FFKS7LM4,B037B02604,B0JDJUDDQW\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B037B0297T\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B037B0297T\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B037B0297T\"}], \"hotel_id\": \"B037B0297T\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"布达拉宫\", \"布达拉宫广场\", \"药王山观景台\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B037B01F68\", \"B0FFFXMY88\", \"B0FFFYEJZD\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFFEXHB4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0K6AAOGBD\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0H2HUJYR2\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0I0P7ZROP\", \"B0H2HUJYR2\", \"B0FFF343IA\", \"B0JDYLNQC6\", \"B0MUVOY4MY\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFFEXHB4\", \"B0I3F90KGJ\", \"B0I0P7ZROP\", \"B0K6AAOGBD\", \"B0H2HUJYR2\", \"B0KDMCCVTI\", \"B0FFIQZSAD\", \"B0H26C0UIQ\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFKPA92S\", \"B0IGUCZ9OS\", \"B0FFFEXHB4\", \"B0I3F90KGJ\", \"B0I0P7ZROP\", \"B0K6AAOGBD\", \"B0H2HUJYR2\", \"B0KDMCCVTI\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"西藏博物馆\", \"罗布林卡\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B037B00866\", \"B037B01C57\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFFEXHB4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B037B02604\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0JDJUDDQW\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0I0P7ZROP\", \"B0H2HUJYR2\", \"B0FFF343IA\", \"B0JDYLNQC6\", \"B0MUVOY4MY\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B037B02604\", \"B0JDJUDDQW\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0G1RU21E4\", \"B037B028UC\", \"B0FFKPA92S\", \"B0IGUCZ9OS\", \"B0FFFEXHB4\", \"B0I3F90KGJ\", \"B0I0P7ZROP\", \"B0K6AAOGBD\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"大昭寺\", \"夏扎大院\", \"小昭寺\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B037B00F2D\", \"B0FFHG2WLI\", \"B037B01D16\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFFEXHB4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFKPA92S\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFF5QQY7\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0I0P7ZROP\", \"B0H2HUJYR2\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFKPA92S\", \"B0FFF5QQY7\", \"B0FFGZKHOZ\", \"B0FFJIXTBF\", \"B0FFF5R9ED\", \"B0J02SBYXM\", \"B037B020II\", \"B0FFJ1U3T7\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B037B028UC\", \"B0FFKPA92S\", \"B0FFF5QQY7\", \"B0FFGZKHOZ\", \"B0IGUCZ9OS\", \"B0FFJIXTBF\", \"B0FFF5R9ED\", \"B0FFFEXHB4\"]}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 0, \"attraction_names\": [\"拉鲁湿地国家级自然保护区\", \"团结公园\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B037B022TL\", \"B0L165S6H1\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFFEXHB4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B037B028UC\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFJ1U3T7\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0I0P7ZROP\", \"B0H2HUJYR2\", \"B0FFF343IA\", \"B0JDYLNQC6\", \"B0MUVOY4MY\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0KDMCCVTI\", \"B0FFF5QW0U\", \"B0G1G9O7IP\", \"B0FFKS7LM4\", \"B037B02604\", \"B0JDJUDDQW\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0G1RU21E4\", \"B0FFFEXHB4\", \"B0I3F90KGJ\", \"B0I0P7ZROP\", \"B0K6AAOGBD\", \"B0H2HUJYR2\", \"B0KDMCCVTI\", \"B0FFIQZSAD\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「药王山观景台」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「夏扎大院」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+    ],
+    "usage": {
+      "prompt_tokens": 23163,
+      "completion_tokens": 2804,
+      "llm_calls": 3
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 1782,
+      "subtotal": 1782,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 1782 元 = 1782 元。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "平措康桑青年旅舍(布达拉宫大昭寺店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "tool_call_count": 60,
+    "hotel_source": "agent",
+    "final_days": 4,
+    "final_weather_days": 4
+  },
+  "request": {
+    "city": "拉萨",
+    "start_date": "2026-10-20",
+    "travel_days": 4,
+    "transportation": "公共交通",
+    "accommodation": "经济型酒店",
+    "preferences": [
+      "自然风光"
+    ],
+    "must_visit": [],
+    "free_text_input": ""
+  },
+  "expect": {
+    "days": 4,
+    "min_beyond_window": 0,
+    "fabricated": 0
+  },
+  "exception": null,
+  "warnings": [
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "神秘树林：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+    "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0I0P7ZROP,B0H2HUJYR2,B0FFF343IA,B0JDYLNQC6,B0MUVOY4MY",
+    "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0I0P7ZROP,B0H2HUJYR2,B0FFF343IA,B0JDYLNQC6,B0MUVOY4MY",
+    "2026-10-21 breakfast 重复餐厅 B0FFFEXHB4，附近尚有未使用候选：B0I0P7ZROP,B0FFF343IA,B0JDYLNQC6,B0MUVOY4MY",
+    "2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0I0P7ZROP,B0H2HUJYR2",
+    "2026-10-22 breakfast 重复餐厅 B0FFFEXHB4，附近尚有未使用候选：B0I0P7ZROP",
+    "2026-10-23 breakfast 餐厅不符合就近/餐次条件，可选ID：B0I0P7ZROP,B0H2HUJYR2,B0FFF343IA,B0JDYLNQC6,B0MUVOY4MY",
+    "2026-10-23 breakfast 重复餐厅 B0FFFEXHB4，附近尚有未使用候选：B0I0P7ZROP,B0FFF343IA,B0JDYLNQC6,B0MUVOY4MY",
+    "2026-10-23 lunch 餐厅不符合就近/餐次条件，可选ID：B0KDMCCVTI,B0FFF5QW0U,B0G1G9O7IP,B0FFKS7LM4,B037B02604,B0JDJUDDQW",
+    "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+    "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「药王山观景台」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「夏扎大院」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+    "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-23：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+    "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+  ],
+  "message": "",
+  "started_at": "2026-10-20T01:11:29"
+}

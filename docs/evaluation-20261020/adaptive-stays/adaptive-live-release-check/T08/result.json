@@ -1,0 +1,536 @@
+{
+  "case_id": "T08",
+  "name": "杭州晚到早离保留中间完整活动日",
+  "kind": "generate",
+  "passed": true,
+  "violations": [],
+  "duration_s": 24.83,
+  "error_code": null,
+  "success": true,
+  "days": 3,
+  "response_summary": {
+    "success": true,
+    "error_code": null,
+    "message": "",
+    "cached": false,
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "2026-10-22 breakfast 重复餐厅 B0FFH0UM9G，附近尚有未使用候选：B0FFIOWE1Z,B0FFK8CHZ4,B0FFHJT1FX,B0FFH5DUCJ,B0FFL9UPC8",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-21：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。"
+    ],
+    "budget": {
+      "ticket_reserve_amount": 100,
+      "total_attractions": 30,
+      "total_hotels": 520,
+      "total_meals": 162,
+      "total_transportation": 360,
+      "total": 1072,
+      "items": [
+        {
+          "category": "attraction",
+          "name": "南宋德寿宫遗址博物馆",
+          "day_index": 1,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：南宋德寿宫遗址博物馆为免费开放的国有博物馆，日常成人入场通常需预约但不收费，按0元估算。"
+        },
+        {
+          "category": "attraction",
+          "name": "吴山景区-城隍阁景区",
+          "day_index": 1,
+          "amount": 30,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：城隍阁景区日常成人门票挂牌价约30元"
+        },
+        {
+          "category": "attraction",
+          "name": "五柳巷历史街区",
+          "day_index": 1,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：五柳巷历史街区为免费开放的历史街区，无门票"
+        },
+        {
+          "category": "meal",
+          "name": "安徽料理小吃(刀茅巷店)",
+          "day_index": 1,
+          "amount": 16,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "知味观(吴山点心分店)",
+          "day_index": 1,
+          "amount": 34,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "风炉故事·遂昌山野土菜(凯旋路店)",
+          "day_index": 1,
+          "amount": 90,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "三鲜面馆(凯旋路店)",
+          "day_index": 2,
+          "amount": 22,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-20 住宿：布丁严选酒店(杭州火车东站艮山西路店)",
+          "day_index": 0,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-21 住宿：布丁严选酒店(杭州火车东站艮山西路店)",
+          "day_index": 1,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "transportation",
+          "name": "市内交通（自驾）",
+          "day_index": null,
+          "amount": 360,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "按每人每天 120 元的固定表估算"
+        }
+      ],
+      "known_total": 0,
+      "estimated_total": 1072,
+      "unknown_items": [],
+      "limit": null,
+      "limit_status": "none",
+      "limit_basis": "未设置预算上限。当前口径：已知 0 元 + 估算 1072 元 = 1072 元。"
+    },
+    "hotel": {
+      "name": "布丁严选酒店(杭州火车东站艮山西路店)",
+      "poi_id": "B023B14DR8",
+      "address": "艮山西路200号(艮秋立交桥西北侧)距闸弄口新村公交站向东200米工商银行旁",
+      "location": {
+        "longitude": 120.197168,
+        "latitude": 30.27668
+      },
+      "price_range": "",
+      "rating": "4.3",
+      "distance": "距最终行程景点加权平均 4.9 km（直线估计）",
+      "type": "经济型连锁酒店",
+      "estimated_cost": 260,
+      "cost_status": "estimated",
+      "cost_source": "static_estimate",
+      "price_evidence_url": null,
+      "nights": 2,
+      "check_in_after": null,
+      "check_in_before": null,
+      "check_out_before": null,
+      "operations_evidence_url": null
+    },
+    "hotel_nights": 2,
+    "accommodation_version": 11,
+    "stays": [
+      {
+        "check_in": "2026-10-20",
+        "check_out": "2026-10-21",
+        "hotel": {
+          "name": "布丁严选酒店(杭州火车东站艮山西路店)",
+          "poi_id": "B023B14DR8",
+          "address": "艮山西路200号(艮秋立交桥西北侧)距闸弄口新村公交站向东200米工商银行旁",
+          "location": {
+            "longitude": 120.197168,
+            "latitude": 30.27668
+          },
+          "price_range": "",
+          "rating": "4.3",
+          "distance": "",
+          "type": "经济型连锁酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "晚到22点，直接入住东站附近经济型酒店，减少夜间接驳；次日市区休闲仍以此为大本营，免去换住整理时间"
+      },
+      {
+        "check_in": "2026-10-21",
+        "check_out": "2026-10-22",
+        "hotel": {
+          "name": "布丁严选酒店(杭州火车东站艮山西路店)",
+          "poi_id": "B023B14DR8",
+          "address": "艮山西路200号(艮秋立交桥西北侧)距闸弄口新村公交站向东200米工商银行旁",
+          "location": {
+            "longitude": 120.197168,
+            "latitude": 30.27668
+          },
+          "price_range": "",
+          "rating": "4.3",
+          "distance": "",
+          "type": "经济型连锁酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "连住同一酒店，第三天9点前离店，东站片区出发便利，避免换住60分钟负担"
+      }
+    ],
+    "stay_comparison": {
+      "strategy": "same_hotel",
+      "hotel_changes": 0,
+      "travel_minutes": 74,
+      "transfer_minutes": 0,
+      "basis": "路线工具核算所选方案；未取得备选实测时，不宣称节省具体分钟。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "布丁严选酒店(杭州火车东站艮山西路店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "小雨"
+      },
+      {
+        "date": "2026-10-21",
+        "beyond_window": false,
+        "day_weather": "小雨"
+      },
+      {
+        "date": "2026-10-22",
+        "beyond_window": false,
+        "day_weather": "多云"
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-20",
+        "day_index": 0,
+        "attractions": [],
+        "meals": [],
+        "total_minutes": 30,
+        "route_start": null,
+        "route_end": {
+          "name": "布丁严选酒店(杭州火车东站艮山西路店)",
+          "location": {
+            "longitude": 120.197168,
+            "latitude": 30.27668
+          },
+          "poi_id": "B023B14DR8",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [],
+        "day_total_cost": 380
+      },
+      {
+        "date": "2026-10-21",
+        "day_index": 1,
+        "attractions": [
+          "南宋德寿宫遗址博物馆",
+          "吴山景区-城隍阁景区",
+          "五柳巷历史街区"
+        ],
+        "meals": [
+          "安徽料理小吃(刀茅巷店)",
+          "知味观(吴山点心分店)",
+          "风炉故事·遂昌山野土菜(凯旋路店)"
+        ],
+        "total_minutes": 648,
+        "route_start": {
+          "name": "布丁严选酒店(杭州火车东站艮山西路店)",
+          "location": {
+            "longitude": 120.197168,
+            "latitude": 30.27668
+          },
+          "poi_id": "B023B14DR8",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "布丁严选酒店(杭州火车东站艮山西路店)",
+          "location": {
+            "longitude": 120.197168,
+            "latitude": 30.27668
+          },
+          "poi_id": "B023B14DR8",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "布丁严选酒店(杭州火车东站艮山西路店)",
+            "to_name": "安徽料理小吃(刀茅巷店)",
+            "from_id": "B023B14DR8",
+            "to_id": "B0FFIOWE1Z",
+            "mode": "自驾",
+            "duration_minutes": 8,
+            "distance_meters": 2981,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "安徽料理小吃(刀茅巷店)",
+            "to_name": "南宋德寿宫遗址博物馆",
+            "from_id": "B0FFIOWE1Z",
+            "to_id": "B0HGNGK3FG",
+            "mode": "自驾",
+            "duration_minutes": 10,
+            "distance_meters": 3269,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "南宋德寿宫遗址博物馆",
+            "to_name": "知味观(吴山点心分店)",
+            "from_id": "B0HGNGK3FG",
+            "to_id": "B023B082PU",
+            "mode": "自驾",
+            "duration_minutes": 6,
+            "distance_meters": 1907,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "知味观(吴山点心分店)",
+            "to_name": "吴山景区-城隍阁景区",
+            "from_id": "B023B082PU",
+            "to_id": "B0FFG49JKW",
+            "mode": "自驾",
+            "duration_minutes": 8,
+            "distance_meters": 1158,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "吴山景区-城隍阁景区",
+            "to_name": "五柳巷历史街区",
+            "from_id": "B0FFG49JKW",
+            "to_id": "B0FFFA3PD5",
+            "mode": "自驾",
+            "duration_minutes": 14,
+            "distance_meters": 3443,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "五柳巷历史街区",
+            "to_name": "风炉故事·遂昌山野土菜(凯旋路店)",
+            "from_id": "B0FFFA3PD5",
+            "to_id": "B0L25ZCBHG",
+            "mode": "自驾",
+            "duration_minutes": 12,
+            "distance_meters": 3886,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "风炉故事·遂昌山野土菜(凯旋路店)",
+            "to_name": "布丁严选酒店(杭州火车东站艮山西路店)",
+            "from_id": "B0L25ZCBHG",
+            "to_id": "B023B14DR8",
+            "mode": "自驾",
+            "duration_minutes": 9,
+            "distance_meters": 3278,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 550
+      },
+      {
+        "date": "2026-10-22",
+        "day_index": 2,
+        "attractions": [],
+        "meals": [
+          "三鲜面馆(凯旋路店)"
+        ],
+        "total_minutes": 42,
+        "route_start": {
+          "name": "布丁严选酒店(杭州火车东站艮山西路店)",
+          "location": {
+            "longitude": 120.197168,
+            "latitude": 30.27668
+          },
+          "poi_id": "B023B14DR8",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": null,
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "布丁严选酒店(杭州火车东站艮山西路店)",
+            "to_name": "三鲜面馆(凯旋路店)",
+            "from_id": "B023B14DR8",
+            "to_id": "B0FFK8CHZ4",
+            "mode": "自驾",
+            "duration_minutes": 7,
+            "distance_meters": 2528,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 142
+      }
+    ],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 1072,
+      "subtotal": 1072,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 1072 元 = 1072 元。"
+    },
+    "validate_error": null
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": null,
+    "retries": 1,
+    "budget_retries": 0,
+    "planning_calls": 2,
+    "composition_valid": true,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "2026-10-22 breakfast 重复餐厅 B0FFH0UM9G，附近尚有未使用候选：B0FFIOWE1Z,B0FFK8CHZ4,B0FFHJT1FX,B0FFH5DUCJ,B0FFL9UPC8\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B023B14DR8\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B023B14DR8\"}], \"hotel_id\": \"B023B14DR8\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [], \"overloaded_routes\": [], \"attraction_ids\": [], \"previous_meals\": [], \"meal_options_for_this_layout\": []}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"南宋德寿宫遗址博物馆\", \"吴山景区-城隍阁景区\", \"五柳巷历史街区\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0HGNGK3FG\", \"B0FFG49JKW\", \"B0FFFA3PD5\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFH0UM9G\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B023B082PU\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0L25ZCBHG\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFH0UM9G\", \"B0FFIOWE1Z\", \"B0FFK8CHZ4\", \"B0FFHJT1FX\", \"B0FFH5DUCJ\"], \"unused_restaurant_ids\": [\"B0FFH0UM9G\", \"B0FFIOWE1Z\", \"B0FFK8CHZ4\", \"B0FFHJT1FX\", \"B0FFH5DUCJ\"], \"suggested_restaurant_id\": \"B0FFIOWE1Z\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B023B032KR\", \"B0KKMR7ORJ\", \"B0HKYGNQHM\", \"B0FFGPEJZJ\", \"B023B08AY0\", \"B023B082PU\", \"B023B05W5P\", \"B0KUXL3VHS\"], \"unused_restaurant_ids\": [\"B023B032KR\", \"B0KKMR7ORJ\", \"B0HKYGNQHM\", \"B0FFGPEJZJ\", \"B023B08AY0\", \"B023B082PU\", \"B023B05W5P\", \"B0KUXL3VHS\"], \"suggested_restaurant_id\": \"B023B082PU\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0L25ZCBHG\", \"B0K2XLDQIZ\", \"B0JGT6QEHN\", \"B0JGSCCS3I\", \"B0FFH0UM9G\", \"B023B091EQ\", \"B0HB4U8HWO\", \"B0FFG2X36A\"], \"unused_restaurant_ids\": [\"B0L25ZCBHG\", \"B0K2XLDQIZ\", \"B0JGT6QEHN\", \"B0JGSCCS3I\", \"B023B091EQ\", \"B0HB4U8HWO\", \"B0FFG2X36A\", \"B023B092XY\"], \"suggested_restaurant_id\": \"B0L25ZCBHG\"}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [], \"overloaded_routes\": [], \"attraction_ids\": [], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFH0UM9G\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFH0UM9G\", \"B0FFIOWE1Z\", \"B0FFK8CHZ4\", \"B0FFHJT1FX\", \"B0FFH5DUCJ\", \"B0FFL9UPC8\"], \"unused_restaurant_ids\": [\"B0FFIOWE1Z\", \"B0FFK8CHZ4\", \"B0FFHJT1FX\", \"B0FFH5DUCJ\", \"B0FFL9UPC8\"], \"suggested_restaurant_id\": \"B0FFH0UM9G\"}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。suggested_restaurant_id是跨餐次匹配后的真实候选建议，保持布局时可优先采用以避免局部贪心导致重复；实际路线和预算仍需复核。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-21：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-21：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。"
+    ],
+    "usage": {
+      "prompt_tokens": 27536,
+      "completion_tokens": 1504,
+      "llm_calls": 3
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 1072,
+      "subtotal": 1072,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 1072 元 = 1072 元。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "布丁严选酒店(杭州火车东站艮山西路店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "tool_call_count": 18,
+    "hotel_source": "agent",
+    "final_days": 3,
+    "final_weather_days": 3
+  },
+  "request": {
+    "city": "杭州",
+    "start_date": "2026-10-20",
+    "travel_days": 3,
+    "transportation": "自驾",
+    "accommodation": "经济型酒店",
+    "preferences": [],
+    "must_visit": [],
+    "free_text_input": "第一天22点才到，第三天9点离开，只在中间一天市区休闲，其余安排接驳住宿",
+    "arrival_time": "22:00",
+    "departure_time": "09:00"
+  },
+  "expect": {
+    "success": true,
+    "days": 3
+  },
+  "exception": null,
+  "warnings": [
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "2026-10-22 breakfast 重复餐厅 B0FFH0UM9G，附近尚有未使用候选：B0FFIOWE1Z,B0FFK8CHZ4,B0FFHJT1FX,B0FFH5DUCJ,B0FFL9UPC8",
+    "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+    "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+    "2026-10-21：本日预报小雨，户外景点需雨具与室内备选；没有将未知开放状态当成可游玩保证。",
+    "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。"
+  ],
+  "message": "",
+  "started_at": "2026-10-20T01:46:41"
+}

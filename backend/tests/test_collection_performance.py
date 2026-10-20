@@ -22,7 +22,7 @@ def test_structured_collection_needs_no_model_and_keeps_required_anchors(monkeyp
     request = make_request(preferences=["自然风光", "自然风光", "美食"], must_visit=[anchor.name])
     state = {**_initial_state(request), "adcode": "330100", "must_visit_resolved": [anchor]}
     result = attraction_agent.collect_attractions(state)
-    assert seen == ["自然风光"]
+    assert sorted(seen) == ["景点", "自然风光"]
     assert result["usage"]["llm_calls"] == 0
     assert next(a for a in result["attractions"] if a.poi_id == "A1").required
     assert len(result["attractions"]) == 2

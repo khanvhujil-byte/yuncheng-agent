@@ -1,29 +1,11 @@
 <template>
-  <a-config-provider :theme="{ token: { colorPrimary: '#315a43', colorText: '#304331', colorBorder: '#dde3d3', borderRadius: 9, colorBgContainer: '#fffefa', fontFamily: 'Inter, Segoe UI, Microsoft YaHei, sans-serif' } }">
+  <a-config-provider :theme="{ token: { colorPrimary: '#3375d6', colorText: '#243b55', colorTextSecondary: '#6b8098', colorBorder: '#dce7f4', borderRadius: 8, colorBgContainer: '#ffffff', fontFamily: 'Inter, Segoe UI, Microsoft YaHei, sans-serif' } }">
     <router-view />
   </a-config-provider>
 </template>
-
 <style>
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background: #f7f7f1;
-  color: #304331;
-  font-family: system-ui, -apple-system, 'Segoe UI', 'Microsoft YaHei', 'PingFang SC',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
-
-#app {
-  min-height: 100vh;
-}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { background: var(--yc-page); color: var(--yc-ink); font-family: var(--yc-font); -webkit-font-smoothing: antialiased; }
+#app { min-height: 100vh; }
 </style>

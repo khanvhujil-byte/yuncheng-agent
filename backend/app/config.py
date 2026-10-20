@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Literal
 
 import httpx
-from pydantic import Field
+from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # ------------------------------------------------------------------ 基础
@@ -25,6 +25,32 @@ AMAP_GEOCODE_URL = "https://restapi.amap.com/v3/geocode/geo"
 logger = logging.getLogger(__name__)
 
 
+def _flyai_user_key() -> str:
+    """Windows saved User env may be newer than the desktop's process env.
+
+    BaseSettings still gives explicit process/.env values precedence. Read only
+    this one requested credential; never copy the user environment wholesale.
+    """
+    if os.name != 'nt':
+        return ''
+    try:
+        import winreg
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, 'Environment') as key:
+            value, _ = winreg.QueryValueEx(key, 'FLYAI_API_KEY')
+            return value.strip() if isinstance(value, str) else ''
+    except OSError:
+        return ''
+
+
+def flyai_process_env() -> dict[str, str]:
+    """Only runtime essentials and the FlyAI secret go to the official CLI."""
+    allowed = {'PATH', 'SYSTEMROOT', 'WINDIR', 'TEMP', 'TMP', 'TMPDIR',
+               'HOME', 'USERPROFILE', 'LOCALAPPDATA', 'APPDATA', 'LANG', 'LC_ALL'}
+    env = {k: v for k, v in os.environ.items() if k.upper() in allowed}
+    env['FLYAI_API_KEY'] = get_settings().flyai_api_key.get_secret_value()
+    return env
+
+
 class ConfigError(RuntimeError):
     """配置错误——属于「不该启动」的级别，不是「降级继续」的级别。"""
 
@@ -33,6 +59,21 @@ class ConfigError(RuntimeError):
 
 
 class Settings(BaseSettings):
+    # Optional official FlyAI read-only provider. No key -> no planning calls.
+    flyai_enabled: bool = True
+    flyai_api_key: SecretStr = Field(default_factory=_flyai_user_key, repr=False, exclude=True)
+    flyai_node_command: str = 'node'
+    flyai_timeout_seconds: float = Field(default=12, ge=1, le=60, allow_inf_nan=False)
+    flyai_request_interval_seconds: float = Field(default=1, ge=0.1, le=30, allow_inf_nan=False)
+    flyai_cache_ttl_seconds: int = Field(default=120, ge=0, le=600)
+    flyai_ticket_query_limit: int = Field(default=2, ge=0, le=4)
+    flyai_ticket_budget_seconds: float = Field(default=5, ge=0.1, le=15, allow_inf_nan=False)
+    flyai_planning_budget_seconds: float = Field(default=12, ge=1, le=30, allow_inf_nan=False)
+    flyai_hotel_match_limit: int = Field(default=4, ge=0, le=8)
+    adaptive_stays_enabled: bool = True
+    regional_context_max_regions: int = Field(default=4, ge=1, le=6)
+    regional_context_budget_seconds: float = Field(default=12, ge=1, le=30)
+
     model_config = SettingsConfigDict(
         env_file=str(ENV_FILE),
         env_file_encoding="utf-8",
@@ -77,7 +118,7 @@ class Settings(BaseSettings):
     route_batch_budget_seconds: float = Field(default=12.0, gt=0, le=30, allow_inf_nan=False)
     route_cache_ttl_seconds: int = Field(default=900, ge=0, le=3600)
     food_coverage_enabled: bool = True
-    food_coverage_query_limit: int = Field(default=3, ge=0, le=5)
+    food_coverage_query_limit: int = Field(default=5, ge=0, le=5)
     food_coverage_budget_seconds: float = Field(default=6, gt=0, le=15, allow_inf_nan=False)
     # Local POI observations are independent of dated room/ticket prices.
     catalog_local_first: bool = True

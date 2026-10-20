@@ -1,0 +1,753 @@
+{
+  "case_id": "G11",
+  "name": "广州3天用户指定酒店",
+  "kind": "generate",
+  "passed": true,
+  "violations": [],
+  "duration_s": 55.17,
+  "error_code": null,
+  "success": true,
+  "days": 3,
+  "response_summary": {
+    "success": true,
+    "error_code": null,
+    "message": "",
+    "cached": false,
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0H2OUD6WX,B0MUHZNWJR",
+      "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0KKTP8VTV",
+      "2026-10-21 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-21 dinner 餐厅不符合就近/餐次条件，可选ID：B0KKTP8VTV",
+      "2026-10-21 dinner 重复餐厅 B0KAFSI56O，附近尚有未使用候选：B0KKTP8VTV",
+      "2026-10-21 dinner 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0KKTP8VTV,B0LUF54IBT",
+      "2026-10-22 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-22 lunch 餐厅不符合就近/餐次条件，可选ID：B00141S0V4,B0K2Y5PY1Y,B0KAAU52NQ,B0G1MNUL91,B00141HZQI,B0JK97AHLF,B0GR6MY8VB,B00140N8RD",
+      "2026-10-22 dinner 重复餐厅 B0KAFSI56O，附近尚有未使用候选：B0K2Y5PY1Y,B0G1MNUL91,B00141HZQI,B0K67CAL22,B0J3HZM2DQ,B00141QSAN,B0FFKSJZR9,B0FFG6EN8Y",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「中山纪念堂」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「珠江夜游(天字码头)」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「陈家祠堂」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「南越王博物院(王墓展区)」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「五羊雕像」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「光孝寺」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "共 2 项费用金额未知（2026-10-20 住宿：广州四季酒店、2026-10-21 住宿：广州四季酒店），未计入总价 —— 所以下面的总计只是已知与估算部分之和，不代表实际开销。"
+    ],
+    "budget": {
+      "ticket_reserve_amount": 100,
+      "total_attractions": 5,
+      "total_hotels": 0,
+      "total_meals": 544,
+      "total_transportation": 120,
+      "total": 669,
+      "items": [
+        {
+          "category": "attraction",
+          "name": "永庆坊",
+          "day_index": 0,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：永庆坊为开放式历史街区，日常免费进入。"
+        },
+        {
+          "category": "attraction",
+          "name": "沙面岛",
+          "day_index": 0,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：沙面岛为开放式公共街区，日常免费进入。"
+        },
+        {
+          "category": "meal",
+          "name": "碧翠园烘焙店(陈家祠店)",
+          "day_index": 0,
+          "amount": 18,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "遇见小面(扬韬广场店)",
+          "day_index": 0,
+          "amount": 20,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "大榕树下顺德菜(富力海珠城店)",
+          "day_index": 0,
+          "amount": 75,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "越秀公园",
+          "day_index": 1,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：越秀公园为免费开放的城市公园。"
+        },
+        {
+          "category": "meal",
+          "name": "肥猫茶餐厅(花城汇中区店)",
+          "day_index": 1,
+          "amount": 36,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "雅韵轩素食·茶馆(越秀公园店)",
+          "day_index": 1,
+          "amount": 272,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "星巴克(富力中心店)",
+          "day_index": 1,
+          "amount": 30,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "六榕寺",
+          "day_index": 2,
+          "amount": 5,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：六榕寺日常成人门票通常为5元。"
+        },
+        {
+          "category": "attraction",
+          "name": "大佛寺",
+          "day_index": 2,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：大佛寺日常免费开放，按0元估算。"
+        },
+        {
+          "category": "meal",
+          "name": "肥猫茶餐厅(花城汇中区店)",
+          "day_index": 2,
+          "amount": 36,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "雾都小面",
+          "day_index": 2,
+          "amount": 17,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "利口福(手信店)",
+          "day_index": 2,
+          "amount": 40,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-20 住宿：广州四季酒店",
+          "day_index": 0,
+          "amount": null,
+          "status": "unknown",
+          "source": "llm_estimated",
+          "note": "一间房一晚；以实际预订为准"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-21 住宿：广州四季酒店",
+          "day_index": 1,
+          "amount": null,
+          "status": "unknown",
+          "source": "llm_estimated",
+          "note": "一间房一晚；以实际预订为准"
+        },
+        {
+          "category": "transportation",
+          "name": "市内交通（公共交通）",
+          "day_index": null,
+          "amount": 120,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "按每人每天 40 元的固定表估算"
+        }
+      ],
+      "known_total": 0,
+      "estimated_total": 669,
+      "unknown_items": [
+        "2026-10-20 住宿：广州四季酒店",
+        "2026-10-21 住宿：广州四季酒店"
+      ],
+      "limit": null,
+      "limit_status": "none",
+      "limit_basis": "未设置预算上限。当前口径：已知 0 元 + 估算 669 元 = 669 元，另有 2 项金额未知。"
+    },
+    "hotel": {
+      "name": "广州四季酒店",
+      "poi_id": "B00140W7WA",
+      "address": "珠江新城珠江西路5号广州国际金融中心",
+      "location": {
+        "longitude": 113.323214,
+        "latitude": 23.117428
+      },
+      "price_range": "",
+      "rating": "4.7",
+      "distance": "距最终行程景点加权平均 7.1 km（直线估计）",
+      "type": "五星级宾馆",
+      "estimated_cost": 0,
+      "cost_status": "estimated",
+      "cost_source": "llm_estimated",
+      "price_evidence_url": null,
+      "nights": 2,
+      "check_in_after": null,
+      "check_in_before": null,
+      "check_out_before": null,
+      "operations_evidence_url": null
+    },
+    "hotel_nights": 2,
+    "accommodation_version": 11,
+    "stays": [
+      {
+        "check_in": "2026-10-20",
+        "check_out": "2026-10-21",
+        "hotel": {
+          "name": "广州四季酒店",
+          "poi_id": "B00140W7WA",
+          "address": "珠江新城珠江西路5号广州国际金融中心",
+          "location": {
+            "longitude": 113.323214,
+            "latitude": 23.117428
+          },
+          "price_range": "",
+          "rating": "4.7",
+          "distance": "",
+          "type": "五星级宾馆",
+          "estimated_cost": 0,
+          "cost_status": "estimated",
+          "cost_source": "llm_estimated",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": true,
+        "reason": "全程锁定该酒店，两晚连住，免去换住整理与行李搬运，便于以珠江新城为基地往返各片区。"
+      },
+      {
+        "check_in": "2026-10-21",
+        "check_out": "2026-10-22",
+        "hotel": {
+          "name": "广州四季酒店",
+          "poi_id": "B00140W7WA",
+          "address": "珠江新城珠江西路5号广州国际金融中心",
+          "location": {
+            "longitude": 113.323214,
+            "latitude": 23.117428
+          },
+          "price_range": "",
+          "rating": "4.7",
+          "distance": "",
+          "type": "五星级宾馆",
+          "estimated_cost": 0,
+          "cost_status": "estimated",
+          "cost_source": "llm_estimated",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": true,
+        "reason": "第二晚继续连住，次日荔湾老城行程从同一住处出发，退房前可寄存需求需自行向酒店核实。"
+      }
+    ],
+    "stay_comparison": {
+      "strategy": "same_hotel",
+      "hotel_changes": 0,
+      "travel_minutes": 423,
+      "transfer_minutes": 0,
+      "basis": "路线工具核算所选方案；未取得备选实测时，不宣称节省具体分钟。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "广州四季酒店",
+      "hotel_source": "user",
+      "feasible": true
+    },
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "晴"
+      },
+      {
+        "date": "2026-10-21",
+        "beyond_window": false,
+        "day_weather": "晴"
+      },
+      {
+        "date": "2026-10-22",
+        "beyond_window": false,
+        "day_weather": "晴"
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-20",
+        "day_index": 0,
+        "attractions": [
+          "永庆坊",
+          "沙面岛"
+        ],
+        "meals": [
+          "碧翠园烘焙店(陈家祠店)",
+          "遇见小面(扬韬广场店)",
+          "大榕树下顺德菜(富力海珠城店)"
+        ],
+        "total_minutes": 647,
+        "route_start": null,
+        "route_end": {
+          "name": "广州四季酒店",
+          "location": {
+            "longitude": 113.323214,
+            "latitude": 23.117428
+          },
+          "poi_id": "B00140W7WA",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "碧翠园烘焙店(陈家祠店)",
+            "to_name": "永庆坊",
+            "from_id": "B0KAAU52NQ",
+            "to_id": "B0IUPDSJHU",
+            "mode": "公共交通",
+            "duration_minutes": 28,
+            "distance_meters": 3203,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "永庆坊",
+            "to_name": "遇见小面(扬韬广场店)",
+            "from_id": "B0IUPDSJHU",
+            "to_id": "B0JK97AHLF",
+            "mode": "公共交通",
+            "duration_minutes": 21,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（AMAP_ERROR）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "遇见小面(扬韬广场店)",
+            "to_name": "沙面岛",
+            "from_id": "B0JK97AHLF",
+            "to_id": "B0FFFAJYVI",
+            "mode": "公共交通",
+            "duration_minutes": 26,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（AMAP_ERROR）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "沙面岛",
+            "to_name": "大榕树下顺德菜(富力海珠城店)",
+            "from_id": "B0FFFAJYVI",
+            "to_id": "B0KAFSI56O",
+            "mode": "公共交通",
+            "duration_minutes": 37,
+            "distance_meters": 5856,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "大榕树下顺德菜(富力海珠城店)",
+            "to_name": "广州四季酒店",
+            "from_id": "B0KAFSI56O",
+            "to_id": "B00140W7WA",
+            "mode": "公共交通",
+            "duration_minutes": 39,
+            "distance_meters": 10811,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 153
+      },
+      {
+        "date": "2026-10-21",
+        "day_index": 1,
+        "attractions": [
+          "越秀公园"
+        ],
+        "meals": [
+          "肥猫茶餐厅(花城汇中区店)",
+          "雅韵轩素食·茶馆(越秀公园店)",
+          "星巴克(富力中心店)"
+        ],
+        "total_minutes": 646,
+        "route_start": {
+          "name": "广州四季酒店",
+          "location": {
+            "longitude": 113.323214,
+            "latitude": 23.117428
+          },
+          "poi_id": "B00140W7WA",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "广州四季酒店",
+          "location": {
+            "longitude": 113.323214,
+            "latitude": 23.117428
+          },
+          "poi_id": "B00140W7WA",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "广州四季酒店",
+            "to_name": "肥猫茶餐厅(花城汇中区店)",
+            "from_id": "B00140W7WA",
+            "to_id": "B0FFFV1WO5",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "肥猫茶餐厅(花城汇中区店)",
+            "to_name": "越秀公园",
+            "from_id": "B0FFFV1WO5",
+            "to_id": "B00140BNNF",
+            "mode": "公共交通",
+            "duration_minutes": 47,
+            "distance_meters": 10854,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "越秀公园",
+            "to_name": "雅韵轩素食·茶馆(越秀公园店)",
+            "from_id": "B00140BNNF",
+            "to_id": "B00140UU87",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "雅韵轩素食·茶馆(越秀公园店)",
+            "to_name": "星巴克(富力中心店)",
+            "from_id": "B00140UU87",
+            "to_id": "B00141J6DU",
+            "mode": "公共交通",
+            "duration_minutes": 43,
+            "distance_meters": 7889,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "星巴克(富力中心店)",
+            "to_name": "广州四季酒店",
+            "from_id": "B00141J6DU",
+            "to_id": "B00140W7WA",
+            "mode": "公共交通",
+            "duration_minutes": 11,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 378
+      },
+      {
+        "date": "2026-10-22",
+        "day_index": 2,
+        "attractions": [
+          "六榕寺",
+          "大佛寺"
+        ],
+        "meals": [
+          "肥猫茶餐厅(花城汇中区店)",
+          "雾都小面",
+          "利口福(手信店)"
+        ],
+        "total_minutes": 630,
+        "route_start": {
+          "name": "广州四季酒店",
+          "location": {
+            "longitude": 113.323214,
+            "latitude": 23.117428
+          },
+          "poi_id": "B00140W7WA",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": null,
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "广州四季酒店",
+            "to_name": "肥猫茶餐厅(花城汇中区店)",
+            "from_id": "B00140W7WA",
+            "to_id": "B0FFFV1WO5",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "肥猫茶餐厅(花城汇中区店)",
+            "to_name": "六榕寺",
+            "from_id": "B0FFFV1WO5",
+            "to_id": "B00140U00B",
+            "mode": "公共交通",
+            "duration_minutes": 45,
+            "distance_meters": 8116,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "六榕寺",
+            "to_name": "雾都小面",
+            "from_id": "B00140U00B",
+            "to_id": "B0K2Y5PY1Y",
+            "mode": "公共交通",
+            "duration_minutes": 28,
+            "distance_meters": 2970,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "雾都小面",
+            "to_name": "大佛寺",
+            "from_id": "B0K2Y5PY1Y",
+            "to_id": "B00140AUDQ",
+            "mode": "公共交通",
+            "duration_minutes": 30,
+            "distance_meters": 3051,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "大佛寺",
+            "to_name": "利口福(手信店)",
+            "from_id": "B00140AUDQ",
+            "to_id": "B00141S0V4",
+            "mode": "公共交通",
+            "duration_minutes": 29,
+            "distance_meters": 3072,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 138
+      }
+    ],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "weather": "amap",
+      "hotel": "user"
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 669,
+      "subtotal": 669,
+      "unknown_items": [
+        "2026-10-20 住宿：广州四季酒店",
+        "2026-10-21 住宿：广州四季酒店"
+      ],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 669 元 = 669 元，另有 2 项金额未知。"
+    },
+    "validate_error": null
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": null,
+    "retries": 1,
+    "budget_retries": 0,
+    "planning_calls": 2,
+    "composition_valid": true,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "weather": "amap",
+      "hotel": "user"
+    },
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0H2OUD6WX,B0MUHZNWJR\n2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0KKTP8VTV\n2026-10-21 breakfast 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-21 dinner 餐厅不符合就近/餐次条件，可选ID：B0KKTP8VTV\n2026-10-21 dinner 重复餐厅 B0KAFSI56O，附近尚有未使用候选：B0KKTP8VTV\n2026-10-21 dinner 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0KKTP8VTV,B0LUF54IBT\n2026-10-22 breakfast 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-22 lunch 餐厅不符合就近/餐次条件，可选ID：B00141S0V4,B0K2Y5PY1Y,B0KAAU52NQ,B0G1MNUL91,B00141HZQI,B0JK97AHLF,B0GR6MY8VB,B00140N8RD\n2026-10-22 dinner 重复餐厅 B0KAFSI56O，附近尚有未使用候选：B0K2Y5PY1Y,B0G1MNUL91,B00141HZQI,B0K67CAL22,B0J3HZM2DQ,B00141QSAN,B0FFKSJZR9,B0FFG6EN8Y\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B00140W7WA\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B00140W7WA\"}], \"hotel_id\": \"B00140W7WA\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"陈家祠堂\", \"永庆坊\", \"沙面岛\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B00140H88E\", \"B0IUPDSJHU\", \"B0FFFAJYVI\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0KAAU52NQ\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0JK97AHLF\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0KAFSI56O\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0H2OUD6WX\", \"B0MUHZNWJR\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B00141S0V4\", \"B0K2Y5PY1Y\", \"B0KAAU52NQ\", \"B0G1MNUL91\", \"B00141HZQI\", \"B0JK97AHLF\", \"B0GR6MY8VB\", \"B00140N8RD\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0KKTP8VTV\", \"B0LUF54IBT\", \"B0KAFSI56O\", \"B0K2Y5PY1Y\", \"B0KAAU52NQ\", \"B0G1MNUL91\", \"B00141HZQI\", \"B0JK97AHLF\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"越秀公园\", \"五羊雕像\", \"中山纪念堂\", \"南越王博物院(王墓展区)\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B00140BNNF\", \"B00140T14D\", \"B00140UFHC\", \"B0014021B3\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFJP96UB\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0GR6MY8VB\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0KAFSI56O\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0KKTP8VTV\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0GR6MY8VB\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0KKTP8VTV\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"光孝寺\", \"六榕寺\", \"大佛寺\", \"珠江夜游(天字码头)\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B00140BAAA\", \"B00140U00B\", \"B00140AUDQ\", \"B00141QXU2\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0H2OUD6WX\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0MUHZNWJR\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0KAFSI56O\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0KKTP8VTV\", \"B0LUF54IBT\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B00141S0V4\", \"B0K2Y5PY1Y\", \"B0KAAU52NQ\", \"B0G1MNUL91\", \"B00141HZQI\", \"B0JK97AHLF\", \"B0GR6MY8VB\", \"B00140N8RD\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0KAFSI56O\", \"B0K2Y5PY1Y\", \"B0KAAU52NQ\", \"B0G1MNUL91\", \"B00141HZQI\", \"B0JK97AHLF\", \"B0GR6MY8VB\", \"B0K67CAL22\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「中山纪念堂」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「珠江夜游(天字码头)」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「陈家祠堂」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「南越王博物院(王墓展区)」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「五羊雕像」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「光孝寺」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "共 2 项费用金额未知（2026-10-20 住宿：广州四季酒店、2026-10-21 住宿：广州四季酒店），未计入总价 —— 所以下面的总计只是已知与估算部分之和，不代表实际开销。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "共 2 项费用金额未知（2026-10-20 住宿：广州四季酒店、2026-10-21 住宿：广州四季酒店），未计入总价 —— 所以下面的总计只是已知与估算部分之和，不代表实际开销。"
+    ],
+    "usage": {
+      "prompt_tokens": 17086,
+      "completion_tokens": 2492,
+      "llm_calls": 3
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 669,
+      "subtotal": 669,
+      "unknown_items": [
+        "2026-10-20 住宿：广州四季酒店",
+        "2026-10-21 住宿：广州四季酒店"
+      ],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 669 元 = 669 元，另有 2 项金额未知。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "广州四季酒店",
+      "hotel_source": "user",
+      "feasible": true
+    },
+    "tool_call_count": 54,
+    "hotel_source": "user",
+    "final_days": 3,
+    "final_weather_days": 3
+  },
+  "request": {
+    "city": "广州",
+    "start_date": "2026-10-20",
+    "travel_days": 3,
+    "transportation": "公共交通",
+    "accommodation": "经济型酒店",
+    "preferences": [],
+    "must_visit": [],
+    "free_text_input": "",
+    "fixed_hotel": "广州四季酒店"
+  },
+  "expect": {
+    "success": true,
+    "days": 3,
+    "hotel_source": "user",
+    "fixed_hotel_contains": "四季"
+  },
+  "exception": null,
+  "warnings": [
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+    "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0H2OUD6WX,B0MUHZNWJR",
+    "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0KKTP8VTV",
+    "2026-10-21 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-21 dinner 餐厅不符合就近/餐次条件，可选ID：B0KKTP8VTV",
+    "2026-10-21 dinner 重复餐厅 B0KAFSI56O，附近尚有未使用候选：B0KKTP8VTV",
+    "2026-10-21 dinner 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0KKTP8VTV,B0LUF54IBT",
+    "2026-10-22 breakfast 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-22 lunch 餐厅不符合就近/餐次条件，可选ID：B00141S0V4,B0K2Y5PY1Y,B0KAAU52NQ,B0G1MNUL91,B00141HZQI,B0JK97AHLF,B0GR6MY8VB,B00140N8RD",
+    "2026-10-22 dinner 重复餐厅 B0KAFSI56O，附近尚有未使用候选：B0K2Y5PY1Y,B0G1MNUL91,B00141HZQI,B0K67CAL22,B0J3HZM2DQ,B00141QSAN,B0FFKSJZR9,B0FFG6EN8Y",
+    "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「中山纪念堂」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「珠江夜游(天字码头)」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「陈家祠堂」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「南越王博物院(王墓展区)」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「五羊雕像」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「光孝寺」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+    "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-22：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+    "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "共 2 项费用金额未知（2026-10-20 住宿：广州四季酒店、2026-10-21 住宿：广州四季酒店），未计入总价 —— 所以下面的总计只是已知与估算部分之和，不代表实际开销。"
+  ],
+  "message": "",
+  "started_at": "2026-10-20T01:05:49"
+}

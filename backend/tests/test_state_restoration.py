@@ -73,7 +73,7 @@ def test_resume_endpoint_executes_real_nodes_after_json_roundtrip(monkeypatch, c
     def forbidden(*_args, **_kwargs):
         raise AssertionError("Completed collection nodes must not run again")
 
-    def fake_model(_system, user, *, extra_user=""):
+    def fake_model(_system, user, *, extra_user="", max_tokens=None):
         model_calls.append(user)
         assert "西湖" in user and "晴" in user
         return json.dumps({"days": [make_day(0, request.start_date, [spot])]},

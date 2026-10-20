@@ -219,7 +219,7 @@ def geocode(address: str, city: Optional[str] = None) -> tuple[Optional[Location
     return _loc(row.get("location")), _s(row.get("adcode"))
 
 
-def search_poi(keywords: str, city: str, offset: int = 20, page: int = 1) -> list[Attraction]:
+def search_poi(keywords: str, city: str, offset: int = 20, page: int = 1, *, citylimit: bool = True) -> list[Attraction]:
     """关键词搜 POI → list[Attraction]。
 
     实测：keywords="西湖", city="杭州" → count="100"（总匹配数），pois[] 只给 offset 条。
@@ -232,7 +232,7 @@ def search_poi(keywords: str, city: str, offset: int = 20, page: int = 1) -> lis
         {
             "keywords": keywords,
             "city": city,
-            "citylimit": "true",  # 限制在城市内，否则搜「西湖」会搜出外地的同名景点
+            "citylimit": "true" if citylimit else "false",  # 周边游另做有界坐标过滤
             "offset": offset,
             "page": page,
             "extensions": "all",  # 少了它就没有 biz_ext / photos
@@ -276,6 +276,27 @@ def search_poi(keywords: str, city: str, offset: int = 20, page: int = 1) -> lis
                 ticket_price_status="unknown",
             )
         )
+    return result
+
+
+def search_hotels_nearby(center: Location, radius: int = 20000, limit: int = 12):
+    from .tools import _hotel_of, haversine_km
+    if not 100 <= radius <= 20000 or not 1 <= limit <= 20 or not -180 <= center.longitude <= 180 or not -90 <= center.latitude <= 90:
+        raise AmapError('INVALID_REQUEST', '酒店周边查询参数不合法')
+    payload = _get(f'{BASE_URL}/place/around', {'types':'100000',
+        'location':f'{center.longitude},{center.latitude}', 'radius':radius,
+        'sortrule':'distance', 'offset':limit, 'page':1, 'extensions':'all'})
+    result = []
+    for row in payload.get('pois') or []:
+        loc = _loc(row.get('location'))
+        if not loc or haversine_km(center, loc) > radius / 1000:
+            continue
+        codes = _s(row.get('typecode')) or ''
+        if not any(code.startswith('10') for code in codes.split('|')):
+            continue
+        result.append(_hotel_of(Attraction(name=_s(row.get('name')) or '', poi_id=_s(row.get('id')),
+            address=(_s(row.get('pname')) or '') + (_s(row.get('cityname')) or '') + (_s(row.get('adname')) or '') + (_s(row.get('address')) or ''),
+            location=loc, typecode=codes, category=_s(row.get('type')) or '住宿服务'), 1))
     return result
 
 
@@ -349,7 +370,7 @@ def search_restaurants_nearby(keywords: str, city: str, center: Location,
             or not -180 <= center.longitude <= 180 or not -90 <= center.latitude <= 90):
         raise AmapError('INVALID_REQUEST', '餐饮周边查询参数不合法')
     payload = _get(f'{BASE_URL}/place/around', {
-        'keywords':keywords, 'city':city, 'citylimit':'true', 'types':'050000',
+        'keywords':keywords, 'city':city, 'citylimit':'false', 'types':'050000',
         'location':f'{center.longitude},{center.latitude}', 'radius':radius,
         'sortrule':'distance', 'offset':limit, 'page':1, 'extensions':'all'})
     # Also enforce the boundary locally instead of trusting provider ranking.

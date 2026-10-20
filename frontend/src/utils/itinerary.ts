@@ -49,9 +49,10 @@ export function dayStops(day: DayPlan, hotel?: Hotel | null): DayStop[] {
       (leg.to_id ? leg.to_id === id : leg.to_name === stop.place.name))
     if (index >= 0) { stop.incoming = legs[index]; cursor = index + 1 }
   }
+  const end = day.dated_boundaries ? day.route_end : hotel
   const last = legs[legs.length - 1]
-  if (ordered.length && hotel && last && legs.length - 1 >= cursor &&
-      (last.to_id ? last.to_id === hotel.poi_id : last.to_name === hotel.name)) {
+  if (ordered.length && end && last && legs.length - 1 >= cursor &&
+      (last.to_id ? last.to_id === end.poi_id : last.to_name === end.name)) {
     ordered[ordered.length - 1]!.returnToHotel = last
   }
   return ordered

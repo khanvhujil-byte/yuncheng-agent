@@ -6,6 +6,7 @@ not a cross-host lock; SQLite must remain on the same host, not a network FS.
 from contextlib import contextmanager
 from contextvars import ContextVar
 import logging
+import sqlite3
 import threading
 import time
 from uuid import uuid4
@@ -39,8 +40,13 @@ class Lease:
         self.lost = threading.Event()
         self.db_path = store.DB_PATH
 
+    def _connect(self):
+        # Heartbeat, checks and cleanup must address the acquired database,
+        # even if another request/test reconfigures store.DB_PATH later.
+        return sqlite3.connect(self.db_path, timeout=10)
+
     def acquire(self):
-        with store._connect() as db:
+        with self._connect() as db:
             db.execute(SCHEMA)
             db.execute('BEGIN IMMEDIATE')
             row = db.execute('SELECT expires FROM execution_lease WHERE key=?', (self.key,)).fetchone()
@@ -52,10 +58,9 @@ class Lease:
         return self
 
     def _renew(self):
-        import sqlite3
         while not self.stop.wait(self.ttl/3):
             try:
-                with sqlite3.connect(self.db_path, timeout=10) as db:
+                with self._connect() as db:
                     changed = db.execute('UPDATE execution_lease SET expires=? WHERE key=? AND token=? AND expires>?',
                                          (time.time()+self.ttl, self.key, self.token, time.time())).rowcount
                 if changed != 1:
@@ -67,7 +72,7 @@ class Lease:
                 return
 
     def check(self):
-        with store._connect() as db:
+        with self._connect() as db:
             row = db.execute('SELECT token,expires FROM execution_lease WHERE key=?', (self.key,)).fetchone()
         if self.lost.is_set() or not row or row[0] != self.token or row[1] <= time.time():
             raise Busy('Execution lease lost')
@@ -75,7 +80,7 @@ class Lease:
     def release(self):
         self.stop.set()
         self.worker.join(timeout=2)
-        with store._connect() as db:
+        with self._connect() as db:
             db.execute('DELETE FROM execution_lease WHERE key=? AND token=?', (self.key, self.token))
 
 

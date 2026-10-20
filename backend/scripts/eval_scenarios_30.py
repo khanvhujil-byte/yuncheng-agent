@@ -32,7 +32,7 @@ import threading
 import time
 import traceback
 from dataclasses import dataclass, field
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from uuid import uuid4
 
@@ -42,7 +42,7 @@ if str(BACKEND) not in sys.path:
 
 OUT_DIR = BACKEND / "experiments" / "eval-20261019"
 REAL_DB = BACKEND / "data" / "trip_planner.db"
-TODAY = date.today()
+TODAY = datetime.now(timezone(timedelta(hours=8))).date()
 
 
 def d(offset: int) -> str:
@@ -383,8 +383,22 @@ def check_invariants(req, resp, final: dict) -> list[str]:
         if len(spots) > 4:
             v.append(f"{day.get('date')} 景点数 {len(spots)} 超过硬上限 4")
         kinds = sorted(m.get("type") for m in (day.get("meals") or []))
-        if kinds != ["breakfast", "dinner", "lunch"]:
-            v.append(f"{day.get('date')} 三餐类型不完整：{kinds}")
+        expected_meals = ['breakfast', 'lunch', 'dinner']
+        first = day.get('day_index') == 0
+        last = day.get('day_index') == req.travel_days-1
+        if data.get('accommodation_version', 0) >= 11 and ((first and req.arrival_time) or (last and req.departure_time)):
+            def parse_time(value):
+                h,m=map(int,value.split(':'))
+                return h*60+m
+            arrival = parse_time(req.arrival_time) if first and req.arrival_time else 0
+            departure = parse_time(req.departure_time) if last and req.departure_time else 1439
+            expected_meals = [k for k,earliest,latest,length in [('breakfast',420,600,30),('lunch',720,840,45),('dinner',1020,1230,60)]
+                              if max(arrival,earliest) <= min(latest,departure-length)]
+            schedule=day.get('schedule') or []
+            if schedule and (parse_time(schedule[0]['start_time']) < arrival or parse_time(schedule[-1]['end_time']) > departure):
+                v.append(f"{day.get('date')} 实际时间表超出用户到离窗口")
+        if kinds != sorted(expected_meals):
+            v.append(f"{day.get('date')} 餐次不匹配可用时间：{kinds}，应为{expected_meals}")
         for spot in spots:
             identity = spot.get("poi_id") or spot.get("name")
             if identity in seen:
@@ -420,7 +434,35 @@ def check_invariants(req, resp, final: dict) -> list[str]:
     # ---- 4. 住宿 ----
     nights = req.nights if req.nights is not None else req.travel_days - 1
     hotel = (data or {}).get("hotel")
-    if nights == 0:
+    stays = data.get('stays') or []
+    if data.get('accommodation_version', 0) >= 11:
+        expected = [(date.fromisoformat(req.start_date) + timedelta(days=i)).isoformat() for i in range(nights)]
+        actual = [s.get('check_in') for s in stays]
+        if sorted(actual) != expected or len(set(actual)) != len(actual):
+            v.append(f'分晚住宿日期缺漏或重叠：{actual} != {expected}')
+        by_date = {s.get('check_in'): s.get('hotel') for s in stays}
+        for stay in stays:
+            check_in = date.fromisoformat(stay['check_in'])
+            if stay.get('check_out') != (check_in + timedelta(days=1)).isoformat():
+                v.append(f"住宿退房日错误：{stay.get('check_in')} → {stay.get('check_out')}")
+        known_total = sum(int(s['hotel'].get('estimated_cost') or 0) for s in stays
+                          if s.get('hotel') and s['hotel'].get('cost_status') != 'unknown')
+        if budget is not None and int(budget.get('total_hotels') or 0) != known_total:
+            v.append(f"分晚房费 {known_total} != total_hotels {budget.get('total_hotels')}")
+        if data.get('hotel_nights') != nights:
+            v.append(f"hotel_nights={data.get('hotel_nights')} != nights={nights}")
+        for day in days:
+            prior_date = (date.fromisoformat(day['date']) - timedelta(days=1)).isoformat()
+            for field, target in (('route_start', by_date.get(prior_date)), ('route_end', by_date.get(day['date']))):
+                boundary = day.get(field) or {}
+                if target and (boundary.get('poi_id') != target.get('poi_id') or boundary.get('location') != target.get('location')):
+                    v.append(f"{day['date']} {field} 与当晚/前晚住宿不一致")
+            legs = day.get('route_legs') or []
+            if legs and day.get('route_start') and legs[0].get('from_name') != day['route_start'].get('name'):
+                v.append(f"{day['date']} 路线遗漏实际出发点")
+            if legs and day.get('route_end') and legs[-1].get('to_name') != day['route_end'].get('name'):
+                v.append(f"{day['date']} 路线遗漏实际终点")
+    elif nights == 0:
         if hotel is not None:
             v.append("nights=0 却给出了酒店")
         if data.get("hotel_nights") not in (0, None):
@@ -509,6 +551,7 @@ def check_invariants(req, resp, final: dict) -> list[str]:
     # ---- 10. 占位假名 ----
     placeholder = re.compile(r"^(?:景点|酒店|餐厅|Attraction|Hotel|Restaurant)\s*\d+$")
     names = [str(hotel.get("name"))] if hotel else []
+    names += [str(s.get('hotel', {}).get('name')) for s in stays]
     names += [str(s.get("name")) for day in days for s in (day.get("attractions") or [])]
     names += [str(m.get("name")) for day in days for m in (day.get("meals") or [])]
     for name in names:
@@ -709,6 +752,9 @@ def run_case(case: Case, graph, planning, store) -> CaseResult:
             "budget": data.get("budget"),
             "hotel": data.get("hotel"),
             "hotel_nights": data.get("hotel_nights"),
+            "accommodation_version": data.get("accommodation_version"),
+            "stays": data.get("stays"),
+            "stay_comparison": data.get("stay_comparison"),
             "constraint_report": data.get("constraint_report"),
             "weather": [
                 {"date": w.get("date"), "beyond_window": w.get("beyond_window"),
@@ -720,6 +766,8 @@ def run_case(case: Case, graph, planning, store) -> CaseResult:
                  "attractions": [s.get("name") for s in (day.get("attractions") or [])],
                  "meals": [m.get("name") for m in (day.get("meals") or [])],
                  "total_minutes": day.get("total_minutes"),
+                 "route_start": day.get("route_start"), "route_end": day.get("route_end"),
+                 "hotel_change": day.get("hotel_change"), "route_legs": day.get("route_legs"),
                  "day_total_cost": day.get("day_total_cost")}
                 for day in days
             ],

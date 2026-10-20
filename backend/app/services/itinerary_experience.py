@@ -116,8 +116,8 @@ def _select_meals(day, restaurants, hotel, used, preserve=False, budget_limit=No
                 duplicate_with_alternative = (chosen.poi_id in used_ids
                                               and bool(feasible_ids - today - used_ids))
                 too_far = (needs.travel_scope != "citywide"
-                           and distances(chosen, anchor, following)[0] > 4
-                           and any(distances(r, anchor, following)[0] <= 4 for r in feasible))
+                           and distances(chosen, anchor, following, kind)[0] > 4
+                           and any(distances(r, anchor, following, kind)[0] <= 4 for r in feasible))
                 if chosen.poi_id not in feasible_ids or duplicate_with_alternative or too_far:
                     chosen = None
         if chosen is None and restaurants:
@@ -156,6 +156,17 @@ def _clock(minutes):
     return f"{minutes//60:02d}:{minutes%60:02d}"
 
 
+def severe_weather(item):
+    item = _dump(item)
+    if item.get('beyond_window'):
+        return False
+    try:
+        hot = int(item.get('day_temp') or 0) >= 38
+    except (ValueError, TypeError):
+        hot = False
+    return hot or any(t in str(item.get('day_weather') or '') for t in ('暴雨', '大雨', '雷', '暴雪', '沙尘', '台风'))
+
+
 def _weather_problems(day, weather):
     item = next((_dump(w) for w in weather if _dump(w).get("date")==day.get("date")), None)
     if not item or item.get("beyond_window"):
@@ -167,9 +178,11 @@ def _weather_problems(day, weather):
         hot = int(item.get("day_temp") or 0) >= 38
     except (ValueError,TypeError):
         hot = False
-    extreme = any(t in text for t in ("暴雨","大雨","雷","暴雪","沙尘","台风")) or hot
+    extreme = severe_weather(item)
     rainy = any(t in text for t in ("雨","雪"))
-    outdoor = [s for s in day.get("attractions",[]) if any(t in str(s.get("category") or "")+s.get("name","") for t in ("公园","风景","山","湖","海滩","动物园","植物园","古道","湿地"))]
+    indoor_names = ('博物馆', '美术馆', '科技馆', '水族馆', '海洋馆')
+    outdoor = [s for s in day.get("attractions",[]) if not any(t in s.get('name', '') for t in indoor_names)
+               and any(t in str(s.get("category") or "")+s.get("name","") for t in ("公园","风景","山","湖","海滩","动物园","植物园","古道","湿地"))]
     if extreme and outdoor:
         return [f"{day['date']} 预报 {text}{' / 高温' if hot else ''}，仍安排户外景点 {'、'.join(s['name'] for s in outdoor)}；请换到其他日期或选择室内候选。"], []
     if rainy and outdoor:
@@ -201,14 +214,23 @@ def _day_over_limit(day, max_minutes):
 
 def validate_experience(plan, state=None):
     state = state or {}
+    if state.get('request'):
+        from .intercity import effective_request
+        state = {**state, 'request': effective_request(state['request'], plan)}
     if not state.get("experience_enabled") and not any(d.get("schedule") for d in plan.get("days",[])):
         return []
     reasons=[]
     pool={str(_dump(r).get("poi_id")):_dump(r) for r in state.get("restaurants",[])} if "restaurants" in state else None
     for day in plan.get("days",[]):
         kinds=[m.get("type") for m in day.get("meals",[])]
-        if sorted(kinds)!=["breakfast","dinner","lunch"]:
-            reasons.append(f"{day.get('date')} 必须有且仅有早中晚三餐。")
+        expected_meals = ['breakfast', 'lunch', 'dinner']
+        window = None
+        if plan.get('accommodation_version', 0) >= 11 and state.get('request'):
+            from .day_window import policy
+            window = policy(state['request'], day.get('date'))
+            expected_meals = window['meal_types']
+        if sorted(kinds)!=sorted(expected_meals):
+            reasons.append(f"{day.get('date')} 餐次未匹配到离时间窗口，应为 {expected_meals}。")
         for meal in day.get("meals",[]):
             if not meal.get("restaurant_id") or (pool is not None and meal["restaurant_id"] not in pool):
                 reasons.append(f"{day.get('date')} 的{meal.get('name')}缺少已核验餐饮候选。")
@@ -229,7 +251,7 @@ def validate_experience(plan, state=None):
             if visits.get(spot.get("poi_id") or spot.get("name"),0)<max(30,int(spot.get("visit_duration") or 120)):
                 reasons.append(f"{day.get('date')} 未给景点 {spot.get('name')} 留足建议游玩时间。")
         cursor=None
-        meal_order=("breakfast","lunch","dinner")
+        meal_order=expected_meals
         meal_position=0
         for entry in schedule:
             try:
@@ -255,11 +277,19 @@ def validate_experience(plan, state=None):
             except (KeyError,ValueError,TypeError):
                 reasons.append(f"{day.get('date')} 的时间表有重叠、缺口或时长不一致。")
                 break
-        if schedule and meal_position!=3:
-            reasons.append(f"{day.get('date')} 的时间表必须分别安排早中晚三餐。")
+        if schedule and meal_position!=len(expected_meals):
+            reasons.append(f"{day.get('date')} 的时间表餐次必须匹配 {expected_meals}。")
+        if window and schedule:
+            first_time = _clock_minutes(schedule[0].get('start_time'))
+            last_time = _clock_minutes(schedule[-1].get('end_time'))
+            if first_time is not None and first_time < window['start_minutes']:
+                reasons.append(f"{day.get('date')} 行程开始早于用户到达时间。")
+            if last_time is not None and last_time > window['end_minutes']:
+                reasons.append(f"{day.get('date')} 行程结束晚于用户离开时间或跨越当日。")
         if total > MAX_COMFORT_MINUTES:
             reasons.append(f"{day.get('date')} 游玩、餐饮、交通与休息合计 {total} 分钟，超过舒适上限 {MAX_COMFORT_MINUTES} 分钟；请减少景点或按片区重排。")
-        severe,_=_weather_problems(day,state.get("weather",plan.get("weather_info",[])))
+        remote = plan.get('accommodation_version', 0) >= 11 and any(a.get('retrieval_scope') == 'surrounding' for a in day.get('attractions', []))
+        severe,_=_weather_problems(day, [] if remote else state.get("weather",plan.get("weather_info",[])))
         reasons.extend(severe)
     return reasons
 
@@ -268,11 +298,20 @@ def _schedule_day(day, sequence, hotel, request, cache, quota, calls):
     """Build the auditable clock from actual cached routes, never from scores."""
     schedule=[]
     legs=[]
-    cursor=8*60+30
-    previous=hotel if hotel and _loc(hotel) else None
+    start_minutes = day.get('start_minutes', 8*60+30)
+    cursor=start_minutes
+    start = day.get('route_start') if day.get('dated_boundaries') else hotel
+    end = day.get('route_end') if day.get('dated_boundaries') else hotel
+    if day.get('transfer_minutes'):
+        # Half before departure (packing/checkout), half at arrival (checkin).
+        length = day['transfer_minutes'] // 2
+        schedule.append({'kind':'rest','name':'行李整理与退房预留','start_time':_clock(cursor),
+                         'end_time':_clock(cursor+length),'duration_minutes':length})
+        cursor += length
+    previous=start if start and _loc(start) else None
     active=0
     rest=0
-    for position,(kind,item,duration) in enumerate(sequence + ([("return",hotel,0)] if hotel and _loc(hotel) else [])):
+    for position,(kind,item,duration) in enumerate(sequence + ([("return",end,0)] if end and _loc(end) else [])):
         if previous and _loc(previous) and _loc(item):
             route=_route(previous,item,request.transportation,request.city,cache,quota,calls)
             leg={"from_name":previous["name"],"to_name":item["name"],"from_id":previous.get("poi_id") or previous.get("restaurant_id"),
@@ -287,7 +326,7 @@ def _schedule_day(day, sequence, hotel, request, cache, quota, calls):
             rest+=buffer
         if kind=="return":
             break
-        minimum = item.get("_earliest_start", {"lunch": 12*60, "dinner": 18*60}.get(item.get("type"), cursor)) if kind == "meal" else cursor
+        minimum = item.get("_earliest_start", {"breakfast": 7*60, "lunch": 12*60, "dinner": 18*60}.get(item.get("type"), cursor)) if kind == "meal" else cursor
         if cursor < minimum:
             spare = minimum-cursor
             schedule.append({"kind":"rest","name":"自由活动与用餐前弹性时间","start_time":_clock(cursor),"end_time":_clock(minimum),"duration_minutes":spare})
@@ -305,15 +344,46 @@ def _schedule_day(day, sequence, hotel, request, cache, quota, calls):
             active=0
         if _loc(item):
             previous=item
+    if not schedule and not sequence and day.get('dated_boundaries') and (start or end):
+        schedule.append({'kind':'rest','name':'仅接驳日整理与出入住宿预留', 'start_time':_clock(cursor),
+                         'end_time':_clock(cursor+30),'duration_minutes':30})
+        cursor += 30
+        rest += 30
+    if (day.get('dated_boundaries') and end and end.get('operations_evidence_url')
+            and end.get('check_in_after') and (not start or start.get('poi_id') != end.get('poi_id'))):
+        opening = _clock_minutes(end['check_in_after'])
+        if opening is not None and cursor < opening:
+            schedule.append({'kind':'rest','name':'等待已核验的酒店入住窗口','start_time':_clock(cursor),
+                             'end_time':_clock(opening),'duration_minutes':opening-cursor})
+            rest += opening-cursor
+            cursor = opening
+    if day.get('transfer_minutes'):
+        length = day['transfer_minutes'] - day['transfer_minutes']//2
+        schedule.append({'kind':'rest','name':'入住与行李安置预留','start_time':_clock(cursor),
+                         'end_time':_clock(cursor+length),'duration_minutes':length})
+        cursor += length
     day.update(route_legs=legs,schedule=schedule,visit_minutes=sum(d for k,_,d in sequence if k=="attraction"),
-               travel_minutes=sum(l["duration_minutes"] for l in legs),rest_minutes=rest,total_minutes=cursor-(8*60+30))
+               travel_minutes=sum(l["duration_minutes"] for l in legs),rest_minutes=rest+day.get("transfer_minutes",0),total_minutes=cursor-start_minutes)
 
 
 def enrich_experience(plan, state, day_indices=None):
+    from .intercity import effective_request
+    original = state['request']
+    state['request'] = effective_request(original, plan)
+    try:
+        return _enrich_experience(plan, state, day_indices)
+    finally:
+        state['request'] = original
+
+
+def _enrich_experience(plan, state, day_indices=None):
     result=copy.deepcopy(plan)
     if not state.get("experience_enabled"):
         return result, [], []
     request=state["request"]
+    if result.get('accommodation_version', 0) >= 11:
+        from .segmented_experience import enrich_segmented
+        return enrich_segmented(result, state, day_indices)
     from .ticket_pricing import refresh_plan_tickets
     result = refresh_plan_tickets(result, request, day_indices, lookup_state=state)
     extra_calls, extra_warnings = [], []
@@ -443,8 +513,52 @@ def enrich_experience(plan, state, day_indices=None):
     if not automatic and can_trim(state):
         max_minutes = request.requirements.pace.max_day_minutes
 
+        # When a late return is the bottleneck, compare a few real dinner
+        # candidates near the hotel. Preserve user edits and food-first anchors.
+        from .food_recommendation import distances, nearby_pool
+        from .requirements import restaurant_allowed
+        dinner_repairs = []
+        all_meal_uses = Counter(m.get('restaurant_id') for d in result.get('days', []) for m in d.get('meals', []))
+        for day, _ in prepared:
+            if not hotel or not _day_over_limit(day, max_minutes) or not day.get('attractions'):
+                continue
+            anchor = day['attractions'][-1]
+            eligible = nearby_pool([r for r in restaurants if restaurant_allowed(r, request.requirements.food)],
+                                   anchor, hotel, 'dinner', citywide=request.requirements.food.travel_scope == 'citywide')
+            original = copy.deepcopy(day['meals'])
+            old_dinner = next((m.get('restaurant_id') for m in original if m['type'] == 'dinner'), None)
+            other_uses = all_meal_uses.copy()
+            if old_dinner:
+                other_uses[old_dinner] -= 1
+            def clock_score(candidate_day):
+                sequence = _ordered(candidate_day, hotel, request.transportation, duration, max_minutes)
+                timing = simulate(sequence, hotel, duration)
+                identity = next((m.get('restaurant_id') for m in candidate_day['meals'] if m['type'] == 'dinner'), None)
+                return (timing['late_meal_minutes'], max(0, timing['total_minutes'] - max_minutes),
+                        other_uses[identity] > 0, timing['total_minutes']), sequence
+            best, best_sequence = clock_score(day)
+            best_meals = original
+            for restaurant in sorted(eligible, key=lambda r: distances(r, hotel, None)[0])[:3]:
+                if distances(restaurant, hotel, None)[0] > 4:
+                    continue
+                trial = {**day, 'meals': [meal_from_restaurant(restaurant, 'dinner') if m['type'] == 'dinner' else m for m in original]}
+                score, sequence = clock_score(trial)
+                if score < best:
+                    best, best_sequence, best_meals = score, sequence, trial['meals']
+            if best_meals != original:
+                day['meals'] = best_meals
+                if old_dinner:
+                    all_meal_uses[old_dinner] -= 1
+                all_meal_uses[next(m['restaurant_id'] for m in best_meals if m['type'] == 'dinner')] += 1
+                warnings.append(f"{day['date']} 为减少晚餐后的长途返程，调整为酒店附近真实餐厅；路程与预算重新复核。")
+                dinner_repairs.append((day, best_sequence))
+        if dinner_repairs:
+            prefetch(dinner_repairs)
+            for day, sequence in dinner_repairs:
+                _schedule_day(day, sequence, hotel, request, cache, quota, calls)
+
         def estimate_clock(day, comfort):
-            seq = _ordered(day, hotel, request.transportation, comfort_limit=comfort)
+            seq = _ordered(day, hotel, request.transportation, duration, comfort_limit=comfort)
             timing = simulate(seq, hotel, duration)
             return timing["total_minutes"], timing["late_meal_minutes"]
 
@@ -469,7 +583,7 @@ def enrich_experience(plan, state, day_indices=None):
                     removed += 1
                     select_day_meals(day)
                     est_total, late = estimate_clock(day, comfort)
-                sequence = _ordered(day, hotel, request.transportation, comfort_limit=comfort)
+                sequence = _ordered(day, hotel, request.transportation, duration, comfort_limit=comfort)
                 tightened.append((day, sequence))
             prefetch(tightened)
             for day, sequence in tightened:
@@ -513,6 +627,8 @@ def enrich_node(state):
     if audit.get("warnings"):
         warnings = [*warnings, *[str(item) for item in audit["warnings"]]]
     feedback = [str(audit_error)] if audit_error else []
+    if not state.get('composition_valid', True) and state.get('validate_error'):
+        feedback.append(str(state['validate_error']))
     feedback.extend(errors)
     if feedback and state.get('unified_planning'):
         from .unified_planning import correction_context
@@ -538,6 +654,8 @@ def enrich_node(state):
             "ticket_lookup_results":state.get("ticket_lookup_results",{}),
             "ticket_estimates":state.get("ticket_estimates",{}),
             "ticket_estimate_attempted":state.get("ticket_estimate_attempted",False),
+            "ticket_estimate_attempted_ids":state.get("ticket_estimate_attempted_ids",[]),
+            "ticket_estimate_calls":state.get("ticket_estimate_calls",0),
             "usage":state.pop('_ticket_usage', {}),
             "ticket_lookup_elapsed_seconds":state.get("ticket_lookup_elapsed_seconds",0),
             "route_query_count":state.get("route_query_count",0),

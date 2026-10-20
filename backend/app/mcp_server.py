@@ -25,10 +25,16 @@ def geocode(address: str, city: str | None = None) -> dict:
 
 
 @server.tool()
-def search_poi(keywords: str, city: str, offset: int = 20, page: int = 1) -> dict:
+def search_poi(keywords: str, city: str, offset: int = 20, page: int = 1, citylimit: bool = True) -> dict:
     if not 1 <= offset <= 20 or not 1 <= page <= 10:
         return {"status": "error", "error_code": "INVALID_REQUEST", "retryable": False}
-    return _run(amap.search_poi, keywords, city, offset=offset, page=page)
+    options = {} if citylimit else {'citylimit': False}
+    return _run(amap.search_poi, keywords, city, offset=offset, page=page, **options)
+
+
+@server.tool()
+def search_hotels_nearby(center: Location, radius: int = 20000, limit: int = 12) -> dict:
+    return _run(amap.search_hotels_nearby, center, radius, limit)
 
 
 @server.tool()

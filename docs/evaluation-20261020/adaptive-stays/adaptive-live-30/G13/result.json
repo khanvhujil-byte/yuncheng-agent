@@ -1,0 +1,2196 @@
+{
+  "case_id": "G13",
+  "name": "厦门10天长行程超窗口6天",
+  "kind": "generate",
+  "passed": true,
+  "violations": [],
+  "duration_s": 96.33,
+  "error_code": null,
+  "success": true,
+  "days": 10,
+  "response_summary": {
+    "success": true,
+    "error_code": null,
+    "message": "",
+    "cached": false,
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：2026-10-24、2026-10-25、2026-10-26、2026-10-27、2026-10-28、2026-10-29。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-21 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0LG9LXY1F,B02500VNHR,B0K0HK93G5",
+      "2026-10-21 dinner 重复餐厅 B0KANHYTCE，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5",
+      "2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B02500S00Q",
+      "2026-10-22 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B02500S00Q",
+      "2026-10-22 dinner 重复餐厅 B0FFGJYCFY，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5",
+      "2026-10-23 breakfast 餐厅不符合就近/餐次条件，可选ID：B0MDVZNEVK,B02500S00Q",
+      "2026-10-23 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0MDVZNEVK",
+      "2026-10-23 dinner 重复餐厅 B0KANHYTCE，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5",
+      "2026-10-24 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0LG9LXY1F,B0K0HK93G5",
+      "2026-10-24 lunch 餐厅不符合就近/餐次条件，可选ID：B0LG9LXY1F,B0KANHYTCE,B0FFGJYCFY,B02500S0HE,B0FFF2I56V,B0K0HK93G5,B0MRDG8AIY,B02500S2IC",
+      "2026-10-24 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-24 dinner 重复餐厅 B0FFGJYCFY，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5,B0FFGJYADH,B0FFF4K1BR,B0FFFQTM93,B0HU24SJM5,B0I6TUOD6K",
+      "2026-10-25 breakfast 餐厅不符合就近/餐次条件，可选ID：B0MDVZNEVK,B02500S00Q",
+      "2026-10-25 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0MDVZNEVK",
+      "2026-10-25 lunch 重复餐厅 B0FFKQVX4S，附近尚有未使用候选：B0FFGJYADH,B0FFF4K1BR,B0FFFQTM93,B0HU24SJM5,B0I6TUOD6K,B0G1NM46QX,B0FFK6MO6V,B0FFJ9TXT2",
+      "2026-10-25 dinner 重复餐厅 B0KANHYTCE，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5,B0FFGJYADH,B0FFF4K1BR,B0FFFQTM93,B0HU24SJM5,B0I6TUOD6K",
+      "2026-10-26 breakfast 餐厅不符合就近/餐次条件，可选ID：B0MDVZNEVK,B02500S00Q",
+      "2026-10-26 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0MDVZNEVK",
+      "2026-10-26 dinner 重复餐厅 B0FFGJYCFY，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5",
+      "2026-10-27 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0LG9LXY1F,B0K0HK93G5",
+      "2026-10-27 lunch 餐厅不符合就近/餐次条件，可选ID：B02500363R",
+      "2026-10-27 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+      "2026-10-27 dinner 重复餐厅 B0KANHYTCE，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5,B02500363R",
+      "2026-10-28 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0LG9LXY1F,B0K0HK93G5",
+      "2026-10-28 dinner 重复餐厅 B0FFGJYCFY，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5,B0MRDG8AIY,B025003G71,B02500363R",
+      "2026-10-29 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0LG9LXY1F,B0K0HK93G5",
+      "2026-10-29 lunch 重复餐厅 B0KANHYTCE，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5",
+      "2026-10-29 dinner 重复餐厅 B0FFGJYCFY，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「大德记沙滩」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「南普陀寺」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-23 为给三餐、真实通勤与休息留足时间，未安排可选景点「厦门园林植物园」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-25 为给三餐、真实通勤与休息留足时间，未安排可选景点「梅海花台」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-24：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-25：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-25：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-26：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-26：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-27：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-27：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-28：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-28：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-29：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-29：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-29：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-29 lunch 重复餐厅 B02500S0HE，附近尚有未使用候选：B0M6CUUYCZ,B0FFF5VBLN,B0FFH30EW4,B02500S87U,B025001IUV,B0FFF67SE7,B025003ROG,B0H01NM6U6",
+      "2026-10-29 dinner 重复餐厅 B0FFGJYCFY，附近尚有未使用候选：B0M6CUUYCZ,B0FFF5VBLN,B0FFH30EW4,B02500S87U,B025001IUV,B0FFF67SE7,B025003ROG,B0H01NM6U6"
+    ],
+    "budget": {
+      "ticket_reserve_amount": 100,
+      "total_attractions": 380,
+      "total_hotels": 2340,
+      "total_meals": 922,
+      "total_transportation": 400,
+      "total": 4042,
+      "items": [
+        {
+          "category": "attraction",
+          "name": "海湾公园",
+          "day_index": 0,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：海湾公园为免费开放的城市公园，日常无门票。"
+        },
+        {
+          "category": "meal",
+          "name": "陕西家厨小吃(世纪海湾店)",
+          "day_index": 0,
+          "amount": 17,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "草莓夫妇丨厦门菜(思北店)",
+          "day_index": 0,
+          "amount": 102,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "黄玉兰鱼丸",
+          "day_index": 0,
+          "amount": 32,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "日光岩",
+          "day_index": 1,
+          "amount": 50,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：日光岩为鼓浪屿核心收费景点，日常成人挂牌价约50元。"
+        },
+        {
+          "category": "attraction",
+          "name": "鼓浪屿管风琴艺术中心",
+          "day_index": 1,
+          "amount": 50,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：鼓浪屿管风琴艺术中心为独立收费展馆，日常成人票约50元。"
+        },
+        {
+          "category": "meal",
+          "name": "苏记莆田卤面馆(镇邦路店)",
+          "day_index": 1,
+          "amount": 21,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "卢阿嬷的手艺(龙头裕泰店)",
+          "day_index": 1,
+          "amount": 25,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "芋包王闽南茶楼",
+          "day_index": 1,
+          "amount": 45,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "沙坡尾",
+          "day_index": 2,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：沙坡尾为开放街区，日常无门票。"
+        },
+        {
+          "category": "attraction",
+          "name": "厦门世茂双子塔",
+          "day_index": 2,
+          "amount": 180,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：厦门世茂双子塔观光厅日常成人票约180元。"
+        },
+        {
+          "category": "meal",
+          "name": "月华沙茶面店(中山路店)",
+          "day_index": 2,
+          "amount": 21,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "南普陀素面馆",
+          "day_index": 2,
+          "amount": 70,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "莲欢海蛎煎(局口横巷)",
+          "day_index": 2,
+          "amount": 30,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "钟鼓索道",
+          "day_index": 3,
+          "amount": 70,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：钟鼓索道日常成人往返票价约70元。"
+        },
+        {
+          "category": "meal",
+          "name": "金记丨沙茶面·厦门名小吃(中山路店)",
+          "day_index": 3,
+          "amount": 37,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "厦门大学思明校区勤业餐厅",
+          "day_index": 3,
+          "amount": 22,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "八婆婆烧仙草(人和店)",
+          "day_index": 3,
+          "amount": 9,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "厦门山海健康步道",
+          "day_index": 4,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：厦门山海健康步道为免费开放步道，无门票。"
+        },
+        {
+          "category": "attraction",
+          "name": "珍珠湾沙滩",
+          "day_index": 4,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：珍珠湾沙滩为免费开放沙滩，无门票。"
+        },
+        {
+          "category": "meal",
+          "name": "伊兰牛肉拉面馆(华侨海景城店)",
+          "day_index": 4,
+          "amount": 17,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "思北花生汤",
+          "day_index": 4,
+          "amount": 16,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "林氏沙茶面(镇邦路店)",
+          "day_index": 4,
+          "amount": 30,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "曾厝垵景区",
+          "day_index": 5,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：曾厝垵景区为开放文创街区，日常无门票。"
+        },
+        {
+          "category": "meal",
+          "name": "东记鱼粥(厦门老字号店)",
+          "day_index": 5,
+          "amount": 46,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "沙家邦·你好·沙县(厦大学生公寓店)",
+          "day_index": 5,
+          "amount": 14,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "蛋满灌(镇邦店)",
+          "day_index": 5,
+          "amount": 20,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "上李水库公园",
+          "day_index": 6,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：上李水库公园为免费开放公园，无门票。"
+        },
+        {
+          "category": "attraction",
+          "name": "万石山国家重点风景名胜区",
+          "day_index": 6,
+          "amount": 30,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：万石山国家重点风景名胜区核心收费区域与园林植物园门票联动，日常成人约30元。"
+        },
+        {
+          "category": "meal",
+          "name": "佳味再添小吃店",
+          "day_index": 6,
+          "amount": 15,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "文屏面线糊(文屏山庄店)",
+          "day_index": 6,
+          "amount": 15,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "大中沙茶面",
+          "day_index": 6,
+          "amount": 33,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "狐尾山公园",
+          "day_index": 7,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：狐尾山公园为免费开放城市公园，无门票。"
+        },
+        {
+          "category": "attraction",
+          "name": "筼筜湖",
+          "day_index": 7,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：筼筜湖为免费开放城市湖泊景区，无门票。"
+        },
+        {
+          "category": "meal",
+          "name": "摇滚粥(大同路店)",
+          "day_index": 7,
+          "amount": 48,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "中国兰州拉面(海明大厦分店)",
+          "day_index": 7,
+          "amount": 15,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "黄则和花生汤(中山路总店)",
+          "day_index": 7,
+          "amount": 26,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "厦门白鹭洲公园",
+          "day_index": 8,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：厦门白鹭洲公园为免费开放公园，无门票。"
+        },
+        {
+          "category": "attraction",
+          "name": "南湖公园",
+          "day_index": 8,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：南湖公园为免费开放城市公园，无门票。"
+        },
+        {
+          "category": "meal",
+          "name": "苏记莆田卤面馆(镇邦路店)",
+          "day_index": 8,
+          "amount": 21,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "沙茶林(太子山庄店)",
+          "day_index": 8,
+          "amount": 18,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "蓝家军沙茶面·儿时味道",
+          "day_index": 8,
+          "amount": 29,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "钢琴码头",
+          "day_index": 9,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：钢琴码头为鼓浪屿开放码头区域，无门票。"
+        },
+        {
+          "category": "meal",
+          "name": "月华沙茶面店(中山路店)",
+          "day_index": 9,
+          "amount": 21,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "九市牛肉店(大同店)",
+          "day_index": 9,
+          "amount": 27,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "鹭江宾馆·观海餐厅",
+          "day_index": 9,
+          "amount": 80,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "餐厅未提供人均价格，按每人每餐固定规则预留；不是餐厅报价。"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-20 住宿：家家乐酒店(厦门中山路步行街镇邦店)",
+          "day_index": 0,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-21 住宿：家家乐酒店(厦门中山路步行街镇邦店)",
+          "day_index": 1,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-22 住宿：家家乐酒店(厦门中山路步行街镇邦店)",
+          "day_index": 2,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-23 住宿：家家乐酒店(厦门中山路步行街镇邦店)",
+          "day_index": 3,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-24 住宿：家家乐酒店(厦门中山路步行街镇邦店)",
+          "day_index": 4,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-25 住宿：家家乐酒店(厦门中山路步行街镇邦店)",
+          "day_index": 5,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-26 住宿：家家乐酒店(厦门中山路步行街镇邦店)",
+          "day_index": 6,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-27 住宿：家家乐酒店(厦门中山路步行街镇邦店)",
+          "day_index": 7,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-28 住宿：家家乐酒店(厦门中山路步行街镇邦店)",
+          "day_index": 8,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "transportation",
+          "name": "市内交通（公共交通）",
+          "day_index": null,
+          "amount": 400,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "按每人每天 40 元的固定表估算"
+        }
+      ],
+      "known_total": 0,
+      "estimated_total": 4042,
+      "unknown_items": [],
+      "limit": null,
+      "limit_status": "none",
+      "limit_basis": "未设置预算上限。当前口径：已知 0 元 + 估算 4042 元 = 4042 元。"
+    },
+    "hotel": {
+      "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+      "poi_id": "B0FFHMTNUP",
+      "address": "镇邦路40-42号",
+      "location": {
+        "longitude": 118.07614,
+        "latitude": 24.454396
+      },
+      "price_range": "",
+      "rating": "4.3",
+      "distance": "距最终行程景点加权平均 3.0 km（直线估计）",
+      "type": "宾馆酒店",
+      "estimated_cost": 260,
+      "cost_status": "estimated",
+      "cost_source": "static_estimate",
+      "price_evidence_url": null,
+      "nights": 9,
+      "check_in_after": null,
+      "check_in_before": null,
+      "check_out_before": null,
+      "operations_evidence_url": null
+    },
+    "hotel_nights": 9,
+    "accommodation_version": 11,
+    "stays": [
+      {
+        "check_in": "2026-10-20",
+        "check_out": "2026-10-21",
+        "hotel": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "poi_id": "B0FFHMTNUP",
+          "address": "镇邦路40-42号",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "price_range": "",
+          "rating": "4.3",
+          "distance": "",
+          "type": "宾馆酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "首晚起连住中山路镇邦片区，步行可达老城餐饮与轮渡码头，避免多次换住整理行李"
+      },
+      {
+        "check_in": "2026-10-21",
+        "check_out": "2026-10-22",
+        "hotel": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "poi_id": "B0FFHMTNUP",
+          "address": "镇邦路40-42号",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "price_range": "",
+          "rating": "4.3",
+          "distance": "",
+          "type": "宾馆酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "次日鼓浪屿需从轮渡出发，住老城通勤最短，继续连住"
+      },
+      {
+        "check_in": "2026-10-22",
+        "check_out": "2026-10-23",
+        "hotel": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "poi_id": "B0FFHMTNUP",
+          "address": "镇邦路40-42号",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "price_range": "",
+          "rating": "4.3",
+          "distance": "",
+          "type": "宾馆酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "沙坡尾、双子塔方向可公交直达，返程仍回老城，连住减少换住"
+      },
+      {
+        "check_in": "2026-10-23",
+        "check_out": "2026-10-24",
+        "hotel": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "poi_id": "B0FFHMTNUP",
+          "address": "镇邦路40-42号",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "price_range": "",
+          "rating": "4.3",
+          "distance": "",
+          "type": "宾馆酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "钟鼓索道与万石山片区公交可达，保持连住"
+      },
+      {
+        "check_in": "2026-10-24",
+        "check_out": "2026-10-25",
+        "hotel": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "poi_id": "B0FFHMTNUP",
+          "address": "镇邦路40-42号",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "price_range": "",
+          "rating": "4.3",
+          "distance": "",
+          "type": "宾馆酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "山海健康步道与珍珠湾方向当日往返，市区连住更省换住时间"
+      },
+      {
+        "check_in": "2026-10-25",
+        "check_out": "2026-10-26",
+        "hotel": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "poi_id": "B0FFHMTNUP",
+          "address": "镇邦路40-42号",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "price_range": "",
+          "rating": "4.3",
+          "distance": "",
+          "type": "宾馆酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "曾厝垵环岛路方向当日往返，继续连住"
+      },
+      {
+        "check_in": "2026-10-26",
+        "check_out": "2026-10-27",
+        "hotel": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "poi_id": "B0FFHMTNUP",
+          "address": "镇邦路40-42号",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "price_range": "",
+          "rating": "4.3",
+          "distance": "",
+          "type": "宾馆酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "上李水库与万石山片区当日往返，连住"
+      },
+      {
+        "check_in": "2026-10-27",
+        "check_out": "2026-10-28",
+        "hotel": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "poi_id": "B0FFHMTNUP",
+          "address": "镇邦路40-42号",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "price_range": "",
+          "rating": "4.3",
+          "distance": "",
+          "type": "宾馆酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "狐尾山、筼筜湖片区公交可达，连住"
+      },
+      {
+        "check_in": "2026-10-28",
+        "check_out": "2026-10-29",
+        "hotel": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "poi_id": "B0FFHMTNUP",
+          "address": "镇邦路40-42号",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "price_range": "",
+          "rating": "4.3",
+          "distance": "",
+          "type": "宾馆酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "白鹭洲、南湖公园为市内活动，末晚仍住老城便于次日轮渡与返程"
+      }
+    ],
+    "stay_comparison": {
+      "strategy": "same_hotel",
+      "hotel_changes": 0,
+      "travel_minutes": 1250,
+      "transfer_minutes": 0,
+      "basis": "路线工具核算所选方案；未取得备选实测时，不宣称节省具体分钟。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "家家乐酒店(厦门中山路步行街镇邦店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "晴"
+      },
+      {
+        "date": "2026-10-21",
+        "beyond_window": false,
+        "day_weather": "多云"
+      },
+      {
+        "date": "2026-10-22",
+        "beyond_window": false,
+        "day_weather": "多云"
+      },
+      {
+        "date": "2026-10-23",
+        "beyond_window": false,
+        "day_weather": "多云"
+      },
+      {
+        "date": "2026-10-24",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-10-25",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-10-26",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-10-27",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-10-28",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-10-29",
+        "beyond_window": true,
+        "day_weather": ""
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-20",
+        "day_index": 0,
+        "attractions": [
+          "海湾公园"
+        ],
+        "meals": [
+          "陕西家厨小吃(世纪海湾店)",
+          "草莓夫妇丨厦门菜(思北店)",
+          "黄玉兰鱼丸"
+        ],
+        "total_minutes": 647,
+        "route_start": null,
+        "route_end": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "poi_id": "B0FFHMTNUP",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "陕西家厨小吃(世纪海湾店)",
+            "to_name": "海湾公园",
+            "from_id": "B0GR3KHTVN",
+            "to_id": "B0250041BK",
+            "mode": "公共交通",
+            "duration_minutes": 16,
+            "distance_meters": 1794,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "海湾公园",
+            "to_name": "草莓夫妇丨厦门菜(思北店)",
+            "from_id": "B0250041BK",
+            "to_id": "B0LG9LXY1F",
+            "mode": "公共交通",
+            "duration_minutes": 18,
+            "distance_meters": 2130,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "草莓夫妇丨厦门菜(思北店)",
+            "to_name": "黄玉兰鱼丸",
+            "from_id": "B0LG9LXY1F",
+            "to_id": "B0KANHYTCE",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "黄玉兰鱼丸",
+            "to_name": "家家乐酒店(厦门中山路步行街镇邦店)",
+            "from_id": "B0KANHYTCE",
+            "to_id": "B0FFHMTNUP",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 451
+      },
+      {
+        "date": "2026-10-21",
+        "day_index": 1,
+        "attractions": [
+          "日光岩",
+          "鼓浪屿管风琴艺术中心"
+        ],
+        "meals": [
+          "苏记莆田卤面馆(镇邦路店)",
+          "卢阿嬷的手艺(龙头裕泰店)",
+          "芋包王闽南茶楼"
+        ],
+        "total_minutes": 647,
+        "route_start": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "poi_id": "B0FFHMTNUP",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "poi_id": "B0FFHMTNUP",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "家家乐酒店(厦门中山路步行街镇邦店)",
+            "to_name": "苏记莆田卤面馆(镇邦路店)",
+            "from_id": "B0FFHMTNUP",
+            "to_id": "B0FFHD5A43",
+            "mode": "公共交通",
+            "duration_minutes": 11,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "苏记莆田卤面馆(镇邦路店)",
+            "to_name": "日光岩",
+            "from_id": "B0FFHD5A43",
+            "to_id": "B0250045AI",
+            "mode": "公共交通",
+            "duration_minutes": 45,
+            "distance_meters": 2751,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "日光岩",
+            "to_name": "卢阿嬷的手艺(龙头裕泰店)",
+            "from_id": "B0250045AI",
+            "to_id": "B02500VNHR",
+            "mode": "公共交通",
+            "duration_minutes": 17,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "卢阿嬷的手艺(龙头裕泰店)",
+            "to_name": "鼓浪屿管风琴艺术中心",
+            "from_id": "B02500VNHR",
+            "to_id": "B0FFJD93NA",
+            "mode": "公共交通",
+            "duration_minutes": 14,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "鼓浪屿管风琴艺术中心",
+            "to_name": "芋包王闽南茶楼",
+            "from_id": "B0FFJD93NA",
+            "to_id": "B0FFGJYCFY",
+            "mode": "公共交通",
+            "duration_minutes": 43,
+            "distance_meters": 2273,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "芋包王闽南茶楼",
+            "to_name": "家家乐酒店(厦门中山路步行街镇邦店)",
+            "from_id": "B0FFGJYCFY",
+            "to_id": "B0FFHMTNUP",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 491
+      },
+      {
+        "date": "2026-10-22",
+        "day_index": 2,
+        "attractions": [
+          "沙坡尾",
+          "厦门世茂双子塔"
+        ],
+        "meals": [
+          "月华沙茶面店(中山路店)",
+          "南普陀素面馆",
+          "莲欢海蛎煎(局口横巷)"
+        ],
+        "total_minutes": 649,
+        "route_start": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "poi_id": "B0FFHMTNUP",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "poi_id": "B0FFHMTNUP",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "家家乐酒店(厦门中山路步行街镇邦店)",
+            "to_name": "月华沙茶面店(中山路店)",
+            "from_id": "B0FFHMTNUP",
+            "to_id": "B0FFF01QSW",
+            "mode": "公共交通",
+            "duration_minutes": 11,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "月华沙茶面店(中山路店)",
+            "to_name": "沙坡尾",
+            "from_id": "B0FFF01QSW",
+            "to_id": "B0HK94XSHB",
+            "mode": "公共交通",
+            "duration_minutes": 36,
+            "distance_meters": 4894,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "沙坡尾",
+            "to_name": "南普陀素面馆",
+            "from_id": "B0HK94XSHB",
+            "to_id": "B02500S00Q",
+            "mode": "公共交通",
+            "duration_minutes": 18,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "南普陀素面馆",
+            "to_name": "厦门世茂双子塔",
+            "from_id": "B02500S00Q",
+            "to_id": "B0FFHGHNQO",
+            "mode": "公共交通",
+            "duration_minutes": 19,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "厦门世茂双子塔",
+            "to_name": "莲欢海蛎煎(局口横巷)",
+            "from_id": "B0FFHGHNQO",
+            "to_id": "B02500S0HE",
+            "mode": "公共交通",
+            "duration_minutes": 23,
+            "distance_meters": 3629,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "莲欢海蛎煎(局口横巷)",
+            "to_name": "家家乐酒店(厦门中山路步行街镇邦店)",
+            "from_id": "B02500S0HE",
+            "to_id": "B0FFHMTNUP",
+            "mode": "公共交通",
+            "duration_minutes": 14,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 601
+      },
+      {
+        "date": "2026-10-23",
+        "day_index": 3,
+        "attractions": [
+          "钟鼓索道"
+        ],
+        "meals": [
+          "金记丨沙茶面·厦门名小吃(中山路店)",
+          "厦门大学思明校区勤业餐厅",
+          "八婆婆烧仙草(人和店)"
+        ],
+        "total_minutes": 648,
+        "route_start": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "poi_id": "B0FFHMTNUP",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "poi_id": "B0FFHMTNUP",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "家家乐酒店(厦门中山路步行街镇邦店)",
+            "to_name": "金记丨沙茶面·厦门名小吃(中山路店)",
+            "from_id": "B0FFHMTNUP",
+            "to_id": "B0JA9N8XDU",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "金记丨沙茶面·厦门名小吃(中山路店)",
+            "to_name": "厦门大学思明校区勤业餐厅",
+            "from_id": "B0JA9N8XDU",
+            "to_id": "B025003J71",
+            "mode": "公共交通",
+            "duration_minutes": 33,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "厦门大学思明校区勤业餐厅",
+            "to_name": "钟鼓索道",
+            "from_id": "B025003J71",
+            "to_id": "B02500SK4B",
+            "mode": "公共交通",
+            "duration_minutes": 22,
+            "distance_meters": 2431,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "钟鼓索道",
+            "to_name": "八婆婆烧仙草(人和店)",
+            "from_id": "B02500SK4B",
+            "to_id": "B0K0HK93G5",
+            "mode": "公共交通",
+            "duration_minutes": 26,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "八婆婆烧仙草(人和店)",
+            "to_name": "家家乐酒店(厦门中山路步行街镇邦店)",
+            "from_id": "B0K0HK93G5",
+            "to_id": "B0FFHMTNUP",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 438
+      },
+      {
+        "date": "2026-10-24",
+        "day_index": 4,
+        "attractions": [
+          "厦门山海健康步道",
+          "珍珠湾沙滩"
+        ],
+        "meals": [
+          "伊兰牛肉拉面馆(华侨海景城店)",
+          "思北花生汤",
+          "林氏沙茶面(镇邦路店)"
+        ],
+        "total_minutes": 646,
+        "route_start": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "poi_id": "B0FFHMTNUP",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "poi_id": "B0FFHMTNUP",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "家家乐酒店(厦门中山路步行街镇邦店)",
+            "to_name": "伊兰牛肉拉面馆(华侨海景城店)",
+            "from_id": "B0FFHMTNUP",
+            "to_id": "B02500S845",
+            "mode": "公共交通",
+            "duration_minutes": 18,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "伊兰牛肉拉面馆(华侨海景城店)",
+            "to_name": "厦门山海健康步道",
+            "from_id": "B02500S845",
+            "to_id": "B0FFLPCW7Y",
+            "mode": "公共交通",
+            "duration_minutes": 25,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "厦门山海健康步道",
+            "to_name": "思北花生汤",
+            "from_id": "B0FFLPCW7Y",
+            "to_id": "B0FFF2I56V",
+            "mode": "公共交通",
+            "duration_minutes": 31,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "思北花生汤",
+            "to_name": "珍珠湾沙滩",
+            "from_id": "B0FFF2I56V",
+            "to_id": "B0KGSHIA0P",
+            "mode": "公共交通",
+            "duration_minutes": 52,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "珍珠湾沙滩",
+            "to_name": "林氏沙茶面(镇邦路店)",
+            "from_id": "B0KGSHIA0P",
+            "to_id": "B0HRK49D0V",
+            "mode": "公共交通",
+            "duration_minutes": 52,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "林氏沙茶面(镇邦路店)",
+            "to_name": "家家乐酒店(厦门中山路步行街镇邦店)",
+            "from_id": "B0HRK49D0V",
+            "to_id": "B0FFHMTNUP",
+            "mode": "公共交通",
+            "duration_minutes": 11,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 363
+      },
+      {
+        "date": "2026-10-25",
+        "day_index": 5,
+        "attractions": [
+          "曾厝垵景区"
+        ],
+        "meals": [
+          "东记鱼粥(厦门老字号店)",
+          "沙家邦·你好·沙县(厦大学生公寓店)",
+          "蛋满灌(镇邦店)"
+        ],
+        "total_minutes": 646,
+        "route_start": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "poi_id": "B0FFHMTNUP",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "poi_id": "B0FFHMTNUP",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "家家乐酒店(厦门中山路步行街镇邦店)",
+            "to_name": "东记鱼粥(厦门老字号店)",
+            "from_id": "B0FFHMTNUP",
+            "to_id": "B02500RZDP",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "东记鱼粥(厦门老字号店)",
+            "to_name": "沙家邦·你好·沙县(厦大学生公寓店)",
+            "from_id": "B02500RZDP",
+            "to_id": "B0FFF4K1BR",
+            "mode": "公共交通",
+            "duration_minutes": 43,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "沙家邦·你好·沙县(厦大学生公寓店)",
+            "to_name": "曾厝垵景区",
+            "from_id": "B0FFF4K1BR",
+            "to_id": "B0J0XCJCJ6",
+            "mode": "公共交通",
+            "duration_minutes": 22,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "曾厝垵景区",
+            "to_name": "蛋满灌(镇邦店)",
+            "from_id": "B0J0XCJCJ6",
+            "to_id": "B0J2VZING1",
+            "mode": "公共交通",
+            "duration_minutes": 55,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "蛋满灌(镇邦店)",
+            "to_name": "家家乐酒店(厦门中山路步行街镇邦店)",
+            "from_id": "B0J2VZING1",
+            "to_id": "B0FFHMTNUP",
+            "mode": "公共交通",
+            "duration_minutes": 11,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 380
+      },
+      {
+        "date": "2026-10-26",
+        "day_index": 6,
+        "attractions": [
+          "上李水库公园",
+          "万石山国家重点风景名胜区"
+        ],
+        "meals": [
+          "佳味再添小吃店",
+          "文屏面线糊(文屏山庄店)",
+          "大中沙茶面"
+        ],
+        "total_minutes": 646,
+        "route_start": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "poi_id": "B0FFHMTNUP",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "poi_id": "B0FFHMTNUP",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "家家乐酒店(厦门中山路步行街镇邦店)",
+            "to_name": "佳味再添小吃店",
+            "from_id": "B0FFHMTNUP",
+            "to_id": "B0KKYA8HXS",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "佳味再添小吃店",
+            "to_name": "上李水库公园",
+            "from_id": "B0KKYA8HXS",
+            "to_id": "B0FFHJ45UE",
+            "mode": "公共交通",
+            "duration_minutes": 53,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "上李水库公园",
+            "to_name": "文屏面线糊(文屏山庄店)",
+            "from_id": "B0FFHJ45UE",
+            "to_id": "B0FFJ1QMAN",
+            "mode": "公共交通",
+            "duration_minutes": 26,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "文屏面线糊(文屏山庄店)",
+            "to_name": "万石山国家重点风景名胜区",
+            "from_id": "B0FFJ1QMAN",
+            "to_id": "B0FFFZ5L0I",
+            "mode": "公共交通",
+            "duration_minutes": 27,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "万石山国家重点风景名胜区",
+            "to_name": "大中沙茶面",
+            "from_id": "B0FFFZ5L0I",
+            "to_id": "B02500TQSK",
+            "mode": "公共交通",
+            "duration_minutes": 23,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "大中沙茶面",
+            "to_name": "家家乐酒店(厦门中山路步行街镇邦店)",
+            "from_id": "B02500TQSK",
+            "to_id": "B0FFHMTNUP",
+            "mode": "公共交通",
+            "duration_minutes": 11,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 393
+      },
+      {
+        "date": "2026-10-27",
+        "day_index": 7,
+        "attractions": [
+          "狐尾山公园",
+          "筼筜湖"
+        ],
+        "meals": [
+          "摇滚粥(大同路店)",
+          "中国兰州拉面(海明大厦分店)",
+          "黄则和花生汤(中山路总店)"
+        ],
+        "total_minutes": 646,
+        "route_start": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "poi_id": "B0FFHMTNUP",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "poi_id": "B0FFHMTNUP",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "家家乐酒店(厦门中山路步行街镇邦店)",
+            "to_name": "摇滚粥(大同路店)",
+            "from_id": "B0FFHMTNUP",
+            "to_id": "B0FFHW0D9B",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "摇滚粥(大同路店)",
+            "to_name": "狐尾山公园",
+            "from_id": "B0FFHW0D9B",
+            "to_id": "B0250043LT",
+            "mode": "公共交通",
+            "duration_minutes": 35,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "狐尾山公园",
+            "to_name": "中国兰州拉面(海明大厦分店)",
+            "from_id": "B0250043LT",
+            "to_id": "B0FFGX09RT",
+            "mode": "公共交通",
+            "duration_minutes": 19,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "中国兰州拉面(海明大厦分店)",
+            "to_name": "筼筜湖",
+            "from_id": "B0FFGX09RT",
+            "to_id": "B02500V28J",
+            "mode": "公共交通",
+            "duration_minutes": 24,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "筼筜湖",
+            "to_name": "黄则和花生汤(中山路总店)",
+            "from_id": "B02500V28J",
+            "to_id": "B025003Z7S",
+            "mode": "公共交通",
+            "duration_minutes": 34,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "黄则和花生汤(中山路总店)",
+            "to_name": "家家乐酒店(厦门中山路步行街镇邦店)",
+            "from_id": "B025003Z7S",
+            "to_id": "B0FFHMTNUP",
+            "mode": "公共交通",
+            "duration_minutes": 11,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 389
+      },
+      {
+        "date": "2026-10-28",
+        "day_index": 8,
+        "attractions": [
+          "厦门白鹭洲公园",
+          "南湖公园"
+        ],
+        "meals": [
+          "苏记莆田卤面馆(镇邦路店)",
+          "沙茶林(太子山庄店)",
+          "蓝家军沙茶面·儿时味道"
+        ],
+        "total_minutes": 647,
+        "route_start": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "poi_id": "B0FFHMTNUP",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "poi_id": "B0FFHMTNUP",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "家家乐酒店(厦门中山路步行街镇邦店)",
+            "to_name": "苏记莆田卤面馆(镇邦路店)",
+            "from_id": "B0FFHMTNUP",
+            "to_id": "B0FFHD5A43",
+            "mode": "公共交通",
+            "duration_minutes": 11,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "苏记莆田卤面馆(镇邦路店)",
+            "to_name": "厦门白鹭洲公园",
+            "from_id": "B0FFHD5A43",
+            "to_id": "B02500414M",
+            "mode": "公共交通",
+            "duration_minutes": 31,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "厦门白鹭洲公园",
+            "to_name": "沙茶林(太子山庄店)",
+            "from_id": "B02500414M",
+            "to_id": "B02500S2IC",
+            "mode": "公共交通",
+            "duration_minutes": 23,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "沙茶林(太子山庄店)",
+            "to_name": "南湖公园",
+            "from_id": "B02500S2IC",
+            "to_id": "B0250043NC",
+            "mode": "公共交通",
+            "duration_minutes": 26,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "南湖公园",
+            "to_name": "蓝家军沙茶面·儿时味道",
+            "from_id": "B0250043NC",
+            "to_id": "B0FFL0RP0W",
+            "mode": "公共交通",
+            "duration_minutes": 42,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "蓝家军沙茶面·儿时味道",
+            "to_name": "家家乐酒店(厦门中山路步行街镇邦店)",
+            "from_id": "B0FFL0RP0W",
+            "to_id": "B0FFHMTNUP",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 368
+      },
+      {
+        "date": "2026-10-29",
+        "day_index": 9,
+        "attractions": [
+          "钢琴码头"
+        ],
+        "meals": [
+          "月华沙茶面店(中山路店)",
+          "九市牛肉店(大同店)",
+          "鹭江宾馆·观海餐厅"
+        ],
+        "total_minutes": 630,
+        "route_start": {
+          "name": "家家乐酒店(厦门中山路步行街镇邦店)",
+          "location": {
+            "longitude": 118.07614,
+            "latitude": 24.454396
+          },
+          "poi_id": "B0FFHMTNUP",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": null,
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "家家乐酒店(厦门中山路步行街镇邦店)",
+            "to_name": "月华沙茶面店(中山路店)",
+            "from_id": "B0FFHMTNUP",
+            "to_id": "B0FFF01QSW",
+            "mode": "公共交通",
+            "duration_minutes": 11,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "月华沙茶面店(中山路店)",
+            "to_name": "九市牛肉店(大同店)",
+            "from_id": "B0FFF01QSW",
+            "to_id": "B0FFF5VBLN",
+            "mode": "公共交通",
+            "duration_minutes": 11,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "九市牛肉店(大同店)",
+            "to_name": "钢琴码头",
+            "from_id": "B0FFF5VBLN",
+            "to_id": "B0FFFS3STT",
+            "mode": "公共交通",
+            "duration_minutes": 19,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "钢琴码头",
+            "to_name": "鹭江宾馆·观海餐厅",
+            "from_id": "B0FFFS3STT",
+            "to_id": "B0FFF67SE7",
+            "mode": "公共交通",
+            "duration_minutes": 17,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 168
+      }
+    ],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 4042,
+      "subtotal": 4042,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 4042 元 = 4042 元。"
+    },
+    "validate_error": null
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": null,
+    "retries": 1,
+    "budget_retries": 0,
+    "planning_calls": 4,
+    "composition_valid": true,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：2026-10-24、2026-10-25、2026-10-26、2026-10-27、2026-10-28、2026-10-29。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-21 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0LG9LXY1F,B02500VNHR,B0K0HK93G5\n2026-10-21 dinner 重复餐厅 B0KANHYTCE，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5\n2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B02500S00Q\n2026-10-22 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B02500S00Q\n2026-10-22 dinner 重复餐厅 B0FFGJYCFY，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5\n2026-10-23 breakfast 餐厅不符合就近/餐次条件，可选ID：B0MDVZNEVK,B02500S00Q\n2026-10-23 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0MDVZNEVK\n2026-10-23 dinner 重复餐厅 B0KANHYTCE，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5\n2026-10-24 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0LG9LXY1F,B0K0HK93G5\n2026-10-24 lunch 餐厅不符合就近/餐次条件，可选ID：B0LG9LXY1F,B0KANHYTCE,B0FFGJYCFY,B02500S0HE,B0FFF2I56V,B0K0HK93G5,B0MRDG8AIY,B02500S2IC\n2026-10-24 lunch 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-24 dinner 重复餐厅 B0FFGJYCFY，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5,B0FFGJYADH,B0FFF4K1BR,B0FFFQTM93,B0HU24SJM5,B0I6TUOD6K\n2026-10-25 breakfast 餐厅不符合就近/餐次条件，可选ID：B0MDVZNEVK,B02500S00Q\n2026-10-25 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0MDVZNEVK\n2026-10-25 lunch 重复餐厅 B0FFKQVX4S，附近尚有未使用候选：B0FFGJYADH,B0FFF4K1BR,B0FFFQTM93,B0HU24SJM5,B0I6TUOD6K,B0G1NM46QX,B0FFK6MO6V,B0FFJ9TXT2\n2026-10-25 dinner 重复餐厅 B0KANHYTCE，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5,B0FFGJYADH,B0FFF4K1BR,B0FFFQTM93,B0HU24SJM5,B0I6TUOD6K\n2026-10-26 breakfast 餐厅不符合就近/餐次条件，可选ID：B0MDVZNEVK,B02500S00Q\n2026-10-26 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0MDVZNEVK\n2026-10-26 dinner 重复餐厅 B0FFGJYCFY，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5\n2026-10-27 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0LG9LXY1F,B0K0HK93G5\n2026-10-27 lunch 餐厅不符合就近/餐次条件，可选ID：B02500363R\n2026-10-27 lunch 距用餐片区超过4公里，需换候选或重排景点。\n2026-10-27 dinner 重复餐厅 B0KANHYTCE，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5,B02500363R\n2026-10-28 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0LG9LXY1F,B0K0HK93G5\n2026-10-28 dinner 重复餐厅 B0FFGJYCFY，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5,B0MRDG8AIY,B025003G71,B02500363R\n2026-10-29 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0LG9LXY1F,B0K0HK93G5\n2026-10-29 lunch 重复餐厅 B0KANHYTCE，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5\n2026-10-29 dinner 重复餐厅 B0FFGJYCFY，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0FFHMTNUP\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0FFHMTNUP\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B0FFHMTNUP\"}, {\"check_in\": \"2026-10-23\", \"hotel_id\": \"B0FFHMTNUP\"}, {\"check_in\": \"2026-10-24\", \"hotel_id\": \"B0FFHMTNUP\"}, {\"check_in\": \"2026-10-25\", \"hotel_id\": \"B0FFHMTNUP\"}, {\"check_in\": \"2026-10-26\", \"hotel_id\": \"B0FFHMTNUP\"}, {\"check_in\": \"2026-10-27\", \"hotel_id\": \"B0FFHMTNUP\"}, {\"check_in\": \"2026-10-28\", \"hotel_id\": \"B0FFHMTNUP\"}], \"hotel_id\": \"B0FFHMTNUP\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"海湾公园\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0250041BK\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFF2I56V\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0KANHYTCE\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFGJYCFY\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFF2I56V\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B0K0HK93G5\", \"B025003G71\", \"B02500363R\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B0K0HK93G5\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"日光岩\", \"鼓浪屿管风琴艺术中心\", \"大德记沙滩\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0250045AI\", \"B0FFJD93NA\", \"B02500UNHY\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFF2I56V\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B02500VNHR\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0KANHYTCE\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B0FFF2I56V\", \"B02500VNHR\", \"B0K0HK93G5\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B02500VNHR\", \"B0K0HK93G5\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B02500VNHR\", \"B0K0HK93G5\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"南普陀寺\", \"沙坡尾\", \"厦门世茂双子塔\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B025003QZU\", \"B0HK94XSHB\", \"B0FFHGHNQO\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFF2I56V\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B02500S00Q\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFGJYCFY\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B02500S00Q\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B02500S00Q\", \"B025003J71\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B02500VNHR\", \"B0K0HK93G5\", \"B02500S00Q\"]}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 0, \"attraction_names\": [\"厦门园林植物园\", \"钟鼓索道\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B025003OPX\", \"B02500SK4B\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFF2I56V\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B025003J71\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0KANHYTCE\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0MDVZNEVK\", \"B02500S00Q\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFJ1QMAN\", \"B02500SDSM\", \"B0KRZ5GAIA\", \"B0FFGJYADH\", \"B02500S00Q\", \"B025003J71\", \"B0MRDG8AIY\", \"B02500S2IC\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B0K0HK93G5\"]}]}, {\"date\": \"2026-10-24\", \"day_index\": 4, \"total_minutes\": 0, \"attraction_names\": [\"厦门山海健康步道\", \"珍珠湾沙滩\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFLPCW7Y\", \"B0KGSHIA0P\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFF2I56V\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFKQVX4S\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFGJYCFY\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B0FFF2I56V\", \"B0K0HK93G5\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B0K0HK93G5\", \"B0MRDG8AIY\", \"B02500S2IC\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B02500VNHR\", \"B0K0HK93G5\", \"B0FFGJYADH\"]}]}, {\"date\": \"2026-10-25\", \"day_index\": 5, \"total_minutes\": 0, \"attraction_names\": [\"梅海花台\", \"曾厝垵景区\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0J19AWOYQ\", \"B0J0XCJCJ6\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFF2I56V\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFKQVX4S\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0KANHYTCE\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0MDVZNEVK\", \"B02500S00Q\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFGJYADH\", \"B0FFF4K1BR\", \"B0FFFQTM93\", \"B0HU24SJM5\", \"B0I6TUOD6K\", \"B0G1NM46QX\", \"B0FFKQVX4S\", \"B0FFK6MO6V\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B02500VNHR\", \"B0K0HK93G5\", \"B0FFGJYADH\"]}]}, {\"date\": \"2026-10-26\", \"day_index\": 6, \"total_minutes\": 0, \"attraction_names\": [\"上李水库公园\", \"万石山国家重点风景名胜区\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFHJ45UE\", \"B0FFFZ5L0I\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFF2I56V\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFF4K1BR\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFGJYCFY\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0MDVZNEVK\", \"B02500S00Q\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFJ1QMAN\", \"B02500SDSM\", \"B0KRZ5GAIA\", \"B0FFGJYADH\", \"B0FFF4K1BR\", \"B02500S00Q\", \"B025003J71\", \"B0FFFQTM93\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B0K0HK93G5\"]}]}, {\"date\": \"2026-10-27\", \"day_index\": 7, \"total_minutes\": 0, \"attraction_names\": [\"狐尾山公园\", \"筼筜湖\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0250043LT\", \"B02500V28J\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFF2I56V\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFGJYADH\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0KANHYTCE\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B0FFF2I56V\", \"B0K0HK93G5\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B02500363R\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B0K0HK93G5\", \"B02500363R\"]}]}, {\"date\": \"2026-10-28\", \"day_index\": 8, \"total_minutes\": 0, \"attraction_names\": [\"厦门白鹭洲公园\", \"南湖公园\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B02500414M\", \"B0250043NC\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFF2I56V\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B02500S2IC\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFGJYCFY\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B0FFF2I56V\", \"B0K0HK93G5\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0MRDG8AIY\", \"B02500S2IC\", \"B025003G71\", \"B02500363R\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B0K0HK93G5\", \"B0MRDG8AIY\", \"B02500S2IC\"]}]}, {\"date\": \"2026-10-29\", \"day_index\": 9, \"total_minutes\": 0, \"attraction_names\": [\"钢琴码头\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFFS3STT\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFF2I56V\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0KANHYTCE\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFGJYCFY\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B0FFF2I56V\", \"B02500VNHR\", \"B0K0HK93G5\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B02500VNHR\", \"B0K0HK93G5\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B02500VNHR\", \"B0K0HK93G5\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「大德记沙滩」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「南普陀寺」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-23 为给三餐、真实通勤与休息留足时间，未安排可选景点「厦门园林植物园」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-25 为给三餐、真实通勤与休息留足时间，未安排可选景点「梅海花台」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-24：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-25：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-25：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-26：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-26：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-27：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-27：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-28：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-28：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-29：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-29：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-29：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-29 lunch 重复餐厅 B02500S0HE，附近尚有未使用候选：B0M6CUUYCZ,B0FFF5VBLN,B0FFH30EW4,B02500S87U,B025001IUV,B0FFF67SE7,B025003ROG,B0H01NM6U6\n2026-10-29 dinner 重复餐厅 B0FFGJYCFY，附近尚有未使用候选：B0M6CUUYCZ,B0FFF5VBLN,B0FFH30EW4,B02500S87U,B025001IUV,B0FFF67SE7,B025003ROG,B0H01NM6U6\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0FFHMTNUP\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0FFHMTNUP\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B0FFHMTNUP\"}, {\"check_in\": \"2026-10-23\", \"hotel_id\": \"B0FFHMTNUP\"}, {\"check_in\": \"2026-10-24\", \"hotel_id\": \"B0FFHMTNUP\"}, {\"check_in\": \"2026-10-25\", \"hotel_id\": \"B0FFHMTNUP\"}, {\"check_in\": \"2026-10-26\", \"hotel_id\": \"B0FFHMTNUP\"}, {\"check_in\": \"2026-10-27\", \"hotel_id\": \"B0FFHMTNUP\"}, {\"check_in\": \"2026-10-28\", \"hotel_id\": \"B0FFHMTNUP\"}], \"hotel_id\": \"B0FFHMTNUP\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"海湾公园\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0250041BK\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0GR3KHTVN\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0LG9LXY1F\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0KANHYTCE\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0GR3KHTVN\", \"B02500S845\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B0K0HK93G5\", \"B0FFGX09RT\", \"B025001NP2\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B0K0HK93G5\", \"B0FFGX09RT\", \"B025001NP2\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"日光岩\", \"鼓浪屿管风琴艺术中心\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0250045AI\", \"B0FFJD93NA\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFHD5A43\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B02500VNHR\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFGJYCFY\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFHD5A43\", \"B0FFF01QSW\", \"B0JA9N8XDU\", \"B0KKYA8HXS\", \"B02500RZDP\", \"B0FFHW0D9B\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B02500VNHR\", \"B0K0HK93G5\", \"B025003Z7S\", \"B0FFL0RP0W\", \"B025001IUV\", \"B0FFF67SE7\", \"B025003ROG\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B02500VNHR\", \"B0K0HK93G5\", \"B0HRK49D0V\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"沙坡尾\", \"厦门世茂双子塔\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0HK94XSHB\", \"B0FFHGHNQO\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFF01QSW\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B02500S00Q\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B02500S0HE\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFHD5A43\", \"B0FFF01QSW\", \"B0JA9N8XDU\", \"B0KKYA8HXS\", \"B02500RZDP\", \"B0FFHW0D9B\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B02500S00Q\", \"B025003J71\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B02500VNHR\", \"B0K0HK93G5\", \"B02500S00Q\"]}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 0, \"attraction_names\": [\"钟鼓索道\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B02500SK4B\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0JA9N8XDU\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B025003J71\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0K0HK93G5\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B02500S845\", \"B0FFHD5A43\", \"B0FFF01QSW\", \"B0JA9N8XDU\", \"B0KKYA8HXS\", \"B02500RZDP\", \"B0FFHW0D9B\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B02500VNHR\", \"B0K0HK93G5\", \"B0FFJ1QMAN\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B0K0HK93G5\", \"B02500S845\", \"B0H13ULP97\"]}]}, {\"date\": \"2026-10-24\", \"day_index\": 4, \"total_minutes\": 0, \"attraction_names\": [\"厦门山海健康步道\", \"珍珠湾沙滩\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFLPCW7Y\", \"B0KGSHIA0P\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B02500S845\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFF2I56V\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0HRK49D0V\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0GR3KHTVN\", \"B02500S845\", \"B0FFHD5A43\", \"B0FFF01QSW\", \"B0JA9N8XDU\", \"B0KKYA8HXS\", \"B02500RZDP\", \"B0FFHW0D9B\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B0K0HK93G5\", \"B0MRDG8AIY\", \"B02500S2IC\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B02500VNHR\", \"B0K0HK93G5\", \"B0FFGJYADH\"]}]}, {\"date\": \"2026-10-25\", \"day_index\": 5, \"total_minutes\": 0, \"attraction_names\": [\"曾厝垵景区\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0J0XCJCJ6\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B02500RZDP\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFF4K1BR\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0J2VZING1\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0MDVZNEVK\", \"B02500S00Q\", \"B0FFHD5A43\", \"B0FFF01QSW\", \"B0JA9N8XDU\", \"B0KKYA8HXS\", \"B02500RZDP\", \"B0FFHW0D9B\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFGJYADH\", \"B0FFF4K1BR\", \"B0FFFQTM93\", \"B0HU24SJM5\", \"B0I6TUOD6K\", \"B0G1NM46QX\", \"B0FFKQVX4S\", \"B0FFK6MO6V\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B02500VNHR\", \"B0K0HK93G5\", \"B0FFGJYADH\"]}]}, {\"date\": \"2026-10-26\", \"day_index\": 6, \"total_minutes\": 0, \"attraction_names\": [\"上李水库公园\", \"万石山国家重点风景名胜区\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFHJ45UE\", \"B0FFFZ5L0I\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0KKYA8HXS\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFJ1QMAN\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B02500TQSK\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0MDVZNEVK\", \"B02500S00Q\", \"B02500S845\", \"B0FFHD5A43\", \"B0FFF01QSW\", \"B0JA9N8XDU\", \"B0KKYA8HXS\", \"B02500RZDP\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFJ1QMAN\", \"B02500SDSM\", \"B0KRZ5GAIA\", \"B0FFGJYADH\", \"B0FFF4K1BR\", \"B02500S00Q\", \"B025003J71\", \"B0FFFQTM93\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B0K0HK93G5\", \"B02500S845\", \"B0H13ULP97\"]}]}, {\"date\": \"2026-10-27\", \"day_index\": 7, \"total_minutes\": 0, \"attraction_names\": [\"狐尾山公园\", \"筼筜湖\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0250043LT\", \"B02500V28J\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFHW0D9B\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFGX09RT\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B025003Z7S\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0GR3KHTVN\", \"B02500S845\", \"B0FFHD5A43\", \"B0FFF01QSW\", \"B0JA9N8XDU\", \"B0KKYA8HXS\", \"B02500RZDP\", \"B0FFHW0D9B\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFGX09RT\", \"B025001NP2\", \"B0250018SL\", \"B025000630\", \"B0GDDZT6AO\", \"B02500QFJA\", \"B0GR3KHTVN\", \"B0HRRARDW9\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B0K0HK93G5\", \"B02500363R\", \"B025001NP2\"]}]}, {\"date\": \"2026-10-28\", \"day_index\": 8, \"total_minutes\": 0, \"attraction_names\": [\"厦门白鹭洲公园\", \"南湖公园\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B02500414M\", \"B0250043NC\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFHD5A43\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B02500S2IC\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFL0RP0W\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0GR3KHTVN\", \"B02500S845\", \"B0FFHD5A43\", \"B0FFF01QSW\", \"B0JA9N8XDU\", \"B0KKYA8HXS\", \"B02500RZDP\", \"B0FFHW0D9B\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0MRDG8AIY\", \"B02500S2IC\", \"B025003G71\", \"B02500363R\", \"B025001NP2\", \"B0250018SL\", \"B025000630\", \"B0GDDZT6AO\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B0K0HK93G5\", \"B0MRDG8AIY\", \"B02500S2IC\"]}]}, {\"date\": \"2026-10-29\", \"day_index\": 9, \"total_minutes\": 0, \"attraction_names\": [\"钢琴码头\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFFS3STT\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFF01QSW\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B02500S0HE\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFGJYCFY\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFHD5A43\", \"B0FFF01QSW\", \"B0JA9N8XDU\", \"B0KKYA8HXS\", \"B02500RZDP\", \"B0FFHW0D9B\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B02500VNHR\", \"B0K0HK93G5\", \"B0HRK49D0V\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0LG9LXY1F\", \"B0KANHYTCE\", \"B0FFGJYCFY\", \"B02500S0HE\", \"B0FFF2I56V\", \"B02500VNHR\", \"B0K0HK93G5\", \"B0HRK49D0V\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-24：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-25：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-25：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-26：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-26：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-27：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-27：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-28：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-28：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-29：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-29：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-29：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-24：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-25：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-25：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-26：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-26：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-27：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-27：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-28：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-28：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-29：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-29：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-29：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+    ],
+    "usage": {
+      "prompt_tokens": 57186,
+      "completion_tokens": 11329,
+      "llm_calls": 5
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 4042,
+      "subtotal": 4042,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 4042 元 = 4042 元。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "家家乐酒店(厦门中山路步行街镇邦店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "tool_call_count": 139,
+    "hotel_source": "agent",
+    "final_days": 10,
+    "final_weather_days": 10
+  },
+  "request": {
+    "city": "厦门",
+    "start_date": "2026-10-20",
+    "travel_days": 10,
+    "transportation": "公共交通",
+    "accommodation": "经济型酒店",
+    "preferences": [
+      "自然风光"
+    ],
+    "must_visit": [],
+    "free_text_input": ""
+  },
+  "expect": {
+    "success": true,
+    "days": 10,
+    "min_beyond_window": 6,
+    "fabricated": 0
+  },
+  "exception": null,
+  "warnings": [
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：2026-10-24、2026-10-25、2026-10-26、2026-10-27、2026-10-28、2026-10-29。",
+    "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+    "2026-10-21 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0LG9LXY1F,B02500VNHR,B0K0HK93G5",
+    "2026-10-21 dinner 重复餐厅 B0KANHYTCE，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5",
+    "2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B02500S00Q",
+    "2026-10-22 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B02500S00Q",
+    "2026-10-22 dinner 重复餐厅 B0FFGJYCFY，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5",
+    "2026-10-23 breakfast 餐厅不符合就近/餐次条件，可选ID：B0MDVZNEVK,B02500S00Q",
+    "2026-10-23 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0MDVZNEVK",
+    "2026-10-23 dinner 重复餐厅 B0KANHYTCE，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5",
+    "2026-10-24 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0LG9LXY1F,B0K0HK93G5",
+    "2026-10-24 lunch 餐厅不符合就近/餐次条件，可选ID：B0LG9LXY1F,B0KANHYTCE,B0FFGJYCFY,B02500S0HE,B0FFF2I56V,B0K0HK93G5,B0MRDG8AIY,B02500S2IC",
+    "2026-10-24 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-24 dinner 重复餐厅 B0FFGJYCFY，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5,B0FFGJYADH,B0FFF4K1BR,B0FFFQTM93,B0HU24SJM5,B0I6TUOD6K",
+    "2026-10-25 breakfast 餐厅不符合就近/餐次条件，可选ID：B0MDVZNEVK,B02500S00Q",
+    "2026-10-25 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0MDVZNEVK",
+    "2026-10-25 lunch 重复餐厅 B0FFKQVX4S，附近尚有未使用候选：B0FFGJYADH,B0FFF4K1BR,B0FFFQTM93,B0HU24SJM5,B0I6TUOD6K,B0G1NM46QX,B0FFK6MO6V,B0FFJ9TXT2",
+    "2026-10-25 dinner 重复餐厅 B0KANHYTCE，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5,B0FFGJYADH,B0FFF4K1BR,B0FFFQTM93,B0HU24SJM5,B0I6TUOD6K",
+    "2026-10-26 breakfast 餐厅不符合就近/餐次条件，可选ID：B0MDVZNEVK,B02500S00Q",
+    "2026-10-26 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0MDVZNEVK",
+    "2026-10-26 dinner 重复餐厅 B0FFGJYCFY，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5",
+    "2026-10-27 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0LG9LXY1F,B0K0HK93G5",
+    "2026-10-27 lunch 餐厅不符合就近/餐次条件，可选ID：B02500363R",
+    "2026-10-27 lunch 距用餐片区超过4公里，需换候选或重排景点。",
+    "2026-10-27 dinner 重复餐厅 B0KANHYTCE，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5,B02500363R",
+    "2026-10-28 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0LG9LXY1F,B0K0HK93G5",
+    "2026-10-28 dinner 重复餐厅 B0FFGJYCFY，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5,B0MRDG8AIY,B025003G71,B02500363R",
+    "2026-10-29 breakfast 重复餐厅 B0FFF2I56V，附近尚有未使用候选：B0LG9LXY1F,B0K0HK93G5",
+    "2026-10-29 lunch 重复餐厅 B0KANHYTCE，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5",
+    "2026-10-29 dinner 重复餐厅 B0FFGJYCFY，附近尚有未使用候选：B0LG9LXY1F,B02500S0HE,B0K0HK93G5",
+    "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+    "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「大德记沙滩」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「南普陀寺」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-23 为给三餐、真实通勤与休息留足时间，未安排可选景点「厦门园林植物园」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-25 为给三餐、真实通勤与休息留足时间，未安排可选景点「梅海花台」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+    "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-24：本日天气未知，保留室内备选，出发前重新查询。",
+    "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-25：本日天气未知，保留室内备选，出发前重新查询。",
+    "2026-10-25：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-26：本日天气未知，保留室内备选，出发前重新查询。",
+    "2026-10-26：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-27：本日天气未知，保留室内备选，出发前重新查询。",
+    "2026-10-27：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-28：本日天气未知，保留室内备选，出发前重新查询。",
+    "2026-10-28：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-29：本日天气未知，保留室内备选，出发前重新查询。",
+    "2026-10-29：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+    "2026-10-29：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-29 lunch 重复餐厅 B02500S0HE，附近尚有未使用候选：B0M6CUUYCZ,B0FFF5VBLN,B0FFH30EW4,B02500S87U,B025001IUV,B0FFF67SE7,B025003ROG,B0H01NM6U6",
+    "2026-10-29 dinner 重复餐厅 B0FFGJYCFY，附近尚有未使用候选：B0M6CUUYCZ,B0FFF5VBLN,B0FFH30EW4,B02500S87U,B025001IUV,B0FFF67SE7,B025003ROG,B0H01NM6U6"
+  ],
+  "message": "",
+  "started_at": "2026-10-20T01:07:39"
+}

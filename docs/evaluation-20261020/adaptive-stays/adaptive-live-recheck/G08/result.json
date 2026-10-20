@@ -1,0 +1,1172 @@
+{
+  "case_id": "G08",
+  "name": "丽江5天民宿+超窗口1天",
+  "kind": "generate",
+  "passed": false,
+  "violations": [
+    "success 期望 True，实际 False"
+  ],
+  "duration_s": 87.83,
+  "error_code": "PLAN_VALIDATION_FAILED",
+  "success": false,
+  "days": 5,
+  "response_summary": {
+    "success": false,
+    "error_code": "PLAN_VALIDATION_FAILED",
+    "message": "已返回部分结果：未通过校验：2026-10-23 dinner 重复餐厅 B0G0YMJVKI，附近尚有未使用候选：B0KAHD1IE4,B03780I16N,B03781586B,B0HKKSI2SA,B0378149MX,B0KALU7VRY,B0FFG77HB0,B0FFFDCBBN，请见上方提示。",
+    "cached": false,
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：2026-10-24。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFJOWXP9,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K",
+      "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFJOWXP9,B0JRLK0ZKH,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K",
+      "2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFJOWXP9,B0JRLK0ZKH,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K",
+      "2026-10-23 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFJOWXP9,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K",
+      "2026-10-24 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFJOWXP9,B0JRLK0ZKH,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K",
+      "酒店每晚300元仅为预算预留，尚未获得实际房价。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「丽江古城-狮子山(狮山路)」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「丽江古城白龙文化广场」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-24：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-24：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22 breakfast 重复餐厅 B0JRLK0ZKH，附近尚有未使用候选：B0FFJOWXP9,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K",
+      "2026-10-23 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFJOWXP9,B0JRLK0ZKH,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K",
+      "2026-10-23 breakfast 重复餐厅 B0FFKR1LR0，附近尚有未使用候选：B0FFJOWXP9,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K",
+      "2026-10-23 dinner 重复餐厅 B0FFM0KDG3，附近尚有未使用候选：B03780I16N,B03781586B,B0FFFDCXXB,B0HKKSI2SA,B0378149MX,B0FFG77HB0,B0FFJOWXP9,B0FFFDCBBN",
+      "2026-10-24 breakfast 重复餐厅 B0JRLK0ZKH，附近尚有未使用候选：B0FFJOWXP9,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K",
+      "2026-10-24 dinner 重复餐厅 B0FFG865VX，附近尚有未使用候选：B03781586B,B0FFJOWXP9,B0FFFDCBBN,B0FFI67BFN,B0FFGASTRO,B0HDBXFELZ,B0FFKPJA2R,B0FFG7CDTP",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「四方街」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「丽江古城-古城大水车」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-23 dinner 重复餐厅 B0G0YMJVKI，附近尚有未使用候选：B0KAHD1IE4,B03780I16N,B03781586B,B0HKKSI2SA,B0378149MX,B0KALU7VRY,B0FFG77HB0,B0FFFDCBBN"
+    ],
+    "budget": {
+      "ticket_reserve_amount": 100,
+      "total_attractions": 90,
+      "total_hotels": 1200,
+      "total_meals": 792,
+      "total_transportation": 200,
+      "total": 2282,
+      "items": [
+        {
+          "category": "attraction",
+          "name": "丽江古城",
+          "day_index": 0,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：丽江古城作为开放的历史街区，日常进入古城不收取门票；古城维护费属于特定时期或特定查验场景的费用，不按常规景点门票计入。"
+        },
+        {
+          "category": "attraction",
+          "name": "丽江古城博物院-木府",
+          "day_index": 0,
+          "amount": 40,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：木府日常成人门票挂牌价约40元，属独立收费景区"
+        },
+        {
+          "category": "meal",
+          "name": "忆食飨包粥坊(忠义店)",
+          "day_index": 0,
+          "amount": 14,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "滇西王子·梦回丽江·云南菜地标品牌(梦回丽江店)",
+          "day_index": 0,
+          "amount": 80,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "阿婆情腊排骨火锅·野生菌季(古城旗舰店)",
+          "day_index": 0,
+          "amount": 60,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "狮子山万古楼景区",
+          "day_index": 1,
+          "amount": 50,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：狮子山万古楼景区日常成人门票约50元，为独立收费景点"
+        },
+        {
+          "category": "attraction",
+          "name": "丽江古城-文昌宫观景台",
+          "day_index": 1,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：文昌宫观景台为古城内开放观景点，日常免费"
+        },
+        {
+          "category": "meal",
+          "name": "广年小吃",
+          "day_index": 1,
+          "amount": 22,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "渣渣米线(古城店)",
+          "day_index": 1,
+          "amount": 59,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "云雪丽·现炒云南菜(大水车店)",
+          "day_index": 1,
+          "amount": 66,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "五一街",
+          "day_index": 2,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：五一街是丽江古城内的公共街道，随古城免费开放，无独立门票。"
+        },
+        {
+          "category": "attraction",
+          "name": "大研花巷",
+          "day_index": 2,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：大研花巷为古城内开放式商业街区，免费进入"
+        },
+        {
+          "category": "meal",
+          "name": "黄氏面馆(丽江古城店)",
+          "day_index": 2,
+          "amount": 20,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "云雪丽 纳西庭院 现炒云南菜(古城南门店)",
+          "day_index": 2,
+          "amount": 76,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "裘记小吃店",
+          "day_index": 2,
+          "amount": 30,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "束河古镇",
+          "day_index": 3,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：束河古镇日常进入古镇区域免费，古镇内个别小景点另行收费"
+        },
+        {
+          "category": "meal",
+          "name": "相品面馆",
+          "day_index": 3,
+          "amount": 24,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "浮娴小锅饭·云南民俗风味餐厅",
+          "day_index": 3,
+          "amount": 75,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "阿婆情腊排骨火锅·野生菌季(古城旗舰店)",
+          "day_index": 3,
+          "amount": 60,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "古城南门牌坊",
+          "day_index": 4,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：古城南门牌坊为开放式街区入口景观，不收费"
+        },
+        {
+          "category": "attraction",
+          "name": "丽江古城-木王府驿站旧址",
+          "day_index": 4,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：木王府驿站旧址为古城内开放参观的旧址点位，日常不单独收费"
+        },
+        {
+          "category": "meal",
+          "name": "古楼小吃·纳西烤鱼·云南家常菜",
+          "day_index": 4,
+          "amount": 59,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "云雪丽现炒云南菜(四方街店)",
+          "day_index": 4,
+          "amount": 60,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "餐厅未提供人均价格，按每人每餐固定规则预留；不是餐厅报价。"
+        },
+        {
+          "category": "meal",
+          "name": "樱花餐厅",
+          "day_index": 4,
+          "amount": 87,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-20 住宿：过街楼客栈(丽江古城木府店)",
+          "day_index": 0,
+          "amount": 300,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-21 住宿：过街楼客栈(丽江古城木府店)",
+          "day_index": 1,
+          "amount": 300,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-22 住宿：过街楼客栈(丽江古城木府店)",
+          "day_index": 2,
+          "amount": 300,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-23 住宿：过街楼客栈(丽江古城木府店)",
+          "day_index": 3,
+          "amount": 300,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "transportation",
+          "name": "市内交通（公共交通）",
+          "day_index": null,
+          "amount": 200,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "按每人每天 40 元的固定表估算"
+        }
+      ],
+      "known_total": 0,
+      "estimated_total": 2282,
+      "unknown_items": [],
+      "limit": null,
+      "limit_status": "none",
+      "limit_basis": "未设置预算上限。当前口径：已知 0 元 + 估算 2282 元 = 2282 元。"
+    },
+    "hotel": {
+      "name": "过街楼客栈(丽江古城木府店)",
+      "poi_id": "B0FFF37GUM",
+      "address": "光义街光碧巷9号(木府后门旁)",
+      "location": {
+        "longitude": 100.233095,
+        "latitude": 26.869096
+      },
+      "price_range": "",
+      "rating": "4.7",
+      "distance": "距最终行程景点加权平均 1.2 km（直线估计）",
+      "type": "旅馆招待所",
+      "estimated_cost": 300,
+      "cost_status": "estimated",
+      "cost_source": "static_estimate",
+      "price_evidence_url": null,
+      "nights": 4,
+      "check_in_after": null,
+      "check_in_before": null,
+      "check_out_before": null,
+      "operations_evidence_url": null
+    },
+    "hotel_nights": 4,
+    "accommodation_version": 11,
+    "stays": [
+      {
+        "check_in": "2026-10-20",
+        "check_out": "2026-10-21",
+        "hotel": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "poi_id": "B0FFF37GUM",
+          "address": "光义街光碧巷9号(木府后门旁)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "price_range": "",
+          "rating": "4.7",
+          "distance": "",
+          "type": "旅馆招待所",
+          "estimated_cost": 300,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "古城木府片区连住四晚，步行覆盖大研古城各景点，免去换住整理与行李搬运"
+      },
+      {
+        "check_in": "2026-10-21",
+        "check_out": "2026-10-22",
+        "hotel": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "poi_id": "B0FFF37GUM",
+          "address": "光义街光碧巷9号(木府后门旁)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "price_range": "",
+          "rating": "4.7",
+          "distance": "",
+          "type": "旅馆招待所",
+          "estimated_cost": 300,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "次日狮子山、文昌宫均在古城内，连住减少通勤"
+      },
+      {
+        "check_in": "2026-10-22",
+        "check_out": "2026-10-23",
+        "hotel": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "poi_id": "B0FFF37GUM",
+          "address": "光义街光碧巷9号(木府后门旁)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "price_range": "",
+          "rating": "4.7",
+          "distance": "",
+          "type": "旅馆招待所",
+          "estimated_cost": 300,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "当日五一街、大研花巷均在古城步行圈，继续连住"
+      },
+      {
+        "check_in": "2026-10-23",
+        "check_out": "2026-10-24",
+        "hotel": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "poi_id": "B0FFF37GUM",
+          "address": "光义街光碧巷9号(木府后门旁)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "price_range": "",
+          "rating": "4.7",
+          "distance": "",
+          "type": "旅馆招待所",
+          "estimated_cost": 300,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "束河古镇为单日往返，回古城住可兼顾次日南门片区，不换住"
+      }
+    ],
+    "stay_comparison": {
+      "strategy": "same_hotel",
+      "hotel_changes": 0,
+      "travel_minutes": 577,
+      "transfer_minutes": 0,
+      "basis": "路线工具核算所选方案；未取得备选实测时，不宣称节省具体分钟。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "过街楼客栈(丽江古城木府店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "多云"
+      },
+      {
+        "date": "2026-10-21",
+        "beyond_window": false,
+        "day_weather": "晴"
+      },
+      {
+        "date": "2026-10-22",
+        "beyond_window": false,
+        "day_weather": "晴"
+      },
+      {
+        "date": "2026-10-23",
+        "beyond_window": false,
+        "day_weather": "晴"
+      },
+      {
+        "date": "2026-10-24",
+        "beyond_window": true,
+        "day_weather": ""
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-20",
+        "day_index": 0,
+        "attractions": [
+          "丽江古城",
+          "丽江古城博物院-木府"
+        ],
+        "meals": [
+          "忆食飨包粥坊(忠义店)",
+          "滇西王子·梦回丽江·云南菜地标品牌(梦回丽江店)",
+          "阿婆情腊排骨火锅·野生菌季(古城旗舰店)"
+        ],
+        "total_minutes": 654,
+        "route_start": null,
+        "route_end": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "poi_id": "B0FFF37GUM",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "忆食飨包粥坊(忠义店)",
+            "to_name": "丽江古城",
+            "from_id": "B0JRLK0ZKH",
+            "to_id": "B0378008PR",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "丽江古城",
+            "to_name": "滇西王子·梦回丽江·云南菜地标品牌(梦回丽江店)",
+            "from_id": "B0378008PR",
+            "to_id": "B0FFG865VX",
+            "mode": "公共交通",
+            "duration_minutes": 14,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（AMAP_ERROR）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "滇西王子·梦回丽江·云南菜地标品牌(梦回丽江店)",
+            "to_name": "丽江古城博物院-木府",
+            "from_id": "B0FFG865VX",
+            "to_id": "B03780I3B7",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "丽江古城博物院-木府",
+            "to_name": "阿婆情腊排骨火锅·野生菌季(古城旗舰店)",
+            "from_id": "B03780I3B7",
+            "to_id": "B0G0YMJVKI",
+            "mode": "公共交通",
+            "duration_minutes": 50,
+            "distance_meters": 5680,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "阿婆情腊排骨火锅·野生菌季(古城旗舰店)",
+            "to_name": "过街楼客栈(丽江古城木府店)",
+            "from_id": "B0G0YMJVKI",
+            "to_id": "B0FFF37GUM",
+            "mode": "公共交通",
+            "duration_minutes": 45,
+            "distance_meters": 5750,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 534
+      },
+      {
+        "date": "2026-10-21",
+        "day_index": 1,
+        "attractions": [
+          "狮子山万古楼景区",
+          "丽江古城-文昌宫观景台"
+        ],
+        "meals": [
+          "广年小吃",
+          "渣渣米线(古城店)",
+          "云雪丽·现炒云南菜(大水车店)"
+        ],
+        "total_minutes": 653,
+        "route_start": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "poi_id": "B0FFF37GUM",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "poi_id": "B0FFF37GUM",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "过街楼客栈(丽江古城木府店)",
+            "to_name": "广年小吃",
+            "from_id": "B0FFF37GUM",
+            "to_id": "B0FFFW7B6K",
+            "mode": "公共交通",
+            "duration_minutes": 15,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "广年小吃",
+            "to_name": "狮子山万古楼景区",
+            "from_id": "B0FFFW7B6K",
+            "to_id": "B037815BZ1",
+            "mode": "公共交通",
+            "duration_minutes": 16,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "狮子山万古楼景区",
+            "to_name": "渣渣米线(古城店)",
+            "from_id": "B037815BZ1",
+            "to_id": "B0J2NUI8WJ",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "渣渣米线(古城店)",
+            "to_name": "丽江古城-文昌宫观景台",
+            "from_id": "B0J2NUI8WJ",
+            "to_id": "B0FFK10I11",
+            "mode": "公共交通",
+            "duration_minutes": 16,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "丽江古城-文昌宫观景台",
+            "to_name": "云雪丽·现炒云南菜(大水车店)",
+            "from_id": "B0FFK10I11",
+            "to_id": "B0FFM0KDG3",
+            "mode": "公共交通",
+            "duration_minutes": 14,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "云雪丽·现炒云南菜(大水车店)",
+            "to_name": "过街楼客栈(丽江古城木府店)",
+            "from_id": "B0FFM0KDG3",
+            "to_id": "B0FFF37GUM",
+            "mode": "公共交通",
+            "duration_minutes": 18,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（AMAP_ERROR）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 537
+      },
+      {
+        "date": "2026-10-22",
+        "day_index": 2,
+        "attractions": [
+          "五一街",
+          "大研花巷"
+        ],
+        "meals": [
+          "黄氏面馆(丽江古城店)",
+          "云雪丽 纳西庭院 现炒云南菜(古城南门店)",
+          "裘记小吃店"
+        ],
+        "total_minutes": 647,
+        "route_start": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "poi_id": "B0FFF37GUM",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "poi_id": "B0FFF37GUM",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "过街楼客栈(丽江古城木府店)",
+            "to_name": "黄氏面馆(丽江古城店)",
+            "from_id": "B0FFF37GUM",
+            "to_id": "B0FFK6GKNJ",
+            "mode": "公共交通",
+            "duration_minutes": 14,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "黄氏面馆(丽江古城店)",
+            "to_name": "五一街",
+            "from_id": "B0FFK6GKNJ",
+            "to_id": "B0FFIMYOV7",
+            "mode": "公共交通",
+            "duration_minutes": 14,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "五一街",
+            "to_name": "云雪丽 纳西庭院 现炒云南菜(古城南门店)",
+            "from_id": "B0FFIMYOV7",
+            "to_id": "B0FFFDCXXB",
+            "mode": "公共交通",
+            "duration_minutes": 16,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "云雪丽 纳西庭院 现炒云南菜(古城南门店)",
+            "to_name": "大研花巷",
+            "from_id": "B0FFFDCXXB",
+            "to_id": "B0FFIXONOV",
+            "mode": "公共交通",
+            "duration_minutes": 18,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "大研花巷",
+            "to_name": "裘记小吃店",
+            "from_id": "B0FFIXONOV",
+            "to_id": "B0FFJOWXP9",
+            "mode": "公共交通",
+            "duration_minutes": 14,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "裘记小吃店",
+            "to_name": "过街楼客栈(丽江古城木府店)",
+            "from_id": "B0FFJOWXP9",
+            "to_id": "B0FFF37GUM",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 466
+      },
+      {
+        "date": "2026-10-23",
+        "day_index": 3,
+        "attractions": [
+          "束河古镇"
+        ],
+        "meals": [
+          "相品面馆",
+          "浮娴小锅饭·云南民俗风味餐厅",
+          "阿婆情腊排骨火锅·野生菌季(古城旗舰店)"
+        ],
+        "total_minutes": 654,
+        "route_start": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "poi_id": "B0FFF37GUM",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "poi_id": "B0FFF37GUM",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "过街楼客栈(丽江古城木府店)",
+            "to_name": "相品面馆",
+            "from_id": "B0FFF37GUM",
+            "to_id": "B0FFG7CDTP",
+            "mode": "公共交通",
+            "duration_minutes": 15,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "相品面馆",
+            "to_name": "束河古镇",
+            "from_id": "B0FFG7CDTP",
+            "to_id": "B03780HUIN",
+            "mode": "公共交通",
+            "duration_minutes": 57,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "束河古镇",
+            "to_name": "浮娴小锅饭·云南民俗风味餐厅",
+            "from_id": "B03780HUIN",
+            "to_id": "B0FFFDCFFR",
+            "mode": "公共交通",
+            "duration_minutes": 11,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "浮娴小锅饭·云南民俗风味餐厅",
+            "to_name": "阿婆情腊排骨火锅·野生菌季(古城旗舰店)",
+            "from_id": "B0FFFDCFFR",
+            "to_id": "B0G0YMJVKI",
+            "mode": "公共交通",
+            "duration_minutes": 55,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "阿婆情腊排骨火锅·野生菌季(古城旗舰店)",
+            "to_name": "过街楼客栈(丽江古城木府店)",
+            "from_id": "B0G0YMJVKI",
+            "to_id": "B0FFF37GUM",
+            "mode": "公共交通",
+            "duration_minutes": 45,
+            "distance_meters": 5750,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          }
+        ],
+        "day_total_cost": 499
+      },
+      {
+        "date": "2026-10-24",
+        "day_index": 4,
+        "attractions": [
+          "古城南门牌坊",
+          "丽江古城-木王府驿站旧址"
+        ],
+        "meals": [
+          "古楼小吃·纳西烤鱼·云南家常菜",
+          "云雪丽现炒云南菜(四方街店)",
+          "樱花餐厅"
+        ],
+        "total_minutes": 630,
+        "route_start": {
+          "name": "过街楼客栈(丽江古城木府店)",
+          "location": {
+            "longitude": 100.233095,
+            "latitude": 26.869096
+          },
+          "poi_id": "B0FFF37GUM",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": null,
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "过街楼客栈(丽江古城木府店)",
+            "to_name": "古楼小吃·纳西烤鱼·云南家常菜",
+            "from_id": "B0FFF37GUM",
+            "to_id": "B0HDBXFELZ",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "古楼小吃·纳西烤鱼·云南家常菜",
+            "to_name": "古城南门牌坊",
+            "from_id": "B0HDBXFELZ",
+            "to_id": "B0FFK2MD5J",
+            "mode": "公共交通",
+            "duration_minutes": 19,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "古城南门牌坊",
+            "to_name": "云雪丽现炒云南菜(四方街店)",
+            "from_id": "B0FFK2MD5J",
+            "to_id": "B0KALU7VRY",
+            "mode": "公共交通",
+            "duration_minutes": 18,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "云雪丽现炒云南菜(四方街店)",
+            "to_name": "丽江古城-木王府驿站旧址",
+            "from_id": "B0KALU7VRY",
+            "to_id": "B0FFKKTSNT",
+            "mode": "公共交通",
+            "duration_minutes": 16,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "丽江古城-木王府驿站旧址",
+            "to_name": "樱花餐厅",
+            "from_id": "B0FFKKTSNT",
+            "to_id": "B03781586B",
+            "mode": "公共交通",
+            "duration_minutes": 15,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 246
+      }
+    ],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 2282,
+      "subtotal": 2282,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 2282 元 = 2282 元。"
+    },
+    "validate_error": "2026-10-23 dinner 重复餐厅 B0G0YMJVKI，附近尚有未使用候选：B0KAHD1IE4,B03780I16N,B03781586B,B0HKKSI2SA,B0378149MX,B0KALU7VRY,B0FFG77HB0,B0FFFDCBBN\n\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0FFF37GUM\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0FFF37GUM\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B0FFF37GUM\"}, {\"check_in\": \"2026-10-23\", \"hotel_id\": \"B0FFF37GUM\"}], \"hotel_id\": \"B0FFF37GUM\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 654, \"attraction_names\": [\"丽江古城\", \"丽江古城博物院-木府\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378008PR\", \"B03780I3B7\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0JRLK0ZKH\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFG865VX\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0G0YMJVKI\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"suggested_restaurant_id\": \"B0JRLK0ZKH\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\"], \"unused_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\"], \"suggested_restaurant_id\": \"B0KAHD1IE4\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\"], \"unused_restaurant_ids\": [\"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\"], \"suggested_restaurant_id\": \"B0FFG865VX\"}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 653, \"attraction_names\": [\"狮子山万古楼景区\", \"丽江古城-文昌宫观景台\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B037815BZ1\", \"B0FFK10I11\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFFW7B6K\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0J2NUI8WJ\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFM0KDG3\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0FFJOWXP9\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"suggested_restaurant_id\": \"B0FFFW7B6K\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\"], \"suggested_restaurant_id\": \"B0J2NUI8WJ\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B0KAHD1IE4\", \"B03781586B\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\", \"B0FFI67BFN\"], \"suggested_restaurant_id\": \"B0FFM0KDG3\"}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 647, \"attraction_names\": [\"五一街\", \"大研花巷\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFIMYOV7\", \"B0FFIXONOV\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFK6GKNJ\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFFDCXXB\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFJOWXP9\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0FFJOWXP9\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\"], \"suggested_restaurant_id\": \"B0FFK6GKNJ\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B0KAHD1IE4\", \"B03781586B\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0FFGASTRO\"], \"suggested_restaurant_id\": \"B0FFFDCXXB\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B0KAHD1IE4\", \"B03781586B\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0FFGASTRO\", \"B0HDBXFELZ\"], \"suggested_restaurant_id\": \"B0FFJOWXP9\"}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 654, \"attraction_names\": [\"束河古镇\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B03780HUIN\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG7CDTP\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFFDCFFR\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0G0YMJVKI\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0HDBXFELZ\", \"B0FFG7CDTP\"], \"suggested_restaurant_id\": \"B0FFG7CDTP\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0378149MX\", \"B0FFG77HB0\", \"B0I6ZHL8V7\", \"B0FFFDCFFR\", \"B0I2BMTQFW\", \"B0HD9DYPQA\", \"B0KAHMUJQR\", \"B0LDRG7XMQ\"], \"unused_restaurant_ids\": [\"B0378149MX\", \"B0FFG77HB0\", \"B0I6ZHL8V7\", \"B0FFFDCFFR\", \"B0I2BMTQFW\", \"B0HD9DYPQA\", \"B0KAHMUJQR\", \"B0LDRG7XMQ\"], \"suggested_restaurant_id\": \"B0FFFDCFFR\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"], \"unused_restaurant_ids\": [\"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0HKKSI2SA\", \"B0378149MX\", \"B0KALU7VRY\", \"B0FFG77HB0\", \"B0FFFDCBBN\"], \"suggested_restaurant_id\": \"B0G0YMJVKI\"}]}, {\"date\": \"2026-10-24\", \"day_index\": 4, \"total_minutes\": 630, \"attraction_names\": [\"古城南门牌坊\", \"丽江古城-木王府驿站旧址\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFK2MD5J\", \"B0FFKKTSNT\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0HDBXFELZ\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0KALU7VRY\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B03781586B\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0HDBXFELZ\"], \"suggested_restaurant_id\": \"B0HDBXFELZ\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\"], \"unused_restaurant_ids\": [\"B03781586B\", \"B0KALU7VRY\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0FFGASTRO\", \"B0FFKPJA2R\", \"B0KBBYO0PB\", \"B0FFL4CSHG\"], \"suggested_restaurant_id\": \"B0KALU7VRY\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B0KAHD1IE4\", \"B03781586B\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0FFGASTRO\", \"B0FFKPJA2R\", \"B0KBBYO0PB\", \"B0FFL4CSHG\"], \"suggested_restaurant_id\": \"B03781586B\"}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。suggested_restaurant_id是跨餐次匹配后的真实候选建议，保持布局时可优先采用以避免局部贪心导致重复；实际路线和预算仍需复核。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。"
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": "2026-10-23 dinner 重复餐厅 B0G0YMJVKI，附近尚有未使用候选：B0KAHD1IE4,B03780I16N,B03781586B,B0HKKSI2SA,B0378149MX,B0KALU7VRY,B0FFG77HB0,B0FFFDCBBN\n\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0FFF37GUM\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0FFF37GUM\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B0FFF37GUM\"}, {\"check_in\": \"2026-10-23\", \"hotel_id\": \"B0FFF37GUM\"}], \"hotel_id\": \"B0FFF37GUM\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 654, \"attraction_names\": [\"丽江古城\", \"丽江古城博物院-木府\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378008PR\", \"B03780I3B7\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0JRLK0ZKH\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFG865VX\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0G0YMJVKI\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"suggested_restaurant_id\": \"B0JRLK0ZKH\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\"], \"unused_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\"], \"suggested_restaurant_id\": \"B0KAHD1IE4\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\"], \"unused_restaurant_ids\": [\"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\"], \"suggested_restaurant_id\": \"B0FFG865VX\"}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 653, \"attraction_names\": [\"狮子山万古楼景区\", \"丽江古城-文昌宫观景台\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B037815BZ1\", \"B0FFK10I11\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFFW7B6K\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0J2NUI8WJ\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFM0KDG3\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0FFJOWXP9\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"suggested_restaurant_id\": \"B0FFFW7B6K\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\"], \"suggested_restaurant_id\": \"B0J2NUI8WJ\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B0KAHD1IE4\", \"B03781586B\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\", \"B0FFI67BFN\"], \"suggested_restaurant_id\": \"B0FFM0KDG3\"}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 647, \"attraction_names\": [\"五一街\", \"大研花巷\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFIMYOV7\", \"B0FFIXONOV\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFK6GKNJ\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFFDCXXB\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFJOWXP9\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0FFJOWXP9\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\"], \"suggested_restaurant_id\": \"B0FFK6GKNJ\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B0KAHD1IE4\", \"B03781586B\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0FFGASTRO\"], \"suggested_restaurant_id\": \"B0FFFDCXXB\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B0KAHD1IE4\", \"B03781586B\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0FFGASTRO\", \"B0HDBXFELZ\"], \"suggested_restaurant_id\": \"B0FFJOWXP9\"}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 654, \"attraction_names\": [\"束河古镇\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B03780HUIN\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG7CDTP\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFFDCFFR\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0G0YMJVKI\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0HDBXFELZ\", \"B0FFG7CDTP\"], \"suggested_restaurant_id\": \"B0FFG7CDTP\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0378149MX\", \"B0FFG77HB0\", \"B0I6ZHL8V7\", \"B0FFFDCFFR\", \"B0I2BMTQFW\", \"B0HD9DYPQA\", \"B0KAHMUJQR\", \"B0LDRG7XMQ\"], \"unused_restaurant_ids\": [\"B0378149MX\", \"B0FFG77HB0\", \"B0I6ZHL8V7\", \"B0FFFDCFFR\", \"B0I2BMTQFW\", \"B0HD9DYPQA\", \"B0KAHMUJQR\", \"B0LDRG7XMQ\"], \"suggested_restaurant_id\": \"B0FFFDCFFR\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"], \"unused_restaurant_ids\": [\"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0HKKSI2SA\", \"B0378149MX\", \"B0KALU7VRY\", \"B0FFG77HB0\", \"B0FFFDCBBN\"], \"suggested_restaurant_id\": \"B0G0YMJVKI\"}]}, {\"date\": \"2026-10-24\", \"day_index\": 4, \"total_minutes\": 630, \"attraction_names\": [\"古城南门牌坊\", \"丽江古城-木王府驿站旧址\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFK2MD5J\", \"B0FFKKTSNT\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0HDBXFELZ\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0KALU7VRY\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B03781586B\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0HDBXFELZ\"], \"suggested_restaurant_id\": \"B0HDBXFELZ\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\"], \"unused_restaurant_ids\": [\"B03781586B\", \"B0KALU7VRY\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0FFGASTRO\", \"B0FFKPJA2R\", \"B0KBBYO0PB\", \"B0FFL4CSHG\"], \"suggested_restaurant_id\": \"B0KALU7VRY\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B0KAHD1IE4\", \"B03781586B\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0FFGASTRO\", \"B0FFKPJA2R\", \"B0KBBYO0PB\", \"B0FFL4CSHG\"], \"suggested_restaurant_id\": \"B03781586B\"}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。suggested_restaurant_id是跨餐次匹配后的真实候选建议，保持布局时可优先采用以避免局部贪心导致重复；实际路线和预算仍需复核。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+    "retries": 1,
+    "budget_retries": 0,
+    "planning_calls": 5,
+    "composition_valid": true,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：2026-10-24。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFJOWXP9,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K\n2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFJOWXP9,B0JRLK0ZKH,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K\n2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFJOWXP9,B0JRLK0ZKH,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K\n2026-10-23 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFJOWXP9,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K\n2026-10-24 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFJOWXP9,B0JRLK0ZKH,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0378152FK\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0378152FK\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B0378152FK\"}, {\"check_in\": \"2026-10-23\", \"hotel_id\": \"B0378152FK\"}], \"hotel_id\": \"B0378152FK\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"丽江古城-古城大水车\", \"丽江古城博物院-木府\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFF9GOOV\", \"B03780I3B7\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0JRLK0ZKH\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0KAHD1IE4\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0G0YMJVKI\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0FFJOWXP9\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"suggested_restaurant_id\": \"B0FFFW7B6K\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"], \"unused_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"], \"suggested_restaurant_id\": \"B03780I16N\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\", \"B0FFJOWXP9\"], \"suggested_restaurant_id\": \"B0FFG865VX\"}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"丽江古城-狮子山(狮山路)\", \"狮子山万古楼景区\", \"四方街\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378008PQ\", \"B037815BZ1\", \"B0G3RHAMHA\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFM0KDG3\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0KALU7VRY\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFG865VX\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0FFJOWXP9\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"suggested_restaurant_id\": \"B0HDBXFELZ\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B0FFG865VX\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\", \"B0FFI67BFN\"], \"suggested_restaurant_id\": \"B0KALU7VRY\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFM0KDG3\", \"B0KALU7VRY\", \"B0FFJOWXP9\"], \"unused_restaurant_ids\": [\"B0FFG865VX\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFJOWXP9\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0FFGASTRO\", \"B0HDBXFELZ\"], \"suggested_restaurant_id\": \"B0KAHD1IE4\"}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"丽江古城白龙文化广场\", \"古城南门牌坊\", \"丽江古城-木王府驿站旧址\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B03780IFZH\", \"B0FFK2MD5J\", \"B0FFKKTSNT\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFL4CSHG\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFFDCXXB\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0LAPLLSTI\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0FFJOWXP9\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"suggested_restaurant_id\": \"B0FFK6GKNJ\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\"], \"unused_restaurant_ids\": [\"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFJOWXP9\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0FFGASTRO\", \"B0HDBXFELZ\"], \"suggested_restaurant_id\": \"B0FFFDCXXB\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B03781586B\", \"B0J2NUI8WJ\", \"B0FFJOWXP9\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0FFGASTRO\", \"B0HDBXFELZ\", \"B0FFKPJA2R\"], \"suggested_restaurant_id\": \"B0LAPLLSTI\"}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 0, \"attraction_names\": [\"束河古镇\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B03780HUIN\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFKR1LR0\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0378149MX\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFFW7B6K\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0FFJOWXP9\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"suggested_restaurant_id\": \"B0FFG7CDTP\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0378149MX\", \"B0FFG77HB0\"], \"unused_restaurant_ids\": [\"B0378149MX\", \"B0FFG77HB0\"], \"suggested_restaurant_id\": \"B0378149MX\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0HKKSI2SA\", \"B0FFM0KDG3\", \"B0378149MX\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B03780I16N\", \"B03781586B\", \"B0HKKSI2SA\", \"B0FFG77HB0\", \"B0FFJOWXP9\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0FFGASTRO\"], \"suggested_restaurant_id\": \"B0G0YMJVKI\"}]}, {\"date\": \"2026-10-24\", \"day_index\": 4, \"total_minutes\": 0, \"attraction_names\": [\"丽江古城-文昌宫观景台\", \"大研花巷\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFK10I11\", \"B0FFIXONOV\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0HGNSN6CF\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFGASTRO\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFJOWXP9\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0FFJOWXP9\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\"], \"suggested_restaurant_id\": \"B0JRLK0ZKH\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFM0KDG3\", \"B0KALU7VRY\", \"B0FFJOWXP9\"], \"unused_restaurant_ids\": [\"B03781586B\", \"B0J2NUI8WJ\", \"B0FFJOWXP9\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0FFGASTRO\", \"B0HDBXFELZ\", \"B0FFKPJA2R\"], \"suggested_restaurant_id\": \"B0FFGASTRO\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"], \"unused_restaurant_ids\": [\"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0HKKSI2SA\", \"B0FFJOWXP9\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0HDBXFELZ\"], \"suggested_restaurant_id\": \"B0FFJOWXP9\"}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。suggested_restaurant_id是跨餐次匹配后的真实候选建议，保持布局时可优先采用以避免局部贪心导致重复；实际路线和预算仍需复核。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚300元仅为预算预留，尚未获得实际房价。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「丽江古城-狮子山(狮山路)」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「丽江古城白龙文化广场」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-24：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-24：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFJOWXP9,B0JRLK0ZKH,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K\n2026-10-22 breakfast 重复餐厅 B0JRLK0ZKH，附近尚有未使用候选：B0FFJOWXP9,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K\n2026-10-23 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFJOWXP9,B0JRLK0ZKH,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K\n2026-10-23 breakfast 重复餐厅 B0FFKR1LR0，附近尚有未使用候选：B0FFJOWXP9,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K\n2026-10-23 dinner 重复餐厅 B0FFM0KDG3，附近尚有未使用候选：B03780I16N,B03781586B,B0FFFDCXXB,B0HKKSI2SA,B0378149MX,B0FFG77HB0,B0FFJOWXP9,B0FFFDCBBN\n2026-10-24 breakfast 重复餐厅 B0JRLK0ZKH，附近尚有未使用候选：B0FFJOWXP9,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K\n2026-10-24 dinner 重复餐厅 B0FFG865VX，附近尚有未使用候选：B03781586B,B0FFJOWXP9,B0FFFDCBBN,B0FFI67BFN,B0FFGASTRO,B0HDBXFELZ,B0FFKPJA2R,B0FFG7CDTP\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0FFF37GUM\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0FFF37GUM\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B0FFF37GUM\"}, {\"check_in\": \"2026-10-23\", \"hotel_id\": \"B0FFF37GUM\"}], \"hotel_id\": \"B0FFF37GUM\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"丽江古城\", \"丽江古城博物院-木府\", \"四方街\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378008PR\", \"B03780I3B7\", \"B0G3RHAMHA\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0JRLK0ZKH\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFG865VX\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0G0YMJVKI\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"suggested_restaurant_id\": \"B0FFJOWXP9\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\"], \"unused_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\"], \"suggested_restaurant_id\": \"B0KAHD1IE4\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\", \"B0FFJOWXP9\"], \"suggested_restaurant_id\": \"B03781586B\"}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"狮子山万古楼景区\", \"丽江古城-古城大水车\", \"丽江古城-文昌宫观景台\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B037815BZ1\", \"B0FFF9GOOV\", \"B0FFK10I11\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFKR1LR0\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0KAHD1IE4\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFM0KDG3\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0FFJOWXP9\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"suggested_restaurant_id\": \"B0FFK6GKNJ\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"], \"unused_restaurant_ids\": [\"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"suggested_restaurant_id\": \"B03780I16N\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\", \"B0FFI67BFN\"], \"suggested_restaurant_id\": \"B0FFM0KDG3\"}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"丽江古城白龙文化广场\", \"五一街\", \"大研花巷\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B03780IFZH\", \"B0FFIMYOV7\", \"B0FFIXONOV\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0JRLK0ZKH\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0J2NUI8WJ\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0KALU7VRY\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0FFJOWXP9\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"suggested_restaurant_id\": \"B0FFG7CDTP\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0FFGASTRO\"], \"suggested_restaurant_id\": \"B0J2NUI8WJ\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B03781586B\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0FFGASTRO\", \"B0HDBXFELZ\"], \"suggested_restaurant_id\": \"B0KALU7VRY\"}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 0, \"attraction_names\": [\"束河古镇\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B03780HUIN\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFKR1LR0\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFFDCFFR\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFM0KDG3\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0FFJOWXP9\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"suggested_restaurant_id\": \"B0HDBXFELZ\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0378149MX\", \"B0FFG77HB0\", \"B0I6ZHL8V7\", \"B0FFFDCFFR\", \"B0I2BMTQFW\", \"B0HD9DYPQA\", \"B0KAHMUJQR\", \"B0LDRG7XMQ\"], \"unused_restaurant_ids\": [\"B0378149MX\", \"B0FFG77HB0\", \"B0I6ZHL8V7\", \"B0FFFDCFFR\", \"B0I2BMTQFW\", \"B0HD9DYPQA\", \"B0KAHMUJQR\", \"B0LDRG7XMQ\"], \"suggested_restaurant_id\": \"B0FFFDCFFR\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"], \"unused_restaurant_ids\": [\"B03780I16N\", \"B03781586B\", \"B0FFFDCXXB\", \"B0HKKSI2SA\", \"B0378149MX\", \"B0FFG77HB0\", \"B0FFJOWXP9\", \"B0FFFDCBBN\"], \"suggested_restaurant_id\": \"B0G0YMJVKI\"}]}, {\"date\": \"2026-10-24\", \"day_index\": 4, \"total_minutes\": 0, \"attraction_names\": [\"古城南门牌坊\", \"丽江古城-木王府驿站旧址\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFK2MD5J\", \"B0FFKKTSNT\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0JRLK0ZKH\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFFDCXXB\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFG865VX\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0FFJOWXP9\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"suggested_restaurant_id\": \"B0JRLK0ZKH\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\"], \"unused_restaurant_ids\": [\"B03781586B\", \"B0FFFDCXXB\", \"B0FFJOWXP9\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0FFGASTRO\", \"B0HDBXFELZ\", \"B0FFKPJA2R\"], \"suggested_restaurant_id\": \"B0FFFDCXXB\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B03781586B\", \"B0FFJOWXP9\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0FFGASTRO\", \"B0HDBXFELZ\", \"B0FFKPJA2R\", \"B0FFG7CDTP\"], \"suggested_restaurant_id\": \"B0FFG865VX\"}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。suggested_restaurant_id是跨餐次匹配后的真实候选建议，保持布局时可优先采用以避免局部贪心导致重复；实际路线和预算仍需复核。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚300元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「四方街」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「丽江古城-古城大水车」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「丽江古城白龙文化广场」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-24：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-24：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23 dinner 重复餐厅 B0G0YMJVKI，附近尚有未使用候选：B0KAHD1IE4,B03780I16N,B03781586B,B0HKKSI2SA,B0378149MX,B0KALU7VRY,B0FFG77HB0,B0FFFDCBBN\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B0FFF37GUM\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B0FFF37GUM\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B0FFF37GUM\"}, {\"check_in\": \"2026-10-23\", \"hotel_id\": \"B0FFF37GUM\"}], \"hotel_id\": \"B0FFF37GUM\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"丽江古城\", \"丽江古城博物院-木府\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0378008PR\", \"B03780I3B7\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0JRLK0ZKH\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFG865VX\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0G0YMJVKI\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"suggested_restaurant_id\": \"B0JRLK0ZKH\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\"], \"unused_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\"], \"suggested_restaurant_id\": \"B0KAHD1IE4\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\"], \"unused_restaurant_ids\": [\"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\"], \"suggested_restaurant_id\": \"B0FFG865VX\"}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"狮子山万古楼景区\", \"丽江古城-文昌宫观景台\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B037815BZ1\", \"B0FFK10I11\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFFW7B6K\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0J2NUI8WJ\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFM0KDG3\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0FFJOWXP9\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"suggested_restaurant_id\": \"B0FFFW7B6K\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\"], \"suggested_restaurant_id\": \"B0J2NUI8WJ\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B0KAHD1IE4\", \"B03781586B\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\", \"B0FFI67BFN\"], \"suggested_restaurant_id\": \"B0FFM0KDG3\"}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"五一街\", \"大研花巷\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFIMYOV7\", \"B0FFIXONOV\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFK6GKNJ\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFFDCXXB\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFJOWXP9\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0FFJOWXP9\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\"], \"suggested_restaurant_id\": \"B0FFK6GKNJ\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B0KAHD1IE4\", \"B03781586B\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0FFGASTRO\"], \"suggested_restaurant_id\": \"B0FFFDCXXB\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B0KAHD1IE4\", \"B03781586B\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0FFGASTRO\", \"B0HDBXFELZ\"], \"suggested_restaurant_id\": \"B0FFJOWXP9\"}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 0, \"attraction_names\": [\"束河古镇\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B03780HUIN\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG7CDTP\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFFDCFFR\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0G0YMJVKI\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0HDBXFELZ\", \"B0FFG7CDTP\"], \"suggested_restaurant_id\": \"B0FFG7CDTP\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0378149MX\", \"B0FFG77HB0\", \"B0I6ZHL8V7\", \"B0FFFDCFFR\", \"B0I2BMTQFW\", \"B0HD9DYPQA\", \"B0KAHMUJQR\", \"B0LDRG7XMQ\"], \"unused_restaurant_ids\": [\"B0378149MX\", \"B0FFG77HB0\", \"B0I6ZHL8V7\", \"B0FFFDCFFR\", \"B0I2BMTQFW\", \"B0HD9DYPQA\", \"B0KAHMUJQR\", \"B0LDRG7XMQ\"], \"suggested_restaurant_id\": \"B0FFFDCFFR\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0HKKSI2SA\"], \"unused_restaurant_ids\": [\"B0KAHD1IE4\", \"B03780I16N\", \"B03781586B\", \"B0HKKSI2SA\", \"B0378149MX\", \"B0KALU7VRY\", \"B0FFG77HB0\", \"B0FFFDCBBN\"], \"suggested_restaurant_id\": \"B0G0YMJVKI\"}]}, {\"date\": \"2026-10-24\", \"day_index\": 4, \"total_minutes\": 0, \"attraction_names\": [\"古城南门牌坊\", \"丽江古城-木王府驿站旧址\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0FFK2MD5J\", \"B0FFKKTSNT\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0HDBXFELZ\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0KALU7VRY\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B03781586B\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFJOWXP9\", \"B0JRLK0ZKH\", \"B0HDBXFELZ\", \"B0FFG7CDTP\", \"B0FFK6GKNJ\", \"B0FFFW7B6K\"], \"unused_restaurant_ids\": [\"B0HDBXFELZ\"], \"suggested_restaurant_id\": \"B0HDBXFELZ\"}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0KALU7VRY\", \"B0FFJOWXP9\", \"B0FFFDCBBN\"], \"unused_restaurant_ids\": [\"B03781586B\", \"B0KALU7VRY\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0FFGASTRO\", \"B0FFKPJA2R\", \"B0KBBYO0PB\", \"B0FFL4CSHG\"], \"suggested_restaurant_id\": \"B0KALU7VRY\"}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFG865VX\", \"B0G0YMJVKI\", \"B0KAHD1IE4\", \"B03781586B\", \"B0J2NUI8WJ\", \"B0FFFDCXXB\", \"B0FFM0KDG3\", \"B0KALU7VRY\"], \"unused_restaurant_ids\": [\"B0KAHD1IE4\", \"B03781586B\", \"B0FFFDCBBN\", \"B0FFI67BFN\", \"B0FFGASTRO\", \"B0FFKPJA2R\", \"B0KBBYO0PB\", \"B0FFL4CSHG\"], \"suggested_restaurant_id\": \"B03781586B\"}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。suggested_restaurant_id是跨餐次匹配后的真实候选建议，保持布局时可优先采用以避免局部贪心导致重复；实际路线和预算仍需复核。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚300元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-24：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-24：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+    ],
+    "usage": {
+      "prompt_tokens": 58420,
+      "completion_tokens": 7897,
+      "llm_calls": 7
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 2282,
+      "subtotal": 2282,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 2282 元 = 2282 元。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "过街楼客栈(丽江古城木府店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "tool_call_count": 109,
+    "hotel_source": "agent",
+    "final_days": 5,
+    "final_weather_days": 5
+  },
+  "request": {
+    "city": "丽江",
+    "start_date": "2026-10-20",
+    "travel_days": 5,
+    "transportation": "公共交通",
+    "accommodation": "民宿",
+    "preferences": [
+      "自然风光"
+    ],
+    "must_visit": [],
+    "free_text_input": ""
+  },
+  "expect": {
+    "success": true,
+    "days": 5,
+    "min_beyond_window": 1,
+    "fabricated": 0
+  },
+  "exception": null,
+  "warnings": [
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：2026-10-24。",
+    "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+    "2026-10-20 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFJOWXP9,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K",
+    "2026-10-21 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFJOWXP9,B0JRLK0ZKH,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K",
+    "2026-10-22 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFJOWXP9,B0JRLK0ZKH,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K",
+    "2026-10-23 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFJOWXP9,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K",
+    "2026-10-24 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFJOWXP9,B0JRLK0ZKH,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K",
+    "酒店每晚300元仅为预算预留，尚未获得实际房价。",
+    "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「丽江古城-狮子山(狮山路)」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「丽江古城白龙文化广场」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+    "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-24：本日天气未知，保留室内备选，出发前重新查询。",
+    "2026-10-24：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+    "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-22 breakfast 重复餐厅 B0JRLK0ZKH，附近尚有未使用候选：B0FFJOWXP9,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K",
+    "2026-10-23 breakfast 餐厅不符合就近/餐次条件，可选ID：B0FFJOWXP9,B0JRLK0ZKH,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K",
+    "2026-10-23 breakfast 重复餐厅 B0FFKR1LR0，附近尚有未使用候选：B0FFJOWXP9,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K",
+    "2026-10-23 dinner 重复餐厅 B0FFM0KDG3，附近尚有未使用候选：B03780I16N,B03781586B,B0FFFDCXXB,B0HKKSI2SA,B0378149MX,B0FFG77HB0,B0FFJOWXP9,B0FFFDCBBN",
+    "2026-10-24 breakfast 重复餐厅 B0JRLK0ZKH，附近尚有未使用候选：B0FFJOWXP9,B0HDBXFELZ,B0FFG7CDTP,B0FFK6GKNJ,B0FFFW7B6K",
+    "2026-10-24 dinner 重复餐厅 B0FFG865VX，附近尚有未使用候选：B03781586B,B0FFJOWXP9,B0FFFDCBBN,B0FFI67BFN,B0FFGASTRO,B0HDBXFELZ,B0FFKPJA2R,B0FFG7CDTP",
+    "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「四方街」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「丽江古城-古城大水车」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-23 dinner 重复餐厅 B0G0YMJVKI，附近尚有未使用候选：B0KAHD1IE4,B03780I16N,B03781586B,B0HKKSI2SA,B0378149MX,B0KALU7VRY,B0FFG77HB0,B0FFFDCBBN"
+  ],
+  "message": "已返回部分结果：未通过校验：2026-10-23 dinner 重复餐厅 B0G0YMJVKI，附近尚有未使用候选：B0KAHD1IE4,B03780I16N,B03781586B,B0HKKSI2SA,B0378149MX,B0KALU7VRY,B0FFG77HB0,B0FFFDCBBN，请见上方提示。",
+  "started_at": "2026-10-20T01:21:57"
+}

@@ -16,7 +16,8 @@
  *   而"我点过没"是**每人不同的数据**，不能塞进公共榜单里。
  *   所以加载完榜单后并发补齐这 20 个状态 —— 这是数据性质决定的，不是偷懒。
  */
-import { ArrowLeft, Flame, Heart, LoaderCircle, RefreshCw, Sparkles, TrendingUp } from 'lucide-vue-next'
+import { ArrowLeft, Flame, Heart, LoaderCircle, RefreshCw, Sparkles } from 'lucide-vue-next'
+import BrandLockup from '@/components/BrandLockup.vue'
 import { computed, onMounted, ref } from 'vue'
 
 import {
@@ -167,16 +168,14 @@ onMounted(async () => {
   <div class="page">
     <header class="hero">
       <div class="brand">
-        <TrendingUp :size="26" />
-        <span>社区行程榜</span>
+        <router-link to="/chat" aria-label="云程，回到旅行工作台"><BrandLockup /></router-link><span class="community-title">社区行程榜</span>
       </div>
       <p class="subtitle">
-        数据来自 Java 社区服务（Spring Boot + MySQL + Redis），行程由 Python 多智能体生成 ——
-        两个服务通过 HTTP 双向联动。
+        看看大家怎样出发，收藏下一次旅行的灵感。
       </p>
       <div class="ids">
         <span class="chip">账号状态：{{ userId }}</span>
-        <span class="chip hint-chip">一人一赞按浏览器计（本地身份，尚未接登录）</span>
+        <span class="chip hint-chip">为喜欢的旅行计划点个赞</span>
       </div>
     </header>
 
@@ -207,10 +206,9 @@ onMounted(async () => {
         </div>
 
         <p v-if="boardType === 'hot'" class="board-note">
-          热度分 = 点赞数 ÷ (发布至今小时数 + 2)<sup>1.5</sup>，所以老行程会自然下沉，
-          新发布的有机会被看到 —— 只按点赞数排的话，榜首会永远钉在那里。
+          结合点赞与发布时间排序，发现最近值得参考的旅行计划。
         </p>
-        <p v-else class="board-note">按发布时间倒序，不参与热度竞争。</p>
+        <p v-else class="board-note">按发布时间排序，看看大家最近的新行程。</p>
 
         <!-- 状态：加载中 / 出错 / 空 / 列表 -->
         <div v-if="loading" class="state">
@@ -222,7 +220,7 @@ onMounted(async () => {
           <span>{{ errorMessage }}</span>
           <button class="action-btn" type="button" @click="loadBoard">重试</button>
           <span class="tiny">
-            社区服务是另一个进程（Java :8080）。它没起来时，行程生成功能不受影响。
+            稍后重试，或先去规划自己的旅行。
           </span>
         </div>
 
@@ -271,9 +269,7 @@ onMounted(async () => {
         <div class="card-block">
           <div class="block-title"><Flame :size="15" /> 社区热度</div>
           <p class="block-hint">
-            这份统计存在 Java 的 tb_hot_stat 里（由已发布行程累积）。
-            <strong>Python 生成行程前会读它</strong>，把热门方向作为参考写进提示词 ——
-            这就是「用户行为 → 热度 → 下一次生成」的闭环。
+            从大家分享的行程中，看看近期常去的城市和喜欢的旅行方式。
           </p>
           <p v-if="hotLoading" class="unavailable">正在读取热度…</p>
           <template v-else-if="hotAvailable">
@@ -302,12 +298,11 @@ onMounted(async () => {
         </div>
 
         <div class="card-block">
-          <div class="block-title">这套联动是怎么分工的</div>
+          <div class="block-title">把灵感变成自己的行程</div>
           <ul class="facts">
-            <li><b>Java</b>：点赞 / 排行榜 / 行程入库 / 唯一持有 MySQL</li>
-            <li><b>Redis</b>：一人一赞（Lua 原子）+ ZSET 排行 + 限频</li>
-            <li><b>落库</b>：点赞先返回，MySQL 每秒批量刷（最终一致）</li>
-            <li><b>Python</b>：生成行程 / 生成简介（被 Java 回调）</li>
+            <li>选好目的地和出发日期，写下这次的旅行想法。</li>
+            <li>一起考虑景点、美食、住宿和预算。</li>
+            <li>已有行程也可以按具体模块调整。</li>
           </ul>
         </div>
       </aside>
@@ -340,7 +335,7 @@ onMounted(async () => {
 
 .subtitle {
   margin: 6px 0 10px;
-  color: #5b6472;
+  color: var(--yc-text);
   font-size: 13px;
 }
 
@@ -354,7 +349,7 @@ onMounted(async () => {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: #eef1f5;
+  background: var(--yc-soft);
   border-radius: 999px;
   padding: 3px 10px;
   font-size: 12px;
@@ -363,7 +358,7 @@ onMounted(async () => {
 
 .chip em {
   font-style: normal;
-  color: #6b7480;
+  color: var(--yc-muted);
 }
 
 .chip.empty {
@@ -371,8 +366,8 @@ onMounted(async () => {
 }
 
 .hint-chip {
-  background: #f6f7f9;
-  color: #7b838f;
+  background: var(--yc-page);
+  color: var(--yc-muted);
 }
 
 .layout {
@@ -391,7 +386,7 @@ onMounted(async () => {
 .main,
 .card-block {
   background: #fff;
-  border: 1px solid #eceef2;
+  border: 1px solid var(--yc-border);
   border-radius: 12px;
 }
 
@@ -415,7 +410,7 @@ onMounted(async () => {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  border: 1px solid #e3e6ec;
+  border: 1px solid var(--yc-border);
   background: #fff;
   border-radius: 8px;
   padding: 6px 12px;
@@ -425,8 +420,8 @@ onMounted(async () => {
 }
 
 .tab.active {
-  background: #1b1f27;
-  border-color: #1b1f27;
+  background: var(--yc-ink);
+  border-color: var(--yc-ink);
   color: #fff;
 }
 
@@ -436,7 +431,7 @@ onMounted(async () => {
   gap: 5px;
   border: none;
   background: transparent;
-  color: #6b7480;
+  color: var(--yc-muted);
   font-size: 13px;
   cursor: pointer;
 }
@@ -449,7 +444,7 @@ onMounted(async () => {
 .board-note {
   margin: 10px 0 14px;
   font-size: 12px;
-  color: #7b838f;
+  color: var(--yc-muted);
   line-height: 1.6;
 }
 
@@ -459,7 +454,7 @@ onMounted(async () => {
   align-items: center;
   gap: 10px;
   padding: 34px 10px;
-  color: #6b7480;
+  color: var(--yc-muted);
   font-size: 13px;
   text-align: center;
 }
@@ -502,7 +497,7 @@ onMounted(async () => {
   height: 26px;
   border-radius: 8px;
   background: #f1f3f7;
-  color: #6b7480;
+  color: var(--yc-muted);
   font-size: 13px;
   font-weight: 600;
   display: flex;
@@ -516,8 +511,8 @@ onMounted(async () => {
 }
 
 .rank.top2 {
-  background: #eef1f5;
-  color: #5b6472;
+  background: var(--yc-soft);
+  color: var(--yc-text);
 }
 
 .rank.top3 {
@@ -565,7 +560,7 @@ onMounted(async () => {
   align-items: center;
   gap: 12px;
   font-size: 12px;
-  color: #7b838f;
+  color: var(--yc-muted);
 }
 
 .score {
@@ -611,7 +606,7 @@ onMounted(async () => {
   gap: 5px;
   margin-top: 16px;
   font-size: 13px;
-  color: #6b7480;
+  color: var(--yc-muted);
   text-decoration: none;
 }
 
@@ -637,7 +632,7 @@ onMounted(async () => {
 .block-hint {
   margin: 0 0 12px;
   font-size: 12px;
-  color: #7b838f;
+  color: var(--yc-muted);
   line-height: 1.7;
 }
 
@@ -668,7 +663,7 @@ onMounted(async () => {
   margin: 0;
   padding-left: 16px;
   font-size: 12px;
-  color: #5b6472;
+  color: var(--yc-text);
   line-height: 1.9;
 }
 
@@ -676,7 +671,7 @@ onMounted(async () => {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  border: 1px solid #e3e6ec;
+  border: 1px solid var(--yc-border);
   background: #fff;
   border-radius: 8px;
   padding: 6px 14px;
@@ -687,8 +682,8 @@ onMounted(async () => {
 }
 
 .action-btn.primary {
-  background: #1b1f27;
-  border-color: #1b1f27;
+  background: var(--yc-ink);
+  border-color: var(--yc-ink);
   color: #fff;
 }
 
@@ -707,7 +702,7 @@ onMounted(async () => {
   left: 50%;
   bottom: 32px;
   transform: translateX(-50%);
-  background: #1b1f27;
+  background: var(--yc-ink);
   color: #fff;
   padding: 10px 18px;
   border-radius: 10px;
@@ -724,4 +719,11 @@ onMounted(async () => {
 .fade-leave-to {
   opacity: 0;
 }
+.hero { padding: 20px 0 24px; border-bottom: 1px solid var(--yc-border); }
+.brand { flex-wrap: wrap; gap: 20px; }
+.brand>a { display: inline-flex; text-decoration: none; }
+.tab.active, .action-btn.primary { background: var(--yc-primary); border-color: var(--yc-primary); }
+.community-title { font-size: 17px; font-weight: 500; border-left: 1px solid var(--yc-border); padding-left: 20px; }
+.subtitle { margin: 18px 0 12px; }
+@media(max-width:600px) { .community-title { font-size: 14px; } .brand { gap: 12px; } }
 </style>

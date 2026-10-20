@@ -15,10 +15,12 @@ const modules: { key: keyof Requirements; label: string; placeholder: string }[]
 ]
 const notes = reactive<Record<keyof Requirements, string>>({ food: '', attractions: '', hotel: '', transport: '', pace: '', weather: '', budget: '' })
 const controls = reactive({ priority: 'nearby' as 'nearby' | 'food_first', scope: 'nearby' as 'nearby' | 'citywide',
+  stayPolicy: 'auto' as 'auto' | 'prefer_same' | 'must_same', luggagePolicy: 'carry' as 'carry' | 'storage_required',
   meal: '', hotel: '', leg: '', activity: '', spots: 4, rain: false, estimated: true })
 watch(() => props.value, value => {
   for (const module of modules) notes[module.key] = value[module.key]?.instructions ?? ''
   controls.priority = value.food?.priority ?? 'nearby'; controls.scope = value.food?.travel_scope ?? 'nearby'
+  controls.stayPolicy = value.hotel?.stay_policy ?? 'auto'; controls.luggagePolicy = value.hotel?.luggage_policy ?? 'carry'
   controls.meal = String(value.food?.max_cost_per_meal ?? ''); controls.hotel = String(value.hotel?.max_price_per_night ?? '')
   controls.leg = String(value.transport?.max_leg_minutes ?? ''); controls.activity = String(value.pace?.max_activity_minutes ?? '')
   controls.spots = value.attractions?.max_per_day ?? 4; controls.rain = value.weather?.avoid_rain_outdoors ?? false
@@ -28,7 +30,7 @@ function save() {
   const result: Requirements = JSON.parse(JSON.stringify(props.value))
   for (const module of modules) result[module.key] = { ...result[module.key], instructions: notes[module.key] }
   result.food = { ...result.food, priority: controls.priority, travel_scope: controls.scope, max_cost_per_meal: controls.meal === '' ? null : Number(controls.meal) }
-  result.hotel = { ...result.hotel, max_price_per_night: controls.hotel === '' ? null : Number(controls.hotel) }
+  result.hotel = { ...result.hotel, stay_policy: controls.stayPolicy, luggage_policy: controls.luggagePolicy, max_price_per_night: controls.hotel === '' ? null : Number(controls.hotel) }
   result.attractions = { ...result.attractions, max_per_day: controls.spots }
   result.transport = { ...result.transport, max_leg_minutes: controls.leg === '' ? null : Number(controls.leg), allow_estimated_routes: controls.estimated }
   result.pace = { ...result.pace, max_activity_minutes: controls.activity === '' ? null : Number(controls.activity) }
@@ -47,6 +49,8 @@ function save() {
         <label>餐饮安排<select v-model="controls.priority" :disabled="disabled"><option value="nearby">景点为主，顺路吃饭</option><option value="food_first">美食优先，围绕餐厅安排</option></select></label>
         <label>找店范围<select v-model="controls.scope" :disabled="disabled"><option value="nearby">优先附近</option><option value="citywide">全城寻找，不优先附近</option></select></label>
         <label>每餐参考价上限 / 元<input v-model="controls.meal" type="number" min="1" max="100000" :disabled="disabled" placeholder="不限" /></label>
+        <label>住宿安排<select v-model="controls.stayPolicy" :disabled="disabled"><option value="auto">结合动线自动评估连住或换住</option><option value="prefer_same">尽量连住，减少搬动</option><option value="must_same">必须全程同一家</option></select></label>
+        <label>换住日行李<select v-model="controls.luggagePolicy" :disabled="disabled"><option value="carry">可随行，预留整理与入住时间</option><option value="storage_required">必须有已核实寄存安排</option></select></label>
         <label>每晚参考房价上限 / 元<input v-model="controls.hotel" type="number" min="1" max="100000" :disabled="disabled" placeholder="不限" /></label>
         <label>每天最多几个景点<input v-model.number="controls.spots" type="number" min="1" max="4" required :disabled="disabled" /></label>
         <label>单段交通上限 / 分钟<input v-model="controls.leg" type="number" min="1" max="300" :disabled="disabled" placeholder="不额外限制" /></label>
@@ -61,5 +65,5 @@ function save() {
 </template>
 
 <style scoped>
-.requirements-panel{margin:18px 0;padding:18px;border:1px solid #dce6e6;border-radius:12px;background:#f8fbfa}summary{font-weight:600;cursor:pointer}p{font-size:13px;color:#60716d;line-height:1.7;margin:12px 0}.module-notes,.rule-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.module-notes label:last-child{grid-column:1/-1}label{display:block;font-size:13px;color:#344d47}span{display:block;margin-bottom:6px}textarea,input,select{width:100%;padding:9px 10px;border:1px solid #cad8d3;border-radius:7px;background:#fff;font:inherit;box-sizing:border-box}textarea{resize:vertical}.rule-fields{margin-top:18px}.rule-fields input,.rule-fields select{display:block;margin-top:6px}.check{display:flex;gap:8px;align-items:center;margin-top:14px}.check input{width:auto}button{background:#245a4e;color:white;border:0;padding:10px 16px;border-radius:8px;cursor:pointer}button:disabled{opacity:.5;cursor:default}@media(max-width:600px){.module-notes,.rule-fields{grid-template-columns:1fr}}
+.requirements-panel{margin:18px 0;padding:18px;border:1px solid #dce6e6;border-radius:12px;background:var(--yc-surface)}summary{font-weight:600;cursor:pointer}p{font-size:13px;color:var(--yc-text);line-height:1.7;margin:12px 0}.module-notes,.rule-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.module-notes label:last-child{grid-column:1/-1}label{display:block;font-size:13px;color:var(--yc-ink)}span{display:block;margin-bottom:6px}textarea,input,select{width:100%;padding:9px 10px;border:1px solid var(--yc-border);border-radius:7px;background:#fff;font:inherit;box-sizing:border-box}textarea{resize:vertical}.rule-fields{margin-top:18px}.rule-fields input,.rule-fields select{display:block;margin-top:6px}.check{display:flex;gap:8px;align-items:center;margin-top:14px}.check input{width:auto}button{background:var(--yc-ink);color:white;border:0;padding:10px 16px;border-radius:8px;cursor:pointer}button:disabled{opacity:.5;cursor:default}@media(max-width:600px){.module-notes,.rule-fields{grid-template-columns:1fr}}
 </style>

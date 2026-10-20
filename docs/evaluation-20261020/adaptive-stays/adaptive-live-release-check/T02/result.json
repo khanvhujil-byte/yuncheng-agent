@@ -1,0 +1,146 @@
+{
+  "case_id": "T02",
+  "name": "成都4天两天周边雪山公共交通可行性",
+  "kind": "generate",
+  "passed": false,
+  "violations": [
+    "days 期望 4，实际 0",
+    "独立主题验收：至少2个不同日期出现相关真实景点，实际0"
+  ],
+  "duration_s": 28.72,
+  "error_code": "PLAN_VALIDATION_FAILED",
+  "success": false,
+  "days": 0,
+  "response_summary": {
+    "success": false,
+    "error_code": "PLAN_VALIDATION_FAILED",
+    "message": "已返回部分结果：行程未生成，未通过校验：统一编排选择无效：2026-10-23 breakfast 的 restaurant_id='B0FFGRH0AY' 不在餐饮候选；请按本轮候选ID修正，不可编造。。内部planner_draft已保留，可用meal_patches仅修正错误餐次，再完整复核；days 数量是 0，但要求正好 4 天，请见上方提示。",
+    "cached": false,
+    "warnings": [
+      "周边主题检索覆盖市中心直线300公里内候选；实际通勤、预算仍需复核。",
+      "雪山景区不代表出行当天必有积雪；市区天气不能代表山区天气，山区天气及开放状态需另行确认。",
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "西岭雪山：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "四姑娘山景区-观景台：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "四姑娘山漂流：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "达古冰川.四姑娘山.黄龙.九寨沟风景区管理局：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "行程为空，未计算预算。",
+      "统一编排选择无效：2026-10-23 breakfast 的 restaurant_id='B0FFGRH0AY' 不在餐饮候选；请按本轮候选ID修正，不可编造。。内部planner_draft已保留，可用meal_patches仅修正错误餐次，再完整复核。",
+      "days 数量是 0，但要求正好 4 天。",
+      "尚未找到可用酒店。",
+      "用户要求「雪山」至少安排2天，实际仅0天以真实相关景点为主要活动；不能用一句建议或同一天多个景点代替。"
+    ],
+    "budget": null,
+    "hotel": null,
+    "hotel_nights": 3,
+    "accommodation_version": 0,
+    "stays": [],
+    "stay_comparison": {},
+    "constraint_report": null,
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "多云"
+      },
+      {
+        "date": "2026-10-21",
+        "beyond_window": false,
+        "day_weather": "阴"
+      },
+      {
+        "date": "2026-10-22",
+        "beyond_window": false,
+        "day_weather": "多云"
+      },
+      {
+        "date": "2026-10-23",
+        "beyond_window": false,
+        "day_weather": "多云"
+      }
+    ],
+    "days": [],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "budget_verdict": null,
+    "validate_error": "统一编排选择无效：2026-10-23 breakfast 的 restaurant_id='B0FFGRH0AY' 不在餐饮候选；请按本轮候选ID修正，不可编造。。内部planner_draft已保留，可用meal_patches仅修正错误餐次，再完整复核。"
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": "统一编排选择无效：2026-10-23 breakfast 的 restaurant_id='B0FFGRH0AY' 不在餐饮候选；请按本轮候选ID修正，不可编造。。内部planner_draft已保留，可用meal_patches仅修正错误餐次，再完整复核。",
+    "retries": 2,
+    "budget_retries": 0,
+    "planning_calls": 2,
+    "composition_valid": false,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "warnings": [
+      "周边主题检索覆盖市中心直线300公里内候选；实际通勤、预算仍需复核。",
+      "雪山景区不代表出行当天必有积雪；市区天气不能代表山区天气，山区天气及开放状态需另行确认。",
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "西岭雪山：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "四姑娘山景区-观景台：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "四姑娘山漂流：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "达古冰川.四姑娘山.黄龙.九寨沟风景区管理局：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "行程为空，未计算预算。"
+    ],
+    "usage": {
+      "prompt_tokens": 34978,
+      "completion_tokens": 1184,
+      "llm_calls": 2
+    },
+    "budget_verdict": null,
+    "constraint_report": null,
+    "tool_call_count": 27,
+    "hotel_source": "agent",
+    "final_days": 0,
+    "final_weather_days": 4
+  },
+  "request": {
+    "city": "成都",
+    "start_date": "2026-10-20",
+    "travel_days": 4,
+    "transportation": "公共交通",
+    "accommodation": "经济型酒店",
+    "preferences": [
+      "自然风光"
+    ],
+    "must_visit": [],
+    "free_text_input": "有两天想去周边的雪山"
+  },
+  "expect": {
+    "days": 4
+  },
+  "exception": null,
+  "warnings": [
+    "周边主题检索覆盖市中心直线300公里内候选；实际通勤、预算仍需复核。",
+    "雪山景区不代表出行当天必有积雪；市区天气不能代表山区天气，山区天气及开放状态需另行确认。",
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "西岭雪山：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "四姑娘山景区-观景台：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "四姑娘山漂流：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "达古冰川.四姑娘山.黄龙.九寨沟风景区管理局：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+    "行程为空，未计算预算。",
+    "统一编排选择无效：2026-10-23 breakfast 的 restaurant_id='B0FFGRH0AY' 不在餐饮候选；请按本轮候选ID修正，不可编造。。内部planner_draft已保留，可用meal_patches仅修正错误餐次，再完整复核。",
+    "days 数量是 0，但要求正好 4 天。",
+    "尚未找到可用酒店。",
+    "用户要求「雪山」至少安排2天，实际仅0天以真实相关景点为主要活动；不能用一句建议或同一天多个景点代替。"
+  ],
+  "message": "已返回部分结果：行程未生成，未通过校验：统一编排选择无效：2026-10-23 breakfast 的 restaurant_id='B0FFGRH0AY' 不在餐饮候选；请按本轮候选ID修正，不可编造。。内部planner_draft已保留，可用meal_patches仅修正错误餐次，再完整复核；days 数量是 0，但要求正好 4 天，请见上方提示。",
+  "started_at": "2026-10-20T01:45:09"
+}

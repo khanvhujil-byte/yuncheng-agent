@@ -34,6 +34,16 @@ test('legacy plans preserve all stops, distinct repeated meals, and do not inven
   assert.ok(stops.every(s=>!s.incoming))
 })
 
+test('dated route ends at tonight hotel rather than a whole-trip summary hotel', () => {
+  const day = { dated_boundaries: true, route_end: {name:'山区酒店',poi_id:'H2'}, attractions:[spot('A')],meals:[],
+    route_legs:[leg('市区酒店','同名景点','A',70),leg('同名景点','山区酒店','H2',10)] }
+  const stops = dayStops(day,{name:'市区酒店',poi_id:'H1'})
+  assert.equal(stops[0].returnToHotel.to_id,'H2')
+  assert.equal(stops[0].incoming.duration_minutes,70)
+  day.route_end = null
+  assert.equal(dayStops(day,{name:'市区酒店',poi_id:'H1'})[0].returnToHotel,undefined)
+})
+
 test('unknown and estimated routes retain uncertainty instead of showing zero as measured', () => {
   assert.match(routeText({...leg('A','B','B',0),status:'unknown'}),/耗时待核实/)
   assert.doesNotMatch(routeText({...leg('A','B','B',0),status:'unknown'}),/0 分钟/)

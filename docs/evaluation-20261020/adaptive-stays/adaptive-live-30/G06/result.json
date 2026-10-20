@@ -1,0 +1,1353 @@
+{
+  "case_id": "G06",
+  "name": "西安6天超预报窗口不编造天气",
+  "kind": "generate",
+  "passed": false,
+  "violations": [
+    "success 期望 True，实际 False"
+  ],
+  "duration_s": 75.76,
+  "error_code": "PLAN_VALIDATION_FAILED",
+  "success": false,
+  "days": 6,
+  "response_summary": {
+    "success": false,
+    "error_code": "PLAN_VALIDATION_FAILED",
+    "message": "已返回部分结果：未通过校验：2026-10-25 dinner 重复餐厅 B0K3OKMDRI，附近尚有未使用候选：B0LDGA85QT,B0KK4H3WDA,B0FFMCIJE7,B0J2VZINFM,B0K1XGU5UA,B0FFFQZE30,B0FFF9WIA3,B0FFLOU1R9，请见上方提示。",
+    "cached": false,
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：2026-10-23、2026-10-24、2026-10-25。",
+      "鄠邑区钟楼：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "终南山古楼观历史文化景区：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "北屯历史文化展示馆：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-24 重复安排景点「西安记忆历史文化展览馆」（2026-10-21 已安排过），已保留首次出现并去重。",
+      "2026-10-25 重复安排景点「西安记忆历史文化展览馆」（2026-10-21 已安排过），已保留首次出现并去重。",
+      "2026-10-21 dinner 餐厅不符合就近/餐次条件，可选ID：B0FFIARZW4",
+      "2026-10-22 breakfast 重复餐厅 B0FFIARZW4，附近尚有未使用候选：B0FFKSID3J,B0HG7HKNX6,B0FFF9W7IF,B0K3G9ZPW2,B0H6L4CABV,B0LAONF2DV,B0J1C9DTW5,B001D08EP8",
+      "2026-10-24 breakfast 餐厅不符合就近/餐次条件，可选ID：B0HG7HKNX6,B0FFF9W7IF",
+      "2026-10-24 breakfast 重复餐厅 B0FFIARZW4，附近尚有未使用候选：B0HG7HKNX6,B0FFF9W7IF",
+      "2026-10-24 dinner 餐厅不符合就近/餐次条件，可选ID：B0HG7HKNX6,B0FFF9W7IF",
+      "2026-10-24 dinner 重复餐厅 B001D08DCF，附近尚有未使用候选：B0HG7HKNX6",
+      "2026-10-25 lunch 重复餐厅 B001D08DCF，附近尚有未使用候选：B0FFKSID3J",
+      "2026-10-25 dinner 重复餐厅 B0FFIARZW4，附近尚有未使用候选：B0FFKSID3J",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「西安化觉巷清真大寺」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「西安唐皇城墙含光门遗址博物馆」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「富陶博物馆·唐毓引」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-24：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-25：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-25：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-25：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23 lunch 重复餐厅 B001D09CL8，附近尚有未使用候选：B0K3OKMDRI,B0FFMCIJE7,B0J2VZINFM,B0FFM4HNK0,B0KKVS37U1,B0FFGRPHX2,B001D077X5,B001D0WQ0Q",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-25 dinner 重复餐厅 B0K3OKMDRI，附近尚有未使用候选：B0LDGA85QT,B0KK4H3WDA,B0FFMCIJE7,B0J2VZINFM,B0K1XGU5UA,B0FFFQZE30,B0FFF9WIA3,B0FFLOU1R9"
+    ],
+    "budget": {
+      "ticket_reserve_amount": 100,
+      "total_attractions": 328,
+      "total_hotels": 1300,
+      "total_meals": 538,
+      "total_transportation": 240,
+      "total": 2406,
+      "items": [
+        {
+          "category": "attraction",
+          "name": "西安钟楼",
+          "day_index": 0,
+          "amount": 30,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：西安钟楼日常成人登楼门票挂牌价约30元"
+        },
+        {
+          "category": "attraction",
+          "name": "西安鼓楼",
+          "day_index": 0,
+          "amount": 30,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：西安鼓楼日常成人登楼门票挂牌价约30元"
+        },
+        {
+          "category": "meal",
+          "name": "爱骅裤带面馆(钟楼店)",
+          "day_index": 0,
+          "amount": 14,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "醉长安(钟楼旗舰店)",
+          "day_index": 0,
+          "amount": 68,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "星巴克臻选(西安钟楼店)",
+          "day_index": 0,
+          "amount": 30,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "西安城墙·碑林历史文化景区",
+          "day_index": 1,
+          "amount": 54,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：西安城墙景区日常成人门票约54元，碑林博物馆另计；此处按城墙日常挂牌价估算"
+        },
+        {
+          "category": "attraction",
+          "name": "西安记忆历史文化展览馆",
+          "day_index": 1,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：西安记忆历史文化展览馆属免费开放类展览馆，按0元估算"
+        },
+        {
+          "category": "meal",
+          "name": "古都华天放心早餐",
+          "day_index": 1,
+          "amount": 25,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "餐厅未提供人均价格，按每人每餐固定规则预留；不是餐厅报价。"
+        },
+        {
+          "category": "meal",
+          "name": "钟楼饭店",
+          "day_index": 1,
+          "amount": 60,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "餐厅未提供人均价格，按每人每餐固定规则预留；不是餐厅报价。"
+        },
+        {
+          "category": "meal",
+          "name": "肯悦咖啡(西安东大街店)",
+          "day_index": 1,
+          "amount": 11,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "陕西历史博物馆",
+          "day_index": 2,
+          "amount": 0,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：陕西历史博物馆基本陈列免费预约参观，按0元估算"
+        },
+        {
+          "category": "meal",
+          "name": "爱骅裤带面馆(钟楼店)",
+          "day_index": 2,
+          "amount": 14,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "虎子水盆羊肉(翠华路总店)",
+          "day_index": 2,
+          "amount": 43,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "长安大牌档(西安博物院文化餐厅)",
+          "day_index": 2,
+          "amount": 44,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "大明宫国家遗址公园丹凤门",
+          "day_index": 3,
+          "amount": 60,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：大明宫国家遗址公园核心区日常成人门票约60元，丹凤门属景区范围"
+        },
+        {
+          "category": "attraction",
+          "name": "西安城墙安远门",
+          "day_index": 3,
+          "amount": 54,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：安远门属西安城墙景区，按城墙日常成人门票约54元估算"
+        },
+        {
+          "category": "meal",
+          "name": "古都华天放心早餐",
+          "day_index": 3,
+          "amount": 25,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "餐厅未提供人均价格，按每人每餐固定规则预留；不是餐厅报价。"
+        },
+        {
+          "category": "meal",
+          "name": "肯德基(方汇商厦店)",
+          "day_index": 3,
+          "amount": 33,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "麦当劳(西安开元餐厅)",
+          "day_index": 3,
+          "amount": 24,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "陕西唐三彩艺术博物馆",
+          "day_index": 4,
+          "amount": 50,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：陕西唐三彩艺术博物馆为独立收费博物馆，日常成人票估算约50元"
+        },
+        {
+          "category": "meal",
+          "name": "古都华天放心早餐",
+          "day_index": 4,
+          "amount": 25,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "餐厅未提供人均价格，按每人每餐固定规则预留；不是餐厅报价。"
+        },
+        {
+          "category": "meal",
+          "name": "马林小炒泡馍(太乙路店)",
+          "day_index": 4,
+          "amount": 24,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "张军擀面皮(中贸国际大厦店)",
+          "day_index": 4,
+          "amount": 17,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "attraction",
+          "name": "灰色博物馆",
+          "day_index": 5,
+          "amount": 50,
+          "status": "estimated",
+          "source": "llm_estimated",
+          "note": "日常成人门票模型估算，未核验官方价格；非优惠或实时成交价。依据：灰色博物馆为独立收费展馆，日常成人票估算约50元"
+        },
+        {
+          "category": "meal",
+          "name": "爱骅裤带面馆(钟楼店)",
+          "day_index": 5,
+          "amount": 14,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "天发芽何记葫芦头泡馍(小南门总店)",
+          "day_index": 5,
+          "amount": 34,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "meal",
+          "name": "肯德基(方汇商厦店)",
+          "day_index": 5,
+          "amount": 33,
+          "status": "estimated",
+          "source": "amap",
+          "note": "数据源提供的人均参考价，实际以点单为准。"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-20 住宿：轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+          "day_index": 0,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-21 住宿：轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+          "day_index": 1,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-22 住宿：轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+          "day_index": 2,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-23 住宿：轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+          "day_index": 3,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "hotel",
+          "name": "2026-10-24 住宿：轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+          "day_index": 4,
+          "amount": 260,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "一间房一晚；预算预留非报价"
+        },
+        {
+          "category": "transportation",
+          "name": "市内交通（公共交通）",
+          "day_index": null,
+          "amount": 240,
+          "status": "estimated",
+          "source": "static_estimate",
+          "note": "按每人每天 40 元的固定表估算"
+        }
+      ],
+      "known_total": 0,
+      "estimated_total": 2406,
+      "unknown_items": [],
+      "limit": null,
+      "limit_status": "none",
+      "limit_basis": "未设置预算上限。当前口径：已知 0 元 + 估算 2406 元 = 2406 元。"
+    },
+    "hotel": {
+      "name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+      "poi_id": "B001D04YY2",
+      "address": "东大街尚德路红十字会巷4号",
+      "location": {
+        "longitude": 108.959963,
+        "latitude": 34.260523
+      },
+      "price_range": "",
+      "rating": "4.7",
+      "distance": "距最终行程景点加权平均 1.9 km（直线估计）",
+      "type": "经济型连锁酒店",
+      "estimated_cost": 260,
+      "cost_status": "estimated",
+      "cost_source": "static_estimate",
+      "price_evidence_url": null,
+      "nights": 5,
+      "check_in_after": null,
+      "check_in_before": null,
+      "check_out_before": null,
+      "operations_evidence_url": null
+    },
+    "hotel_nights": 5,
+    "accommodation_version": 11,
+    "stays": [
+      {
+        "check_in": "2026-10-20",
+        "check_out": "2026-10-21",
+        "hotel": {
+          "name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+          "poi_id": "B001D04YY2",
+          "address": "东大街尚德路红十字会巷4号",
+          "location": {
+            "longitude": 108.959963,
+            "latitude": 34.260523
+          },
+          "price_range": "",
+          "rating": "4.7",
+          "distance": "",
+          "type": "经济型连锁酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "首日钟楼鼓楼片区游览，入住钟鼓楼附近经济型酒店，步行可达核心景点，减少通勤。"
+      },
+      {
+        "check_in": "2026-10-21",
+        "check_out": "2026-10-22",
+        "hotel": {
+          "name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+          "poi_id": "B001D04YY2",
+          "address": "东大街尚德路红十字会巷4号",
+          "location": {
+            "longitude": 108.959963,
+            "latitude": 34.260523
+          },
+          "price_range": "",
+          "rating": "4.7",
+          "distance": "",
+          "type": "经济型连锁酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "次日城墙碑林与西安记忆展览馆仍在同一片区，连住免去换住整理时间。"
+      },
+      {
+        "check_in": "2026-10-22",
+        "check_out": "2026-10-23",
+        "hotel": {
+          "name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+          "poi_id": "B001D04YY2",
+          "address": "东大街尚德路红十字会巷4号",
+          "location": {
+            "longitude": 108.959963,
+            "latitude": 34.260523
+          },
+          "price_range": "",
+          "rating": "4.7",
+          "distance": "",
+          "type": "经济型连锁酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "陕西历史博物馆位于小寨方向，从钟楼片区公共交通可达，继续连住保持行李稳定。"
+      },
+      {
+        "check_in": "2026-10-23",
+        "check_out": "2026-10-24",
+        "hotel": {
+          "name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+          "poi_id": "B001D04YY2",
+          "address": "东大街尚德路红十字会巷4号",
+          "location": {
+            "longitude": 108.959963,
+            "latitude": 34.260523
+          },
+          "price_range": "",
+          "rating": "4.7",
+          "distance": "",
+          "type": "经济型连锁酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "大明宫丹凤门与安远门均在城北城墙沿线，回钟楼片区住宿动线合理，连住。"
+      },
+      {
+        "check_in": "2026-10-24",
+        "check_out": "2026-10-25",
+        "hotel": {
+          "name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+          "poi_id": "B001D04YY2",
+          "address": "东大街尚德路红十字会巷4号",
+          "location": {
+            "longitude": 108.959963,
+            "latitude": 34.260523
+          },
+          "price_range": "",
+          "rating": "4.7",
+          "distance": "",
+          "type": "经济型连锁酒店",
+          "estimated_cost": 260,
+          "cost_status": "estimated",
+          "cost_source": "static_estimate",
+          "price_evidence_url": null,
+          "nights": 1,
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "locked": false,
+        "reason": "唐三彩艺术博物馆位于城内东北方向，返钟楼片区住宿方便，末段连住减少换住负担。"
+      }
+    ],
+    "stay_comparison": {
+      "strategy": "same_hotel",
+      "hotel_changes": 0,
+      "travel_minutes": 683,
+      "transfer_minutes": 0,
+      "basis": "路线工具核算所选方案；未取得备选实测时，不宣称节省具体分钟。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "weather": [
+      {
+        "date": "2026-10-20",
+        "beyond_window": false,
+        "day_weather": "多云"
+      },
+      {
+        "date": "2026-10-21",
+        "beyond_window": false,
+        "day_weather": "多云"
+      },
+      {
+        "date": "2026-10-22",
+        "beyond_window": false,
+        "day_weather": "多云"
+      },
+      {
+        "date": "2026-10-23",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-10-24",
+        "beyond_window": true,
+        "day_weather": ""
+      },
+      {
+        "date": "2026-10-25",
+        "beyond_window": true,
+        "day_weather": ""
+      }
+    ],
+    "days": [
+      {
+        "date": "2026-10-20",
+        "day_index": 0,
+        "attractions": [
+          "西安钟楼",
+          "西安鼓楼"
+        ],
+        "meals": [
+          "爱骅裤带面馆(钟楼店)",
+          "醉长安(钟楼旗舰店)",
+          "星巴克臻选(西安钟楼店)"
+        ],
+        "total_minutes": 655,
+        "route_start": null,
+        "route_end": {
+          "name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+          "location": {
+            "longitude": 108.959963,
+            "latitude": 34.260523
+          },
+          "poi_id": "B001D04YY2",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "爱骅裤带面馆(钟楼店)",
+            "to_name": "西安钟楼",
+            "from_id": "B0LDT57Q5G",
+            "to_id": "B001D09TAA",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "西安钟楼",
+            "to_name": "醉长安(钟楼旗舰店)",
+            "from_id": "B001D09TAA",
+            "to_id": "B0FFIARZW4",
+            "mode": "公共交通",
+            "duration_minutes": 28,
+            "distance_meters": 2253,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "醉长安(钟楼旗舰店)",
+            "to_name": "西安鼓楼",
+            "from_id": "B0FFIARZW4",
+            "to_id": "B001D07CMS",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "西安鼓楼",
+            "to_name": "星巴克臻选(西安钟楼店)",
+            "from_id": "B001D07CMS",
+            "to_id": "B001D09CL8",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "星巴克臻选(西安钟楼店)",
+            "to_name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+            "from_id": "B001D09CL8",
+            "to_id": "B001D04YY2",
+            "mode": "公共交通",
+            "duration_minutes": 20,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（AMAP_ERROR）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 472
+      },
+      {
+        "date": "2026-10-21",
+        "day_index": 1,
+        "attractions": [
+          "西安城墙·碑林历史文化景区",
+          "西安记忆历史文化展览馆"
+        ],
+        "meals": [
+          "古都华天放心早餐",
+          "钟楼饭店",
+          "肯悦咖啡(西安东大街店)"
+        ],
+        "total_minutes": 653,
+        "route_start": {
+          "name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+          "location": {
+            "longitude": 108.959963,
+            "latitude": 34.260523
+          },
+          "poi_id": "B001D04YY2",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+          "location": {
+            "longitude": 108.959963,
+            "latitude": 34.260523
+          },
+          "poi_id": "B001D04YY2",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+            "to_name": "古都华天放心早餐",
+            "from_id": "B001D04YY2",
+            "to_id": "B0FFG9SKJ4",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "古都华天放心早餐",
+            "to_name": "西安城墙·碑林历史文化景区",
+            "from_id": "B0FFG9SKJ4",
+            "to_id": "B0KROZSZG0",
+            "mode": "公共交通",
+            "duration_minutes": 30,
+            "distance_meters": 2299,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "西安城墙·碑林历史文化景区",
+            "to_name": "钟楼饭店",
+            "from_id": "B0KROZSZG0",
+            "to_id": "B001D03PU9",
+            "mode": "公共交通",
+            "duration_minutes": 28,
+            "distance_meters": 1526,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "钟楼饭店",
+            "to_name": "西安记忆历史文化展览馆",
+            "from_id": "B001D03PU9",
+            "to_id": "B0FFJIWE14",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "西安记忆历史文化展览馆",
+            "to_name": "肯悦咖啡(西安东大街店)",
+            "from_id": "B0FFJIWE14",
+            "to_id": "B0LROKW64N",
+            "mode": "公共交通",
+            "duration_minutes": 38,
+            "distance_meters": 4342,
+            "status": "known",
+            "source": "amap",
+            "note": "高德路线接口缓存（1 分钟内）；出发时路况仍可能变化。"
+          },
+          {
+            "from_name": "肯悦咖啡(西安东大街店)",
+            "to_name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+            "from_id": "B0LROKW64N",
+            "to_id": "B001D04YY2",
+            "mode": "公共交通",
+            "duration_minutes": 18,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（AMAP_ERROR）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 450
+      },
+      {
+        "date": "2026-10-22",
+        "day_index": 2,
+        "attractions": [
+          "陕西历史博物馆"
+        ],
+        "meals": [
+          "爱骅裤带面馆(钟楼店)",
+          "虎子水盆羊肉(翠华路总店)",
+          "长安大牌档(西安博物院文化餐厅)"
+        ],
+        "total_minutes": 635,
+        "route_start": {
+          "name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+          "location": {
+            "longitude": 108.959963,
+            "latitude": 34.260523
+          },
+          "poi_id": "B001D04YY2",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+          "location": {
+            "longitude": 108.959963,
+            "latitude": 34.260523
+          },
+          "poi_id": "B001D04YY2",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+            "to_name": "爱骅裤带面馆(钟楼店)",
+            "from_id": "B001D04YY2",
+            "to_id": "B0LDT57Q5G",
+            "mode": "公共交通",
+            "duration_minutes": 20,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "爱骅裤带面馆(钟楼店)",
+            "to_name": "虎子水盆羊肉(翠华路总店)",
+            "from_id": "B0LDT57Q5G",
+            "to_id": "B0FFGZPDIV",
+            "mode": "公共交通",
+            "duration_minutes": 42,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "虎子水盆羊肉(翠华路总店)",
+            "to_name": "陕西历史博物馆",
+            "from_id": "B0FFGZPDIV",
+            "to_id": "B001D03PEX",
+            "mode": "公共交通",
+            "duration_minutes": 14,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "陕西历史博物馆",
+            "to_name": "长安大牌档(西安博物院文化餐厅)",
+            "from_id": "B001D03PEX",
+            "to_id": "B0FFKSID3J",
+            "mode": "公共交通",
+            "duration_minutes": 27,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "长安大牌档(西安博物院文化餐厅)",
+            "to_name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+            "from_id": "B0FFKSID3J",
+            "to_id": "B001D04YY2",
+            "mode": "公共交通",
+            "duration_minutes": 29,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 401
+      },
+      {
+        "date": "2026-10-23",
+        "day_index": 3,
+        "attractions": [
+          "大明宫国家遗址公园丹凤门",
+          "西安城墙安远门"
+        ],
+        "meals": [
+          "古都华天放心早餐",
+          "肯德基(方汇商厦店)",
+          "麦当劳(西安开元餐厅)"
+        ],
+        "total_minutes": 653,
+        "route_start": {
+          "name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+          "location": {
+            "longitude": 108.959963,
+            "latitude": 34.260523
+          },
+          "poi_id": "B001D04YY2",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+          "location": {
+            "longitude": 108.959963,
+            "latitude": 34.260523
+          },
+          "poi_id": "B001D04YY2",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+            "to_name": "古都华天放心早餐",
+            "from_id": "B001D04YY2",
+            "to_id": "B0FFG9SKJ4",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "古都华天放心早餐",
+            "to_name": "大明宫国家遗址公园丹凤门",
+            "from_id": "B0FFG9SKJ4",
+            "to_id": "B001D0X51I",
+            "mode": "公共交通",
+            "duration_minutes": 29,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "大明宫国家遗址公园丹凤门",
+            "to_name": "肯德基(方汇商厦店)",
+            "from_id": "B001D0X51I",
+            "to_id": "B0K3OKMDRI",
+            "mode": "公共交通",
+            "duration_minutes": 31,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "肯德基(方汇商厦店)",
+            "to_name": "西安城墙安远门",
+            "from_id": "B0K3OKMDRI",
+            "to_id": "B0GD3H1EO6",
+            "mode": "公共交通",
+            "duration_minutes": 24,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "西安城墙安远门",
+            "to_name": "麦当劳(西安开元餐厅)",
+            "from_id": "B0GD3H1EO6",
+            "to_id": "B001D10MF4",
+            "mode": "公共交通",
+            "duration_minutes": 25,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "麦当劳(西安开元餐厅)",
+            "to_name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+            "from_id": "B001D10MF4",
+            "to_id": "B001D04YY2",
+            "mode": "公共交通",
+            "duration_minutes": 18,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 496
+      },
+      {
+        "date": "2026-10-24",
+        "day_index": 4,
+        "attractions": [
+          "陕西唐三彩艺术博物馆"
+        ],
+        "meals": [
+          "古都华天放心早餐",
+          "马林小炒泡馍(太乙路店)",
+          "张军擀面皮(中贸国际大厦店)"
+        ],
+        "total_minutes": 647,
+        "route_start": {
+          "name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+          "location": {
+            "longitude": 108.959963,
+            "latitude": 34.260523
+          },
+          "poi_id": "B001D04YY2",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": {
+          "name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+          "location": {
+            "longitude": 108.959963,
+            "latitude": 34.260523
+          },
+          "poi_id": "B001D04YY2",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+            "to_name": "古都华天放心早餐",
+            "from_id": "B001D04YY2",
+            "to_id": "B0FFG9SKJ4",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未找到适用交通方式的可用路线（ROUTE_NOT_FOUND）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "古都华天放心早餐",
+            "to_name": "陕西唐三彩艺术博物馆",
+            "from_id": "B0FFG9SKJ4",
+            "to_id": "B0IDCCBTTS",
+            "mode": "公共交通",
+            "duration_minutes": 25,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "陕西唐三彩艺术博物馆",
+            "to_name": "马林小炒泡馍(太乙路店)",
+            "from_id": "B0IDCCBTTS",
+            "to_id": "B0HG7HKNX6",
+            "mode": "公共交通",
+            "duration_minutes": 28,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "马林小炒泡馍(太乙路店)",
+            "to_name": "张军擀面皮(中贸国际大厦店)",
+            "from_id": "B0HG7HKNX6",
+            "to_id": "B001D077X5",
+            "mode": "公共交通",
+            "duration_minutes": 33,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "张军擀面皮(中贸国际大厦店)",
+            "to_name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+            "from_id": "B001D077X5",
+            "to_id": "B001D04YY2",
+            "mode": "公共交通",
+            "duration_minutes": 12,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 416
+      },
+      {
+        "date": "2026-10-25",
+        "day_index": 5,
+        "attractions": [
+          "灰色博物馆"
+        ],
+        "meals": [
+          "爱骅裤带面馆(钟楼店)",
+          "天发芽何记葫芦头泡馍(小南门总店)",
+          "肯德基(方汇商厦店)"
+        ],
+        "total_minutes": 630,
+        "route_start": {
+          "name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+          "location": {
+            "longitude": 108.959963,
+            "latitude": 34.260523
+          },
+          "poi_id": "B001D04YY2",
+          "check_in_after": null,
+          "check_in_before": null,
+          "check_out_before": null,
+          "operations_evidence_url": null
+        },
+        "route_end": null,
+        "hotel_change": false,
+        "route_legs": [
+          {
+            "from_name": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+            "to_name": "爱骅裤带面馆(钟楼店)",
+            "from_id": "B001D04YY2",
+            "to_id": "B0LDT57Q5G",
+            "mode": "公共交通",
+            "duration_minutes": 20,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "爱骅裤带面馆(钟楼店)",
+            "to_name": "天发芽何记葫芦头泡馍(小南门总店)",
+            "from_id": "B0LDT57Q5G",
+            "to_id": "B001D06YQ0",
+            "mode": "公共交通",
+            "duration_minutes": 20,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "天发芽何记葫芦头泡馍(小南门总店)",
+            "to_name": "灰色博物馆",
+            "from_id": "B001D06YQ0",
+            "to_id": "B0M6ZU1RZQ",
+            "mode": "公共交通",
+            "duration_minutes": 22,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          },
+          {
+            "from_name": "灰色博物馆",
+            "to_name": "肯德基(方汇商厦店)",
+            "from_id": "B0M6ZU1RZQ",
+            "to_id": "B0K3OKMDRI",
+            "mode": "公共交通",
+            "duration_minutes": 13,
+            "distance_meters": null,
+            "status": "estimated",
+            "source": "static_estimate",
+            "note": "路线接口未取得结果（ROUTE_QUERY_LIMIT）。按直线距离×1.5与交通速度估算；未获取实际道路路线。"
+          }
+        ],
+        "day_total_cost": 171
+      }
+    ],
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 2406,
+      "subtotal": 2406,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 2406 元 = 2406 元。"
+    },
+    "validate_error": "2026-10-25 dinner 重复餐厅 B0K3OKMDRI，附近尚有未使用候选：B0LDGA85QT,B0KK4H3WDA,B0FFMCIJE7,B0J2VZINFM,B0K1XGU5UA,B0FFFQZE30,B0FFF9WIA3,B0FFLOU1R9\n\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B001D04YY2\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B001D04YY2\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B001D04YY2\"}, {\"check_in\": \"2026-10-23\", \"hotel_id\": \"B001D04YY2\"}, {\"check_in\": \"2026-10-24\", \"hotel_id\": \"B001D04YY2\"}], \"hotel_id\": \"B001D04YY2\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 655, \"attraction_names\": [\"西安钟楼\", \"西安鼓楼\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001D09TAA\", \"B001D07CMS\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LDT57Q5G\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFIARZW4\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B001D09CL8\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LDT57Q5G\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\", \"B0KK4H3WDA\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\", \"B0KK4H3WDA\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 653, \"attraction_names\": [\"西安城墙·碑林历史文化景区\", \"西安记忆历史文化展览馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0KROZSZG0\", \"B0FFJIWE14\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG9SKJ4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B001D03PU9\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0LROKW64N\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LDT57Q5G\", \"B0FFG9SKJ4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\", \"B0KK4H3WDA\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\", \"B0KK4H3WDA\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 635, \"attraction_names\": [\"陕西历史博物馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001D03PEX\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LDT57Q5G\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFGZPDIV\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFKSID3J\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LDT57Q5G\", \"B0FFG9SKJ4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFGZPDIV\", \"B0FFK97RP0\", \"B0LAX53GDZ\", \"B0LA65A1F3\", \"B0K3G9ZPW2\", \"B001D10O8B\", \"B0H6L4CABV\", \"B0LAONF2DV\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFKSID3J\", \"B0FFIARZW4\", \"B0FFGZPDIV\", \"B0HG7HKNX6\", \"B0FFF9W7IF\", \"B0LA65A1F3\", \"B0K3G9ZPW2\", \"B001D10O8B\"]}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 653, \"attraction_names\": [\"大明宫国家遗址公园丹凤门\", \"西安城墙安远门\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001D0X51I\", \"B0GD3H1EO6\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG9SKJ4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0K3OKMDRI\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B001D10MF4\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG9SKJ4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B001D09CL8\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B0FFMCIJE7\", \"B0J2VZINFM\", \"B0FFM4HNK0\", \"B0KKVS37U1\", \"B0FFGRPHX2\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\", \"B0KK4H3WDA\", \"B0FFMCIJE7\"]}]}, {\"date\": \"2026-10-24\", \"day_index\": 4, \"total_minutes\": 647, \"attraction_names\": [\"陕西唐三彩艺术博物馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0IDCCBTTS\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG9SKJ4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0HG7HKNX6\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B001D077X5\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG9SKJ4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0HG7HKNX6\", \"B0FFF9W7IF\", \"B001D077X5\", \"B0FFFA8VPP\", \"B0LRNDL817\", \"B0FFFA8U2P\", \"B0FFFPK8XX\", \"B0IBF7Z4ID\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B001D077X5\", \"B0FFFA8VPP\", \"B0LRNDL817\", \"B0FFFA8U2P\", \"B0FFFPK8XX\", \"B0IBF7Z4ID\", \"B0FFF58R9J\", \"B0JKSAZLIP\"]}]}, {\"date\": \"2026-10-25\", \"day_index\": 5, \"total_minutes\": 630, \"attraction_names\": [\"灰色博物馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0M6ZU1RZQ\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LDT57Q5G\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B001D06YQ0\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0K3OKMDRI\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LDT57Q5G\", \"B0FFG9SKJ4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D06YQ0\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D06YQ0\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。"
+  },
+  "final_summary": {
+    "error_code": null,
+    "validate_error": "2026-10-25 dinner 重复餐厅 B0K3OKMDRI，附近尚有未使用候选：B0LDGA85QT,B0KK4H3WDA,B0FFMCIJE7,B0J2VZINFM,B0K1XGU5UA,B0FFFQZE30,B0FFF9WIA3,B0FFLOU1R9\n\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B001D04YY2\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B001D04YY2\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B001D04YY2\"}, {\"check_in\": \"2026-10-23\", \"hotel_id\": \"B001D04YY2\"}, {\"check_in\": \"2026-10-24\", \"hotel_id\": \"B001D04YY2\"}], \"hotel_id\": \"B001D04YY2\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 655, \"attraction_names\": [\"西安钟楼\", \"西安鼓楼\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001D09TAA\", \"B001D07CMS\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LDT57Q5G\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFIARZW4\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B001D09CL8\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LDT57Q5G\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\", \"B0KK4H3WDA\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\", \"B0KK4H3WDA\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 653, \"attraction_names\": [\"西安城墙·碑林历史文化景区\", \"西安记忆历史文化展览馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0KROZSZG0\", \"B0FFJIWE14\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG9SKJ4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B001D03PU9\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0LROKW64N\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LDT57Q5G\", \"B0FFG9SKJ4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\", \"B0KK4H3WDA\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\", \"B0KK4H3WDA\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 635, \"attraction_names\": [\"陕西历史博物馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001D03PEX\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LDT57Q5G\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFGZPDIV\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFKSID3J\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LDT57Q5G\", \"B0FFG9SKJ4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFGZPDIV\", \"B0FFK97RP0\", \"B0LAX53GDZ\", \"B0LA65A1F3\", \"B0K3G9ZPW2\", \"B001D10O8B\", \"B0H6L4CABV\", \"B0LAONF2DV\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFKSID3J\", \"B0FFIARZW4\", \"B0FFGZPDIV\", \"B0HG7HKNX6\", \"B0FFF9W7IF\", \"B0LA65A1F3\", \"B0K3G9ZPW2\", \"B001D10O8B\"]}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 653, \"attraction_names\": [\"大明宫国家遗址公园丹凤门\", \"西安城墙安远门\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001D0X51I\", \"B0GD3H1EO6\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG9SKJ4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0K3OKMDRI\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B001D10MF4\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG9SKJ4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B001D09CL8\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B0FFMCIJE7\", \"B0J2VZINFM\", \"B0FFM4HNK0\", \"B0KKVS37U1\", \"B0FFGRPHX2\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\", \"B0KK4H3WDA\", \"B0FFMCIJE7\"]}]}, {\"date\": \"2026-10-24\", \"day_index\": 4, \"total_minutes\": 647, \"attraction_names\": [\"陕西唐三彩艺术博物馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0IDCCBTTS\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG9SKJ4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0HG7HKNX6\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B001D077X5\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG9SKJ4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0HG7HKNX6\", \"B0FFF9W7IF\", \"B001D077X5\", \"B0FFFA8VPP\", \"B0LRNDL817\", \"B0FFFA8U2P\", \"B0FFFPK8XX\", \"B0IBF7Z4ID\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B001D077X5\", \"B0FFFA8VPP\", \"B0LRNDL817\", \"B0FFFA8U2P\", \"B0FFFPK8XX\", \"B0IBF7Z4ID\", \"B0FFF58R9J\", \"B0JKSAZLIP\"]}]}, {\"date\": \"2026-10-25\", \"day_index\": 5, \"total_minutes\": 630, \"attraction_names\": [\"灰色博物馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0M6ZU1RZQ\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LDT57Q5G\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B001D06YQ0\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0K3OKMDRI\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LDT57Q5G\", \"B0FFG9SKJ4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D06YQ0\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D06YQ0\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+    "retries": 1,
+    "budget_retries": 0,
+    "planning_calls": 3,
+    "composition_valid": true,
+    "experience_enabled": true,
+    "unified_planning": true,
+    "sources": {
+      "community_hot": "degraded",
+      "attractions": "amap",
+      "food": "catalog+amap",
+      "hotel": "amap",
+      "weather": "amap"
+    },
+    "warnings": [
+      "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+      "以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：2026-10-23、2026-10-24、2026-10-25。",
+      "鄠邑区钟楼：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "终南山古楼观历史文化景区：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "北屯历史文化展示馆：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-24 重复安排景点「西安记忆历史文化展览馆」（2026-10-21 已安排过），已保留首次出现并去重。",
+      "2026-10-25 重复安排景点「西安记忆历史文化展览馆」（2026-10-21 已安排过），已保留首次出现并去重。",
+      "2026-10-21 dinner 餐厅不符合就近/餐次条件，可选ID：B0FFIARZW4\n2026-10-22 breakfast 重复餐厅 B0FFIARZW4，附近尚有未使用候选：B0FFKSID3J,B0HG7HKNX6,B0FFF9W7IF,B0K3G9ZPW2,B0H6L4CABV,B0LAONF2DV,B0J1C9DTW5,B001D08EP8\n2026-10-24 breakfast 餐厅不符合就近/餐次条件，可选ID：B0HG7HKNX6,B0FFF9W7IF\n2026-10-24 breakfast 重复餐厅 B0FFIARZW4，附近尚有未使用候选：B0HG7HKNX6,B0FFF9W7IF\n2026-10-24 dinner 餐厅不符合就近/餐次条件，可选ID：B0HG7HKNX6,B0FFF9W7IF\n2026-10-24 dinner 重复餐厅 B001D08DCF，附近尚有未使用候选：B0HG7HKNX6\n2026-10-25 lunch 重复餐厅 B001D08DCF，附近尚有未使用候选：B0FFKSID3J\n2026-10-25 dinner 重复餐厅 B0FFIARZW4，附近尚有未使用候选：B0FFKSID3J\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B001D04YY2\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B001D04YY2\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B001D04YY2\"}, {\"check_in\": \"2026-10-23\", \"hotel_id\": \"B001D04YY2\"}, {\"check_in\": \"2026-10-24\", \"hotel_id\": \"B001D04YY2\"}], \"hotel_id\": \"B001D04YY2\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"西安钟楼\", \"西安鼓楼\", \"西安化觉巷清真大寺\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001D09TAA\", \"B001D07CMS\", \"B001D07CMR\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFIARZW4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFIARZW4\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B001D08DCF\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D06YQ0\", \"B001D08DCF\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"西安城墙·碑林历史文化景区\", \"西安唐皇城墙含光门遗址博物馆\", \"西安记忆历史文化展览馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0KROZSZG0\", \"B0FFF65CXL\", \"B0FFJIWE14\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFIARZW4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B001D06YQ0\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B001D0WKXP\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D06YQ0\", \"B001D0WKXP\", \"B001D08DCF\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"陕西历史博物馆\", \"富陶博物馆·唐毓引\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001D03PEX\", \"B001D0Z8XL\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFIARZW4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFGZPDIV\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0HRO7KWFN\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFKSID3J\", \"B0FFIARZW4\", \"B0HG7HKNX6\", \"B0FFF9W7IF\", \"B0K3G9ZPW2\", \"B0H6L4CABV\", \"B0LAONF2DV\", \"B0J1C9DTW5\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFGZPDIV\", \"B0HRO7KWFN\", \"B0FFK97RP0\", \"B001D0WUQX\", \"B0LAX53GDZ\", \"B0LA65A1F3\", \"B0K3G9ZPW2\", \"B001D10O8B\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFKSID3J\", \"B0FFGZPDIV\", \"B0HRO7KWFN\", \"B0HG7HKNX6\", \"B0FFK97RP0\", \"B0FFF9W7IF\", \"B001D0WUQX\", \"B0LAX53GDZ\"]}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 0, \"attraction_names\": [\"大明宫国家遗址公园丹凤门\", \"西安城墙安远门\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001D0X51I\", \"B0GD3H1EO6\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFIARZW4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B001D08DCF\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFIARZW4\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B001D08DCF\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D08DCF\"]}]}, {\"date\": \"2026-10-24\", \"day_index\": 4, \"total_minutes\": 0, \"attraction_names\": [\"陕西唐三彩艺术博物馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0IDCCBTTS\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFIARZW4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFF9W7IF\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B001D08DCF\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0HG7HKNX6\", \"B0FFF9W7IF\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0HG7HKNX6\", \"B0FFF9W7IF\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0HG7HKNX6\", \"B0FFF9W7IF\"]}]}, {\"date\": \"2026-10-25\", \"day_index\": 5, \"total_minutes\": 0, \"attraction_names\": [\"灰色博物馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0M6ZU1RZQ\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFIARZW4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B001D08DCF\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFIARZW4\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B0FFF9W7IF\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFKSID3J\", \"B0FFIARZW4\", \"B001D06YQ0\", \"B0FFF9W7IF\", \"B001D0WKXP\", \"B001D08DCF\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFKSID3J\", \"B0FFIARZW4\", \"B001D06YQ0\", \"B0FFF9W7IF\", \"B001D0WKXP\", \"B001D08DCF\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「西安化觉巷清真大寺」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「西安唐皇城墙含光门遗址博物馆」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「富陶博物馆·唐毓引」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-24：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-25：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-25：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-25：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23 lunch 重复餐厅 B001D09CL8，附近尚有未使用候选：B0K3OKMDRI,B0FFMCIJE7,B0J2VZINFM,B0FFM4HNK0,B0KKVS37U1,B0FFGRPHX2,B001D077X5,B001D0WQ0Q\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B001D04YY2\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B001D04YY2\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B001D04YY2\"}, {\"check_in\": \"2026-10-23\", \"hotel_id\": \"B001D04YY2\"}, {\"check_in\": \"2026-10-24\", \"hotel_id\": \"B001D04YY2\"}], \"hotel_id\": \"B001D04YY2\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"西安钟楼\", \"西安鼓楼\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001D09TAA\", \"B001D07CMS\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LDT57Q5G\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFIARZW4\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B001D09CL8\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LDT57Q5G\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\", \"B0KK4H3WDA\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\", \"B0KK4H3WDA\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"西安城墙·碑林历史文化景区\", \"西安记忆历史文化展览馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0KROZSZG0\", \"B0FFJIWE14\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG9SKJ4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B001D03PU9\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0LROKW64N\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LDT57Q5G\", \"B0FFG9SKJ4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\", \"B0KK4H3WDA\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\", \"B0KK4H3WDA\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"陕西历史博物馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001D03PEX\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LDT57Q5G\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFGZPDIV\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFKSID3J\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LDT57Q5G\", \"B0FFG9SKJ4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFGZPDIV\", \"B0FFK97RP0\", \"B0LAX53GDZ\", \"B0LA65A1F3\", \"B0K3G9ZPW2\", \"B001D10O8B\", \"B0H6L4CABV\", \"B0LAONF2DV\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFKSID3J\", \"B0FFIARZW4\", \"B0FFGZPDIV\", \"B0HG7HKNX6\", \"B0FFF9W7IF\", \"B0LA65A1F3\", \"B0K3G9ZPW2\", \"B001D10O8B\"]}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 0, \"attraction_names\": [\"大明宫国家遗址公园丹凤门\", \"西安城墙安远门\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001D0X51I\", \"B0GD3H1EO6\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG9SKJ4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B001D09CL8\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B001D10MF4\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG9SKJ4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B001D09CL8\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B0FFMCIJE7\", \"B0J2VZINFM\", \"B0FFM4HNK0\", \"B0KKVS37U1\", \"B0FFGRPHX2\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\", \"B0KK4H3WDA\", \"B0FFMCIJE7\"]}]}, {\"date\": \"2026-10-24\", \"day_index\": 4, \"total_minutes\": 0, \"attraction_names\": [\"陕西唐三彩艺术博物馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0IDCCBTTS\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG9SKJ4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0HG7HKNX6\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B001D077X5\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG9SKJ4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0HG7HKNX6\", \"B0FFF9W7IF\", \"B001D077X5\", \"B0FFFA8VPP\", \"B0LRNDL817\", \"B0FFFA8U2P\", \"B0FFFPK8XX\", \"B0IBF7Z4ID\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B001D077X5\", \"B0FFFA8VPP\", \"B0LRNDL817\", \"B0FFFA8U2P\", \"B0FFFPK8XX\", \"B0IBF7Z4ID\", \"B0FFF58R9J\", \"B0JKSAZLIP\"]}]}, {\"date\": \"2026-10-25\", \"day_index\": 5, \"total_minutes\": 0, \"attraction_names\": [\"灰色博物馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0M6ZU1RZQ\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LDT57Q5G\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B001D06YQ0\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0K3OKMDRI\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LDT57Q5G\", \"B0FFG9SKJ4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D06YQ0\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D06YQ0\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-24：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-25：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-25：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-25：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-25 dinner 重复餐厅 B0K3OKMDRI，附近尚有未使用候选：B0LDGA85QT,B0KK4H3WDA,B0FFMCIJE7,B0J2VZINFM,B0K1XGU5UA,B0FFFQZE30,B0FFF9WIA3,B0FFLOU1R9\n【上次方案和按相同规则计算的候选】\n{\"stays\": [{\"check_in\": \"2026-10-20\", \"hotel_id\": \"B001D04YY2\"}, {\"check_in\": \"2026-10-21\", \"hotel_id\": \"B001D04YY2\"}, {\"check_in\": \"2026-10-22\", \"hotel_id\": \"B001D04YY2\"}, {\"check_in\": \"2026-10-23\", \"hotel_id\": \"B001D04YY2\"}, {\"check_in\": \"2026-10-24\", \"hotel_id\": \"B001D04YY2\"}], \"hotel_id\": \"B001D04YY2\", \"days\": [{\"date\": \"2026-10-20\", \"day_index\": 0, \"total_minutes\": 0, \"attraction_names\": [\"西安钟楼\", \"西安鼓楼\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001D09TAA\", \"B001D07CMS\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LDT57Q5G\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFIARZW4\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B001D09CL8\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LDT57Q5G\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\", \"B0KK4H3WDA\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\", \"B0KK4H3WDA\"]}]}, {\"date\": \"2026-10-21\", \"day_index\": 1, \"total_minutes\": 0, \"attraction_names\": [\"西安城墙·碑林历史文化景区\", \"西安记忆历史文化展览馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0KROZSZG0\", \"B0FFJIWE14\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG9SKJ4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B001D03PU9\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0LROKW64N\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LDT57Q5G\", \"B0FFG9SKJ4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\", \"B0KK4H3WDA\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\", \"B0KK4H3WDA\"]}]}, {\"date\": \"2026-10-22\", \"day_index\": 2, \"total_minutes\": 0, \"attraction_names\": [\"陕西历史博物馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001D03PEX\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LDT57Q5G\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0FFGZPDIV\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0FFKSID3J\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LDT57Q5G\", \"B0FFG9SKJ4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFGZPDIV\", \"B0FFK97RP0\", \"B0LAX53GDZ\", \"B0LA65A1F3\", \"B0K3G9ZPW2\", \"B001D10O8B\", \"B0H6L4CABV\", \"B0LAONF2DV\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFKSID3J\", \"B0FFIARZW4\", \"B0FFGZPDIV\", \"B0HG7HKNX6\", \"B0FFF9W7IF\", \"B0LA65A1F3\", \"B0K3G9ZPW2\", \"B001D10O8B\"]}]}, {\"date\": \"2026-10-23\", \"day_index\": 3, \"total_minutes\": 0, \"attraction_names\": [\"大明宫国家遗址公园丹凤门\", \"西安城墙安远门\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B001D0X51I\", \"B0GD3H1EO6\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG9SKJ4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0K3OKMDRI\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B001D10MF4\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG9SKJ4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B001D09CL8\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B0FFMCIJE7\", \"B0J2VZINFM\", \"B0FFM4HNK0\", \"B0KKVS37U1\", \"B0FFGRPHX2\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\", \"B0KK4H3WDA\", \"B0FFMCIJE7\"]}]}, {\"date\": \"2026-10-24\", \"day_index\": 4, \"total_minutes\": 0, \"attraction_names\": [\"陕西唐三彩艺术博物馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0IDCCBTTS\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0FFG9SKJ4\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B0HG7HKNX6\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B001D077X5\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0FFG9SKJ4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0HG7HKNX6\", \"B0FFF9W7IF\", \"B001D077X5\", \"B0FFFA8VPP\", \"B0LRNDL817\", \"B0FFFA8U2P\", \"B0FFFPK8XX\", \"B0IBF7Z4ID\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B001D077X5\", \"B0FFFA8VPP\", \"B0LRNDL817\", \"B0FFFA8U2P\", \"B0FFFPK8XX\", \"B0IBF7Z4ID\", \"B0FFF58R9J\", \"B0JKSAZLIP\"]}]}, {\"date\": \"2026-10-25\", \"day_index\": 5, \"total_minutes\": 0, \"attraction_names\": [\"灰色博物馆\"], \"overloaded_routes\": [], \"attraction_ids\": [\"B0M6ZU1RZQ\"], \"previous_meals\": [{\"type\": \"breakfast\", \"restaurant_id\": \"B0LDT57Q5G\"}, {\"type\": \"lunch\", \"restaurant_id\": \"B001D06YQ0\"}, {\"type\": \"dinner\", \"restaurant_id\": \"B0K3OKMDRI\"}], \"meal_options_for_this_layout\": [{\"type\": \"breakfast\", \"eligible_restaurant_ids\": [\"B0LDT57Q5G\", \"B0FFG9SKJ4\"]}, {\"type\": \"lunch\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D06YQ0\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\"]}, {\"type\": \"dinner\", \"eligible_restaurant_ids\": [\"B0FFIARZW4\", \"B001D06YQ0\", \"B001D09CL8\", \"B001D03PU9\", \"B0LROKW64N\", \"B0K3OKMDRI\", \"B001D10MF4\", \"B0LDGA85QT\"]}]}]}\n若保持酒店和景点顺序，请从各餐次eligible_restaurant_ids选择并优先不重复。空数组表示当前布局无可用餐厅，需要更改酒店或景点布局；布局改变后这些列表需重新计算，不能照搬。overloaded_routes是该日实际复核的路程耗时；注意同名不同区景点。超时日应减少可选景点、换近处候选或跨日重分必去点，不能重复提交相同布局。",
+      "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+      "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+      "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+      "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-23：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-24：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+      "2026-10-25：本日天气未知，保留室内备选，出发前重新查询。",
+      "2026-10-25：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+      "2026-10-25：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。"
+    ],
+    "usage": {
+      "prompt_tokens": 46430,
+      "completion_tokens": 5560,
+      "llm_calls": 4
+    },
+    "budget_verdict": {
+      "status": "none",
+      "limit": null,
+      "known_total": 0,
+      "estimated_total": 2406,
+      "subtotal": 2406,
+      "unknown_items": [],
+      "basis": "未设置预算上限。当前口径：已知 0 元 + 估算 2406 元 = 2406 元。"
+    },
+    "constraint_report": {
+      "required_attractions": [],
+      "satisfied": [],
+      "unsatisfied": [],
+      "reasons": {},
+      "hotel_anchor": "轻住酒店·申鹏精选(钟鼓楼大差市第四医院店)",
+      "hotel_source": "agent",
+      "feasible": true
+    },
+    "tool_call_count": 99,
+    "hotel_source": "agent",
+    "final_days": 6,
+    "final_weather_days": 6
+  },
+  "request": {
+    "city": "西安",
+    "start_date": "2026-10-20",
+    "travel_days": 6,
+    "transportation": "公共交通",
+    "accommodation": "经济型酒店",
+    "preferences": [
+      "历史文化"
+    ],
+    "must_visit": [],
+    "free_text_input": ""
+  },
+  "expect": {
+    "success": true,
+    "days": 6,
+    "min_beyond_window": 2,
+    "fabricated": 0
+  },
+  "exception": null,
+  "warnings": [
+    "当前无已核实的高德扫街榜餐厅，展示普通高德餐饮 POI 推荐，未冒充榜单。",
+    "以下日期超出高德预报窗口（今天起 4 天），已留空而不是编造：2026-10-23、2026-10-24、2026-10-25。",
+    "鄠邑区钟楼：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "终南山古楼观历史文化景区：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "北屯历史文化展示馆：山区/周边活动点无现场预报，市区天气不能代替；出发前核实当地预警与开放状态。",
+    "部分餐次附近的可用餐厅或早餐候选不足；已限次补充检索，营业时间仍需出发前核验。",
+    "2026-10-24 重复安排景点「西安记忆历史文化展览馆」（2026-10-21 已安排过），已保留首次出现并去重。",
+    "2026-10-25 重复安排景点「西安记忆历史文化展览馆」（2026-10-21 已安排过），已保留首次出现并去重。",
+    "2026-10-21 dinner 餐厅不符合就近/餐次条件，可选ID：B0FFIARZW4",
+    "2026-10-22 breakfast 重复餐厅 B0FFIARZW4，附近尚有未使用候选：B0FFKSID3J,B0HG7HKNX6,B0FFF9W7IF,B0K3G9ZPW2,B0H6L4CABV,B0LAONF2DV,B0J1C9DTW5,B001D08EP8",
+    "2026-10-24 breakfast 餐厅不符合就近/餐次条件，可选ID：B0HG7HKNX6,B0FFF9W7IF",
+    "2026-10-24 breakfast 重复餐厅 B0FFIARZW4，附近尚有未使用候选：B0HG7HKNX6,B0FFF9W7IF",
+    "2026-10-24 dinner 餐厅不符合就近/餐次条件，可选ID：B0HG7HKNX6,B0FFF9W7IF",
+    "2026-10-24 dinner 重复餐厅 B001D08DCF，附近尚有未使用候选：B0HG7HKNX6",
+    "2026-10-25 lunch 重复餐厅 B001D08DCF，附近尚有未使用候选：B0FFKSID3J",
+    "2026-10-25 dinner 重复餐厅 B0FFIARZW4，附近尚有未使用候选：B0FFKSID3J",
+    "酒店每晚260元仅为预算预留，尚未获得实际房价。",
+    "2026-10-20 为给三餐、真实通勤与休息留足时间，未安排可选景点「西安化觉巷清真大寺」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-21 为给三餐、真实通勤与休息留足时间，未安排可选景点「西安唐皇城墙含光门遗址博物馆」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-22 为给三餐、真实通勤与休息留足时间，未安排可选景点「富陶博物馆·唐毓引」（建议游玩120分钟）；保留其他景点原建议时长与全部必去景点。",
+    "2026-10-20：首日未提供到达点，路线从首个活动开始，抵达交通未计入。",
+    "2026-10-20：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-21：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-22：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-23：本日天气未知，保留室内备选，出发前重新查询。",
+    "2026-10-24：本日天气未知，保留室内备选，出发前重新查询。",
+    "2026-10-24：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-25：本日天气未知，保留室内备选，出发前重新查询。",
+    "2026-10-25：末日未提供离开点，路线止于末个活动，返程接驳未计入。",
+    "2026-10-25：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-23 lunch 重复餐厅 B001D09CL8，附近尚有未使用候选：B0K3OKMDRI,B0FFMCIJE7,B0J2VZINFM,B0FFM4HNK0,B0KKVS37U1,B0FFGRPHX2,B001D077X5,B001D0WQ0Q",
+    "2026-10-23：部分路线为估算，请核实实际可达性；远途公交未核实不会作为已验证计划交付。",
+    "2026-10-25 dinner 重复餐厅 B0K3OKMDRI，附近尚有未使用候选：B0LDGA85QT,B0KK4H3WDA,B0FFMCIJE7,B0J2VZINFM,B0K1XGU5UA,B0FFFQZE30,B0FFF9WIA3,B0FFLOU1R9"
+  ],
+  "message": "已返回部分结果：未通过校验：2026-10-25 dinner 重复餐厅 B0K3OKMDRI，附近尚有未使用候选：B0LDGA85QT,B0KK4H3WDA,B0FFMCIJE7,B0J2VZINFM,B0K1XGU5UA,B0FFFQZE30,B0FFF9WIA3,B0FFLOU1R9，请见上方提示。",
+  "started_at": "2026-10-20T01:03:39"
+}
